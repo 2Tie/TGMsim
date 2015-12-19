@@ -305,6 +305,7 @@ namespace TGMsim
                             if (ruleset.nextNum > 0)
                             {
                                 tet1 = field1.nextTet[0];
+                                field1.groundTimer = ruleset.baseLock;
                                 for (int i = 0; i < field1.nextTet.Count - 1; i++)
                                 {
                                     field1.nextTet[i] = field1.nextTet[i + 1];
@@ -383,7 +384,7 @@ namespace TGMsim
                         if (field1.currentTimer == (int)Field.timerType.LockDelay)
                         {
                             //if lock delay up, place piece.
-                            if (field1.timerCount == 0)
+                            if (field1.groundTimer == 0)
                             {
                                 if(field1.level % 100 != 99 && field1.level != 998)
                                     field1.level++;
@@ -438,13 +439,13 @@ namespace TGMsim
                             else
                             {
                                 field1.gravCounter = 0;
-                                field1.timerCount--;
+                                field1.groundTimer--;
                             }
                         }
                         else
                         {
                             field1.currentTimer = (int)Field.timerType.LockDelay;
-                            field1.timerCount = ruleset.baseLock;
+                            //field1.timerCount = ruleset.baseLock;
                         }
                     }
                     else
@@ -473,7 +474,7 @@ namespace TGMsim
 
                     
 
-                    if (inputV == 1)
+                    if (inputV == 1 && ruleset.hardDrop == 1)
                     {
                         blockDrop = 19;
                         field1.gravCounter = 0;
@@ -483,7 +484,7 @@ namespace TGMsim
                         blockDrop = 1;
                         field1.gravCounter = 0;
                         if(field1.currentTimer == (int)Field.timerType.LockDelay)
-                            field1.timerCount = 0;
+                            field1.groundTimer = 0;
                     }
 
                     if (inputHold == 1 && ruleset.hold == true && field1.swappedHeld == false)
@@ -494,6 +495,7 @@ namespace TGMsim
                             tempTet = new Tetromino(field1.heldPiece.id);
                             field1.heldPiece = new Tetromino(tet1.id);
                             tet1 = tempTet;
+                            field1.groundTimer = ruleset.baseLock;
                         }
                         else
                         {
@@ -501,7 +503,6 @@ namespace TGMsim
                             tet1.id = 0;
                             field1.currentTimer = (int)Field.timerType.ARE;
                             field1.timerCount = ruleset.baseARE;
-
                         }
                         //field1.heldPiece = new Tetromino(tet1.id);
                     }
@@ -522,6 +523,7 @@ namespace TGMsim
                     {
                         int i;
                         field1.gravCounter = 0;
+                        field1.groundTimer = ruleset.baseLock;
                         for(i = 0; i < blockDrop; i++)
                         {
                             //check collision of each step

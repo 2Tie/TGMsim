@@ -23,6 +23,7 @@ namespace TGMsim
         public enum timerType { ARE, DAS, LockDelay, LineClear} ;
         public int currentTimer = 0;
         public int timerCount = 0;
+        public int groundTimer = 0;
         public int gravCounter = 0;
         public int gravLevel = 0;
         public int level = 1;
