@@ -1387,7 +1387,7 @@ namespace TGMsim
                                     }
                                     for (int i = 1; i < 4; i++)
                                     {
-                                        if (field1.gameField[tet1.bits[0].x + -1 + ((i % 3) - 1)][tet1.bits[0].y + yOffset] == 0 && field1.gameField[tet1.bits[1].x + ((i % 3) - 1)][tet1.bits[1].y + -1 + yOffset] == 0 && field1.gameField[tet1.bits[2].x + 1 + ((i % 3) - 1)][tet1.bits[2].y + -2 + yOffset] == 0 && field1.gameField[tet1.bits[3].x + -2 + ((i % 3) - 1)][tet1.bits[3].y + -1 + yOffset] == 0)
+                                        if (field1.gameField[tet1.bits[0].x + -1 + ((i % 3) - 1)][tet1.bits[0].y + yOffset] == 0 && field1.gameField[tet1.bits[1].x + ((i % 3) - 1)][tet1.bits[1].y + -1 + yOffset] == 0 && field1.gameField[tet1.bits[2].x + 1 + ((i % 3) - 1)][tet1.bits[2].y + -2 + yOffset] == 0 && field1.gameField[tet1.bits[3].x + 2 + ((i % 3) - 1)][tet1.bits[3].y + -1 + yOffset] == 0)
                                         {
                                             tet1.bits[0].x += -1 + ((i % 3) - 1);
                                             tet1.bits[0].y += yOffset;
