@@ -437,6 +437,7 @@ namespace TGMsim
                             }
                             else
                             {
+                                field1.gravCounter = 0;
                                 field1.timerCount--;
                             }
                         }
