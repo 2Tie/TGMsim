@@ -264,6 +264,19 @@ namespace TGMsim
 
             if (gameRunning == true)
             {
+                //check inputs and handle logic pertaining to them
+
+                if (inputH == 1 || inputH == -1)
+                {
+                    if (inputDelayH > 0)
+                    {
+                        inputDelayH--;
+                    }
+                    if (inputDelayH == -1)
+                        inputDelayH = ruleset.baseDAS;
+                }
+                else
+                    inputDelayH = -1;
                 //check ID of current tetromino.
                 if (tet1.id == 0)
                 {
@@ -453,25 +466,10 @@ namespace TGMsim
 
 
 
-                    //check saved inputs and act on them accordingly
-
-                    if (inputWaitH > 0)
-                    {
-                        inputWaitH--;
-                        //if (inputPressedStateH == 1)
-                            //inputPressedStateH = 2;
-                    }
-                    if (inputDelayH > 0)
-                    {
-                        inputDelayH--;
-                        //if (inputDelayH == 0)
-                            //inputPressedStateH = 2;
-                    }
-                    if (inputDelayV > 0)
-                        inputDelayV--;
-
                     int blockDrop = 0;// make it here so we can drop faster
 
+
+                    //check saved inputs and act on them accordingly
                     
 
                     if (inputV == 1 && ruleset.hardDrop == 1)
@@ -565,17 +563,8 @@ namespace TGMsim
                         }
                     }
 
-                    if (inputH == 1 && inputWaitH == 0 && inputDelayH == 0)
+                    if (inputH == 1 && (inputDelayH < 1 || inputDelayH == ruleset.baseDAS))
                     {
-                        if (inputPressedStateH == 0)
-                        {
-                            inputWaitH = ruleset.baseDAS;
-                            inputPressedStateH = 1;
-                        }
-                        //if (inputPressedStateH == 2)
-                        //{
-                        //inputDelayH = 0;
-                        //}
                         bool safe = true;
                         //check to the right of each bit
                         for (int i = 0; i < 4; i++)
@@ -599,17 +588,8 @@ namespace TGMsim
                             }
                         }
                     }
-                    else if (inputH == -1 && inputWaitH == 0 && inputDelayH == 0)
+                    else if (inputH == -1 && (inputDelayH < 1 || inputDelayH == ruleset.baseDAS))
                     {
-                        if (inputPressedStateH == 0)
-                        {
-                            inputWaitH = ruleset.baseDAS;
-                            inputPressedStateH = 1;
-                        }
-                        //if (inputPressedStateH == 2)
-                        //{
-                        //inputDelayH = 0;
-                        //}
                         bool safe = true;
                         //check to the right of each bit
                         for (int i = 0; i < 4; i++)
@@ -632,13 +612,6 @@ namespace TGMsim
                                 tet1.bits[i].x--;
                             }
                         }
-                    }
-                    else
-                    {
-                        inputPressedStateH = 0;
-                        inputWaitH = 0;
-                        inputDelayH = 0;
-
                     }
 
                     if (inputRot1 == 1)
