@@ -726,6 +726,10 @@ namespace TGMsim
                                     }
                                     for (int i = 1; i < 4; i++) //test the three x locations
                                     {
+                                        if (tet1.bits[1].x - 1 + ((i % 3) - 1) < 0 || tet1.bits[1].x + 1 + ((i % 3) - 1) > 9)//test for OoB shenanigans
+                                        {
+                                            continue;
+                                        }
                                         if (field1.gameField[tet1.bits[0].x + 1 + ((i % 3) - 1)][tet1.bits[0].y - 1 + yOffset] == 0 && field1.gameField[tet1.bits[1].x + ((i % 3) - 1)][tet1.bits[1].y + yOffset] == 0 && field1.gameField[tet1.bits[2].x + ((i % 3) - 1)][tet1.bits[2].y + yOffset] == 0 && field1.gameField[tet1.bits[3].x + ((i % 3) - 1)][tet1.bits[3].y + yOffset] == 0)
                                         {
                                             tet1.bits[0].x += 1 + ((i % 3) - 1);
@@ -744,12 +748,6 @@ namespace TGMsim
                                     }
                                     break;
                                 case 1:
-                                    //test for OoB bump
-                                    if (tet1.bits[0].x - 1 < 0)
-                                    {
-                                        xOffset = 1;
-                                    }
-
                                     //TODO: test for upkick if TGM3
                                     if (ruleset.rotation == 3 && ((field1.gameField[tet1.bits[0].x - 1 + xOffset][tet1.bits[0].y] != 0 || field1.gameField[tet1.bits[0].x + 1 + xOffset][tet1.bits[0].y] != 0) && tet1.kicked == 0))
                                     {
@@ -759,11 +757,11 @@ namespace TGMsim
                                     
                                     for (int i = 1; i < 4; i++ )
                                     {
-                                        if(tet1.bits[1].x - 2 + ((i % 3) - 1) < 0)//test for OoB shenanigans
+                                        if (tet1.bits[1].x - 1 + ((i % 3) - 1) < 0 || tet1.bits[1].x + 1 + ((i % 3) - 1) > 9)//test for OoB shenanigans
                                         {
                                             continue;
                                         }
-                                        if (field1.gameField[tet1.bits[0].x + 1 + xOffset + ((i % 3) - 1)][tet1.bits[0].y + yOffset] == 0 && field1.gameField[tet1.bits[1].x + xOffset + ((i % 3) - 1)][tet1.bits[1].y - 1 + yOffset] == 0 && field1.gameField[tet1.bits[2].x - 1 + xOffset + ((i % 3) - 1)][tet1.bits[2].y + 2 + yOffset] == 0 && field1.gameField[tet1.bits[3].x - 1 + xOffset + ((i % 3) - 1)][tet1.bits[3].y + yOffset] == 0)
+                                        if (field1.gameField[tet1.bits[0].x + 1 + xOffset + ((i % 3) - 1)][tet1.bits[0].y + yOffset] == 0 && field1.gameField[tet1.bits[1].x + xOffset + ((i % 3) - 1)][tet1.bits[1].y + 1 + yOffset] == 0 && field1.gameField[tet1.bits[2].x - 1 + xOffset + ((i % 3) - 1)][tet1.bits[2].y + 2 + yOffset] == 0 && field1.gameField[tet1.bits[3].x - 1 + xOffset + ((i % 3) - 1)][tet1.bits[3].y + yOffset] == 0)
                                         {
                                             tet1.bits[0].x += 1 + xOffset + ((i % 3) - 1);
                                             tet1.bits[0].y += yOffset;
@@ -794,6 +792,10 @@ namespace TGMsim
                                     }
                                     for (int i = 1; i < 4; i++ )
                                     {
+                                        if (tet1.bits[1].x - 1 + ((i % 3) - 1) < 0 || tet1.bits[1].x + 1 + ((i % 3) - 1) > 9)//test for OoB shenanigans
+                                        {
+                                            continue;
+                                        }
                                         if (field1.gameField[tet1.bits[0].x + -1 + ((i % 3) - 1)][tet1.bits[0].y + -2 + yOffset] == 0 && field1.gameField[tet1.bits[1].x + ((i % 3) - 1)][tet1.bits[1].y + -1 + yOffset] == 0 && field1.gameField[tet1.bits[2].x + 1 + ((i % 3) - 1)][tet1.bits[2].y + yOffset] == 0 && field1.gameField[tet1.bits[3].x + -1 + ((i % 3) - 1)][tet1.bits[3].y + yOffset] == 0)
                                         {
                                             tet1.bits[0].x += -1 + ((i % 3) - 1);
@@ -812,13 +814,9 @@ namespace TGMsim
                                     }
                                     break;
                                 case 3:
-                                    if(tet1.bits[1].x + 1 > 9)
-                                    {
-                                        xOffset = -1;
-                                    }
                                     for (int i = 1; i < 4; i++ )
                                     {
-                                        if(tet1.bits[0].x + 1 + ((i % 3) - 1) > 9)//test for OoB shenanigans
+                                        if (tet1.bits[1].x - 1 + ((i % 3) - 1) < 0 || tet1.bits[1].x + 1 + ((i % 3) - 1) > 9)//test for OoB shenanigans
                                         {
                                             continue;
                                         }
@@ -857,6 +855,10 @@ namespace TGMsim
                                     }
                                     for (int i = 1; i < 4; i++ )
                                     {
+                                        if (tet1.bits[1].x - 1 + ((i % 3) - 1) < 0 || tet1.bits[1].x + 1 + ((i % 3) - 1) > 9)//test for OoB shenanigans
+                                        {
+                                            continue;
+                                        }
                                         if (field1.gameField[tet1.bits[0].x + 1 + ((i % 3) - 1)][tet1.bits[0].y + -1 + yOffset] == 0 && field1.gameField[tet1.bits[1].x + ((i % 3) - 1)][tet1.bits[1].y + yOffset] == 0 && field1.gameField[tet1.bits[2].x + -1 + ((i % 3) - 1)][tet1.bits[2].y + 1 + yOffset] == 0 && field1.gameField[tet1.bits[3].x + -1 + ((i % 3) - 1)][tet1.bits[3].y + -1 + yOffset] == 0)
                                         {
                                             tet1.bits[0].x += 1 + ((i % 3) - 1);
@@ -875,14 +877,9 @@ namespace TGMsim
                                     }
                                     break;
                                 case 1:
-
-                                    if(tet1.bits[1].x - 1 < 0)
-                                    {
-                                        xOffset = 1;
-                                    }
                                     for (int i = 1; i < 4; i++) //test the three x locations
                                     {
-                                        if (tet1.bits[0].x - 1 + ((i % 3) - 1) < 0)//test for OoB shenanigans
+                                        if (tet1.bits[1].x - 1 + ((i % 3) - 1) < 0 || tet1.bits[1].x + 1 + ((i % 3) - 1) > 9)//test for OoB shenanigans
                                         {
                                             continue;
                                         }
@@ -916,6 +913,10 @@ namespace TGMsim
                                     }
                                     for (int i = 1; i < 4; i++)
                                     {
+                                        if (tet1.bits[1].x - 1 + ((i % 3) - 1) < 0 || tet1.bits[1].x + 1 + ((i % 3) - 1) > 9)//test for OoB shenanigans
+                                        {
+                                            continue;
+                                        }
                                         if (field1.gameField[tet1.bits[0].x - 1 + ((i % 3) - 1)][tet1.bits[0].y + yOffset] == 0 && field1.gameField[tet1.bits[1].x + ((i % 3) - 1)][tet1.bits[1].y + 1 + yOffset] == 0 && field1.gameField[tet1.bits[2].x + 1 + ((i % 3) - 1)][tet1.bits[2].y - 2 + yOffset] == 0 && field1.gameField[tet1.bits[3].x + 1 + ((i % 3) - 1)][tet1.bits[3].y + yOffset] == 0)
                                         {
                                             tet1.bits[0].x += -1 + ((i % 3) - 1);
@@ -934,13 +935,9 @@ namespace TGMsim
                                     }
                                     break;
                                 case 3:
-                                    if (tet1.bits[1].x + 1 > 9)
-                                    {
-                                        xOffset = -1;
-                                    }
                                     for (int i = 1; i < 4; i++)
                                     {
-                                        if (tet1.bits[0].x + 1 + ((i % 3) - 1) > 9)//test for OoB shenanigans
+                                        if (tet1.bits[1].x - 1 + ((i % 3) - 1) < 0 || tet1.bits[1].x + 1 + ((i % 3) - 1) > 9)//test for OoB shenanigans
                                         {
                                             continue;
                                         }
@@ -990,6 +987,10 @@ namespace TGMsim
                                     }
                                     for(int i = 1; i < 4; i++)
                                     {
+                                        if (tet1.bits[1].x - 1 + ((i % 3) - 1) < 0 || tet1.bits[1].x + 1 + ((i % 3) - 1) > 9)//test for OoB shenanigans
+                                        {
+                                            continue;
+                                        }
                                         if (field1.gameField[tet1.bits[0].x + 1 + ((i % 3) - 1)][tet1.bits[0].y + 1 + yOffset] == 0 && field1.gameField[tet1.bits[1].x + ((i % 3) - 1)][tet1.bits[1].y + yOffset] == 0 && field1.gameField[tet1.bits[2].x + -1 + ((i % 3) - 1)][tet1.bits[2].y + -1 + yOffset] == 0 && field1.gameField[tet1.bits[3].x + 2 + ((i % 3) - 1)][tet1.bits[3].y + yOffset] == 0)
                                         {
                                             tet1.bits[0].x += 1 + ((i % 3) - 1);
@@ -1008,13 +1009,9 @@ namespace TGMsim
                                     }
                                     break;
                                 case 1:
-                                    if (tet1.bits[0].x - 1 < 0)//test oob for bump
-                                    {
-                                        xOffset = 1;
-                                    }
                                     for(int i = 1; i < 4; i++)
                                     {
-                                        if (tet1.bits[0].x - 1 + ((i % 3) - 1) < 0)//test for OoB shenanigans
+                                        if (tet1.bits[0].x - 1 + ((i % 3) - 1) < 0 || tet1.bits[0].x + 1 + ((i % 3) - 1) > 9)//test for OoB shenanigans
                                         {
                                             continue;
                                         }
@@ -1048,6 +1045,10 @@ namespace TGMsim
                                     }
                                     for(int i = 1; i < 4; i++)
                                     {
+                                        if (tet1.bits[1].x - 1 + ((i % 3) - 1) < 0 || tet1.bits[1].x + 1 + ((i % 3) - 1) > 9)//test for OoB shenanigans
+                                        {
+                                            continue;
+                                        }
                                         if (field1.gameField[tet1.bits[0].x + -1 + ((i % 3) - 1)][tet1.bits[0].y + -2 + yOffset] == 0 && field1.gameField[tet1.bits[1].x + ((i % 3) - 1)][tet1.bits[1].y + -1 + yOffset] == 0 && field1.gameField[tet1.bits[2].x + 1 + ((i % 3) - 1)][tet1.bits[2].y + yOffset] == 0 && field1.gameField[tet1.bits[3].x + -2 + ((i % 3) - 1)][tet1.bits[3].y + -1 + yOffset] == 0)
                                         {
                                             tet1.bits[0].x += -1 + ((i % 3) - 1);
@@ -1066,13 +1067,9 @@ namespace TGMsim
                                     }
                                     break;
                                 case 3:
-                                    if(tet1.bits[1].x + 1 > 9)
-                                    {
-                                        xOffset = -1;
-                                    }
                                     for(int i = 1; i < 4; i++)
                                     {
-                                        if (tet1.bits[0].x + 1 + ((i % 3) - 1) > 9)//test for OoB shenanigans
+                                        if (tet1.bits[1].x - 1 + ((i % 3) - 1) < 0 || tet1.bits[1].x + 1 + ((i % 3) - 1) > 9)//test for OoB shenanigans
                                         {
                                             continue;
                                         }
@@ -1117,6 +1114,10 @@ namespace TGMsim
                                         }
                                         for(int i = 1; i < 4; i++)
                                         {
+                                            if (tet1.bits[1].x - 1 + ((i % 3) - 1) < 0 || tet1.bits[1].x + 1 + ((i % 3) - 1) > 9)//test for OoB shenanigans
+                                            {
+                                                continue;
+                                            }
                                             if (field1.gameField[tet1.bits[0].x + 1 + ((i % 3) - 1)][tet1.bits[0].y + -1 + yOffset] == 0 && field1.gameField[tet1.bits[1].x + ((i % 3) - 1)][tet1.bits[1].y + yOffset] == 0 && field1.gameField[tet1.bits[2].x + -1 + ((i % 3) - 1)][tet1.bits[2].y + 1 + yOffset] == 0 && field1.gameField[tet1.bits[3].x + ((i % 3) - 1)][tet1.bits[3].y + -2 + yOffset] == 0)
                                             {
                                                 tet1.bits[0].x += 1 + ((i % 3) - 1);
@@ -1136,13 +1137,9 @@ namespace TGMsim
                                     }
                                     break;
                                 case 1:
-                                    if (tet1.bits[0].x - 1 < 0)//test oob for bump
-                                    {
-                                        xOffset = 1;
-                                    }
                                     for (int i = 1; i < 4; i++)
                                     {
-                                        if (tet1.bits[0].x - 1 + ((i % 3) - 1) < 0)//test for OoB shenanigans
+                                        if (tet1.bits[1].x - 1 + ((i % 3) - 1) < 0 || tet1.bits[1].x + 1 + ((i % 3) - 1) > 9)//test for OoB shenanigans
                                         {
                                             continue;
                                         }
@@ -1175,6 +1172,10 @@ namespace TGMsim
                                     }
                                     for (int i = 1; i < 4; i++)
                                     {
+                                        if (tet1.bits[1].x - 1 + ((i % 3) - 1) < 0 || tet1.bits[1].x + 1 + ((i % 3) - 1) > 9)//test for OoB shenanigans
+                                        {
+                                            continue;
+                                        }
                                         if (field1.gameField[tet1.bits[0].x + -1 + ((i % 3) - 1)][tet1.bits[0].y + yOffset] == 0 && field1.gameField[tet1.bits[1].x + ((i % 3) - 1)][tet1.bits[1].y + -1 + yOffset] == 0 && field1.gameField[tet1.bits[2].x + 1 + ((i % 3) - 1)][tet1.bits[2].y + -2 + yOffset] == 0 && field1.gameField[tet1.bits[3].x + ((i % 3) - 1)][tet1.bits[3].y + 1 + yOffset] == 0)
                                         {
                                             tet1.bits[0].x += -1 + ((i % 3) - 1);
@@ -1193,13 +1194,9 @@ namespace TGMsim
                                     }
                                     break;
                                 case 3:
-                                    if (tet1.bits[1].x + 1 > 9)
-                                    {
-                                        xOffset = -1;
-                                    }
                                     for (int i = 1; i < 4; i++)
                                     {
-                                        if (tet1.bits[0].x + 1 + ((i % 3) - 1) > 9)//test for OoB shenanigans
+                                        if (tet1.bits[1].x - 1 + ((i % 3) - 1) < 0 || tet1.bits[1].x + 1 + ((i % 3) - 1) > 9)//test for OoB shenanigans
                                         {
                                             continue;
                                         }
@@ -1250,6 +1247,10 @@ namespace TGMsim
                                     }
                                     for(int i = 1; i < 4; i++)
                                     {
+                                        if (tet1.bits[1].x - 1 + ((i % 3) - 1) < 0 || tet1.bits[1].x + 1 + ((i % 3) - 1) > 9)//test for OoB shenanigans
+                                        {
+                                            continue;
+                                        }
                                         if (field1.gameField[tet1.bits[0].x + 1 + ((i % 3) - 1)][tet1.bits[0].y + 1 + yOffset] == 0 && field1.gameField[tet1.bits[1].x + ((i % 3) - 1)][tet1.bits[1].y + yOffset] == 0 && field1.gameField[tet1.bits[2].x + -1 + ((i % 3) - 1)][tet1.bits[2].y + -1 + yOffset] == 0 && field1.gameField[tet1.bits[3].x + ((i % 3) - 1)][tet1.bits[3].y + -2 + yOffset] == 0)
                                         {
                                             tet1.bits[0].x += 1 + ((i % 3) - 1);
@@ -1268,13 +1269,9 @@ namespace TGMsim
                                     }
                                     break;
                                 case 1:
-                                    if (tet1.bits[0].x - 1 < 0)//test oob for bump
-                                    {
-                                        xOffset = 1;
-                                    }
                                     for(int i = 1; i < 4; i++)
                                     {
-                                        if (tet1.bits[0].x - 1 + ((i % 3) - 1) < 0)//test for OoB shenanigans
+                                        if (tet1.bits[1].x - 1 + ((i % 3) - 1) < 0 || tet1.bits[1].x + 1 + ((i % 3) - 1) > 9)//test for OoB shenanigans
                                         {
                                             continue;
                                         }
@@ -1308,6 +1305,10 @@ namespace TGMsim
                                     }
                                     for(int i = 1; i < 4; i++)
                                     {
+                                        if (tet1.bits[1].x - 1 + ((i % 3) - 1) < 0 || tet1.bits[1].x + 1 + ((i % 3) - 1) > 9)//test for OoB shenanigans
+                                        {
+                                            continue;
+                                        }
                                         if (field1.gameField[tet1.bits[0].x + -1 + ((i % 3) - 1)][tet1.bits[0].y + -2 + yOffset] == 0 && field1.gameField[tet1.bits[1].x + ((i % 3) - 1)][tet1.bits[1].y + -1 + yOffset] == 0 && field1.gameField[tet1.bits[2].x + 1 + ((i % 3) - 1)][tet1.bits[2].y + yOffset] == 0 && field1.gameField[tet1.bits[3].x  + ((i % 3) - 1)][tet1.bits[3].y + 1 + yOffset] == 0)
                                         {
                                             tet1.bits[0].x += -1 + ((i % 3) - 1);
@@ -1326,13 +1327,9 @@ namespace TGMsim
                                     }
                                     break;
                                 case 3:
-                                    if(tet1.bits[1].x + 1 > 9)
-                                    {
-                                        xOffset = -1;
-                                    }
                                     for(int i = 1; i < 4; i++)
                                     {
-                                        if (tet1.bits[0].x + 1 + ((i % 3) - 1) > 9)//test for OoB shenanigans
+                                        if (tet1.bits[1].x - 1 + ((i % 3) - 1) < 0 || tet1.bits[1].x + 1 + ((i % 3) - 1) > 9)//test for OoB shenanigans
                                         {
                                             continue;
                                         }
@@ -1376,6 +1373,10 @@ namespace TGMsim
                                         }
                                         for (int i = 1; i < 4; i++)
                                         {
+                                            if (tet1.bits[1].x - 1 + ((i % 3) - 1) < 0 || tet1.bits[1].x + 1 + ((i % 3) - 1) > 9)//test for OoB shenanigans
+                                            {
+                                                continue;
+                                            }
                                             if (field1.gameField[tet1.bits[0].x + 1 + ((i % 3) - 1)][tet1.bits[0].y + -1 + yOffset] == 0 && field1.gameField[tet1.bits[1].x + ((i % 3) - 1)][tet1.bits[1].y + yOffset] == 0 && field1.gameField[tet1.bits[2].x + -1 + ((i % 3) - 1)][tet1.bits[2].y + 1 + yOffset] == 0 && field1.gameField[tet1.bits[3].x + -2 + ((i % 3) - 1)][tet1.bits[3].y + yOffset] == 0)
                                             {
                                                 tet1.bits[0].x += 1 + ((i % 3) - 1);
@@ -1395,13 +1396,9 @@ namespace TGMsim
                                     }
                                     break;
                                 case 1:
-                                    if (tet1.bits[0].x - 1 < 0)//test oob for bump
-                                    {
-                                        xOffset = 1;
-                                    }
                                     for (int i = 1; i < 4; i++)
                                     {
-                                        if (tet1.bits[0].x - 1 + ((i % 3) - 1) < 0)//test for OoB shenanigans
+                                        if (tet1.bits[1].x - 1 + ((i % 3) - 1) < 0 || tet1.bits[1].x + 1 + ((i % 3) - 1) > 9)//test for OoB shenanigans
                                         {
                                             continue;
                                         }
@@ -1435,6 +1432,10 @@ namespace TGMsim
                                     }
                                     for (int i = 1; i < 4; i++)
                                     {
+                                        if (tet1.bits[1].x - 1 + ((i % 3) - 1) < 0 || tet1.bits[1].x + 1 + ((i % 3) - 1) > 9)//test for OoB shenanigans
+                                        {
+                                            continue;
+                                        }
                                         if (field1.gameField[tet1.bits[0].x + -1 + ((i % 3) - 1)][tet1.bits[0].y + yOffset] == 0 && field1.gameField[tet1.bits[1].x + ((i % 3) - 1)][tet1.bits[1].y + -1 + yOffset] == 0 && field1.gameField[tet1.bits[2].x + 1 + ((i % 3) - 1)][tet1.bits[2].y + -2 + yOffset] == 0 && field1.gameField[tet1.bits[3].x + 2 + ((i % 3) - 1)][tet1.bits[3].y + -1 + yOffset] == 0)
                                         {
                                             tet1.bits[0].x += -1 + ((i % 3) - 1);
@@ -1453,13 +1454,9 @@ namespace TGMsim
                                     }
                                     break;
                                 case 3:
-                                    if (tet1.bits[1].x + 1 > 9)
-                                    {
-                                        xOffset = -1;
-                                    }
                                     for (int i = 1; i < 4; i++)
                                     {
-                                        if (tet1.bits[0].x + 1 + ((i % 3) - 1) > 9)//test for OoB shenanigans
+                                        if (tet1.bits[1].x - 1 + ((i % 3) - 1) < 0 || tet1.bits[1].x + 1 + ((i % 3) - 1) > 9)//test for OoB shenanigans
                                         {
                                             continue;
                                         }
@@ -1499,6 +1496,10 @@ namespace TGMsim
 
                             for (int i = 1; i < 4; i++)
                             {
+                                if (tet1.bits[1].x - 1 + ((i % 3) - 1) < 0 || tet1.bits[1].x + 1 + ((i % 3) - 1) > 9)//test for OoB shenanigans
+                                {
+                                    continue;
+                                }
                                 if (field1.gameField[tet1.bits[0].x + ((i % 3) - 1)][tet1.bits[0].y - 2 + yOffset] == 0 && field1.gameField[tet1.bits[0].x + ((i % 3) - 1)][tet1.bits[0].y - 1 + yOffset] == 0 && field1.gameField[tet1.bits[1].x + ((i % 3) - 1)][tet1.bits[1].y + yOffset] == 0 && field1.gameField[tet1.bits[2].x + ((i % 3) - 1)][tet1.bits[2].y + yOffset] == 0)
                                 {
                                     tet1.bits[0].x += 1 + ((i % 3) - 1);
@@ -1517,13 +1518,9 @@ namespace TGMsim
                             }
                             break;
                         case 1:
-                            if(tet1.bits[0].x + 1 > 9)
-                            {
-                                xOffset = -1;
-                            }
                             for (int i = 1; i < 4; i++)
                             {
-                                if (tet1.bits[0].x + 1 + ((i % 3) - 1) > 9)//test for OoB shenanigans
+                                if (tet1.bits[1].x - 1 + ((i % 3) - 1) < 0 || tet1.bits[1].x + 1 + ((i % 3) - 1) > 9)//test for OoB shenanigans
                                 {
                                     continue;
                                 }
@@ -1559,6 +1556,10 @@ namespace TGMsim
                             }
                             for (int i = 1; i < 4; i++)
                             {
+                                if (tet1.bits[2].x - 1 + ((i % 3) - 1) < 0 || tet1.bits[2].x + 1 + ((i % 3) - 1) > 9)//test for OoB shenanigans
+                                {
+                                    continue;
+                                }
                                 if (field1.gameField[tet1.bits[1].x - 1 + ((i % 3) - 1)][tet1.bits[0].y - 1 + yOffset] == 0 && field1.gameField[tet1.bits[1].x - 1 + ((i % 3) - 1)][tet1.bits[3].y + yOffset] == 0 && field1.gameField[tet1.bits[1].x + ((i % 3) - 1)][tet1.bits[1].y + yOffset] == 0 && field1.gameField[tet1.bits[2].x + ((i % 3) - 1)][tet1.bits[2].y + yOffset] == 0)
                                 {
                                     tet1.bits[0].x += 2 + ((i % 3) - 1);
@@ -1577,13 +1578,9 @@ namespace TGMsim
                             }
                             break;
                         case 1:
-                            if (tet1.bits[0].x - 2 < 0)
-                            {
-                                xOffset = 1;
-                            }
                             for (int i = 1; i < 4; i ++)
                             {
-                                if (tet1.bits[0].x - 1 + ((i % 3) - 1) < 0)//test for OoB shenanigans
+                                if (tet1.bits[2].x - 1 + ((i % 3) - 1) < 0 || tet1.bits[2].x + 1 + ((i % 3) - 1) > 9)//test for OoB shenanigans
                                 {
                                     continue;
                                 }
