@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TGMsim
 {
-    class BlockBit
+    public class BlockBit
     {
         public int x, y;
     }

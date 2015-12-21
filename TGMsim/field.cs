@@ -10,6 +10,7 @@ namespace TGMsim
     {
 
         public List<Tetromino> nextTet = new List<Tetromino>();
+        public List<int> lastTet = new List<int>() { 0, 0, 0, 0};
 
         public List<List<int>> gameField = new List<List<int>>();
 
@@ -29,6 +30,9 @@ namespace TGMsim
         public int level = 1;
         public int grade = 0;
         public int score = 0;
+        public int combo = 1;
+
+        public int softCounter = 0;
         public Field()
         {
             x = 250;

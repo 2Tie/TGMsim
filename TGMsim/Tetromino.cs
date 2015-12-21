@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TGMsim
 {
-    class Tetromino
+    public class Tetromino
     {
         enum piece { I = 1, T, L, J, S, Z, O };
 

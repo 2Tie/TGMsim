@@ -68,14 +68,13 @@ namespace TGMsim
         {
             timer.start();
             //field1.randomize();
-            Random tetrng = new Random();
-            tet1 = new Tetromino(tetrng.Next(7) + 1);
+            tet1 = generatePiece();
 
             if (field1.nextTet.Count == 0 && ruleset.nextNum > 0) //generate nextTet
             {
                 for (int i = 0; i < ruleset.nextNum; i++)
                 {
-                    field1.nextTet.Add(new Tetromino(tetrng.Next(7) + 1));
+                    field1.nextTet.Add(generatePiece());
                 }
             }
 
@@ -231,24 +230,34 @@ namespace TGMsim
 
 
 #if DEBUG
+            SolidBrush debugBrush = new SolidBrush(Color.White);
             //denote debug
-            drawBuffer.DrawString("DEBUG", DefaultFont, new SolidBrush(Color.White), 20, 710);
+            drawBuffer.DrawString("DEBUG", DefaultFont, debugBrush, 20, 710);
             //draw the current inputs
-            drawBuffer.DrawString(Keyboard.IsKeyDown(Key.W) ? "1" : "0", DefaultFont, new SolidBrush(Color.White), 28, 720);
-            drawBuffer.DrawString(Keyboard.IsKeyDown(Key.A) ? "1" : "0", DefaultFont, new SolidBrush(Color.White), 20, 730);
-            drawBuffer.DrawString(Keyboard.IsKeyDown(Key.S) ? "1" : "0", DefaultFont, new SolidBrush(Color.White), 28, 740);
-            drawBuffer.DrawString(Keyboard.IsKeyDown(Key.D) ? "1" : "0", DefaultFont, new SolidBrush(Color.White), 36, 730);
-            drawBuffer.DrawString(Keyboard.IsKeyDown(Key.O) ? "1" : "0", DefaultFont, new SolidBrush(Color.White), 50, 720);
-            drawBuffer.DrawString(Keyboard.IsKeyDown(Key.P) ? "1" : "0", DefaultFont, new SolidBrush(Color.White), 58, 720);
-            drawBuffer.DrawString(Keyboard.IsKeyDown(Key.OemOpenBrackets) ? "1" : "0", DefaultFont, new SolidBrush(Color.White), 66, 720);
-            drawBuffer.DrawString(Keyboard.IsKeyDown(Key.L) ? "1" : "0", DefaultFont, new SolidBrush(Color.White), 50, 730);
-            drawBuffer.DrawString(Keyboard.IsKeyDown(Key.Enter) ? "1" : "0", DefaultFont, new SolidBrush(Color.White), 74, 730);
+            drawBuffer.DrawString(Keyboard.IsKeyDown(Key.W) ? "1" : "0", DefaultFont, debugBrush, 28, 720);
+            drawBuffer.DrawString(Keyboard.IsKeyDown(Key.A) ? "1" : "0", DefaultFont, debugBrush, 20, 730);
+            drawBuffer.DrawString(Keyboard.IsKeyDown(Key.S) ? "1" : "0", DefaultFont, debugBrush, 28, 740);
+            drawBuffer.DrawString(Keyboard.IsKeyDown(Key.D) ? "1" : "0", DefaultFont, debugBrush, 36, 730);
+            drawBuffer.DrawString(Keyboard.IsKeyDown(Key.O) ? "1" : "0", DefaultFont, debugBrush, 50, 720);
+            drawBuffer.DrawString(Keyboard.IsKeyDown(Key.P) ? "1" : "0", DefaultFont, debugBrush, 58, 720);
+            drawBuffer.DrawString(Keyboard.IsKeyDown(Key.OemOpenBrackets) ? "1" : "0", DefaultFont, debugBrush, 66, 720);
+            drawBuffer.DrawString(Keyboard.IsKeyDown(Key.L) ? "1" : "0", DefaultFont, debugBrush, 50, 730);
+            drawBuffer.DrawString(Keyboard.IsKeyDown(Key.Enter) ? "1" : "0", DefaultFont, debugBrush, 74, 730);
 
+            //tech stats
+            drawBuffer.DrawString("Current Timer: " + field1.currentTimer.ToString(), DefaultFont, debugBrush, 20, 750);
+            drawBuffer.DrawString("Grav Level: " + field1.gravLevel, DefaultFont, debugBrush, 200, 750);
+            drawBuffer.DrawString("Current Gravity: " + field1.gravCounter.ToString(), DefaultFont, debugBrush, 20, 760);
+            drawBuffer.DrawString("Current Level: " + field1.level, DefaultFont, debugBrush, 200, 760);
 
-            drawBuffer.DrawString("Current Timer: " + field1.currentTimer.ToString(), DefaultFont, new SolidBrush(Color.White), 20, 750);
-            drawBuffer.DrawString("Grav Level: " + field1.gravLevel, DefaultFont, new SolidBrush(Color.White), 200, 750);
-            drawBuffer.DrawString("Current Gravity: " + field1.gravCounter.ToString(), DefaultFont, new SolidBrush(Color.White), 20, 760);
-            drawBuffer.DrawString("Current Level: " + field1.level, DefaultFont, new SolidBrush(Color.White), 200, 760);
+            //game stats
+            drawBuffer.DrawString("Score: " + field1.score, DefaultFont, debugBrush, 90, 740);
+            drawBuffer.DrawString("Grade:" + ruleset.gradesTGM1[field1.grade], DefaultFont, debugBrush, 90, 730);
+            //time
+
+            //tets
+            drawBuffer.DrawString(field1.lastTet[0] + " " + field1.lastTet[1] + " " + field1.lastTet[2] + " " + field1.lastTet[3] + " " + tet1.id, DefaultFont, debugBrush, 100, 720);
+
 #endif
 
             //draw the buffer, then set to refresh
@@ -294,7 +303,6 @@ namespace TGMsim
                                         field1.gameField[k][j] = field1.gameField[k][j - 1];
                                     }
                                 }
-                                //field1.full[i]
                             }
                             field1.full.Clear();
                             field1.currentTimer = (int)Field.timerType.ARE;
@@ -312,9 +320,6 @@ namespace TGMsim
                         if (field1.timerCount == 0)
                         {
                             //get next tetromino, generate another for "next"
-                            Random piece = new Random();
-
-                            
                             if (ruleset.nextNum > 0)
                             {
                                 tet1 = field1.nextTet[0];
@@ -323,11 +328,11 @@ namespace TGMsim
                                 {
                                     field1.nextTet[i] = field1.nextTet[i + 1];
                                 }
-                                field1.nextTet[field1.nextTet.Count - 1] = new Tetromino(piece.Next(7) + 1);
+                                field1.nextTet[field1.nextTet.Count - 1] = generatePiece();
                             }
                             else
                             {
-                                tet1 = new Tetromino(piece.Next(7) + 1);
+                                tet1 = generatePiece();
                             }
 
                             field1.gravCounter = 0;
@@ -365,6 +370,7 @@ namespace TGMsim
                                 //TODO: cleanup and scoring
                                 return;
                             }
+                            field1.softCounter = 0;
                         }
                         else
                         {
@@ -406,21 +412,29 @@ namespace TGMsim
                                     field1.gameField[tet1.bits[i].x][tet1.bits[i].y] = tet1.id;
                                 }
                                 tet1.id = 0;
-                                //check for full rows
+                                //check for full rows and screenclears
                                 
+                                int tetCount = 0;
+
                                 for(int i = 0; i < 20; i++)
                                 {
                                     int columnCount = 0;
                                     for(int j = 0; j < 10; j++)
                                     {
                                         if (field1.gameField[j][i] != 0)
+                                        {
                                             columnCount++;
+                                            tetCount++;
+                                        }
                                     }
                                     if (columnCount == 10)
+                                    {
                                         field1.full.Add(i);
+                                        tetCount -= 10;
+                                    }
                                 }
 
-                                if (field1.full.Count > 0)  //if full rows, clear the rows, start the line clear timer
+                                if (field1.full.Count > 0)  //if full rows, clear the rows, start the line clear timer, give points
                                 {
                                     for(int i = 0; i < field1.full.Count; i++)
                                     {
@@ -428,25 +442,43 @@ namespace TGMsim
                                             field1.gameField[j][field1.full[i]] = 0;
                                         field1.level++;
                                     }
+                                    //calculate combo!
+                                    int bravo = 1;
+                                    if (tetCount == 0)
+                                        bravo = 4;
+
+                                    field1.combo = field1.combo + (2 * field1.full.Count) - 2;
+                                    //give points
+                                    field1.score += ((int)Math.Ceiling((double)(field1.level + field1.full.Count) / 4) + field1.softCounter) * field1.full.Count * ((field1.full.Count * 2) - 1) * field1.combo * bravo;
+
+                                    //update grade
+                                    if(field1.grade < ruleset.gradePointsTGM1.Count - 1)
+                                    {
+                                        if (field1.score >= ruleset.gradePointsTGM1[field1.grade + 1])
+                                            field1.grade++;
+                                    }
+
+                                    //start timer
                                     field1.currentTimer = (int)Field.timerType.LineClear;
                                     field1.timerCount = ruleset.baseLineClear;
 
                                 }
-                                else //start the ARE, add points, check if new grav level
+                                else //start the ARE, check if new grav level
                                 {
                                     field1.currentTimer = (int)Field.timerType.ARE;
                                     field1.timerCount = ruleset.baseARE;
 
+                                    field1.combo = 1;
                                     
-
-                                    //TODO: add points
-
-                                    if (field1.level >= ruleset.gravLevelsTGM1[field1.gravLevel + 1])
-                                        field1.gravLevel++;
-
-                                    return;
                                 }
 
+                                if (field1.gravLevel < ruleset.gravLevelsTGM1.Count - 1)
+                                {
+                                    if (field1.level >= ruleset.gravLevelsTGM1[field1.gravLevel + 1])
+                                        field1.gravLevel++;
+                                }
+
+                                return;
                                 
                             }
                             else
@@ -480,6 +512,7 @@ namespace TGMsim
                     else if (inputV == -1 && inputDelayV == 0)
                     {
                         blockDrop = 1;
+                        field1.softCounter++;
                         field1.gravCounter = 0;
                         if(field1.currentTimer == (int)Field.timerType.LockDelay)
                             field1.groundTimer = 0;
@@ -1577,6 +1610,26 @@ namespace TGMsim
                 case 7: //O has one. do nothing.
                     break;
             }
+        }
+
+        public Tetromino generatePiece()
+        {
+            Random piece = new Random();
+            int tempID = 0;
+            for (int j = 0; j < 4; j++)
+            {
+                tempID = piece.Next(7) + 1;
+                if (tempID != field1.lastTet[0] && tempID != field1.lastTet[1] && tempID != field1.lastTet[2] && tempID != field1.lastTet[3])
+                    break;
+            }
+            for (int j = 0; j < 3; j++)
+            {
+                field1.lastTet[j] = field1.lastTet[j + 1];
+            }
+
+            Tetromino tempTet = new Tetromino(tempID);
+            field1.lastTet[3] = tempTet.id;
+            return tempTet;
         }
     }
 }
