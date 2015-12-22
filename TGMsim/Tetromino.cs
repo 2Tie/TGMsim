@@ -30,73 +30,73 @@ namespace TGMsim
             {
                 case 1:
                     bits[0].x = 3;
-                    bits[0].y = 0;
+                    bits[0].y = 1;
                     bits[1].x = 4;
-                    bits[1].y = 0;
+                    bits[1].y = 1;
                     bits[2].x = 5;
-                    bits[2].y = 0;
+                    bits[2].y = 1;
                     bits[3].x = 6;
-                    bits[3].y = 0;
+                    bits[3].y = 1;
                     break;
                 case 2:
                     bits[0].x = 3;
-                    bits[0].y = 0;
+                    bits[0].y = 1;
                     bits[1].x = 4;
-                    bits[1].y = 0;
+                    bits[1].y = 1;
                     bits[2].x = 5;
-                    bits[2].y = 0;
+                    bits[2].y = 1;
                     bits[3].x = 4;
-                    bits[3].y = 1;
+                    bits[3].y = 2;
                     break;
                 case 3:
                     bits[0].x = 3;
-                    bits[0].y = 0;
+                    bits[0].y = 1;
                     bits[1].x = 4;
-                    bits[1].y = 0;
+                    bits[1].y = 1;
                     bits[2].x = 5;
-                    bits[2].y = 0;
+                    bits[2].y = 1;
                     bits[3].x = 3;
-                    bits[3].y = 1;
+                    bits[3].y = 2;
                     break;
                 case 4:
                     bits[0].x = 3;
-                    bits[0].y = 0;
+                    bits[0].y = 1;
                     bits[1].x = 4;
-                    bits[1].y = 0;
+                    bits[1].y = 1;
                     bits[2].x = 5;
-                    bits[2].y = 0;
+                    bits[2].y = 1;
+                    bits[3].x = 5;
+                    bits[3].y = 2;
+                    break;
+                case 5:
+                    bits[0].x = 3;
+                    bits[0].y = 2;
+                    bits[1].x = 4;
+                    bits[1].y = 2;
+                    bits[2].x = 4;
+                    bits[2].y = 1;
                     bits[3].x = 5;
                     bits[3].y = 1;
                     break;
-                case 5:
+                case 6:
                     bits[0].x = 3;
                     bits[0].y = 1;
                     bits[1].x = 4;
                     bits[1].y = 1;
                     bits[2].x = 4;
-                    bits[2].y = 0;
+                    bits[2].y = 2;
                     bits[3].x = 5;
-                    bits[3].y = 0;
-                    break;
-                case 6:
-                    bits[0].x = 3;
-                    bits[0].y = 0;
-                    bits[1].x = 4;
-                    bits[1].y = 0;
-                    bits[2].x = 4;
-                    bits[2].y = 1;
-                    bits[3].x = 5;
-                    bits[3].y = 1;
+                    bits[3].y = 2;
                     break;
                 case 7:
                     bits[0].x = 4;
-                    bits[0].y = 0;
+                    bits[0].y = 1;
                     bits[1].x = 5;
-                    bits[1].y = 0;
+                    bits[1].y = 1;
                     bits[2].x = 5;
-                    bits[2].y = 1;
+                    bits[2].y = 2;
                     bits[3].x = 4;
-                    bits[3].y = 1;
+                    bits[3].y = 2;
                     break;
             }
         }

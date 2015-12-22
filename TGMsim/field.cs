@@ -35,14 +35,14 @@ namespace TGMsim
         public int softCounter = 0;
         public Field()
         {
-            x = 250;
+            x = 275;
             y = 100;
             width = 250;
             height = 500;
             for (int i = 0; i < 10; i++)
             {
                 List<int> tempList = new List<int>();
-                for (int j = 0; j < 20; j++)
+                for (int j = 0; j < 21; j++)
                 {
                     tempList.Add(0); // at least nine types; seven tetrominoes, invisible, and garbage
                 }

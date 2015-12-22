@@ -189,12 +189,12 @@ namespace TGMsim
             drawBuffer.FillRectangle(new SolidBrush(Color.Black), this.ClientRectangle);
 
             //draw the field
-            drawBuffer.FillRectangle(new SolidBrush(Color.Gray), field1.x, field1.y, field1.width, field1.height);
+            drawBuffer.FillRectangle(new SolidBrush(Color.Gray), field1.x, field1.y + 25, field1.width, field1.height - 25);
 
             //draw the pieces
             for (int i = 0; i < 10; i++)
             {
-                for (int j = 0; j < 20; j++)
+                for (int j = 0; j < 21; j++)
                 {
                     int block = field1.gameField[i][j];
                     if (block != 0)
@@ -224,9 +224,9 @@ namespace TGMsim
 
             //draw the grid
             for (int i = 1; i < 11; i++)
-                drawBuffer.DrawLine(gridPen, field1.x + 25 * i, field1.y, field1.x + 25 * i, field1.y + field1.height);
-            for (int i = 1; i < 21; i++)
-                drawBuffer.DrawLine(gridPen, field1.x, field1.y + 25 * i, field1.x + field1.width, field1.y + 25 * i);
+                drawBuffer.DrawLine(gridPen, field1.x + 25 * i, field1.y + 25, field1.x + 25 * i, field1.y + field1.height);
+            for (int i = 1; i < 20; i++)
+                drawBuffer.DrawLine(gridPen, field1.x, field1.y + 25 * i + 25, field1.x + field1.width, field1.y + 25 * i + 25);
 
 
 #if DEBUG
@@ -421,7 +421,7 @@ namespace TGMsim
                                     int columnCount = 0;
                                     for(int j = 0; j < 10; j++)
                                     {
-                                        if (field1.gameField[j][i] != 0)
+                                        if (field1.gameField[j][i+1] != 0)
                                         {
                                             columnCount++;
                                             tetCount++;
@@ -429,7 +429,7 @@ namespace TGMsim
                                     }
                                     if (columnCount == 10)
                                     {
-                                        field1.full.Add(i);
+                                        field1.full.Add(i + 1);
                                         tetCount -= 10;
                                     }
                                 }
@@ -541,60 +541,7 @@ namespace TGMsim
                     
 
 
-                    //calc gravity
-                    field1.gravCounter += ruleset.gravTableTGM1[field1.gravLevel]; //add our current gravity strength
-
-                    
-                    
-                    for(int tempGrav = field1.gravCounter; tempGrav > 256; tempGrav = tempGrav - 256)
-                    {
-                        blockDrop++;
-                    }
-                    if (blockDrop > 0 && field1.currentTimer != (int)Field.timerType.LockDelay)
-                    {
-                        int i;
-                        field1.gravCounter = 0;
-                        field1.groundTimer = ruleset.baseLock;
-                        for(i = 0; i < blockDrop; i++)
-                        {
-                            //check collision of each step
-                            
-
-                            if (field1.gameField[tet1.bits[0].x][tet1.bits[0].y + i] != 0)
-                            {
-                                i--;
-                                break;
-                            }
-                            if (field1.gameField[tet1.bits[1].x][tet1.bits[1].y + i] != 0)
-                            {
-                                i--;
-                                break;
-                            }
-                            if (field1.gameField[tet1.bits[2].x][tet1.bits[2].y + i] != 0)
-                            {
-                                i--;
-                                break;
-                            }
-                            if (field1.gameField[tet1.bits[3].x][tet1.bits[3].y + i] != 0)
-                            {
-                                i--;
-                                break;
-                            }
-                            if (tet1.bits[0].y + i >= 19)
-                                break;
-                            if (tet1.bits[1].y + i >= 19)
-                                break;
-                            if (tet1.bits[2].y + i >= 19)
-                                break;
-                            if (tet1.bits[3].y + i >= 19)
-                                break;
-                        }
-
-                        for(int j = 0; j < 4; j++)
-                        {
-                            tet1.bits[j].y += i;
-                        }
-                    }
+                   
 
                     if (inputH == 1 && (inputDelayH < 1 || inputDelayH == ruleset.baseDAS))
                     {
@@ -655,7 +602,62 @@ namespace TGMsim
                     {
                         rotatePiece(2);
                     }
-                    
+
+                    //calc gravity LAST sso I-jumps are doable?
+                    field1.gravCounter += ruleset.gravTableTGM1[field1.gravLevel]; //add our current gravity strength
+
+
+
+                    for (int tempGrav = field1.gravCounter; tempGrav > 256; tempGrav = tempGrav - 256)
+                    {
+                        blockDrop++;
+                    }
+                    if (blockDrop > 0 && field1.currentTimer != (int)Field.timerType.LockDelay)
+                    {
+                        int i;
+                        field1.gravCounter = 0;
+                        field1.groundTimer = ruleset.baseLock;
+                        for (i = 0; i < blockDrop; i++)
+                        {
+                            //check collision of each step
+
+
+                            if (field1.gameField[tet1.bits[0].x][tet1.bits[0].y + i] != 0)
+                            {
+                                i--;
+                                break;
+                            }
+                            if (field1.gameField[tet1.bits[1].x][tet1.bits[1].y + i] != 0)
+                            {
+                                i--;
+                                break;
+                            }
+                            if (field1.gameField[tet1.bits[2].x][tet1.bits[2].y + i] != 0)
+                            {
+                                i--;
+                                break;
+                            }
+                            if (field1.gameField[tet1.bits[3].x][tet1.bits[3].y + i] != 0)
+                            {
+                                i--;
+                                break;
+                            }
+                            if (tet1.bits[0].y + i >= 19)
+                                break;
+                            if (tet1.bits[1].y + i >= 19)
+                                break;
+                            if (tet1.bits[2].y + i >= 19)
+                                break;
+                            if (tet1.bits[3].y + i >= 19)
+                                break;
+                        }
+
+                        for (int j = 0; j < 4; j++)
+                        {
+                            tet1.bits[j].y += i;
+                        }
+                    }
+
                 }
 
 
