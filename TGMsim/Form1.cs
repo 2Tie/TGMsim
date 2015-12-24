@@ -141,7 +141,7 @@ namespace TGMsim
                 inputStart = 1;
 
             //rot1 = o or [
-            if (Keyboard.IsKeyDown(Key.O) || Keyboard.IsKeyDown(Key.OemOpenBrackets))
+            if (Keyboard.IsKeyDown(Key.I) || Keyboard.IsKeyDown(Key.P))
             {
                 if (!inputPressedRot1)
                 {
@@ -155,7 +155,7 @@ namespace TGMsim
             }
 
             //rot2 = p
-            if (Keyboard.IsKeyDown(Key.P))
+            if (Keyboard.IsKeyDown(Key.O))
             {
                 if (!inputPressedRot2)
                 {
@@ -168,8 +168,8 @@ namespace TGMsim
                 inputPressedRot2 = false;
             }
 
-            //hold = space
-            if (Keyboard.IsKeyDown(Key.Space))
+            //hold = K
+            if (Keyboard.IsKeyDown(Key.K))
                 inputHold = 1;
 
             //deal with game logic
@@ -248,10 +248,10 @@ namespace TGMsim
             drawBuffer.DrawString(Keyboard.IsKeyDown(Key.A) ? "1" : "0", DefaultFont, debugBrush, 20, 730);
             drawBuffer.DrawString(Keyboard.IsKeyDown(Key.S) ? "1" : "0", DefaultFont, debugBrush, 28, 740);
             drawBuffer.DrawString(Keyboard.IsKeyDown(Key.D) ? "1" : "0", DefaultFont, debugBrush, 36, 730);
-            drawBuffer.DrawString(Keyboard.IsKeyDown(Key.O) ? "1" : "0", DefaultFont, debugBrush, 50, 720);
-            drawBuffer.DrawString(Keyboard.IsKeyDown(Key.P) ? "1" : "0", DefaultFont, debugBrush, 58, 720);
-            drawBuffer.DrawString(Keyboard.IsKeyDown(Key.OemOpenBrackets) ? "1" : "0", DefaultFont, debugBrush, 66, 720);
-            drawBuffer.DrawString(Keyboard.IsKeyDown(Key.L) ? "1" : "0", DefaultFont, debugBrush, 50, 730);
+            drawBuffer.DrawString(Keyboard.IsKeyDown(Key.I) ? "1" : "0", DefaultFont, debugBrush, 50, 720);
+            drawBuffer.DrawString(Keyboard.IsKeyDown(Key.O) ? "1" : "0", DefaultFont, debugBrush, 58, 720);
+            drawBuffer.DrawString(Keyboard.IsKeyDown(Key.P) ? "1" : "0", DefaultFont, debugBrush, 66, 720);
+            drawBuffer.DrawString(Keyboard.IsKeyDown(Key.K) ? "1" : "0", DefaultFont, debugBrush, 50, 730);
             drawBuffer.DrawString(Keyboard.IsKeyDown(Key.Enter) ? "1" : "0", DefaultFont, debugBrush, 74, 730);
 
             //tech stats
@@ -262,7 +262,17 @@ namespace TGMsim
 
             //game stats
             drawBuffer.DrawString("Score: " + field1.score, DefaultFont, debugBrush, 90, 740);
-            drawBuffer.DrawString("Grade:" + ruleset.gradesTGM1[field1.grade], DefaultFont, debugBrush, 90, 730);
+            if (field1.isGM)
+                drawBuffer.DrawString("Grade: GM", DefaultFont, debugBrush, 90, 730);
+            else
+                drawBuffer.DrawString("Grade: " + ruleset.gradesTGM1[field1.grade], DefaultFont, debugBrush, 90, 730);
+
+            for (int i = 0; i < field1.GMflags.Count; i++ )
+            {
+                drawBuffer.DrawString("-*".Substring(Convert.ToInt32(field1.GMflags[i]), 1), DefaultFont, debugBrush, 200 + i*8, 730);
+            }
+
+            drawBuffer.DrawString("Bravos: " + field1.bravoCounter, DefaultFont, debugBrush, 200, 740);
             
             //time
             drawBuffer.DrawString(string.Format("{0,2:00}:{1,2:00}:{2,2:00}", field1.min, field1.sec, field1.msec10), DefaultFont, debugBrush, 100, 700);
@@ -455,11 +465,48 @@ namespace TGMsim
                                     //calculate combo!
                                     int bravo = 1;
                                     if (tetCount == 0)
+                                    {
+                                        field1.bravoCounter++;
                                         bravo = 4;
+                                    }
 
                                     field1.combo = field1.combo + (2 * field1.full.Count) - 2;
                                     //give points
                                     field1.score += ((int)Math.Ceiling((double)(field1.level + field1.full.Count) / 4) + field1.softCounter) * field1.full.Count * ((field1.full.Count * 2) - 1) * field1.combo * bravo;
+
+                                    //check GM conditions
+                                    if(field1.GMflags.Count == 0 && field1.level >= 300)
+                                    {
+                                        if (field1.score >= 12000 && field1.timer.elapsedTime <= 255000)
+                                            field1.GMflags.Add(true);
+                                        else
+                                            field1.GMflags.Add(false);
+                                    }
+                                    else if(field1.GMflags.Count == 1 && field1.level >= 500)
+                                    {
+                                        if (field1.score >= 40000 && field1.timer.elapsedTime <= 450000)
+                                            field1.GMflags.Add(true);
+                                        else
+                                            field1.GMflags.Add(false);
+                                    }
+                                    else if(field1.GMflags.Count == 2 && field1.level >= 999)
+                                    {
+                                        field1.level = 999;
+                                        if (field1.score >= 126000 && field1.timer.elapsedTime <= 810000)
+                                            field1.GMflags.Add(true);
+                                        else
+                                            field1.GMflags.Add(false);
+
+
+                                        //check for awarding GM
+                                        if (field1.GMflags[0] && field1.GMflags[1] && field1.GMflags[2])
+                                        {
+                                            //credits roll in future, for now just gibe GM?
+                                            field1.isGM = true;
+
+                                            gameRunning = false;
+                                        }
+                                    }
 
                                     //update grade
                                     if(field1.grade < ruleset.gradePointsTGM1.Count - 1)

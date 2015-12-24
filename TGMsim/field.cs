@@ -16,6 +16,10 @@ namespace TGMsim
 
         public List<int> full = new List<int>();
 
+        public List<bool> GMflags = new List<bool>();
+
+        public bool isGM = false;
+
         public Tetromino heldPiece;
 
         public Tetromino ghostPiece;
@@ -36,6 +40,8 @@ namespace TGMsim
         public int grade = 0;
         public int score = 0;
         public int combo = 1;
+
+        public int bravoCounter = 0;
 
         public int softCounter = 0;
         public Field()
