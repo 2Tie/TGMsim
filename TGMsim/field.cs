@@ -18,6 +18,8 @@ namespace TGMsim
 
         public Tetromino heldPiece;
 
+        public Tetromino ghostPiece;
+
         public bool swappedHeld;
 
         public int x, y, width, height;

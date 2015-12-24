@@ -189,7 +189,7 @@ namespace TGMsim
             drawBuffer.FillRectangle(new SolidBrush(Color.Black), this.ClientRectangle);
 
             //draw the field
-            drawBuffer.FillRectangle(new SolidBrush(Color.Gray), field1.x, field1.y + 25, field1.width, field1.height - 25);
+            drawBuffer.FillRectangle(new SolidBrush(Color.Gray), field1.x, field1.y + 25, field1.width, field1.height);
 
             //draw the pieces
             for (int i = 0; i < 10; i++)
@@ -222,11 +222,20 @@ namespace TGMsim
                 }
             }
 
+            //draw the ghost piece
+            if (field1.level < 100 && field1.ghostPiece != null)
+            {
+                for(int i = 0; i < 4; i++)
+                {
+                    drawBuffer.FillRectangle(new SolidBrush(tetColors[field1.ghostPiece.id]), field1.x + 25 * field1.ghostPiece.bits[i].x, field1.y + 25 * field1.ghostPiece.bits[i].y, 25, 25);
+                }
+           }
+
             //draw the grid
             for (int i = 1; i < 11; i++)
-                drawBuffer.DrawLine(gridPen, field1.x + 25 * i, field1.y + 25, field1.x + 25 * i, field1.y + field1.height);
-            for (int i = 1; i < 20; i++)
-                drawBuffer.DrawLine(gridPen, field1.x, field1.y + 25 * i + 25, field1.x + field1.width, field1.y + 25 * i + 25);
+                drawBuffer.DrawLine(gridPen, field1.x + 25 * i, field1.y + 25, field1.x + 25 * i, field1.y + field1.height + 25);
+            for (int i = 1; i < 22; i++)
+                drawBuffer.DrawLine(gridPen, field1.x, field1.y + 25 * i, field1.x + field1.width, field1.y + 25 * i);
 
 
 #if DEBUG
@@ -339,30 +348,7 @@ namespace TGMsim
 
                             bool blocked = false;
 
-                            switch(tet1.id)
-                            {
-                                case 1: //I
-                                    blocked = (field1.gameField[3][0] + field1.gameField[4][0] + field1.gameField[5][0] + field1.gameField[6][0] != 0);
-                                    break;
-                                case 2: //T
-                                    blocked = (field1.gameField[3][0] + field1.gameField[4][0] + field1.gameField[5][0] + field1.gameField[4][1] != 0);
-                                    break;
-                                case 3: //L
-                                    blocked = (field1.gameField[3][0] + field1.gameField[4][0] + field1.gameField[5][0] + field1.gameField[3][1] != 0);
-                                    break;
-                                case 4: //J
-                                    blocked = (field1.gameField[3][0] + field1.gameField[4][0] + field1.gameField[5][0] + field1.gameField[5][1] != 0);
-                                    break;
-                                case 5: //S
-                                    blocked = (field1.gameField[3][1] + field1.gameField[4][1] + field1.gameField[4][1] + field1.gameField[5][0] != 0);
-                                    break;
-                                case 6: //Z
-                                    blocked = (field1.gameField[3][0] + field1.gameField[4][0] + field1.gameField[4][1] + field1.gameField[5][1] != 0);
-                                    break;
-                                case 7: //O
-                                    blocked = (field1.gameField[4][0] + field1.gameField[5][0] + field1.gameField[5][1] + field1.gameField[4][1] != 0);
-                                    break;
-                            }
+                            blocked = !emptyUnderTet(tet1);
 
                             if (blocked)
                             {
@@ -385,7 +371,7 @@ namespace TGMsim
 
                     for (int i = 0; i < 4; i++ )
                     {
-                        if (tet1.bits[i].y + 1 >= 20)
+                        if (tet1.bits[i].y + 1 >= 21)
                         {
                             floored = true;
                             break;
@@ -538,8 +524,15 @@ namespace TGMsim
                         //field1.heldPiece = new Tetromino(tet1.id);
                     }
 
-                    
 
+                    if (inputRot1 == 1)
+                    {
+                        rotatePiece(1);
+                    }
+                    if (inputRot2 == 1)
+                    {
+                        rotatePiece(2);
+                    }
 
                    
 
@@ -589,18 +582,9 @@ namespace TGMsim
                         {
                             for (int i = 0; i < 4; i++)
                             {
-                                tet1.bits[i].x--;
+                                tet1.bits[i].x-=1;
                             }
                         }
-                    }
-
-                    if (inputRot1 == 1)
-                    {
-                        rotatePiece(1);
-                    }
-                    if (inputRot2 == 1)
-                    {
-                        rotatePiece(2);
                     }
 
                     //calc gravity LAST sso I-jumps are doable?
@@ -608,7 +592,7 @@ namespace TGMsim
 
 
 
-                    for (int tempGrav = field1.gravCounter; tempGrav > 256; tempGrav = tempGrav - 256)
+                    for (int tempGrav = field1.gravCounter; tempGrav >= 256; tempGrav = tempGrav - 256)
                     {
                         blockDrop++;
                     }
@@ -642,13 +626,13 @@ namespace TGMsim
                                 i--;
                                 break;
                             }
-                            if (tet1.bits[0].y + i >= 19)
+                            if (tet1.bits[0].y + i >= 20)
                                 break;
-                            if (tet1.bits[1].y + i >= 19)
+                            if (tet1.bits[1].y + i >= 20)
                                 break;
-                            if (tet1.bits[2].y + i >= 19)
+                            if (tet1.bits[2].y + i >= 20)
                                 break;
-                            if (tet1.bits[3].y + i >= 19)
+                            if (tet1.bits[3].y + i >= 20)
                                 break;
                         }
 
@@ -656,8 +640,43 @@ namespace TGMsim
                         {
                             tet1.bits[j].y += i;
                         }
+
+
+                        //handle ghost piece logic
+                        field1.ghostPiece = tet1;
+
+                        /*int g;
+                        for(g = 0; g < 20; g++)
+                        {
+                            bool breakout = false;
+                            for(int g2 = 0; g2 < 4; g2++)
+                            {
+                                if (field1.ghostPiece.bits[g2].y + g >= 20)
+                                {
+                                    breakout = true;
+                                    break;
+                                }
+                                if (field1.gameField[field1.ghostPiece.bits[g2].x][field1.ghostPiece.bits[g2].y + g] != 0)
+                                {
+                                    g--;
+                                    breakout = true;
+                                    break;
+                                }
+                            }
+                            if (breakout)
+                                break;
+                        }
+                        for (int j = 0; j < 4; j++)
+                        {
+                            field1.ghostPiece.bits[j].y += g;
+                        }*/
+
                     }
 
+                    if (!emptyUnderTet(tet1))
+                    {
+                        throw new NotImplementedException();
+                    }
                 }
 
 
@@ -1632,6 +1651,21 @@ namespace TGMsim
             Tetromino tempTet = new Tetromino(tempID);
             field1.lastTet[3] = tempTet.id;
             return tempTet;
+        }
+
+        public bool emptyUnderTet(Tetromino tet)
+        {
+            bool status = true;
+            for (int i = 0; i < 4; i++ )
+            {
+                if (field1.gameField[tet.bits[i].x][tet.bits[i].y] != 0)
+                {
+                    status = false;
+                    break;
+                }
+            }
+
+            return status;
         }
     }
 }
