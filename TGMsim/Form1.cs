@@ -69,6 +69,7 @@ namespace TGMsim
             timer.start();
             //field1.randomize();
             tet1 = generatePiece();
+            field1.ghostPiece = tet1;
 
             if (field1.nextTet.Count == 0 && ruleset.nextNum > 0) //generate nextTet
             {
@@ -262,10 +263,24 @@ namespace TGMsim
             //game stats
             drawBuffer.DrawString("Score: " + field1.score, DefaultFont, debugBrush, 90, 740);
             drawBuffer.DrawString("Grade:" + ruleset.gradesTGM1[field1.grade], DefaultFont, debugBrush, 90, 730);
+            
             //time
+            drawBuffer.DrawString(string.Format("{0,2:00}:{1,2:00}:{2,2:00}", field1.min, field1.sec, field1.msec10), DefaultFont, debugBrush, 100, 700);
 
             //tets
             drawBuffer.DrawString(field1.lastTet[0] + " " + field1.lastTet[1] + " " + field1.lastTet[2] + " " + field1.lastTet[3] + " " + tet1.id, DefaultFont, debugBrush, 100, 720);
+            for(int i = 0; i < 4; i++)
+            {
+                drawBuffer.DrawString(tet1.bits[i].x + " " + tet1.bits[i].y, DefaultFont, debugBrush, 160 + (32*i), 720);
+            }
+
+            if (field1.ghostPiece != null)
+            {
+                for (int i = 0; i < 4; i++)
+                {
+                    drawBuffer.DrawString(field1.ghostPiece.bits[i].x + " " + field1.ghostPiece.bits[i].y, DefaultFont, debugBrush, 160 + (32 * i), 710);
+                }
+            }
 
 #endif
 
@@ -282,6 +297,15 @@ namespace TGMsim
 
             if (gameRunning == true)
             {
+                //timing logic
+                long temptimeVAR = field1.timer.elapsedTime;
+                field1.min = (int)Math.Floor((double)temptimeVAR / 60000);
+                temptimeVAR -= field1.min * 60000;
+                field1.sec = (int)Math.Floor((double)temptimeVAR / 1000);
+                temptimeVAR -= field1.sec * 1000;
+                field1.msec = (int)temptimeVAR;
+                field1.msec10 = (int)(field1.msec/10);
+
                 //check inputs and handle logic pertaining to them
 
                 if (inputH == 1 || inputH == -1)
@@ -642,41 +666,55 @@ namespace TGMsim
                         }
 
 
-                        //handle ghost piece logic
-                        field1.ghostPiece = tet1;
-
-                        /*int g;
-                        for(g = 0; g < 20; g++)
-                        {
-                            bool breakout = false;
-                            for(int g2 = 0; g2 < 4; g2++)
-                            {
-                                if (field1.ghostPiece.bits[g2].y + g >= 20)
-                                {
-                                    breakout = true;
-                                    break;
-                                }
-                                if (field1.gameField[field1.ghostPiece.bits[g2].x][field1.ghostPiece.bits[g2].y + g] != 0)
-                                {
-                                    g--;
-                                    breakout = true;
-                                    break;
-                                }
-                            }
-                            if (breakout)
-                                break;
-                        }
-                        for (int j = 0; j < 4; j++)
-                        {
-                            field1.ghostPiece.bits[j].y += g;
-                        }*/
+                        
 
                     }
 
-                    if (!emptyUnderTet(tet1))
+                    //handle ghost piece logic
+                    /*field1.ghostPiece.bits[0] = tet1.bits[0];
+                    field1.ghostPiece.bits[0].y = 20;
+                    field1.ghostPiece.bits[1] = tet1.bits[1];
+                    field1.ghostPiece.bits[1].y = 20;
+                    field1.ghostPiece.bits[2] = tet1.bits[2];
+                    field1.ghostPiece.bits[2].y = 20;
+                    field1.ghostPiece.bits[3] = tet1.bits[3];
+                    field1.ghostPiece.bits[3].y = 20;
+
+                    int g = 0;
+                    for (g = 0; g < 20; g++)
                     {
-                        throw new NotImplementedException();
+                        bool breakout = false;
+                        for (int g2 = 0; g2 < 4; g2++)
+                        {
+                            if (field1.ghostPiece.bits[g2].y + g == 20)
+                            {
+                                breakout = true;
+                                break;
+                            }
+                            if (field1.gameField[field1.ghostPiece.bits[g2].x][field1.ghostPiece.bits[g2].y + g] != 0)
+                            {
+                                g--;
+                                breakout = true;
+                                break;
+                            }
+                        }
+                        if (breakout)
+                            break;
                     }
+                    for (int j = 0; j < 4; j++)
+                    {
+                        field1.ghostPiece.bits[j].y += g;
+                    }*/
+
+                    //if (!emptyUnderTet(field1.ghostPiece))
+                    //{
+                    //    throw new NotImplementedException();
+                    //}
+
+                    //if (!emptyUnderTet(tet1))
+                    //{
+                    //    throw new NotImplementedException();
+                    //}
                 }
 
 

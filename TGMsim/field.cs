@@ -20,6 +20,9 @@ namespace TGMsim
 
         public Tetromino ghostPiece;
 
+        public GameTimer timer = new GameTimer();
+        public int min, sec, msec, msec10;
+
         public bool swappedHeld;
 
         public int x, y, width, height;
@@ -41,6 +44,7 @@ namespace TGMsim
             y = 100;
             width = 250;
             height = 500;
+            timer.start();
             for (int i = 0; i < 10; i++)
             {
                 List<int> tempList = new List<int>();
