@@ -9,7 +9,7 @@ namespace TGMsim
         public int gameRules = 1;
         public int nextNum = 1;
         public bool hold = false;
-        public int hardDrop = 0; //no, sonic, hard
+        public int hardDrop = 0; //no, sonic, firm
 
         public int rotation = 0; //TGM, TGM3, SRS
 

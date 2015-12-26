@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,6 +10,9 @@ namespace TGMsim
     class Field
     {
 
+        bool gameRunning;
+
+        Tetromino activeTet;
         public List<Tetromino> nextTet = new List<Tetromino>();
         public List<int> lastTet = new List<int>() { 0, 0, 0, 0};
 
@@ -44,12 +48,43 @@ namespace TGMsim
         public int bravoCounter = 0;
 
         public int softCounter = 0;
+
+        Rules ruleset = new Rules();
+
+        List<Color> tetColors = new List<Color>();
+
+        Pen gridPen = new Pen(new SolidBrush(Color.White));
+
+        int inputDelayH = 0, inputDelayV = 0;
+
         public Field()
         {
             x = 275;
             y = 100;
             width = 250;
             height = 500;
+            tetColors.Add(Color.Transparent);
+            tetColors.Add(Color.Red);
+            tetColors.Add(Color.Cyan);
+            tetColors.Add(Color.Orange);
+            tetColors.Add(Color.Blue);
+            tetColors.Add(Color.Purple);
+            tetColors.Add(Color.Green);
+            tetColors.Add(Color.Yellow);
+
+            activeTet = generatePiece();
+            ghostPiece = activeTet;
+
+            if (nextTet.Count == 0 && ruleset.nextNum > 0) //generate nextTet
+            {
+                for (int i = 0; i < ruleset.nextNum; i++)
+                {
+                    nextTet.Add(generatePiece());
+                }
+            }
+
+            gameRunning = true;
+
             timer.start();
             for (int i = 0; i < 10; i++)
             {
@@ -70,6 +105,1550 @@ namespace TGMsim
                 gameField[rng.Next(10)][rng.Next(20)] = rng.Next(8);
                 
             }
+        }
+
+        public void draw(Graphics drawBuffer)
+        {
+            //draw the field
+            drawBuffer.FillRectangle(new SolidBrush(Color.Gray), x, y + 25, width, height);
+
+            //draw the pieces
+            for (int i = 0; i < 10; i++)
+            {
+                for (int j = 0; j < 21; j++)
+                {
+                    int block = gameField[i][j];
+                    if (block != 0)
+                        drawBuffer.FillRectangle(new SolidBrush(tetColors[block]), x + 25 * i, y + j * 25, 25, 25);
+                }
+            }
+
+            //draw the current piece
+            if (activeTet.id != 0)
+            {
+                for (int i = 0; i < 4; i++)
+                {
+                    drawBuffer.FillRectangle(new SolidBrush(tetColors[activeTet.id]), x + 25 * activeTet.bits[i].x, y + 25 * activeTet.bits[i].y, 25, 25);
+                }
+            }
+
+            if (ruleset.nextNum > 0)
+            {
+                for (int i = 0; i < ruleset.nextNum; i++)
+                {
+                    for (int j = 0; j < 4; j++)
+                    {
+                        drawBuffer.FillRectangle(new SolidBrush(tetColors[nextTet[i].id]), x + 25 * nextTet[i].bits[j].x, y + 25 * nextTet[i].bits[j].y - 75, 25, 25);
+                    }
+                }
+            }
+
+            //draw the ghost piece
+            if (level < 100 && ghostPiece != null)
+            {
+                for (int i = 0; i < 4; i++)
+                {
+                    drawBuffer.FillRectangle(new SolidBrush(tetColors[ghostPiece.id]), x + 25 * ghostPiece.bits[i].x, y + 25 * ghostPiece.bits[i].y, 25, 25);
+                }
+            }
+
+            //draw the grid
+            for (int i = 1; i < 11; i++)
+                drawBuffer.DrawLine(gridPen, x + 25 * i, y + 25, x + 25 * i, y + height + 25);
+            for (int i = 1; i < 22; i++)
+                drawBuffer.DrawLine(gridPen, x, y + 25 * i, x + width, y + 25 * i);
+
+#if DEBUG
+            SolidBrush debugBrush = new SolidBrush(Color.White);
+
+            //tech stats
+            drawBuffer.DrawString("Current Timer: " + currentTimer.ToString(), SystemFonts.DefaultFont, debugBrush, 20, 750);
+            drawBuffer.DrawString("Grav Level: " + gravLevel, SystemFonts.DefaultFont, debugBrush, 200, 750);
+            drawBuffer.DrawString("Current Gravity: " + gravCounter.ToString(), SystemFonts.DefaultFont, debugBrush, 20, 760);
+            drawBuffer.DrawString("Current Level: " + level, SystemFonts.DefaultFont, debugBrush, 200, 760);
+
+            //game stats
+            drawBuffer.DrawString("Score: " + score, SystemFonts.DefaultFont, debugBrush, 90, 740);
+            if (isGM)
+                drawBuffer.DrawString("Grade: GM", SystemFonts.DefaultFont, debugBrush, 90, 730);
+            else
+                drawBuffer.DrawString("Grade: " + ruleset.gradesTGM1[grade], SystemFonts.DefaultFont, debugBrush, 90, 730);
+
+            for (int i = 0; i < GMflags.Count; i++)
+            {
+                drawBuffer.DrawString("-*".Substring(Convert.ToInt32(GMflags[i]), 1), SystemFonts.DefaultFont, debugBrush, 200 + i * 8, 730);
+            }
+
+            drawBuffer.DrawString("Bravos: " + bravoCounter, SystemFonts.DefaultFont, debugBrush, 200, 740);
+
+            //time
+            drawBuffer.DrawString(string.Format("{0,2:00}:{1,2:00}:{2,2:00}", min, sec, msec10), SystemFonts.DefaultFont, debugBrush, 100, 700);
+
+            //tets
+            drawBuffer.DrawString(lastTet[0] + " " + lastTet[1] + " " + lastTet[2] + " " + lastTet[3] + " " + activeTet.id, SystemFonts.DefaultFont, debugBrush, 100, 720);
+            for (int i = 0; i < 4; i++)
+            {
+                drawBuffer.DrawString(activeTet.bits[i].x + " " + activeTet.bits[i].y, SystemFonts.DefaultFont, debugBrush, 160 + (32 * i), 720);
+            }
+
+            if (ghostPiece != null)
+            {
+                for (int i = 0; i < 4; i++)
+                {
+                    drawBuffer.DrawString(ghostPiece.bits[i].x + " " + ghostPiece.bits[i].y, SystemFonts.DefaultFont, debugBrush, 160 + (32 * i), 710);
+                }
+            }
+#endif
+        }
+
+        public void logic(Controller pad)
+        {
+            if (gameRunning == true)
+            {
+                //timing logic
+                long temptimeVAR = timer.elapsedTime;
+                min = (int)Math.Floor((double)temptimeVAR / 60000);
+                temptimeVAR -= min * 60000;
+                sec = (int)Math.Floor((double)temptimeVAR / 1000);
+                temptimeVAR -= sec * 1000;
+                msec = (int)temptimeVAR;
+                msec10 = (int)(msec/10);
+
+                //check inputs and handle logic pertaining to them
+
+                if (pad.inputH == 1 || pad.inputH == -1)
+                {
+                    if (inputDelayH > 0)
+                    {
+                        inputDelayH--;
+                    }
+                    if (inputDelayH == -1)
+                        inputDelayH = ruleset.baseDAS;
+                }
+                else
+                    inputDelayH = -1;
+                //check ID of current tetromino.
+                if (activeTet.id == 0)
+                {
+                    if (currentTimer == (int)Field.timerType.LineClear)  //if timer is line clear and done, settle pieces and start ARE
+                    {
+                        if (timerCount == 0)
+                        {
+                            //settle pieces and start ARE
+                            for (int i = 0; i < full.Count; i++ )
+                            {
+                                for(int j = full[i]; j > 0; j--)
+                                {
+                                    for(int k = 0; k < 10; k++)
+                                    {
+                                        gameField[k][j] = gameField[k][j - 1];
+                                    }
+                                }
+                            }
+                            full.Clear();
+                            currentTimer = (int)Field.timerType.ARE;
+                            timerCount = ruleset.baseARE;
+                        }
+                        else
+                        {
+                            timerCount--;
+                            return;
+                        }
+                    }
+                    //elseif timer is ARE and done, get next tetromino
+                    else if (currentTimer == (int)Field.timerType.ARE)
+                    {
+                        if (timerCount == 0)
+                        {
+                            //get next tetromino, generate another for "next"
+                            if (ruleset.nextNum > 0)
+                            {
+                                activeTet = nextTet[0];
+                                groundTimer = ruleset.baseLock;
+                                for (int i = 0; i < nextTet.Count - 1; i++)
+                                {
+                                    nextTet[i] = nextTet[i + 1];
+                                }
+                                nextTet[nextTet.Count - 1] = generatePiece();
+                            }
+                            else
+                            {
+                                activeTet = generatePiece();
+                            }
+
+                            gravCounter = 0;
+
+                            bool blocked = false;
+
+                            blocked = !emptyUnderTet(activeTet);
+
+                            if (blocked)
+                            {
+                                gameRunning = false;
+                                //TODO: cleanup and scoring
+                                return;
+                            }
+                            softCounter = 0;
+                        }
+                        else
+                        {
+                            timerCount--;
+                            return;
+                        }
+                    }
+                }
+                else  //else, check collision below
+                {
+                    bool floored = false;
+
+                    for (int i = 0; i < 4; i++ )
+                    {
+                        if (activeTet.bits[i].y + 1 >= 21)
+                        {
+                            floored = true;
+                            break;
+                        } 
+                        else if (gameField[activeTet.bits[i].x][activeTet.bits[i].y + 1] != 0)
+                        {
+                            floored = true;
+                            break;
+                        }
+                    }
+
+                    if (floored == true)
+                    {
+                        //check lock delay if grounded
+                        if (currentTimer == (int)Field.timerType.LockDelay)
+                        {
+                            //if lock delay up, place piece.
+                            if (groundTimer == 0)
+                            {
+                                if(level % 100 != 99 && level != 998)
+                                    level++;
+                                for (int i = 0; i < 4; i++)
+                                {
+                                    gameField[activeTet.bits[i].x][activeTet.bits[i].y] = activeTet.id;
+                                }
+                                activeTet.id = 0;
+                                //check for full rows and screenclears
+                                
+                                int tetCount = 0;
+
+                                for(int i = 0; i < 20; i++)
+                                {
+                                    int columnCount = 0;
+                                    for(int j = 0; j < 10; j++)
+                                    {
+                                        if (gameField[j][i+1] != 0)
+                                        {
+                                            columnCount++;
+                                            tetCount++;
+                                        }
+                                    }
+                                    if (columnCount == 10)
+                                    {
+                                        full.Add(i + 1);
+                                        tetCount -= 10;
+                                    }
+                                }
+
+                                if (full.Count > 0)  //if full rows, clear the rows, start the line clear timer, give points
+                                {
+                                    for(int i = 0; i < full.Count; i++)
+                                    {
+                                        for (int j = 0; j < 10; j++)
+                                            gameField[j][full[i]] = 0;
+                                        level++;
+                                    }
+                                    //calculate combo!
+                                    int bravo = 1;
+                                    if (tetCount == 0)
+                                    {
+                                        bravoCounter++;
+                                        bravo = 4;
+                                    }
+
+                                    combo = combo + (2 * full.Count) - 2;
+                                    //give points
+                                    score += ((int)Math.Ceiling((double)(level + full.Count) / 4) + softCounter) * full.Count * ((full.Count * 2) - 1) * combo * bravo;
+
+                                    //check GM conditions
+                                    if(GMflags.Count == 0 && level >= 300)
+                                    {
+                                        if (score >= 12000 && timer.elapsedTime <= 255000)
+                                            GMflags.Add(true);
+                                        else
+                                            GMflags.Add(false);
+                                    }
+                                    else if(GMflags.Count == 1 && level >= 500)
+                                    {
+                                        if (score >= 40000 && timer.elapsedTime <= 450000)
+                                            GMflags.Add(true);
+                                        else
+                                            GMflags.Add(false);
+                                    }
+                                    else if(GMflags.Count == 2 && level >= 999)
+                                    {
+                                        level = 999;
+                                        if (score >= 126000 && timer.elapsedTime <= 810000)
+                                            GMflags.Add(true);
+                                        else
+                                            GMflags.Add(false);
+
+
+                                        //check for awarding GM
+                                        if (GMflags[0] && GMflags[1] && GMflags[2])
+                                        {
+                                            //credits roll in future, for now just gibe GM?
+                                            isGM = true;
+
+                                            gameRunning = false;
+                                        }
+                                    }
+
+                                    //update grade
+                                    if(grade < ruleset.gradePointsTGM1.Count - 1)
+                                    {
+                                        if (score >= ruleset.gradePointsTGM1[grade + 1])
+                                            grade++;
+                                    }
+
+                                    //start timer
+                                    currentTimer = (int)Field.timerType.LineClear;
+                                    timerCount = ruleset.baseLineClear;
+
+                                }
+                                else //start the ARE, check if new grav level
+                                {
+                                    currentTimer = (int)Field.timerType.ARE;
+                                    timerCount = ruleset.baseARE;
+
+                                    combo = 1;
+                                    
+                                }
+
+                                if (gravLevel < ruleset.gravLevelsTGM1.Count - 1)
+                                {
+                                    if (level >= ruleset.gravLevelsTGM1[gravLevel + 1])
+                                        gravLevel++;
+                                }
+
+                                return;
+                                
+                            }
+                            else
+                            {
+                                gravCounter = 0;
+                                groundTimer--;
+                            }
+                        }
+                        else
+                        {
+                            currentTimer = (int)Field.timerType.LockDelay;
+                            //timerCount = ruleset.baseLock;
+                        }
+                    }
+                    else
+                        currentTimer = (int)Field.timerType.ARE;
+
+
+
+                    int blockDrop = 0;// make it here so we can drop faster
+
+
+                    //check saved inputs and act on them accordingly
+                    
+
+                    if (pad.inputV == 1 && ruleset.hardDrop == 1)
+                    {
+                        blockDrop = 19;
+                        gravCounter = 0;
+                    }
+                    else if (pad.inputV == -1 && inputDelayV == 0)
+                    {
+                        blockDrop = 1;
+                        softCounter++;
+                        gravCounter = 0;
+                        if(currentTimer == (int)Field.timerType.LockDelay)
+                            groundTimer = 0;
+                    }
+
+                    if (pad.inputHold == 1 && ruleset.hold == true && swappedHeld == false)
+                    {
+                        Tetromino tempTet;
+                        if (heldPiece.id != null)
+                        {
+                            tempTet = new Tetromino(heldPiece.id);
+                            heldPiece = new Tetromino(activeTet.id);
+                            activeTet = tempTet;
+                            groundTimer = ruleset.baseLock;
+                        }
+                        else
+                        {
+                            heldPiece = new Tetromino(activeTet.id);
+                            activeTet.id = 0;
+                            currentTimer = (int)Field.timerType.ARE;
+                            timerCount = ruleset.baseARE;
+                        }
+                        //heldPiece = new Tetromino(activeTet.id);
+                    }
+
+
+                    if (pad.inputRot1 == 1)
+                    {
+                        rotatePiece(activeTet, 1, pad);
+                    }
+                    if (pad.inputRot2 == 1)
+                    {
+                        rotatePiece(activeTet, 2, pad);
+                    }
+
+                   
+
+                    if (pad.inputH == 1 && (inputDelayH < 1 || inputDelayH == ruleset.baseDAS))
+                    {
+                        bool safe = true;
+                        //check to the right of each bit
+                        for (int i = 0; i < 4; i++)
+                        {
+                            if (activeTet.bits[i].x + 1 == 10)
+                            {
+                                safe = false;
+                                break;
+                            }
+                            if (gameField[activeTet.bits[i].x + 1][activeTet.bits[i].y] != 0)
+                            {
+                                safe = false;
+                                break;
+                            }
+                        }
+                        if (safe) //if it's fine, move them all right one
+                        {
+                            for (int i = 0; i < 4; i++)
+                            {
+                                activeTet.bits[i].x++;
+                            }
+                        }
+                    }
+                    else if (pad.inputH == -1 && (inputDelayH < 1 || inputDelayH == ruleset.baseDAS))
+                    {
+                        bool safe = true;
+                        //check to the right of each bit
+                        for (int i = 0; i < 4; i++)
+                        {
+                            if (activeTet.bits[i].x - 1 == -1)
+                            {
+                                safe = false;
+                                break;
+                            }
+                            if (gameField[activeTet.bits[i].x - 1][activeTet.bits[i].y] != 0)
+                            {
+                                safe = false;
+                                break;
+                            }
+                        }
+                        if (safe) //if it's fine, move them all right one
+                        {
+                            for (int i = 0; i < 4; i++)
+                            {
+                                activeTet.bits[i].x-=1;
+                            }
+                        }
+                    }
+
+                    //calc gravity LAST sso I-jumps are doable?
+                    gravCounter += ruleset.gravTableTGM1[gravLevel]; //add our current gravity strength
+
+
+
+                    for (int tempGrav = gravCounter; tempGrav >= 256; tempGrav = tempGrav - 256)
+                    {
+                        blockDrop++;
+                    }
+                    if (blockDrop > 0 && currentTimer != (int)Field.timerType.LockDelay)
+                    {
+                        int i;
+                        gravCounter = 0;
+                        groundTimer = ruleset.baseLock;
+                        for (i = 0; i < blockDrop; i++)
+                        {
+                            //check collision of each step
+
+
+                            if (gameField[activeTet.bits[0].x][activeTet.bits[0].y + i] != 0)
+                            {
+                                i--;
+                                break;
+                            }
+                            if (gameField[activeTet.bits[1].x][activeTet.bits[1].y + i] != 0)
+                            {
+                                i--;
+                                break;
+                            }
+                            if (gameField[activeTet.bits[2].x][activeTet.bits[2].y + i] != 0)
+                            {
+                                i--;
+                                break;
+                            }
+                            if (gameField[activeTet.bits[3].x][activeTet.bits[3].y + i] != 0)
+                            {
+                                i--;
+                                break;
+                            }
+                            if (activeTet.bits[0].y + i >= 20)
+                                break;
+                            if (activeTet.bits[1].y + i >= 20)
+                                break;
+                            if (activeTet.bits[2].y + i >= 20)
+                                break;
+                            if (activeTet.bits[3].y + i >= 20)
+                                break;
+                        }
+
+                        for (int j = 0; j < 4; j++)
+                        {
+                            activeTet.bits[j].y += i;
+                        }
+
+
+                        
+
+                    }
+
+                    //handle ghost piece logic
+                    /*ghostPiece.bits[0] = activeTet.bits[0];
+                    ghostPiece.bits[0].y = 20;
+                    ghostPiece.bits[1] = activeTet.bits[1];
+                    ghostPiece.bits[1].y = 20;
+                    ghostPiece.bits[2] = activeTet.bits[2];
+                    ghostPiece.bits[2].y = 20;
+                    ghostPiece.bits[3] = activeTet.bits[3];
+                    ghostPiece.bits[3].y = 20;
+
+                    int g = 0;
+                    for (g = 0; g < 20; g++)
+                    {
+                        bool breakout = false;
+                        for (int g2 = 0; g2 < 4; g2++)
+                        {
+                            if (ghostPiece.bits[g2].y + g == 20)
+                            {
+                                breakout = true;
+                                break;
+                            }
+                            if (gameField[ghostPiece.bits[g2].x][ghostPiece.bits[g2].y + g] != 0)
+                            {
+                                g--;
+                                breakout = true;
+                                break;
+                            }
+                        }
+                        if (breakout)
+                            break;
+                    }
+                    for (int j = 0; j < 4; j++)
+                    {
+                        ghostPiece.bits[j].y += g;
+                    }*/
+
+                    //if (!emptyUnderTet(ghostPiece))
+                    //{
+                    //    throw new NotImplementedException();
+                    //}
+
+                    //if (!emptyUnderTet(activeTet))
+                    //{
+                    //    throw new NotImplementedException();
+                    //}
+                }
+
+
+            }
+        }
+
+        private void rotatePiece(Tetromino tet, int p, Controller pad)
+        {
+            int xOffset = 0; //for kicks
+            int yOffset = 0;
+
+            switch (tet.id)
+            {
+                case 1: //I has two rotation states; KICKS ONLY IN NEW RULES
+                    //check current rotation
+                    //check positions based on p and rotation, if abovescreen or offscreen to the sides then add an offset
+                    switch (tet.rotation)
+                    {
+                        case 0:
+                            if (tet.bits[2].y - 1 >= 0 && tet.bits[2].y + 2 <= 19)
+                            {
+                                if (gameField[tet.bits[2].x][tet.bits[2].y - 1] == 0 && gameField[tet.bits[2].x][tet.bits[2].y + 1] == 0 && gameField[tet.bits[2].x][tet.bits[2].y + 2] == 0)
+                                {
+                                    tet.bits[0].x += 2;
+                                    tet.bits[0].y += 2;
+                                    tet.bits[1].x += 1;
+                                    tet.bits[1].y += 1;
+                                    tet.bits[3].x -= 1;
+                                    tet.bits[3].y -= 1;
+
+                                    tet.rotation = 1;
+                                }
+                            }
+                            break;
+                        case 1:
+                            if (tet.bits[2].x - 2 >= 0 && tet.bits[2].x + 1 <= 9)
+                            {
+                                if (gameField[tet.bits[2].x - 2][tet.bits[2].y] == 0 && gameField[tet.bits[2].x - 1][tet.bits[2].y] == 0 && gameField[tet.bits[2].x + 1][tet.bits[2].y] == 0)
+                                {
+                                    tet.bits[0].x -= 2;
+                                    tet.bits[0].y -= 2;
+                                    tet.bits[1].x -= 1;
+                                    tet.bits[1].y -= 1;
+                                    tet.bits[3].x += 1;
+                                    tet.bits[3].y += 1;
+
+                                    tet.rotation = 0;
+                                }
+                            }
+                            break;
+                    }
+                    //if spaces are open, rotate and place!
+                    //else test kicks
+
+                    break;
+                case 2: //T 
+                    switch (pad.inputRot1 - pad.inputRot2)
+                    {
+                        case 1:
+                            switch (tet.rotation)
+                            {
+                                case 0:
+                                    //test for OoB bump
+                                    if (tet.bits[1].y - 1 < 0)
+                                    {
+                                        yOffset = 1;
+                                    }
+                                    else
+                                    {
+                                        if (gameField[tet.bits[1].x][tet.bits[1].y - 1] != 0) //test no-spin scenarios
+                                        {
+                                            break;
+                                        }
+                                    }
+                                    for (int i = 1; i < 4; i++) //test the three x locations
+                                    {
+                                        if (tet.bits[1].x - 1 + ((i % 3) - 1) < 0 || tet.bits[1].x + 1 + ((i % 3) - 1) > 9)//test for OoB shenanigans
+                                        {
+                                            continue;
+                                        }
+                                        if (gameField[tet.bits[0].x + 1 + ((i % 3) - 1)][tet.bits[0].y - 1 + yOffset] == 0 && gameField[tet.bits[1].x + ((i % 3) - 1)][tet.bits[1].y + yOffset] == 0 && gameField[tet.bits[2].x + ((i % 3) - 1)][tet.bits[2].y + yOffset] == 0 && gameField[tet.bits[3].x + ((i % 3) - 1)][tet.bits[3].y + yOffset] == 0)
+                                        {
+                                            tet.bits[0].x += 1 + ((i % 3) - 1);
+                                            tet.bits[0].y += 1 + yOffset;
+                                            tet.bits[1].x += ((i % 3) - 1);
+                                            tet.bits[1].y += yOffset;
+                                            tet.bits[2].x += -1 + ((i % 3) - 1);
+                                            tet.bits[2].y += -1 + yOffset;
+                                            tet.bits[3].x += 1 + ((i % 3) - 1);
+                                            tet.bits[3].y += -1 + yOffset;
+
+                                            tet.rotation = 1;
+
+                                            break;
+                                        }
+                                    }
+                                    break;
+                                case 1:
+                                    //TODO: test for upkick if TGM3
+                                    if (ruleset.rotation == 3 && ((gameField[tet.bits[0].x - 1 + xOffset][tet.bits[0].y] != 0 || gameField[tet.bits[0].x + 1 + xOffset][tet.bits[0].y] != 0) && tet.kicked == 0))
+                                    {
+                                        yOffset = -1;
+                                        tet.kicked = 1;
+                                    }
+
+                                    for (int i = 1; i < 4; i++)
+                                    {
+                                        if (tet.bits[1].x - 1 + ((i % 3) - 1) < 0 || tet.bits[1].x + 1 + ((i % 3) - 1) > 9)//test for OoB shenanigans
+                                        {
+                                            continue;
+                                        }
+                                        if (gameField[tet.bits[0].x + 1 + xOffset + ((i % 3) - 1)][tet.bits[0].y + yOffset] == 0 && gameField[tet.bits[1].x + xOffset + ((i % 3) - 1)][tet.bits[1].y + 1 + yOffset] == 0 && gameField[tet.bits[2].x - 1 + xOffset + ((i % 3) - 1)][tet.bits[2].y + 2 + yOffset] == 0 && gameField[tet.bits[3].x - 1 + xOffset + ((i % 3) - 1)][tet.bits[3].y + yOffset] == 0)
+                                        {
+                                            tet.bits[0].x += 1 + xOffset + ((i % 3) - 1);
+                                            tet.bits[0].y += yOffset;
+                                            tet.bits[1].x += xOffset + ((i % 3) - 1);
+                                            tet.bits[1].y += 1 + yOffset;
+                                            tet.bits[2].x += -1 + xOffset + ((i % 3) - 1);
+                                            tet.bits[2].y += 2 + yOffset;
+                                            tet.bits[3].x += -1 + xOffset + ((i % 3) - 1);
+                                            tet.bits[3].y += yOffset;
+
+                                            tet.rotation = 2;
+
+                                            break;
+                                        }
+                                    }
+                                    break;
+                                case 2:
+                                    if (tet.bits[3].y - 1 < 0)
+                                    {
+                                        yOffset = 1;
+                                    }
+                                    else
+                                    {
+                                        if (gameField[tet.bits[3].x][tet.bits[3].y - 1] != 0) //test for no-spin scenarios
+                                        {
+                                            break;
+                                        }
+                                    }
+                                    for (int i = 1; i < 4; i++)
+                                    {
+                                        if (tet.bits[1].x - 1 + ((i % 3) - 1) < 0 || tet.bits[1].x + 1 + ((i % 3) - 1) > 9)//test for OoB shenanigans
+                                        {
+                                            continue;
+                                        }
+                                        if (gameField[tet.bits[0].x + -1 + ((i % 3) - 1)][tet.bits[0].y + -2 + yOffset] == 0 && gameField[tet.bits[1].x + ((i % 3) - 1)][tet.bits[1].y + -1 + yOffset] == 0 && gameField[tet.bits[2].x + 1 + ((i % 3) - 1)][tet.bits[2].y + yOffset] == 0 && gameField[tet.bits[3].x + -1 + ((i % 3) - 1)][tet.bits[3].y + yOffset] == 0)
+                                        {
+                                            tet.bits[0].x += -1 + ((i % 3) - 1);
+                                            tet.bits[0].y += -2 + yOffset;
+                                            tet.bits[1].x += ((i % 3) - 1);
+                                            tet.bits[1].y += -1 + yOffset;
+                                            tet.bits[2].x += 1 + ((i % 3) - 1);
+                                            tet.bits[2].y += yOffset;
+                                            tet.bits[3].x += -1 + ((i % 3) - 1);
+                                            tet.bits[3].y += yOffset;
+
+                                            tet.rotation = 3;
+
+                                            break;
+                                        }
+                                    }
+                                    break;
+                                case 3:
+                                    for (int i = 1; i < 4; i++)
+                                    {
+                                        if (tet.bits[1].x - 1 + ((i % 3) - 1) < 0 || tet.bits[1].x + 1 + ((i % 3) - 1) > 9)//test for OoB shenanigans
+                                        {
+                                            continue;
+                                        }
+                                        if (gameField[tet.bits[0].x + -1 + xOffset + ((i % 3) - 1)][tet.bits[0].y + 1] == 0 && gameField[tet.bits[1].x + xOffset + ((i % 3) - 1)][tet.bits[1].y] == 0 && gameField[tet.bits[2].x + 1 + xOffset + ((i % 3) - 1)][tet.bits[2].y + -1] == 0 && gameField[tet.bits[3].x + 1 + xOffset + ((i % 3) - 1)][tet.bits[3].y + 1] == 0)
+                                        {
+                                            tet.bits[0].x += -1 + xOffset + ((i % 3) - 1);
+                                            tet.bits[0].y += 1;
+                                            tet.bits[1].x += xOffset + ((i % 3) - 1);
+                                            tet.bits[2].x += 1 + xOffset + ((i % 3) - 1);
+                                            tet.bits[2].y += -1;
+                                            tet.bits[3].x += 1 + xOffset + ((i % 3) - 1);
+                                            tet.bits[3].y += 1;
+
+                                            tet.rotation = 0;
+
+                                            break;
+                                        }
+                                    }
+                                    break;
+                            }
+                            break;
+                        case -1:
+                            switch (tet.rotation)
+                            {
+                                case 0:
+                                    if (tet.bits[1].y - 1 < 0)
+                                    {
+                                        yOffset = 1;
+                                    }
+                                    else
+                                    {
+                                        if (gameField[tet.bits[1].x][tet.bits[1].y - 1] != 0) //test no-spin scenarios
+                                        {
+                                            break;
+                                        }
+                                    }
+                                    for (int i = 1; i < 4; i++)
+                                    {
+                                        if (tet.bits[1].x - 1 + ((i % 3) - 1) < 0 || tet.bits[1].x + 1 + ((i % 3) - 1) > 9)//test for OoB shenanigans
+                                        {
+                                            continue;
+                                        }
+                                        if (gameField[tet.bits[0].x + 1 + ((i % 3) - 1)][tet.bits[0].y + -1 + yOffset] == 0 && gameField[tet.bits[1].x + ((i % 3) - 1)][tet.bits[1].y + yOffset] == 0 && gameField[tet.bits[2].x + -1 + ((i % 3) - 1)][tet.bits[2].y + 1 + yOffset] == 0 && gameField[tet.bits[3].x + -1 + ((i % 3) - 1)][tet.bits[3].y + -1 + yOffset] == 0)
+                                        {
+                                            tet.bits[0].x += 1 + ((i % 3) - 1);
+                                            tet.bits[0].y += -1 + yOffset;
+                                            tet.bits[1].x += ((i % 3) - 1);
+                                            tet.bits[1].y += yOffset;
+                                            tet.bits[2].x += -1 + ((i % 3) - 1);
+                                            tet.bits[2].y += 1 + yOffset;
+                                            tet.bits[3].x += -1 + ((i % 3) - 1);
+                                            tet.bits[3].y += -1 + yOffset;
+
+                                            tet.rotation = 3;
+
+                                            break;
+                                        }
+                                    }
+                                    break;
+                                case 1:
+                                    for (int i = 1; i < 4; i++) //test the three x locations
+                                    {
+                                        if (tet.bits[1].x - 1 + ((i % 3) - 1) < 0 || tet.bits[1].x + 1 + ((i % 3) - 1) > 9)//test for OoB shenanigans
+                                        {
+                                            continue;
+                                        }
+                                        if (gameField[tet.bits[0].x + -1 + xOffset + ((i % 3) - 1)][tet.bits[0].y + -1] == 0 && gameField[tet.bits[1].x + xOffset + ((i % 3) - 1)][tet.bits[1].y] == 0 && gameField[tet.bits[2].x + xOffset + ((i % 3) - 1)][tet.bits[2].y] == 0 && gameField[tet.bits[3].x + xOffset + ((i % 3) - 1)][tet.bits[3].y] == 0)
+                                        {
+                                            tet.bits[0].x += -1 + xOffset + ((i % 3) - 1);
+                                            tet.bits[0].y += -1;
+                                            tet.bits[1].x += xOffset + ((i % 3) - 1);
+                                            tet.bits[2].x += 1 + xOffset + ((i % 3) - 1);
+                                            tet.bits[2].y += 1;
+                                            tet.bits[3].x += -1 + xOffset + ((i % 3) - 1);
+                                            tet.bits[3].y += 1;
+
+                                            tet.rotation = 0;
+
+                                            break;
+                                        }
+                                    }
+                                    break;
+                                case 2:
+                                    if (tet.bits[3].y - 1 < 0)
+                                    {
+                                        yOffset = 1;
+                                    }
+                                    else
+                                    {
+                                        if (gameField[tet.bits[3].x][tet.bits[3].y - 1] != 0) //test for no-spin scenarios
+                                        {
+                                            break;
+                                        }
+                                    }
+                                    for (int i = 1; i < 4; i++)
+                                    {
+                                        if (tet.bits[1].x - 1 + ((i % 3) - 1) < 0 || tet.bits[1].x + 1 + ((i % 3) - 1) > 9)//test for OoB shenanigans
+                                        {
+                                            continue;
+                                        }
+                                        if (gameField[tet.bits[0].x - 1 + ((i % 3) - 1)][tet.bits[0].y + yOffset] == 0 && gameField[tet.bits[1].x + ((i % 3) - 1)][tet.bits[1].y + 1 + yOffset] == 0 && gameField[tet.bits[2].x + 1 + ((i % 3) - 1)][tet.bits[2].y - 2 + yOffset] == 0 && gameField[tet.bits[3].x + 1 + ((i % 3) - 1)][tet.bits[3].y + yOffset] == 0)
+                                        {
+                                            tet.bits[0].x += -1 + ((i % 3) - 1);
+                                            tet.bits[0].y += yOffset;
+                                            tet.bits[1].x += ((i % 3) - 1);
+                                            tet.bits[1].y += -1 + yOffset;
+                                            tet.bits[2].x += 1 + ((i % 3) - 1);
+                                            tet.bits[2].y += -2 + yOffset;
+                                            tet.bits[3].x += 1 + ((i % 3) - 1);
+                                            tet.bits[3].y += yOffset;
+
+                                            tet.rotation = 1;
+
+                                            break;
+                                        }
+                                    }
+                                    break;
+                                case 3:
+                                    for (int i = 1; i < 4; i++)
+                                    {
+                                        if (tet.bits[1].x - 1 + ((i % 3) - 1) < 0 || tet.bits[1].x + 1 + ((i % 3) - 1) > 9)//test for OoB shenanigans
+                                        {
+                                            continue;
+                                        }
+                                        if (gameField[tet.bits[0].x + 1 + xOffset + ((i % 3) - 1)][tet.bits[0].y + 2] == 0 && gameField[tet.bits[1].x + xOffset + ((i % 3) - 1)][tet.bits[1].y + 1] == 0 && gameField[tet.bits[2].x + -1 + xOffset + ((i % 3) - 1)][tet.bits[2].y] == 0 && gameField[tet.bits[3].x + 1 + xOffset + ((i % 3) - 1)][tet.bits[3].y] == 0)
+                                        {
+                                            tet.bits[0].x += 1 + xOffset + ((i % 3) - 1);
+                                            tet.bits[0].y += 2;
+                                            tet.bits[1].x += xOffset + ((i % 3) - 1);
+                                            tet.bits[1].y += 1;
+                                            tet.bits[2].x += -1 + xOffset + ((i % 3) - 1);
+                                            tet.bits[3].x += 1 + xOffset + ((i % 3) - 1);
+
+                                            tet.rotation = 2;
+
+                                            break;
+                                        }
+                                    }
+                                    break;
+                            }
+                            break;
+                    }
+                    break;
+                case 3: //L
+                    switch (pad.inputRot1 - pad.inputRot2)
+                    {
+                        case 1:
+                            switch (tet.rotation)
+                            {
+                                case 0:
+                                    if (tet.bits[1].y - 1 < 0)//test oob for bump
+                                    {
+                                        yOffset = 1;
+                                    }
+                                    else //test for special restrictions
+                                    {
+                                        if (gameField[tet.bits[1].x][tet.bits[1].y - 1] != 0)
+                                        {
+                                            break;
+                                        }
+                                        if (gameField[tet.bits[1].x][tet.bits[1].y + 1] != 0)
+                                        {
+                                            //if (gameField[tet.bits[0].x][tet.bits[0].y - 1] == 0) //USE FOR OTHER SPIN
+                                            //{
+                                            break;
+                                            //}
+                                        }
+                                    }
+                                    for (int i = 1; i < 4; i++)
+                                    {
+                                        if (tet.bits[1].x - 1 + ((i % 3) - 1) < 0 || tet.bits[1].x + 1 + ((i % 3) - 1) > 9)//test for OoB shenanigans
+                                        {
+                                            continue;
+                                        }
+                                        if (gameField[tet.bits[0].x + 1 + ((i % 3) - 1)][tet.bits[0].y + 1 + yOffset] == 0 && gameField[tet.bits[1].x + ((i % 3) - 1)][tet.bits[1].y + yOffset] == 0 && gameField[tet.bits[2].x + -1 + ((i % 3) - 1)][tet.bits[2].y + -1 + yOffset] == 0 && gameField[tet.bits[3].x + 2 + ((i % 3) - 1)][tet.bits[3].y + yOffset] == 0)
+                                        {
+                                            tet.bits[0].x += 1 + ((i % 3) - 1);
+                                            tet.bits[0].y += 1 + yOffset;
+                                            tet.bits[1].x += ((i % 3) - 1);
+                                            tet.bits[1].y += yOffset;
+                                            tet.bits[2].x += -1 + ((i % 3) - 1);
+                                            tet.bits[2].y += -1 + yOffset;
+                                            tet.bits[3].x += 2 + ((i % 3) - 1);
+                                            tet.bits[3].y += yOffset;
+
+                                            tet.rotation = 1;
+
+                                            break;
+                                        }
+                                    }
+                                    break;
+                                case 1:
+                                    for (int i = 1; i < 4; i++)
+                                    {
+                                        if (tet.bits[0].x - 1 + ((i % 3) - 1) < 0 || tet.bits[0].x + 1 + ((i % 3) - 1) > 9)//test for OoB shenanigans
+                                        {
+                                            continue;
+                                        }
+                                        if (gameField[tet.bits[0].x + 1 + xOffset + ((i % 3) - 1)][tet.bits[0].y] == 0 && gameField[tet.bits[1].x + xOffset + ((i % 3) - 1)][tet.bits[1].y + 1] == 0 && gameField[tet.bits[2].x + -1 + xOffset + ((i % 3) - 1)][tet.bits[2].y + 2] == 0 && gameField[tet.bits[3].x + xOffset + ((i % 3) - 1)][tet.bits[3].y + -1] == 0)
+                                        {
+                                            tet.bits[0].x += 1 + xOffset + ((i % 3) - 1);
+                                            tet.bits[1].x += xOffset + ((i % 3) - 1);
+                                            tet.bits[1].y += 1;
+                                            tet.bits[2].x += -1 + xOffset + ((i % 3) - 1);
+                                            tet.bits[2].y += 2;
+                                            tet.bits[3].x += xOffset + ((i % 3) - 1);
+                                            tet.bits[3].y += -1;
+
+                                            tet.rotation = 2;
+
+                                            break;
+                                        }
+                                    }
+                                    break;
+                                case 2:
+                                    if (tet.bits[1].y - 2 < 0)
+                                    {
+                                        yOffset = 1;
+                                    }
+                                    else //test for special restrictions
+                                    {
+                                        if (gameField[tet.bits[1].x][tet.bits[1].y - 2] != 0 || gameField[tet.bits[1].x][tet.bits[1].y - 1] != 0)
+                                        {
+                                            break;
+                                        }
+                                    }
+                                    for (int i = 1; i < 4; i++)
+                                    {
+                                        if (tet.bits[1].x - 1 + ((i % 3) - 1) < 0 || tet.bits[1].x + 1 + ((i % 3) - 1) > 9)//test for OoB shenanigans
+                                        {
+                                            continue;
+                                        }
+                                        if (gameField[tet.bits[0].x + -1 + ((i % 3) - 1)][tet.bits[0].y + -2 + yOffset] == 0 && gameField[tet.bits[1].x + ((i % 3) - 1)][tet.bits[1].y + -1 + yOffset] == 0 && gameField[tet.bits[2].x + 1 + ((i % 3) - 1)][tet.bits[2].y + yOffset] == 0 && gameField[tet.bits[3].x + -2 + ((i % 3) - 1)][tet.bits[3].y + -1 + yOffset] == 0)
+                                        {
+                                            tet.bits[0].x += -1 + ((i % 3) - 1);
+                                            tet.bits[0].y += -2 + yOffset;
+                                            tet.bits[1].x += ((i % 3) - 1);
+                                            tet.bits[1].y += -1 + yOffset;
+                                            tet.bits[2].x += 1 + ((i % 3) - 1);
+                                            tet.bits[2].y += yOffset;
+                                            tet.bits[3].x += -2 + ((i % 3) - 1);
+                                            tet.bits[3].y += -1 + yOffset;
+
+                                            tet.rotation = 3;
+
+                                            break;
+                                        }
+                                    }
+                                    break;
+                                case 3:
+                                    for (int i = 1; i < 4; i++)
+                                    {
+                                        if (tet.bits[1].x - 1 + ((i % 3) - 1) < 0 || tet.bits[1].x + 1 + ((i % 3) - 1) > 9)//test for OoB shenanigans
+                                        {
+                                            continue;
+                                        }
+                                        if (gameField[tet.bits[0].x + -1 + xOffset + ((i % 3) - 1)][tet.bits[0].y + 1] == 0 && gameField[tet.bits[1].x + xOffset + ((i % 3) - 1)][tet.bits[1].y] == 0 && gameField[tet.bits[2].x + 1 + xOffset + ((i % 3) - 1)][tet.bits[2].y + -1] == 0 && gameField[tet.bits[3].x + xOffset + ((i % 3) - 1)][tet.bits[3].y + 2] == 0)
+                                        {
+                                            tet.bits[0].x += -1 + xOffset + ((i % 3) - 1);
+                                            tet.bits[0].y += 1;
+                                            tet.bits[1].x += xOffset + ((i % 3) - 1);
+                                            tet.bits[2].x += 1 + xOffset + ((i % 3) - 1);
+                                            tet.bits[2].y += -1;
+                                            tet.bits[3].x += xOffset + ((i % 3) - 1);
+                                            tet.bits[3].y += 2;
+
+                                            tet.rotation = 0;
+
+                                            break;
+                                        }
+                                    }
+                                    break;
+                            }
+                            break;
+                        case -1:
+                            switch (tet.rotation)
+                            {
+                                case 0:
+                                    if (tet.bits[1].y - 1 < 0)//test oob for bump
+                                    {
+                                        yOffset = 1;
+                                    }
+                                    else //test for special restrictions
+                                    {
+                                        if (gameField[tet.bits[1].x][tet.bits[1].y - 1] != 0)
+                                        {
+                                            break;
+                                        }
+                                        if (gameField[tet.bits[1].x][tet.bits[1].y + 1] != 0)
+                                        {
+                                            if (gameField[tet.bits[0].x][tet.bits[0].y - 1] == 0)
+                                            {
+                                                break;
+                                            }
+                                        }
+                                        for (int i = 1; i < 4; i++)
+                                        {
+                                            if (tet.bits[1].x - 1 + ((i % 3) - 1) < 0 || tet.bits[1].x + 1 + ((i % 3) - 1) > 9)//test for OoB shenanigans
+                                            {
+                                                continue;
+                                            }
+                                            if (gameField[tet.bits[0].x + 1 + ((i % 3) - 1)][tet.bits[0].y + -1 + yOffset] == 0 && gameField[tet.bits[1].x + ((i % 3) - 1)][tet.bits[1].y + yOffset] == 0 && gameField[tet.bits[2].x + -1 + ((i % 3) - 1)][tet.bits[2].y + 1 + yOffset] == 0 && gameField[tet.bits[3].x + ((i % 3) - 1)][tet.bits[3].y + -2 + yOffset] == 0)
+                                            {
+                                                tet.bits[0].x += 1 + ((i % 3) - 1);
+                                                tet.bits[0].y += -1 + yOffset;
+                                                tet.bits[1].x += ((i % 3) - 1);
+                                                tet.bits[1].y += yOffset;
+                                                tet.bits[2].x += -1 + ((i % 3) - 1);
+                                                tet.bits[2].y += 1 + yOffset;
+                                                tet.bits[3].x += ((i % 3) - 1);
+                                                tet.bits[3].y += -2 + yOffset;
+
+                                                tet.rotation = 3;
+
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    break;
+                                case 1:
+                                    for (int i = 1; i < 4; i++)
+                                    {
+                                        if (tet.bits[1].x - 1 + ((i % 3) - 1) < 0 || tet.bits[1].x + 1 + ((i % 3) - 1) > 9)//test for OoB shenanigans
+                                        {
+                                            continue;
+                                        }
+                                        if (gameField[tet.bits[0].x + -1 + xOffset + ((i % 3) - 1)][tet.bits[0].y + -1] == 0 && gameField[tet.bits[1].x + xOffset + ((i % 3) - 1)][tet.bits[1].y] == 0 && gameField[tet.bits[2].x + 1 + xOffset + ((i % 3) - 1)][tet.bits[2].y + 1] == 0 && gameField[tet.bits[3].x + -2 + xOffset + ((i % 3) - 1)][tet.bits[3].y] == 0)
+                                        {
+                                            tet.bits[0].x += -1 + xOffset + ((i % 3) - 1);
+                                            tet.bits[0].y += -1;
+                                            tet.bits[1].x += xOffset + ((i % 3) - 1);
+                                            tet.bits[2].x += 1 + xOffset + ((i % 3) - 1);
+                                            tet.bits[2].y += 1;
+                                            tet.bits[3].x += -2 + xOffset + ((i % 3) - 1);
+
+                                            tet.rotation = 0;
+
+                                            break;
+                                        }
+                                    }
+                                    break;
+                                case 2:
+                                    if (tet.bits[1].y - 2 < 0)
+                                    {
+                                        yOffset = 1;
+                                    }
+                                    else //test for special restrictions
+                                    {
+                                        if (gameField[tet.bits[1].x][tet.bits[1].y - 2] != 0 || gameField[tet.bits[1].x][tet.bits[1].y - 1] != 0)
+                                        {
+                                            break;
+                                        }
+                                    }
+                                    for (int i = 1; i < 4; i++)
+                                    {
+                                        if (tet.bits[1].x - 1 + ((i % 3) - 1) < 0 || tet.bits[1].x + 1 + ((i % 3) - 1) > 9)//test for OoB shenanigans
+                                        {
+                                            continue;
+                                        }
+                                        if (gameField[tet.bits[0].x + -1 + ((i % 3) - 1)][tet.bits[0].y + yOffset] == 0 && gameField[tet.bits[1].x + ((i % 3) - 1)][tet.bits[1].y + -1 + yOffset] == 0 && gameField[tet.bits[2].x + 1 + ((i % 3) - 1)][tet.bits[2].y + -2 + yOffset] == 0 && gameField[tet.bits[3].x + ((i % 3) - 1)][tet.bits[3].y + 1 + yOffset] == 0)
+                                        {
+                                            tet.bits[0].x += -1 + ((i % 3) - 1);
+                                            tet.bits[0].y += yOffset;
+                                            tet.bits[1].x += ((i % 3) - 1);
+                                            tet.bits[1].y += -1 + yOffset;
+                                            tet.bits[2].x += 1 + ((i % 3) - 1);
+                                            tet.bits[2].y += -2 + yOffset;
+                                            tet.bits[3].x += ((i % 3) - 1);
+                                            tet.bits[3].y += 1 + yOffset;
+
+                                            tet.rotation = 1;
+
+                                            break;
+                                        }
+                                    }
+                                    break;
+                                case 3:
+                                    for (int i = 1; i < 4; i++)
+                                    {
+                                        if (tet.bits[1].x - 1 + ((i % 3) - 1) < 0 || tet.bits[1].x + 1 + ((i % 3) - 1) > 9)//test for OoB shenanigans
+                                        {
+                                            continue;
+                                        }
+                                        if (gameField[tet.bits[0].x + 1 + xOffset + ((i % 3) - 1)][tet.bits[0].y + 2] == 0 && gameField[tet.bits[1].x + xOffset + ((i % 3) - 1)][tet.bits[1].y + 1] == 0 && gameField[tet.bits[2].x + -1 + xOffset + ((i % 3) - 1)][tet.bits[2].y] == 0 && gameField[tet.bits[3].x + 2 + xOffset + ((i % 3) - 1)][tet.bits[3].y + 1] == 0)
+                                        {
+                                            tet.bits[0].x += 1 + xOffset + ((i % 3) - 1);
+                                            tet.bits[0].y += 2;
+                                            tet.bits[1].x += xOffset + ((i % 3) - 1);
+                                            tet.bits[1].y += 1;
+                                            tet.bits[2].x += -1 + xOffset + ((i % 3) - 1);
+                                            tet.bits[3].x += 2 + xOffset + ((i % 3) - 1);
+                                            tet.bits[3].y += 1;
+
+                                            tet.rotation = 2;
+
+                                            break;
+                                        }
+                                    }
+                                    break;
+                            }
+                            break;
+                    }
+                    break;
+                case 4: //J
+                    switch (pad.inputRot1 - pad.inputRot2)
+                    {
+                        case 1:
+                            switch (tet.rotation)
+                            {
+                                case 0:
+                                    if (tet.bits[1].y - 1 < 0)//test oob for bump
+                                    {
+                                        yOffset = 1;
+                                    }
+                                    else //test for special restrictions
+                                    {
+                                        if (gameField[tet.bits[1].x][tet.bits[1].y - 1] != 0)
+                                        {
+                                            break;
+                                        }
+                                        if (gameField[tet.bits[1].x][tet.bits[1].y + 1] != 0)
+                                        {
+                                            if (gameField[tet.bits[0].x][tet.bits[0].y - 1] == 0)
+                                            {
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    for (int i = 1; i < 4; i++)
+                                    {
+                                        if (tet.bits[1].x - 1 + ((i % 3) - 1) < 0 || tet.bits[1].x + 1 + ((i % 3) - 1) > 9)//test for OoB shenanigans
+                                        {
+                                            continue;
+                                        }
+                                        if (gameField[tet.bits[0].x + 1 + ((i % 3) - 1)][tet.bits[0].y + 1 + yOffset] == 0 && gameField[tet.bits[1].x + ((i % 3) - 1)][tet.bits[1].y + yOffset] == 0 && gameField[tet.bits[2].x + -1 + ((i % 3) - 1)][tet.bits[2].y + -1 + yOffset] == 0 && gameField[tet.bits[3].x + ((i % 3) - 1)][tet.bits[3].y + -2 + yOffset] == 0)
+                                        {
+                                            tet.bits[0].x += 1 + ((i % 3) - 1);
+                                            tet.bits[0].y += 1 + yOffset;
+                                            tet.bits[1].x += ((i % 3) - 1);
+                                            tet.bits[1].y += yOffset;
+                                            tet.bits[2].x += -1 + ((i % 3) - 1);
+                                            tet.bits[2].y += -1 + yOffset;
+                                            tet.bits[3].x += ((i % 3) - 1);
+                                            tet.bits[3].y += -2 + yOffset;
+
+                                            tet.rotation = 1;
+
+                                            break;
+                                        }
+                                    }
+                                    break;
+                                case 1:
+                                    for (int i = 1; i < 4; i++)
+                                    {
+                                        if (tet.bits[1].x - 1 + ((i % 3) - 1) < 0 || tet.bits[1].x + 1 + ((i % 3) - 1) > 9)//test for OoB shenanigans
+                                        {
+                                            continue;
+                                        }
+                                        if (gameField[tet.bits[0].x + 1 + xOffset + ((i % 3) - 1)][tet.bits[0].y] == 0 && gameField[tet.bits[1].x + xOffset + ((i % 3) - 1)][tet.bits[1].y + 1] == 0 && gameField[tet.bits[2].x + -1 + xOffset + ((i % 3) - 1)][tet.bits[2].y + 2] == 0 && gameField[tet.bits[3].x + -2 + xOffset + ((i % 3) - 1)][tet.bits[3].y + 1] == 0)
+                                        {
+                                            tet.bits[0].x += 1 + xOffset + ((i % 3) - 1);
+                                            tet.bits[1].x += xOffset + ((i % 3) - 1);
+                                            tet.bits[1].y += 1;
+                                            tet.bits[2].x += -1 + xOffset + ((i % 3) - 1);
+                                            tet.bits[2].y += 2;
+                                            tet.bits[3].x += -2 + xOffset + ((i % 3) - 1);
+                                            tet.bits[3].y += 1;
+
+                                            tet.rotation = 2;
+
+                                            break;
+                                        }
+                                    }
+                                    break;
+                                case 2:
+                                    if (tet.bits[1].y - 2 < 0)
+                                    {
+                                        yOffset = 1;
+                                    }
+                                    else //test for special restrictions
+                                    {
+                                        if (gameField[tet.bits[1].x][tet.bits[1].y - 2] != 0 || gameField[tet.bits[1].x][tet.bits[1].y - 1] != 0)
+                                        {
+                                            break;
+                                        }
+                                    }
+                                    for (int i = 1; i < 4; i++)
+                                    {
+                                        if (tet.bits[1].x - 1 + ((i % 3) - 1) < 0 || tet.bits[1].x + 1 + ((i % 3) - 1) > 9)//test for OoB shenanigans
+                                        {
+                                            continue;
+                                        }
+                                        if (gameField[tet.bits[0].x + -1 + ((i % 3) - 1)][tet.bits[0].y + -2 + yOffset] == 0 && gameField[tet.bits[1].x + ((i % 3) - 1)][tet.bits[1].y + -1 + yOffset] == 0 && gameField[tet.bits[2].x + 1 + ((i % 3) - 1)][tet.bits[2].y + yOffset] == 0 && gameField[tet.bits[3].x + ((i % 3) - 1)][tet.bits[3].y + 1 + yOffset] == 0)
+                                        {
+                                            tet.bits[0].x += -1 + ((i % 3) - 1);
+                                            tet.bits[0].y += -2 + yOffset;
+                                            tet.bits[1].x += ((i % 3) - 1);
+                                            tet.bits[1].y += -1 + yOffset;
+                                            tet.bits[2].x += 1 + ((i % 3) - 1);
+                                            tet.bits[2].y += yOffset;
+                                            tet.bits[3].x += ((i % 3) - 1);
+                                            tet.bits[3].y += 1 + yOffset;
+
+                                            tet.rotation = 3;
+
+                                            break;
+                                        }
+                                    }
+                                    break;
+                                case 3:
+                                    for (int i = 1; i < 4; i++)
+                                    {
+                                        if (tet.bits[1].x - 1 + ((i % 3) - 1) < 0 || tet.bits[1].x + 1 + ((i % 3) - 1) > 9)//test for OoB shenanigans
+                                        {
+                                            continue;
+                                        }
+                                        if (gameField[tet.bits[0].x + -1 + xOffset + ((i % 3) - 1)][tet.bits[0].y + 1] == 0 && gameField[tet.bits[1].x + xOffset + ((i % 3) - 1)][tet.bits[1].y] == 0 && gameField[tet.bits[2].x + 1 + xOffset + ((i % 3) - 1)][tet.bits[2].y + -1] == 0 && gameField[tet.bits[3].x + 2 + xOffset + ((i % 3) - 1)][tet.bits[3].y] == 0)
+                                        {
+                                            tet.bits[0].x += -1 + xOffset + ((i % 3) - 1);
+                                            tet.bits[0].y += 1;
+                                            tet.bits[1].x += xOffset + ((i % 3) - 1);
+                                            tet.bits[2].x += 1 + xOffset + ((i % 3) - 1);
+                                            tet.bits[2].y += -1;
+                                            tet.bits[3].x += 2 + xOffset + ((i % 3) - 1);
+
+                                            tet.rotation = 0;
+
+                                            break;
+                                        }
+                                    }
+                                    break;
+                            }
+                            break;
+                        case -1:
+                            switch (tet.rotation)
+                            {
+                                case 0:
+                                    if (tet.bits[1].y - 1 < 0)//test oob for bump
+                                    {
+                                        yOffset = 1;
+                                    }
+                                    else //test for special restrictions
+                                    {
+                                        if (gameField[tet.bits[1].x][tet.bits[1].y - 1] != 0)
+                                        {
+                                            break;
+                                        }
+                                        if (gameField[tet.bits[1].x][tet.bits[1].y + 1] != 0)
+                                        {
+                                            // if (gameField[tet.bits[0].x][tet.bits[0].y - 1] == 0) //for the otehr direction
+                                            //{
+                                            break;
+                                            //}
+                                        }
+                                        for (int i = 1; i < 4; i++)
+                                        {
+                                            if (tet.bits[1].x - 1 + ((i % 3) - 1) < 0 || tet.bits[1].x + 1 + ((i % 3) - 1) > 9)//test for OoB shenanigans
+                                            {
+                                                continue;
+                                            }
+                                            if (gameField[tet.bits[0].x + 1 + ((i % 3) - 1)][tet.bits[0].y + -1 + yOffset] == 0 && gameField[tet.bits[1].x + ((i % 3) - 1)][tet.bits[1].y + yOffset] == 0 && gameField[tet.bits[2].x + -1 + ((i % 3) - 1)][tet.bits[2].y + 1 + yOffset] == 0 && gameField[tet.bits[3].x + -2 + ((i % 3) - 1)][tet.bits[3].y + yOffset] == 0)
+                                            {
+                                                tet.bits[0].x += 1 + ((i % 3) - 1);
+                                                tet.bits[0].y += -1 + yOffset;
+                                                tet.bits[1].x += ((i % 3) - 1);
+                                                tet.bits[1].y += yOffset;
+                                                tet.bits[2].x += -1 + ((i % 3) - 1);
+                                                tet.bits[2].y += 1 + yOffset;
+                                                tet.bits[3].x += -2 + ((i % 3) - 1);
+                                                tet.bits[3].y += yOffset;
+
+                                                tet.rotation = 3;
+
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    break;
+                                case 1:
+                                    for (int i = 1; i < 4; i++)
+                                    {
+                                        if (tet.bits[1].x - 1 + ((i % 3) - 1) < 0 || tet.bits[1].x + 1 + ((i % 3) - 1) > 9)//test for OoB shenanigans
+                                        {
+                                            continue;
+                                        }
+                                        if (gameField[tet.bits[0].x + -1 + xOffset + ((i % 3) - 1)][tet.bits[0].y + -1] == 0 && gameField[tet.bits[1].x + xOffset + ((i % 3) - 1)][tet.bits[1].y] == 0 && gameField[tet.bits[2].x + 1 + xOffset + ((i % 3) - 1)][tet.bits[2].y + 1] == 0 && gameField[tet.bits[3].x + xOffset + ((i % 3) - 1)][tet.bits[3].y + 2] == 0)
+                                        {
+                                            tet.bits[0].x += -1 + xOffset + ((i % 3) - 1);
+                                            tet.bits[0].y += -1;
+                                            tet.bits[1].x += xOffset + ((i % 3) - 1);
+                                            tet.bits[2].x += 1 + xOffset + ((i % 3) - 1);
+                                            tet.bits[2].y += 1;
+                                            tet.bits[3].x += xOffset + ((i % 3) - 1);
+                                            tet.bits[3].y += 2;
+
+                                            tet.rotation = 0;
+
+                                            break;
+                                        }
+                                    }
+                                    break;
+                                case 2:
+                                    if (tet.bits[1].y - 2 < 0)
+                                    {
+                                        yOffset = 1;
+                                    }
+                                    else //test for special restrictions
+                                    {
+                                        if (gameField[tet.bits[1].x][tet.bits[1].y - 2] != 0 || gameField[tet.bits[1].x][tet.bits[1].y - 1] != 0)
+                                        {
+                                            break;
+                                        }
+                                    }
+                                    for (int i = 1; i < 4; i++)
+                                    {
+                                        if (tet.bits[1].x - 1 + ((i % 3) - 1) < 0 || tet.bits[1].x + 1 + ((i % 3) - 1) > 9)//test for OoB shenanigans
+                                        {
+                                            continue;
+                                        }
+                                        if (gameField[tet.bits[0].x + -1 + ((i % 3) - 1)][tet.bits[0].y + yOffset] == 0 && gameField[tet.bits[1].x + ((i % 3) - 1)][tet.bits[1].y + -1 + yOffset] == 0 && gameField[tet.bits[2].x + 1 + ((i % 3) - 1)][tet.bits[2].y + -2 + yOffset] == 0 && gameField[tet.bits[3].x + 2 + ((i % 3) - 1)][tet.bits[3].y + -1 + yOffset] == 0)
+                                        {
+                                            tet.bits[0].x += -1 + ((i % 3) - 1);
+                                            tet.bits[0].y += yOffset;
+                                            tet.bits[1].x += ((i % 3) - 1);
+                                            tet.bits[1].y += -1 + yOffset;
+                                            tet.bits[2].x += 1 + ((i % 3) - 1);
+                                            tet.bits[2].y += -2 + yOffset;
+                                            tet.bits[3].x += 2 + ((i % 3) - 1);
+                                            tet.bits[3].y += -1 + yOffset;
+
+                                            tet.rotation = 1;
+
+                                            break;
+                                        }
+                                    }
+                                    break;
+                                case 3:
+                                    for (int i = 1; i < 4; i++)
+                                    {
+                                        if (tet.bits[1].x - 1 + ((i % 3) - 1) < 0 || tet.bits[1].x + 1 + ((i % 3) - 1) > 9)//test for OoB shenanigans
+                                        {
+                                            continue;
+                                        }
+                                        if (gameField[tet.bits[0].x + 1 + xOffset + ((i % 3) - 1)][tet.bits[0].y + 2] == 0 && gameField[tet.bits[1].x + xOffset + ((i % 3) - 1)][tet.bits[1].y + 1] == 0 && gameField[tet.bits[2].x + -1 + xOffset + ((i % 3) - 1)][tet.bits[2].y] == 0 && gameField[tet.bits[3].x + xOffset + ((i % 3) - 1)][tet.bits[3].y + -1] == 0)
+                                        {
+                                            tet.bits[0].x += 1 + xOffset + ((i % 3) - 1);
+                                            tet.bits[0].y += 2;
+                                            tet.bits[1].x += xOffset + ((i % 3) - 1);
+                                            tet.bits[1].y += 1;
+                                            tet.bits[2].x += -1 + xOffset + ((i % 3) - 1);
+                                            tet.bits[3].x += xOffset + ((i % 3) - 1);
+                                            tet.bits[3].y += -1;
+
+                                            tet.rotation = 2;
+
+                                            break;
+                                        }
+                                    }
+                                    break;
+                            }
+                            break;
+                    }
+                    break;
+                case 5: //S has two rotation states
+                    switch (tet.rotation)
+                    {
+                        case 0:
+                            if (tet.bits[0].y - 2 < 0)
+                            {
+                                //set an offset
+                                yOffset = 1;
+                            }
+                            else
+                            {
+                                //check if space has a piece there!
+                            }
+
+                            for (int i = 1; i < 4; i++)
+                            {
+                                if (tet.bits[1].x - 1 + ((i % 3) - 1) < 0 || tet.bits[1].x + 1 + ((i % 3) - 1) > 9)//test for OoB shenanigans
+                                {
+                                    continue;
+                                }
+                                if (gameField[tet.bits[0].x + ((i % 3) - 1)][tet.bits[0].y - 2 + yOffset] == 0 && gameField[tet.bits[0].x + ((i % 3) - 1)][tet.bits[0].y - 1 + yOffset] == 0 && gameField[tet.bits[1].x + ((i % 3) - 1)][tet.bits[1].y + yOffset] == 0 && gameField[tet.bits[2].x + ((i % 3) - 1)][tet.bits[2].y + yOffset] == 0)
+                                {
+                                    tet.bits[0].x += 1 + ((i % 3) - 1);
+                                    tet.bits[0].y += yOffset;
+                                    tet.bits[1].x += ((i % 3) - 1);
+                                    tet.bits[1].y += yOffset - 1;
+                                    tet.bits[2].x += -1 + ((i % 3) - 1);
+                                    tet.bits[2].y += yOffset;
+                                    tet.bits[3].x += -2 + ((i % 3) - 1);
+                                    tet.bits[3].y += (yOffset - 1);
+
+                                    tet.rotation = 1;
+
+                                    break;
+                                }
+                            }
+                            break;
+                        case 1:
+                            for (int i = 1; i < 4; i++)
+                            {
+                                if (tet.bits[1].x - 1 + ((i % 3) - 1) < 0 || tet.bits[1].x + 1 + ((i % 3) - 1) > 9)//test for OoB shenanigans
+                                {
+                                    continue;
+                                }
+                                if (gameField[tet.bits[0].x - 1 + xOffset + ((i % 3) - 1)][tet.bits[0].y] == 0 && gameField[tet.bits[0].x + xOffset + ((i % 3) - 1)][tet.bits[0].y] == 0 && gameField[tet.bits[0].x + xOffset + ((i % 3) - 1)][tet.bits[0].y - 1] == 0 && gameField[tet.bits[0].x + 1 + xOffset + ((i % 3) - 1)][tet.bits[0].y - 1] == 0)
+                                {
+                                    tet.bits[2].x += 1 + xOffset + ((i % 3) - 1);
+                                    tet.bits[1].y += 1;
+                                    tet.bits[1].x += xOffset + ((i % 3) - 1);
+                                    tet.bits[0].x += -1 + xOffset + ((i % 3) - 1);
+                                    tet.bits[3].x += 2 + xOffset + ((i % 3) - 1);
+                                    tet.bits[3].y += 1;
+
+                                    tet.rotation = 0;
+
+                                    break;
+                                }
+                            }
+                            break;
+                    }
+                    break;
+                case 6: //Z has two rotation states
+                    switch (tet.rotation)
+                    {
+                        case 0:
+                            if (tet.bits[0].y - 1 < 0)
+                            {
+                                //set an offset
+                                yOffset = 1;
+                            }
+                            else
+                            {
+                                //check if space has a piece there!
+                            }
+                            for (int i = 1; i < 4; i++)
+                            {
+                                if (tet.bits[2].x - 1 + ((i % 3) - 1) < 0 || tet.bits[2].x + 1 + ((i % 3) - 1) > 9)//test for OoB shenanigans
+                                {
+                                    continue;
+                                }
+                                if (gameField[tet.bits[1].x - 1 + ((i % 3) - 1)][tet.bits[0].y - 1 + yOffset] == 0 && gameField[tet.bits[1].x - 1 + ((i % 3) - 1)][tet.bits[3].y + yOffset] == 0 && gameField[tet.bits[1].x + ((i % 3) - 1)][tet.bits[1].y + yOffset] == 0 && gameField[tet.bits[2].x + ((i % 3) - 1)][tet.bits[2].y + yOffset] == 0)
+                                {
+                                    tet.bits[0].x += 2 + ((i % 3) - 1);
+                                    tet.bits[0].y += yOffset - 1;
+                                    tet.bits[1].x += 1 + ((i % 3) - 1);
+                                    tet.bits[1].y += yOffset;
+                                    tet.bits[2].x += ((i % 3) - 1);
+                                    tet.bits[2].y += yOffset - 1;
+                                    tet.bits[3].x += -1 + ((i % 3) - 1);
+                                    tet.bits[3].y += yOffset;
+
+                                    tet.rotation = 1;
+
+                                    break;
+                                }
+                            }
+                            break;
+                        case 1:
+                            for (int i = 1; i < 4; i++)
+                            {
+                                if (tet.bits[2].x - 1 + ((i % 3) - 1) < 0 || tet.bits[2].x + 1 + ((i % 3) - 1) > 9)//test for OoB shenanigans
+                                {
+                                    continue;
+                                }
+                                if (gameField[tet.bits[0].x - 2 + xOffset + ((i % 3) - 1)][tet.bits[0].y + 1] == 0 && gameField[tet.bits[2].x + xOffset + ((i % 3) - 1)][tet.bits[2].y] == 0 && gameField[tet.bits[3].x + xOffset + ((i % 3) - 1)][tet.bits[3].y] == 0 && gameField[tet.bits[1].x + xOffset + ((i % 3) - 1)][tet.bits[1].y + 1] == 0)
+                                {
+                                    tet.bits[2].x += xOffset + ((i % 3) - 1);
+                                    tet.bits[2].y += 1;
+                                    tet.bits[1].x += xOffset - 1 + ((i % 3) - 1);
+                                    tet.bits[0].x += (xOffset - 2) + ((i % 3) - 1);
+                                    tet.bits[0].y += 1;
+                                    tet.bits[3].x += (xOffset + 1) + ((i % 3) - 1);
+
+                                    tet.rotation = 0;
+
+                                    break;
+                                }
+                            }
+                            break;
+                    }
+                    break;
+                case 7: //O has one. do nothing.
+                    break;
+            }
+        }
+
+        public Tetromino generatePiece()
+        {
+            Random piece = new Random();
+            int tempID = 0;
+            for (int j = 0; j < 4; j++)
+            {
+                tempID = piece.Next(7) + 1;
+                if (tempID != lastTet[0] && tempID != lastTet[1] && tempID != lastTet[2] && tempID != lastTet[3])
+                    break;
+            }
+            for (int j = 0; j < 3; j++)
+            {
+                lastTet[j] = lastTet[j + 1];
+            }
+
+            Tetromino tempTet = new Tetromino(tempID);
+            lastTet[3] = tempTet.id;
+            return tempTet;
+        }
+
+        public bool emptyUnderTet(Tetromino tet)
+        {
+            bool status = true;
+            for (int i = 0; i < 4; i++)
+            {
+                if (gameField[tet.bits[i].x][tet.bits[i].y] != 0)
+                {
+                    status = false;
+                    break;
+                }
+            }
+
+            return status;
         }
     }
 }
