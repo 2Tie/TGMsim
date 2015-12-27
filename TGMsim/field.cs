@@ -144,7 +144,7 @@ namespace TGMsim
             }
 
             //draw the ghost piece
-            if (level < 100 && ghostPiece != null)
+            if (level < 100 && ghostPiece != null && activeTet.id == ghostPiece.id)
             {
                 for (int i = 0; i < 4; i++)
                 {
@@ -618,31 +618,7 @@ namespace TGMsim
                     //handle ghost piece logic
                     ghostPiece = activeTet.clone();
 
-                    int g = 0;
-                    for (g = 0; g < 20; g++)
-                    {
-                        bool breakout = false;
-                        for (int g2 = 0; g2 < 4; g2++)
-                        {
-                            if (ghostPiece.bits[g2].y + g == 20)
-                            {
-                                breakout = true;
-                                break;
-                            }
-                            if (gameField[ghostPiece.bits[g2].x][ghostPiece.bits[g2].y + g] != 0)
-                            {
-                                g--;
-                                breakout = true;
-                                break;
-                            }
-                        }
-                        if (breakout)
-                            break;
-                    }
-                    for (int j = 0; j < 4; j++)
-                    {
-                        ghostPiece.bits[j].y += g;
-                    }
+                    tetGrav(ghostPiece, 20);
 
                     //if (!emptyUnderTet(ghostPiece))
                     //{
@@ -1642,6 +1618,38 @@ namespace TGMsim
             }
 
             return status;
+        }
+        public void tetGrav(Tetromino tet, int i)
+        {
+            int g = 0;
+            for (g = 0; g < i; g++)
+            {
+                bool breakout = false;
+                for (int p = 0; p < 4; p++)
+                {
+                    if (gameField[tet.bits[p].x][tet.bits[p].y + g] != 0)
+                    {
+                        g--;
+                        breakout = true;
+                        break;
+                    }
+                }
+                for (int p = 0; p < 4; p++)
+                {
+                    if (tet.bits[p].y + g == 20)
+                    {
+                        breakout = true;
+                        break;
+                    }
+                }
+
+                if (breakout)
+                    break;
+            }
+            for (int p = 0; p < 4; p++)
+            {
+                tet.bits[p].y += g;
+            }
         }
     }
 }
