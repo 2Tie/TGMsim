@@ -100,5 +100,25 @@ namespace TGMsim
                     break;
             }
         }
+
+        public Tetromino clone()
+        {
+            Tetromino newTet = new Tetromino(id);
+            for (int i = 0; i < 4; i++ )
+            {
+                int x, y;
+                for (x = 0; x < bits[i].x; x++ )
+                {
+                    
+                }
+                for (y = 0; y < bits[i].y; y++ )
+                {
+
+                }
+                newTet.bits[i].x = x;
+                newTet.bits[i].y = y;
+            }
+            return newTet;
+        }
     }
 }

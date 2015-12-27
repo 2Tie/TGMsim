@@ -73,7 +73,7 @@ namespace TGMsim
             tetColors.Add(Color.Yellow);
 
             activeTet = generatePiece();
-            ghostPiece = activeTet;
+            ghostPiece = activeTet.clone();
 
             if (nextTet.Count == 0 && ruleset.nextNum > 0) //generate nextTet
             {
@@ -148,7 +148,7 @@ namespace TGMsim
             {
                 for (int i = 0; i < 4; i++)
                 {
-                    drawBuffer.FillRectangle(new SolidBrush(tetColors[ghostPiece.id]), x + 25 * ghostPiece.bits[i].x, y + 25 * ghostPiece.bits[i].y, 25, 25);
+                    drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(100, tetColors[ghostPiece.id])), x + 25 * ghostPiece.bits[i].x, y + 25 * ghostPiece.bits[i].y, 25, 25);
                 }
             }
 
@@ -616,14 +616,7 @@ namespace TGMsim
                     }
 
                     //handle ghost piece logic
-                    /*ghostPiece.bits[0] = activeTet.bits[0];
-                    ghostPiece.bits[0].y = 20;
-                    ghostPiece.bits[1] = activeTet.bits[1];
-                    ghostPiece.bits[1].y = 20;
-                    ghostPiece.bits[2] = activeTet.bits[2];
-                    ghostPiece.bits[2].y = 20;
-                    ghostPiece.bits[3] = activeTet.bits[3];
-                    ghostPiece.bits[3].y = 20;
+                    ghostPiece = activeTet.clone();
 
                     int g = 0;
                     for (g = 0; g < 20; g++)
@@ -649,7 +642,7 @@ namespace TGMsim
                     for (int j = 0; j < 4; j++)
                     {
                         ghostPiece.bits[j].y += g;
-                    }*/
+                    }
 
                     //if (!emptyUnderTet(ghostPiece))
                     //{
