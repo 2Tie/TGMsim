@@ -163,8 +163,7 @@ namespace TGMsim
 
             //tech stats
             drawBuffer.DrawString("Current Timer: " + currentTimer.ToString(), SystemFonts.DefaultFont, debugBrush, 20, 750);
-            drawBuffer.DrawString("Grav Level: " + gravLevel, SystemFonts.DefaultFont, debugBrush, 200, 750);
-            drawBuffer.DrawString("Current Gravity: " + gravCounter.ToString(), SystemFonts.DefaultFont, debugBrush, 20, 760);
+            drawBuffer.DrawString("Grav Level: " + ruleset.gravTableTGM1[gravLevel].ToString(), SystemFonts.DefaultFont, debugBrush, 20, 760);
             drawBuffer.DrawString("Current Level: " + level, SystemFonts.DefaultFont, debugBrush, 200, 760);
 
             //game stats
@@ -567,7 +566,7 @@ namespace TGMsim
                     }
                     if (blockDrop > 0 && currentTimer != (int)Field.timerType.LockDelay)
                     {
-                        int i;
+                        /*int i;
                         gravCounter = 0;
                         groundTimer = ruleset.baseLock;
                         for (i = 0; i < blockDrop; i++)
@@ -608,9 +607,9 @@ namespace TGMsim
                         for (int j = 0; j < 4; j++)
                         {
                             activeTet.bits[j].y += i;
-                        }
-
-
+                        }*/
+                        gravCounter = 0;
+                        tetGrav(activeTet, blockDrop);
                         
 
                     }
@@ -620,15 +619,15 @@ namespace TGMsim
 
                     tetGrav(ghostPiece, 20);
 
-                    //if (!emptyUnderTet(ghostPiece))
-                    //{
-                    //    throw new NotImplementedException();
-                    //}
+                    /*if (!emptyUnderTet(ghostPiece))
+                    {
+                        throw new NotImplementedException();
+                    }
 
-                    //if (!emptyUnderTet(activeTet))
-                    //{
-                    //    throw new NotImplementedException();
-                    //}
+                    if (!emptyUnderTet(activeTet))
+                    {
+                        throw new NotImplementedException();
+                    }*/
                 }
 
 
@@ -1629,7 +1628,7 @@ namespace TGMsim
                 {
                     if (gameField[tet.bits[p].x][tet.bits[p].y + g] != 0)
                     {
-                        g--;
+                        g = g - 1;
                         breakout = true;
                         break;
                     }
@@ -1649,6 +1648,15 @@ namespace TGMsim
             for (int p = 0; p < 4; p++)
             {
                 tet.bits[p].y += g;
+            }
+
+            //failsafe for now, ugh
+            if (!emptyUnderTet(tet))
+            {
+                for (int p =0; p < 4; p++)
+                {
+                    tet.bits[p].y--;
+                }
             }
         }
     }
