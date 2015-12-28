@@ -20,6 +20,8 @@ namespace TGMsim
         public int gravType = 0; //b256, b65536
         public int baseGrav = 4;
 
+        public int creditsLength = 2968;
+
         public int fieldW = 10;
         public int fieldH = 20;
 
@@ -51,6 +53,7 @@ namespace TGMsim
                     baseGrav = 4;
                     fieldW = 10;
                     fieldH = 20;
+                    creditsLength = 2968;
                     showGrade = true;
                     break;
                 case 2:

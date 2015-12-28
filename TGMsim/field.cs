@@ -45,6 +45,8 @@ namespace TGMsim
         public int score = 0;
         public int combo = 1;
 
+        int creditsProgress;
+
         public int bravoCounter = 0;
 
         public int softCounter = 0;
