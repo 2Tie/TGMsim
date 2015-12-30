@@ -11,6 +11,8 @@ namespace TGMsim
         public bool hold = false;
         public int hardDrop = 0; //no, sonic, firm
 
+        public int genAttps = 4;
+
         public int rotation = 0; //TGM, TGM3, SRS
 
         public int baseARE = 30;
@@ -51,6 +53,7 @@ namespace TGMsim
                     baseLineClear = 41;
                     gravType = 0;
                     baseGrav = 4;
+                    genAttps = 4;
                     fieldW = 10;
                     fieldH = 20;
                     creditsLength = 2968; //taken from nullpomino, though estimates place it around 2961. still need to verify
@@ -67,6 +70,7 @@ namespace TGMsim
                     baseLineClear = 40;
                     gravType = 0;
                     baseGrav = 4;
+                    genAttps = 6;
                     fieldW = 10;
                     fieldH = 20;
                     showGrade = true;
@@ -82,6 +86,7 @@ namespace TGMsim
                     baseLineClear = 40;
                     gravType = 1;
                     baseGrav = 1024;
+                    genAttps = 6;
                     fieldW = 10;
                     fieldH = 20;
                     showGrade = false;

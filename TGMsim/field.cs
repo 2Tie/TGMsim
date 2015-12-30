@@ -14,7 +14,7 @@ namespace TGMsim
 
         Tetromino activeTet;
         public List<Tetromino> nextTet = new List<Tetromino>();
-        public List<int> lastTet = new List<int>() { 0, 0, 0, 0};
+        public List<int> lastTet = new List<int>() { 6, 6, 6, 6};
 
         public List<List<int>> gameField = new List<List<int>>();
 
@@ -78,7 +78,9 @@ namespace TGMsim
 
             pad = ctlr;
 
-            activeTet = generatePiece();
+            Random random = new Random();
+
+            activeTet = new Tetromino(random.Next(4) + 1); //fist piece cannot be S, Z, or O
             ghostPiece = activeTet.clone();
 
             if (nextTet.Count == 0 && ruleset.nextNum > 0) //generate nextTet
@@ -173,7 +175,10 @@ namespace TGMsim
             if (!inCredits)
                 drawBuffer.DrawString("Current Level: " + level, SystemFonts.DefaultFont, debugBrush, 200, 760);
             else
+            {
                 drawBuffer.DrawString("Credits", SystemFonts.DefaultFont, debugBrush, 200, 760);
+                drawBuffer.DrawString("Credits Timer: " + creditsProgress.ToString(), SystemFonts.DefaultFont, debugBrush, 200, 750);
+            }
 
             //game stats
             drawBuffer.DrawString("Score: " + score, SystemFonts.DefaultFont, debugBrush, 90, 740);
@@ -222,8 +227,7 @@ namespace TGMsim
                 msec = (int)temptimeVAR;
                 msec10 = (int)(msec/10);
 
-                if(inCredits)
-                    creditsProgress++;
+                
 
                 //check inputs and handle logic pertaining to them
                 pad.poll();
@@ -238,6 +242,16 @@ namespace TGMsim
                 }
                 else
                     inputDelayH = -1;
+
+                if (inCredits)
+                {
+                    creditsProgress++;
+                    if (pad.inputStart == 1 && ruleset.gameRules == 1)
+                        creditsProgress += 3;
+                }
+
+                //GAME LOGIC
+
                 //check ID of current tetromino.
                 if (activeTet.id == 0)
                 {
@@ -1573,19 +1587,27 @@ namespace TGMsim
         {
             Random piece = new Random();
             int tempID = 0;
-            for (int j = 0; j < 4; j++)
+            for (int j = 0; j < ruleset.genAttps; j++)
             {
+                bool copy = false;
                 tempID = piece.Next(7) + 1;
-                if (tempID != lastTet[0] && tempID != lastTet[1] && tempID != lastTet[2] && tempID != lastTet[3])
+                for (int k = 0; k < lastTet.Count; k++)
+                {
+                    if (tempID == lastTet[k])
+                    {
+                        copy = true;
+                    }
+                }
+                if (copy == false)
                     break;
             }
-            for (int j = 0; j < 3; j++)
+            for (int j = 0; j < lastTet.Count - 1; j++)
             {
                 lastTet[j] = lastTet[j + 1];
             }
 
             Tetromino tempTet = new Tetromino(tempID);
-            lastTet[3] = tempTet.id;
+            lastTet[lastTet.Count - 1] = tempTet.id;
 
             return tempTet;
         }
