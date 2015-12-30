@@ -45,6 +45,7 @@ namespace TGMsim
         public int score = 0;
         public int combo = 1;
 
+        public bool inCredits = false;
         int creditsProgress;
 
         public int bravoCounter = 0;
@@ -166,7 +167,10 @@ namespace TGMsim
             //tech stats
             drawBuffer.DrawString("Current Timer: " + currentTimer.ToString(), SystemFonts.DefaultFont, debugBrush, 20, 750);
             drawBuffer.DrawString("Grav Level: " + ruleset.gravTableTGM1[gravLevel].ToString(), SystemFonts.DefaultFont, debugBrush, 20, 760);
-            drawBuffer.DrawString("Current Level: " + level, SystemFonts.DefaultFont, debugBrush, 200, 760);
+            if (!inCredits)
+                drawBuffer.DrawString("Current Level: " + level, SystemFonts.DefaultFont, debugBrush, 200, 760);
+            else
+                drawBuffer.DrawString("Credits", SystemFonts.DefaultFont, debugBrush, 200, 760);
 
             //game stats
             drawBuffer.DrawString("Score: " + score, SystemFonts.DefaultFont, debugBrush, 90, 740);
@@ -214,6 +218,9 @@ namespace TGMsim
                 temptimeVAR -= sec * 1000;
                 msec = (int)temptimeVAR;
                 msec10 = (int)(msec/10);
+
+                if(inCredits)
+                    creditsProgress++;
 
                 //check inputs and handle logic pertaining to them
 
@@ -285,9 +292,7 @@ namespace TGMsim
 
                             if (blocked)
                             {
-                                gameRunning = false;
-                                //TODO: cleanup and scoring
-                                return;
+                                endGame();
                             }
                             softCounter = 0;
                         }
@@ -326,6 +331,12 @@ namespace TGMsim
                             {
                                 if(level % 100 != 99 && level != 998)
                                     level++;
+
+                                if (inCredits == true && creditsProgress >= ruleset.creditsLength)
+                                {
+                                    endGame();
+                                }
+
                                 for (int i = 0; i < 4; i++)
                                 {
                                     gameField[activeTet.bits[i].x][activeTet.bits[i].y] = activeTet.id;
@@ -371,7 +382,8 @@ namespace TGMsim
 
                                     combo = combo + (2 * full.Count) - 2;
                                     //give points
-                                    score += ((int)Math.Ceiling((double)(level + full.Count) / 4) + softCounter) * full.Count * ((full.Count * 2) - 1) * combo * bravo;
+                                    if (!inCredits)
+                                        score += ((int)Math.Ceiling((double)(level + full.Count) / 4) + softCounter) * full.Count * ((full.Count * 2) - 1) * combo * bravo;
 
                                     //check GM conditions
                                     if(GMflags.Count == 0 && level >= 300)
@@ -403,7 +415,8 @@ namespace TGMsim
                                             //credits roll in future, for now just gibe GM?
                                             isGM = true;
 
-                                            gameRunning = false;
+                                            
+                                            //gameRunning = false;
                                         }
                                     }
 
@@ -412,6 +425,11 @@ namespace TGMsim
                                     {
                                         if (score >= ruleset.gradePointsTGM1[grade + 1])
                                             grade++;
+                                    }
+
+                                    if (level >= 999 && inCredits == false)
+                                    {
+                                        triggerCredits();
                                     }
 
                                     //start timer
@@ -568,48 +586,6 @@ namespace TGMsim
                     }
                     if (blockDrop > 0 && currentTimer != (int)Field.timerType.LockDelay)
                     {
-                        /*int i;
-                        gravCounter = 0;
-                        groundTimer = ruleset.baseLock;
-                        for (i = 0; i < blockDrop; i++)
-                        {
-                            //check collision of each step
-
-
-                            if (gameField[activeTet.bits[0].x][activeTet.bits[0].y + i] != 0)
-                            {
-                                i--;
-                                break;
-                            }
-                            if (gameField[activeTet.bits[1].x][activeTet.bits[1].y + i] != 0)
-                            {
-                                i--;
-                                break;
-                            }
-                            if (gameField[activeTet.bits[2].x][activeTet.bits[2].y + i] != 0)
-                            {
-                                i--;
-                                break;
-                            }
-                            if (gameField[activeTet.bits[3].x][activeTet.bits[3].y + i] != 0)
-                            {
-                                i--;
-                                break;
-                            }
-                            if (activeTet.bits[0].y + i >= 20)
-                                break;
-                            if (activeTet.bits[1].y + i >= 20)
-                                break;
-                            if (activeTet.bits[2].y + i >= 20)
-                                break;
-                            if (activeTet.bits[3].y + i >= 20)
-                                break;
-                        }
-
-                        for (int j = 0; j < 4; j++)
-                        {
-                            activeTet.bits[j].y += i;
-                        }*/
                         gravCounter = 0;
                         tetGrav(activeTet, blockDrop);
                         
@@ -621,19 +597,22 @@ namespace TGMsim
 
                     tetGrav(ghostPiece, 20);
 
-                    /*if (!emptyUnderTet(ghostPiece))
-                    {
-                        throw new NotImplementedException();
-                    }
-
-                    if (!emptyUnderTet(activeTet))
-                    {
-                        throw new NotImplementedException();
-                    }*/
                 }
 
 
             }
+        }
+
+        private void endGame()
+        {
+            gameRunning = false;
+        }
+
+        private void triggerCredits()
+        {
+            timer.stop();
+            inCredits = true;
+
         }
 
         private void rotatePiece(Tetromino tet, int p, Controller pad)

@@ -53,7 +53,7 @@ namespace TGMsim
                     baseGrav = 4;
                     fieldW = 10;
                     fieldH = 20;
-                    creditsLength = 2968;
+                    creditsLength = 2968; //taken from nullpomino, though estimates place it around 2961. still need to verify
                     showGrade = true;
                     break;
                 case 2:
