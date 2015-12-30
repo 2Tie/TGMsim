@@ -28,7 +28,7 @@ namespace TGMsim
 
         int menuState = 5; //title, login, game select, mode select, ingame, results, hiscore roll, custom game, settings
 
-        Field field1 = new Field();
+        Field field1;
         
         Tetromino tet1;
         
@@ -57,11 +57,12 @@ namespace TGMsim
             //field1.randomize();
             
             //tetrng.delete();
+            field1 = new Field(pad1);
 
             while (this.Created)
             {
                 startTime = timer.elapsedTime;
-                pad1.poll();
+                //pad1.poll();
                 gameLogic();
                 gameRender();
 
@@ -101,7 +102,7 @@ namespace TGMsim
 
                     break;
                 case 5: //ingame
-                    field1.logic(pad1);
+                    field1.logic();
                     break;
             }
         }

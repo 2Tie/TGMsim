@@ -58,9 +58,10 @@ namespace TGMsim
 
         Pen gridPen = new Pen(new SolidBrush(Color.White));
 
+        Controller pad;
         int inputDelayH = 0, inputDelayV = 0;
 
-        public Field()
+        public Field(Controller ctlr)
         {
             x = 275;
             y = 100;
@@ -74,6 +75,8 @@ namespace TGMsim
             tetColors.Add(Color.Purple);
             tetColors.Add(Color.Green);
             tetColors.Add(Color.Yellow);
+
+            pad = ctlr;
 
             activeTet = generatePiece();
             ghostPiece = activeTet.clone();
@@ -206,7 +209,7 @@ namespace TGMsim
 #endif
         }
 
-        public void logic(Controller pad)
+        public void logic()
         {
             if (gameRunning == true)
             {
@@ -223,7 +226,7 @@ namespace TGMsim
                     creditsProgress++;
 
                 //check inputs and handle logic pertaining to them
-
+                pad.poll();
                 if (pad.inputH == 1 || pad.inputH == -1)
                 {
                     if (inputDelayH > 0)
@@ -283,6 +286,14 @@ namespace TGMsim
                             {
                                 activeTet = generatePiece();
                             }
+
+                            int intRot = 0;
+                            if (pad.inputPressedRot1)
+                                intRot += 1;
+                            if (pad.inputPressedRot2)
+                                intRot -= 1;
+                            if (intRot != 0)
+                                rotatePiece(activeTet, intRot);
 
                             gravCounter = 0;
 
@@ -512,15 +523,8 @@ namespace TGMsim
                         //heldPiece = new Tetromino(activeTet.id);
                     }
 
-
-                    if (pad.inputRot1 == 1)
-                    {
-                        rotatePiece(activeTet, 1, pad);
-                    }
-                    if (pad.inputRot2 == 1)
-                    {
-                        rotatePiece(activeTet, 2, pad);
-                    }
+                    if (pad.inputRot1 - pad.inputRot2 != 0)
+                        rotatePiece(activeTet, pad.inputRot1 - pad.inputRot2);
 
                    
 
@@ -615,7 +619,7 @@ namespace TGMsim
 
         }
 
-        private void rotatePiece(Tetromino tet, int p, Controller pad)
+        private void rotatePiece(Tetromino tet, int p)
         {
             int xOffset = 0; //for kicks
             int yOffset = 0;
@@ -665,7 +669,7 @@ namespace TGMsim
 
                     break;
                 case 2: //T 
-                    switch (pad.inputRot1 - pad.inputRot2)
+                    switch (p)
                     {
                         case 1:
                             switch (tet.rotation)
@@ -920,7 +924,7 @@ namespace TGMsim
                     }
                     break;
                 case 3: //L
-                    switch (pad.inputRot1 - pad.inputRot2)
+                    switch (p)
                     {
                         case 1:
                             switch (tet.rotation)
@@ -1180,7 +1184,7 @@ namespace TGMsim
                     }
                     break;
                 case 4: //J
-                    switch (pad.inputRot1 - pad.inputRot2)
+                    switch (p)
                     {
                         case 1:
                             switch (tet.rotation)
@@ -1582,6 +1586,7 @@ namespace TGMsim
 
             Tetromino tempTet = new Tetromino(tempID);
             lastTet[3] = tempTet.id;
+
             return tempTet;
         }
 

@@ -56,9 +56,9 @@ namespace TGMsim
             {
                 if (!inputPressedRot1)
                 {
-                    inputPressedRot1 = true;
                     inputRot1 = 1;
                 }
+                inputPressedRot1 = true;
             }
             else
             {
@@ -70,9 +70,9 @@ namespace TGMsim
             {
                 if (!inputPressedRot2)
                 {
-                    inputPressedRot2 = true;
                     inputRot2 = 1;
                 }
+                inputPressedRot2 = true;
             }
             else
             {
