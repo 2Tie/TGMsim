@@ -52,7 +52,7 @@ namespace TGMsim
 
         public int softCounter = 0;
 
-        Rules ruleset = new Rules();
+        Rules ruleset;
 
         List<Color> tetColors = new List<Color>();
 
@@ -61,7 +61,7 @@ namespace TGMsim
         Controller pad;
         int inputDelayH = 0, inputDelayV = 0;
 
-        public Field(Controller ctlr)
+        public Field(Controller ctlr, Rules rules)
         {
             x = 275;
             y = 100;
@@ -77,10 +77,17 @@ namespace TGMsim
             tetColors.Add(Color.Yellow);
 
             pad = ctlr;
+            ruleset = rules;
 
             Random random = new Random();
 
             activeTet = new Tetromino(random.Next(4) + 1); //fist piece cannot be S, Z, or O
+            for (int j = 0; j < lastTet.Count - 1; j++)
+            {
+                lastTet[j] = lastTet[j + 1];
+            }
+            lastTet[lastTet.Count - 1] = activeTet.id;
+
             ghostPiece = activeTet.clone();
 
             if (nextTet.Count == 0 && ruleset.nextNum > 0) //generate nextTet
@@ -198,7 +205,7 @@ namespace TGMsim
             drawBuffer.DrawString(string.Format("{0,2:00}:{1,2:00}:{2,2:00}", min, sec, msec10), SystemFonts.DefaultFont, debugBrush, 100, 700);
 
             //tets
-            drawBuffer.DrawString(lastTet[0] + " " + lastTet[1] + " " + lastTet[2] + " " + lastTet[3] + " " + activeTet.id, SystemFonts.DefaultFont, debugBrush, 100, 720);
+            drawBuffer.DrawString(lastTet[0] + " " + lastTet[1] + " " + lastTet[2] + " " + lastTet[3], SystemFonts.DefaultFont, debugBrush, 100, 720);
             for (int i = 0; i < 4; i++)
             {
                 drawBuffer.DrawString(activeTet.bits[i].x + " " + activeTet.bits[i].y, SystemFonts.DefaultFont, debugBrush, 160 + (32 * i), 720);

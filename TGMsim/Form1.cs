@@ -20,6 +20,7 @@ namespace TGMsim
 
 
         Controller pad1 = new Controller();
+        Rules rules = new Rules();
 
         Image imgBuffer;
         Graphics graphics, drawBuffer;
@@ -57,7 +58,7 @@ namespace TGMsim
             //field1.randomize();
             
             //tetrng.delete();
-            field1 = new Field(pad1);
+            field1 = new Field(pad1, rules);
 
             while (this.Created)
             {
