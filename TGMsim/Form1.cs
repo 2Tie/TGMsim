@@ -15,8 +15,9 @@ namespace TGMsim
     {
 
         GameTimer timer = new GameTimer();
+        double FPS = 59.84; //59.84 for TGM1, 61.68 for TGM2, 60.00 for TGM3
         long startTime;
-        long interval = (long)TimeSpan.FromSeconds(1.0 / 60).TotalMilliseconds;
+        long interval;
 
 
         Controller pad1 = new Controller();
@@ -43,7 +44,7 @@ namespace TGMsim
 
             this.ClientSize = new Size(1280, 780);
 
-            
+            interval = (long)TimeSpan.FromSeconds(1.0 / FPS).TotalMilliseconds;
 
             imgBuffer = (Image)new Bitmap(this.ClientSize.Width, this.ClientSize.Height);
 
