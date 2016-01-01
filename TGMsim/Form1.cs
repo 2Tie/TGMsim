@@ -15,7 +15,7 @@ namespace TGMsim
     {
 
         GameTimer timer = new GameTimer();
-        double FPS = 59.84; //59.84 for TGM1, 61.68 for TGM2, 60.00 for TGM3
+        double FPS = 60; //59.84 for TGM1, 61.68 for TGM2, 60.00 for TGM3
         long startTime;
         long interval;
 
@@ -28,7 +28,7 @@ namespace TGMsim
 
         
 
-        int menuState = 5; //title, login, game select, mode select, ingame, results, hiscore roll, custom game, settings
+        int menuState = 0; //title, login, game select, mode select, ingame, results, hiscore roll, custom game, settings
 
         Field field1;
         
@@ -59,12 +59,11 @@ namespace TGMsim
             //field1.randomize();
             
             //tetrng.delete();
-            field1 = new Field(pad1, rules);
+            //field1 = new Field(pad1, rules);
 
             while (this.Created)
             {
                 startTime = timer.elapsedTime;
-                //pad1.poll();
                 gameLogic();
                 gameRender();
 
@@ -79,16 +78,21 @@ namespace TGMsim
             switch (menuState) //clean up the current menu
             {
                 case 0:
-                    //TitlePanel.Enabled = false;
-                    //TitlePanel.Visible = false;
+                    break;
+                case 5:
                     break;
             }
 
             switch (newMenu) //activate the new menu
             {
                 case 0:
-                    //TitlePanel.Enabled = true;
-                    //TitlePanel.Visible = true;
+                    menuState = 0;
+                    FPS = 60.00;
+                    break;
+                case 5:
+                    menuState = 5;
+                    FPS = 59.84;
+                    field1 = new Field(pad1, rules);
                     break;
             }
 
@@ -101,11 +105,20 @@ namespace TGMsim
             switch (menuState)
             {
                 case 0: //title
-
+                    titleLogic();
                     break;
                 case 5: //ingame
                     field1.logic();
                     break;
+            }
+        }
+
+        private void titleLogic()
+        {
+            pad1.poll();
+            if (pad1.inputStart == 1)
+            {
+                changeMenu(5);
             }
         }
 
@@ -114,7 +127,16 @@ namespace TGMsim
             //draw temp BG so bleeding doesn't occur
             drawBuffer.FillRectangle(new SolidBrush(Color.Black), this.ClientRectangle);
 
-            field1.draw(drawBuffer);
+
+            switch (menuState)
+            {
+                case 0:
+                    drawBuffer.DrawString("TGM sim title screen thingy", DefaultFont, new SolidBrush(Color.White), 500, 300);
+                    break;
+                case 5:
+                    field1.draw(drawBuffer);
+                    break;
+            }
 
 #if DEBUG
             SolidBrush debugBrush = new SolidBrush(Color.White);
