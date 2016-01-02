@@ -237,7 +237,7 @@ namespace TGMsim
                 
 
                 //check inputs and handle logic pertaining to them
-                pad.poll();
+                //pad.poll();
                 if (pad.inputH == 1 || pad.inputH == -1)
                 {
                     if (inputDelayH > 0)
@@ -631,6 +631,7 @@ namespace TGMsim
         private void endGame()
         {
             gameRunning = false;
+            //in the future, the little fadeout animation goes here!
         }
 
         private void triggerCredits()

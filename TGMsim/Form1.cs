@@ -19,6 +19,7 @@ namespace TGMsim
         long startTime;
         long interval;
 
+        int menuSelection;
 
         Controller pad1 = new Controller();
         Rules rules = new Rules();
@@ -26,11 +27,13 @@ namespace TGMsim
         Image imgBuffer;
         Graphics graphics, drawBuffer;
 
+        Profile player;
         
 
         int menuState = 0; //title, login, game select, mode select, ingame, results, hiscore roll, custom game, settings
 
         Field field1;
+        Login login;
         
         Tetromino tet1;
         
@@ -76,20 +79,31 @@ namespace TGMsim
         {
 
             switch (menuState) //clean up the current menu
-            {
+            {  //title, login, game select, mode select, ingame, results, hiscore roll, custom game, settings
                 case 0:
                     break;
-                case 5:
+                case 1:
+                    break;
+                case 4:
                     break;
             }
 
             switch (newMenu) //activate the new menu
-            {
+            {  //title, login, game select, mode select, ingame, results, hiscore roll, custom game, settings
                 case 0:
                     menuState = 0;
                     FPS = 60.00;
                     break;
-                case 5:
+                case 1:
+                    menuState = 1;
+                    login = new Login();
+                    break;
+                case 2:
+                    menuState = 2;
+                    menuSelection = 0;
+                    break;
+
+                case 4:
                     menuState = 5;
                     FPS = 59.84;
                     field1 = new Field(pad1, rules);
@@ -101,24 +115,42 @@ namespace TGMsim
 
         void gameLogic()
         {
+            pad1.poll();
             //deal with game logic
             switch (menuState)
             {
                 case 0: //title
                     titleLogic();
                     break;
-                case 5: //ingame
+                case 1:
+                    loginLogic();
+                    break;
+                case 4: //ingame
                     field1.logic();
                     break;
             }
         }
 
+        private void loginLogic()
+        {
+
+            login.logic(pad1);
+
+            if (pad1.inputStart == 1 && login.loggedin)
+            {
+                pad1.inputStart = 0;
+                player = login.temp;
+                changeMenu(4);
+            }
+        }
+
         private void titleLogic()
         {
-            pad1.poll();
+
             if (pad1.inputStart == 1)
             {
-                changeMenu(5);
+                pad1.inputStart = 0;
+                changeMenu(1);
             }
         }
 
@@ -132,8 +164,13 @@ namespace TGMsim
             {
                 case 0:
                     drawBuffer.DrawString("TGM sim title screen thingy", DefaultFont, new SolidBrush(Color.White), 500, 300);
+                    drawBuffer.DrawString("Press Start", DefaultFont, new SolidBrush(Color.White), 550, 400);
                     break;
-                case 5:
+                case 1:
+                    drawBuffer.DrawString("login", DefaultFont, new SolidBrush(Color.White), 100, 20);
+                    login.render(drawBuffer);
+                    break;
+                case 4:
                     field1.draw(drawBuffer);
                     break;
             }

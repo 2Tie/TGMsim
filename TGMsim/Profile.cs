@@ -8,11 +8,11 @@ namespace TGMsim
 {
     class Profile
     {
-        String name;
-        int decoration;
-        int globalDecoration;
-        bool displayGlobal;
-        List<byte> password;
-        bool passProtected;
+        public String name;
+        public int decoration = 0;
+        public int globalDecoration;
+        public bool displayGlobal = false;
+        public List<byte> password;
+        public bool passProtected = false;
     }
 }
