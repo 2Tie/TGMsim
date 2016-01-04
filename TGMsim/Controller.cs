@@ -29,60 +29,62 @@ namespace TGMsim
 
         public void poll() 
         {
-            //handle inputs
-            //reset inputs
-            inputH = inputV = inputStart = inputRot1 = inputRot2 = inputHold = 0;
-
-            //up or down = w or s
-            if (Keyboard.IsKeyDown(keyUp))
-                inputV += 1;
-
-            if (Keyboard.IsKeyDown(keyDown))
-                inputV -= 1;
-
-            //left or right = a or d
-            if (Keyboard.IsKeyDown(keyLeft))
-                inputH -= 1;
-
-            if (Keyboard.IsKeyDown(keyRight))
-                inputH += 1;
-
-            //start = enter
-            if (Keyboard.IsKeyDown(keyStart))
-                inputStart = 1;
-
-            //rot1 = o or [
-            if (Keyboard.IsKeyDown(keyRot1) || Keyboard.IsKeyDown(keyRot3))
+            if (true) //todo: ignore background inputs optionally
             {
-                if (!inputPressedRot1)
+                //handle inputs
+                //reset inputs
+                inputH = inputV = inputStart = inputRot1 = inputRot2 = inputHold = 0;
+
+                //up or down = w or s
+                if (Keyboard.IsKeyDown(keyUp))
+                    inputV += 1;
+
+                if (Keyboard.IsKeyDown(keyDown))
+                    inputV -= 1;
+
+                //left or right = a or d
+                if (Keyboard.IsKeyDown(keyLeft))
+                    inputH -= 1;
+
+                if (Keyboard.IsKeyDown(keyRight))
+                    inputH += 1;
+
+                //start = enter
+                if (Keyboard.IsKeyDown(keyStart))
+                    inputStart = 1;
+
+                //rot1 = o or [
+                if (Keyboard.IsKeyDown(keyRot1) || Keyboard.IsKeyDown(keyRot3))
                 {
-                    inputRot1 = 1;
+                    if (!inputPressedRot1)
+                    {
+                        inputRot1 = 1;
+                    }
+                    inputPressedRot1 = true;
                 }
-                inputPressedRot1 = true;
-            }
-            else
-            {
-                inputPressedRot1 = false;
-            }
-
-            //rot2 = p
-            if (Keyboard.IsKeyDown(keyRot2))
-            {
-                if (!inputPressedRot2)
+                else
                 {
-                    inputRot2 = 1;
+                    inputPressedRot1 = false;
                 }
-                inputPressedRot2 = true;
-            }
-            else
-            {
-                inputPressedRot2 = false;
-            }
 
-            //hold = K
-            if (Keyboard.IsKeyDown(keyHold))
-                inputHold = 1;
+                //rot2 = p
+                if (Keyboard.IsKeyDown(keyRot2))
+                {
+                    if (!inputPressedRot2)
+                    {
+                        inputRot2 = 1;
+                    }
+                    inputPressedRot2 = true;
+                }
+                else
+                {
+                    inputPressedRot2 = false;
+                }
 
+                //hold = K
+                if (Keyboard.IsKeyDown(keyHold))
+                    inputHold = 1;
+            }
         }
     }
 }

@@ -14,6 +14,7 @@ namespace TGMsim
         public long time;
         public int grade;
         public int level;
+        public string username;
 
     }
 }

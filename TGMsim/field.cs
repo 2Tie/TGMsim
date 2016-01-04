@@ -10,7 +10,7 @@ namespace TGMsim
     class Field
     {
 
-        bool gameRunning;
+        public bool gameRunning;
 
         Tetromino activeTet;
         public List<Tetromino> nextTet = new List<Tetromino>();
@@ -29,6 +29,7 @@ namespace TGMsim
         public Tetromino ghostPiece;
 
         public GameTimer timer = new GameTimer();
+        public GameTimer contTime = new GameTimer();
         public int min, sec, msec, msec10;
 
         public bool swappedHeld;
@@ -53,6 +54,10 @@ namespace TGMsim
         public int softCounter = 0;
 
         Rules ruleset;
+
+        public GameResult results;
+
+        public bool cont = false;
 
         List<Color> tetColors = new List<Color>();
 
@@ -172,6 +177,20 @@ namespace TGMsim
                 drawBuffer.DrawLine(gridPen, x + 25 * i, y + 25, x + 25 * i, y + height + 25);
             for (int i = 1; i < 22; i++)
                 drawBuffer.DrawLine(gridPen, x, y + 25 * i, x + width, y + 25 * i);
+
+
+            //endgame stats
+            if (gameRunning == false)
+            {
+                drawBuffer.DrawString("Grade: " + results.grade, SystemFonts.DefaultFont, new SolidBrush(Color.White), 200, 200);
+                drawBuffer.DrawString("Score: " + results.score, SystemFonts.DefaultFont, new SolidBrush(Color.White), 200, 210);
+                drawBuffer.DrawString("Time: " + results.time, SystemFonts.DefaultFont, new SolidBrush(Color.White), 200, 220);
+                drawBuffer.DrawString("Name: " + results.username, SystemFonts.DefaultFont, new SolidBrush(Color.White), 200, 230);
+
+                drawBuffer.DrawString("Press start to", SystemFonts.DefaultFont, new SolidBrush(Color.White), 200, 250);
+                drawBuffer.DrawString("restart the field!", SystemFonts.DefaultFont, new SolidBrush(Color.White), 200, 260);
+            }
+
 
 #if DEBUG
             SolidBrush debugBrush = new SolidBrush(Color.White);
@@ -626,12 +645,28 @@ namespace TGMsim
 
 
             }
+            else //gamerunning == false
+            {
+                if (pad.inputStart == 1)
+                {
+                    cont = true;
+                }
+            }
         }
 
         private void endGame()
         {
             gameRunning = false;
             //in the future, the little fadeout animation goes here!
+
+            results = new GameResult();
+            results.game = ruleset.gameRules;
+            results.username = "TEST";
+            results.grade = grade;
+            results.score = score;
+            results.time = timer.elapsedTime;
+            results.level = level;
+            contTime.start();
         }
 
         private void triggerCredits()

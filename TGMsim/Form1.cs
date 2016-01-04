@@ -126,6 +126,12 @@ namespace TGMsim
                     loginLogic();
                     break;
                 case 4: //ingame
+                    if (field1.gameRunning == false)
+                    {
+                        //Todo: save a hiscore
+                    }
+                    if (field1.cont == true)
+                        field1 = new Field(pad1, rules);
                     field1.logic();
                     break;
             }
