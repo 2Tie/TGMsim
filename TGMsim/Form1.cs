@@ -128,7 +128,9 @@ namespace TGMsim
                 case 4: //ingame
                     if (field1.gameRunning == false)
                     {
+                        field1.results.username = player.name;
                         //Todo: save a hiscore
+
                     }
                     if (field1.cont == true)
                         field1 = new Field(pad1, rules);
