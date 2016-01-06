@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Input;
+using System.IO.File;
 
 namespace TGMsim
 {
@@ -34,8 +35,8 @@ namespace TGMsim
 
         Field field1;
         Login login;
-        
-        Tetromino tet1;
+
+        List<List<GameResult>> hiscoreTable = new List<List<GameResult>>();
         
 
         public Form1()
@@ -131,6 +132,9 @@ namespace TGMsim
                         field1.results.username = player.name;
                         //Todo: save a hiscore
 
+                        if (testHiscore(field1.results))
+                            saveHiscore(field1.results);
+
                     }
                     if (field1.cont == true)
                         field1 = new Field(pad1, rules);
@@ -204,6 +208,44 @@ namespace TGMsim
             this.BackgroundImage = imgBuffer;
             this.Invalidate();
 
+        }
+
+        private bool testHiscore(GameResult gameResult)
+        {
+            if (hiscoreTable.Count == 0) //oh no! error reading the file!
+                return false;
+
+            for (int i = 0; i < hiscoreTable[gameResult.game - 1].Count; i++)
+            {
+                if (hiscoreTable[gameResult.game - 1][i].grade < gameResult.grade)
+                {
+                    //insert the new score here
+                    return true;
+                }
+                if (hiscoreTable[gameResult.game - 1][i].grade == gameResult.grade)
+                {
+                    //compare level
+                    if (hiscoreTable[gameResult.game - 1][i].level < gameResult.level)
+                    {
+                        return true;
+                    }
+                    if (hiscoreTable[gameResult.game - 1][i].level == gameResult.level)
+                    {
+                        //compare time
+                        if (hiscoreTable[gameResult.game - 1][i].time < gameResult.time)
+                        {
+                            return true;
+                        }
+                    }
+                }
+                //else try the next one.
+            }
+            return false;
+        }
+
+        private void saveHiscore(GameResult gameResult)
+        {
+            throw new NotImplementedException();
         }
         
     }
