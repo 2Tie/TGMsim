@@ -248,5 +248,12 @@ namespace TGMsim
             throw new NotImplementedException();
         }
         
+        private void loadHiscores (int game)
+        {
+            if (!File.Exists("default.gm1"))
+            {
+                return;
+            }
+        }
     }
 }
