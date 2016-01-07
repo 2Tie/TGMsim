@@ -53,6 +53,8 @@ namespace TGMsim
 
         public int softCounter = 0;
 
+        double FPS;
+
         Rules ruleset;
 
         public GameResult results;
@@ -83,6 +85,20 @@ namespace TGMsim
 
             pad = ctlr;
             ruleset = rules;
+
+            switch(rules.gameRules)
+            {
+                case 1:
+                    FPS = 59.84;
+                    break;
+                case 2:
+                    FPS = 61.68;
+                    break;
+                case 3:
+                    FPS = 60.00;
+                    break;
+            }
+
 
             Random random = new Random();
 
@@ -245,7 +261,7 @@ namespace TGMsim
             if (gameRunning == true)
             {
                 //timing logic
-                long temptimeVAR = timer.elapsedTime;
+                long temptimeVAR = (long)(timer.elapsedTime*59.84/60);
                 min = (int)Math.Floor((double)temptimeVAR / 60000);
                 temptimeVAR -= min * 60000;
                 sec = (int)Math.Floor((double)temptimeVAR / 1000);

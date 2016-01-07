@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Input;
-using System.IO.File;
+using System.IO;
 
 namespace TGMsim
 {
@@ -16,7 +16,7 @@ namespace TGMsim
     {
 
         GameTimer timer = new GameTimer();
-        double FPS = 60; //59.84 for TGM1, 61.68 for TGM2, 60.00 for TGM3
+        double FPS = 60.00; //59.84 for TGM1, 61.68 for TGM2, 60.00 for TGM3
         long startTime;
         long interval;
 
