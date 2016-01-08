@@ -250,10 +250,13 @@ namespace TGMsim
         
         private void loadHiscores (int game)
         {
-            if (!File.Exists("default.gm1"))
+            string filename = "default.gm" + game.ToString();
+            if (!File.Exists(filename))
             {
                 return;
             }
+
+            //otherwise, load up the hiscores into memory!
         }
     }
 }

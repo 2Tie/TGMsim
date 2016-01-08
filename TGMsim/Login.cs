@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace TGMsim
 {
@@ -35,8 +36,15 @@ namespace TGMsim
                         delaytimer = 5;
                         if (menuSelection == 3) //then check if it's a registered nick, else register it!
                         {
-                            //for now we're just making a new one each time, sorry :P
-                            registering = true;
+                            string nick = getLetter(username[0]) + getLetter(username[1]) + getLetter(username[2]);
+                            if (File.Exists(nick + ".usr"))
+                            {
+                                registering = false;
+                            }
+                            else  //for now we're just making a new one each time, sorry :P
+                                registering = true;
+
+
                         }
                     }
                     else if (pad1.inputRot2 == 1 && menuSelection != 0)
@@ -78,6 +86,14 @@ namespace TGMsim
                         {
                             if (pad1.inputStart == 1)
                             {
+                                if (tempPass.Count == 0)
+                                {
+                                    temp.passProtected = false;
+                                }
+                                else
+                                {
+                                    temp.passProtected = true;
+                                }
                                 menuSelection = 5;
                             }
                             else
@@ -113,6 +129,34 @@ namespace TGMsim
         string getLetter(int i)
         {
             return "ABCDEFGHIJKLMNOPQRSTUVWXYZ ".Substring(i, 1);
+        }
+
+        public bool writeUser()
+        {
+            using (StreamWriter sw = File.CreateText(temp.name + ".usr"))
+            {
+                sw.Write(temp.name);
+                //one byte for password, the first bit if pass-protected, three bits for length (up to six) and then two bits for each digit (four possible inputs each, ABCH)
+                UInt16 passData = new byte();
+                if (!temp.passProtected)
+                {
+                    sw.Write(passData);
+                }
+                else
+                {
+                    passData += 0x8000;
+                    passData += (UInt16)((tempPass.Count & 0xFf) << 12);//password length
+                    for (int i = 0; i < tempPass.Count; i++)
+                    {
+                        passData += (UInt16)(tempPass[i] << (10 - 2 * i));
+                    }
+                    sw.Write(passData);
+                    sw.Write(new char[4]);//global points
+                    sw.Write(new char[4]);//TGM3 points
+                    sw.Write(new char[2]);//Official GM certifications (1, 2, tap, tap death, 3, 3 shirase, konoha)
+                }
+            }
+            return false;
         }
     }
 }
