@@ -11,8 +11,8 @@ namespace TGMsim
     {
         public Key keyRot1, keyRot2, keyRot3, keyHold, keyUp, keyDown, keyLeft, keyRight, keyStart;
 
-        public int inputH, inputV, inputStart, inputRot1, inputRot2, inputHold;
-        public bool inputPressedRot1 = false, inputPressedRot2 = false;
+        public int inputH, inputV, inputStart, inputRot1, inputRot2, inputRot3, inputHold;
+        public bool inputPressedRot1 = false, inputPressedRot2 = false, inputPressedRot3 = false, inputPressedHold = false;
 
         public Controller()
         {
@@ -33,7 +33,7 @@ namespace TGMsim
             {
                 //handle inputs
                 //reset inputs
-                inputH = inputV = inputStart = inputRot1 = inputRot2 = inputHold = 0;
+                inputH = inputV = inputStart = inputRot1 = inputRot2 = inputRot3 = inputHold = 0;
 
                 //up or down = w or s
                 if (Keyboard.IsKeyDown(keyUp))
@@ -54,7 +54,7 @@ namespace TGMsim
                     inputStart = 1;
 
                 //rot1 = o or [
-                if (Keyboard.IsKeyDown(keyRot1) || Keyboard.IsKeyDown(keyRot3))
+                if (Keyboard.IsKeyDown(keyRot1))
                 {
                     if (!inputPressedRot1)
                     {
@@ -65,6 +65,19 @@ namespace TGMsim
                 else
                 {
                     inputPressedRot1 = false;
+                }
+
+                if (Keyboard.IsKeyDown(keyRot3))
+                {
+                    if (!inputPressedRot3)
+                    {
+                        inputRot3 = 1;
+                    }
+                    inputPressedRot3 = true;
+                }
+                else
+                {
+                    inputPressedRot3 = false;
                 }
 
                 //rot2 = p
@@ -83,7 +96,17 @@ namespace TGMsim
 
                 //hold = K
                 if (Keyboard.IsKeyDown(keyHold))
-                    inputHold = 1;
+                {
+                    if (!inputPressedHold)
+                    {
+                        inputHold = 1;
+                    }
+                    inputPressedHold = true;
+                }
+                else
+                {
+                    inputPressedHold = false;
+                }
             }
         }
     }

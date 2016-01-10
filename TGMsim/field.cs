@@ -576,11 +576,11 @@ namespace TGMsim
                             currentTimer = (int)Field.timerType.ARE;
                             timerCount = ruleset.baseARE;
                         }
-                        //heldPiece = new Tetromino(activeTet.id);
+                        swappedHeld = true;
                     }
-
-                    if (pad.inputRot1 - pad.inputRot2 != 0)
-                        rotatePiece(activeTet, pad.inputRot1 - pad.inputRot2);
+                    int rot = (pad.inputRot1 | pad.inputRot3) - pad.inputRot2;
+                    if (rot != 0)
+                        rotatePiece(activeTet, rot);
 
                    
 

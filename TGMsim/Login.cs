@@ -12,12 +12,14 @@ namespace TGMsim
     {
         public Profile temp = new Profile();
         List<int> username = new List<int>{0, 0, 0};
-        List<byte> tempPass;
-        List<byte> verifyPass;
+        List<byte> tempPass = new List<byte>();
+        List<byte> verifyPass = new List<byte>();
         bool registering;
         int menuSelection;
         public bool loggedin = false;
         int delaytimer = 5;
+        int lastinput = 0;
+        bool startPressed = false;
 
         public Login()
         {
@@ -30,18 +32,18 @@ namespace TGMsim
             {
                 if (menuSelection < 3)
                 {
-                    if (pad1.inputRot1 == 1)
+                    if ((pad1.inputRot1 | pad1.inputRot3) == 1)
                     {
                         menuSelection += 1;
                         delaytimer = 5;
                         if (menuSelection == 3) //then check if it's a registered nick, else register it!
                         {
-                            string nick = getLetter(username[0]) + getLetter(username[1]) + getLetter(username[2]);
-                            if (File.Exists(nick + ".usr"))
+                            temp.name = getLetter(username[0]) + getLetter(username[1]) + getLetter(username[2]);
+                            if (File.Exists(temp.name + ".usr"))
                             {
                                 registering = false;
                             }
-                            else  //for now we're just making a new one each time, sorry :P
+                            else
                                 registering = true;
 
 
@@ -75,37 +77,153 @@ namespace TGMsim
                     {
                         if (menuSelection == 5) // wait for start!!!
                         {
-                            temp.name = getLetter(username[0]) + getLetter(username[1]) + getLetter(username[2]);
+                            writeUser();
                             loggedin = true;
                         }
                         if (menuSelection == 4) //verify password input
                         {
-
+                            if (pad1.inputStart == 1)
+                            {
+                                if (!startPressed)
+                                {
+                                    if (verifyPass.SequenceEqual(tempPass))//if they match
+                                    {
+                                        temp.password = tempPass;
+                                        menuSelection = 5;
+                                    }
+                                    else//if they don't
+                                    {
+                                        tempPass.Clear();
+                                        verifyPass.Clear();
+                                        menuSelection = 3;
+                                    }
+                                }
+                                startPressed = true;
+                            }
+                            else if (verifyPass.Count < 6)
+                            {
+                                //read input, then add to the list
+                                startPressed = false;
+                                //wait until input's released or a new one is added
+                                
+                                if (pad1.inputRot1 == 1)
+                                {
+                                    verifyPass.Add((byte)0x0);
+                                }
+                                if (pad1.inputRot2 == 1)
+                                {
+                                    verifyPass.Add((byte)0x1);
+                                }
+                                if (pad1.inputRot3 == 1)
+                                {
+                                    verifyPass.Add((byte)0x2);
+                                }
+                                if (pad1.inputHold == 1)
+                                {
+                                    verifyPass.Add((byte)0x3);
+                                }
+                                
+                            }
                         }
                         if (menuSelection == 3) //start password input
                         {
                             if (pad1.inputStart == 1)
                             {
-                                if (tempPass.Count == 0)
+                                if (!startPressed)
                                 {
-                                    temp.passProtected = false;
+                                    startPressed = true;
+                                    if (tempPass.Count == 0)
+                                    {
+                                        throw new NotImplementedException();
+                                        temp.passProtected = false;
+                                        menuSelection = 5;
+                                    }
+                                    else
+                                    {
+                                        temp.passProtected = true;
+                                        menuSelection = 4;
+                                    }
                                 }
-                                else
-                                {
-                                    temp.passProtected = true;
-                                }
-                                menuSelection = 5;
                             }
-                            else
+                            else if (tempPass.Count < 6)
                             {
                                 //read input, then add to the list
+                                startPressed = false;
                                 //wait until input's released or a new one is added
+                                if (pad1.inputRot1 == 1)
+                                {
+                                    tempPass.Add((byte)0x0);
+                                }
+                                if (pad1.inputRot2 == 1)
+                                {
+                                    tempPass.Add((byte)0x1);
+                                }
+                                if (pad1.inputRot3 == 1)
+                                {
+                                    tempPass.Add((byte)0x2);
+                                }
+                                if (pad1.inputHold == 1)
+                                {
+                                    tempPass.Add((byte)0x3);
+                                }
+                                
                             }
                         }
                     }
                     else //verify the pass and compare it
                     {
-                        throw new NotImplementedException();
+                        if (menuSelection == 5)//login
+                        {
+                            readUserData();
+                            loggedin = true;
+                        }
+                        if (menuSelection == 4)//verify
+                        {
+                            if (pad1.inputStart == 1)
+                            {
+                                if (!startPressed)
+                                {
+                                    if (verifyPass.SequenceEqual(tempPass))//if they match
+                                    {
+                                        menuSelection = 5;
+                                    }
+                                    else//if they don't
+                                    {
+                                        tempPass.Clear();
+                                    }
+                                }
+                                startPressed = true;
+                            }
+                            else if (tempPass.Count < 6)
+                            {
+                                //read input, then add to the list
+                                startPressed = false;
+                                //wait until input's released or a new one is added
+
+                                if (pad1.inputRot1 == 1)
+                                {
+                                    tempPass.Add((byte)0x0);
+                                }
+                                if (pad1.inputRot2 == 1)
+                                {
+                                    tempPass.Add((byte)0x1);
+                                }
+                                if (pad1.inputRot3 == 1)
+                                {
+                                    tempPass.Add((byte)0x2);
+                                }
+                                if (pad1.inputHold == 1)
+                                {
+                                    tempPass.Add((byte)0x3);
+                                }
+
+                            }
+                        }
+                        if (menuSelection == 3)//setup
+                        {
+                            readPass();
+                            menuSelection = 4;
+                        }
                     }
                 }
             }
@@ -115,15 +233,32 @@ namespace TGMsim
 
         public void render(Graphics drawBuffer)
         {
-            if (menuSelection == 3)
+            if (menuSelection == 3 || menuSelection == 4)
             {
-                drawBuffer.DrawString("Press Start to skip password registration!", SystemFonts.DefaultFont, new SolidBrush(Color.White), 350, 350);
+                if (tempPass.Count == 0)
+                drawBuffer.DrawString("Press Start to confirm inputs!", SystemFonts.DefaultFont, new SolidBrush(Color.White), 350, 360);
+                
+                for(int i = 0; i < tempPass.Count; i++)
+                    drawBuffer.DrawString("*", SystemFonts.DefaultFont, new SolidBrush(Color.White), 400 + 10*i, 320);
+
+                for (int i = 0; i < verifyPass.Count; i++)
+                    drawBuffer.DrawString("*", SystemFonts.DefaultFont, new SolidBrush(Color.White), 400 + 10 * i, 340);
             }
             drawBuffer.DrawString(getLetter(username[0]), SystemFonts.DefaultFont, new SolidBrush(Color.White), 400, 300);
             drawBuffer.DrawString(getLetter(username[1]), SystemFonts.DefaultFont, new SolidBrush(Color.White), 409, 300);
             drawBuffer.DrawString(getLetter(username[2]), SystemFonts.DefaultFont, new SolidBrush(Color.White), 418, 300);
             if (menuSelection < 3)
                 drawBuffer.DrawString("↑", SystemFonts.DefaultFont, new SolidBrush(Color.White), 398 + (9*menuSelection), 315);
+
+#if DEBUG
+            if (menuSelection == 3 || menuSelection == 4)
+            {
+                drawBuffer.DrawString(tempPass.Count.ToString(), SystemFonts.DefaultFont, new SolidBrush(Color.White), 380, 320);
+                drawBuffer.DrawString(verifyPass.Count.ToString(), SystemFonts.DefaultFont, new SolidBrush(Color.White), 380, 340);
+            }
+
+            drawBuffer.DrawString("Last Input: " + lastinput.ToString(), SystemFonts.DefaultFont, new SolidBrush(Color.White), 500, 500);
+#endif
         }
 
         string getLetter(int i)
@@ -133,11 +268,13 @@ namespace TGMsim
 
         public bool writeUser()
         {
-            using (StreamWriter sw = File.CreateText(temp.name + ".usr"))
+            using (FileStream fsStream = new FileStream(temp.name + ".usr", FileMode.Create))
+            using (BinaryWriter sw = new BinaryWriter(fsStream, Encoding.UTF8))
             {
                 sw.Write(temp.name);
+                sw.Write((byte)0x01);//version number
                 //one byte for password, the first bit if pass-protected, three bits for length (up to six) and then two bits for each digit (four possible inputs each, ABCH)
-                UInt16 passData = new byte();
+                UInt16 passData = new UInt16();
                 if (!temp.passProtected)
                 {
                     sw.Write(passData);
@@ -145,18 +282,76 @@ namespace TGMsim
                 else
                 {
                     passData += 0x8000;
-                    passData += (UInt16)((tempPass.Count & 0xFf) << 12);//password length
+                    passData += (UInt16)((tempPass.Count & 0x7) << 12);//password length
                     for (int i = 0; i < tempPass.Count; i++)
                     {
                         passData += (UInt16)(tempPass[i] << (10 - 2 * i));
                     }
                     sw.Write(passData);
-                    sw.Write(new char[4]);//global points
-                    sw.Write(new char[4]);//TGM3 points
-                    sw.Write(new char[2]);//Official GM certifications (1, 2, tap, tap death, 3, 3 shirase, konoha)
+                    sw.Write(new byte[4]);//global points
+                    sw.Write(new byte[4]);//TGM3 points
+                    sw.Write(new byte[2]);//Official GM certifications (1, 2, tap, tap death, 3, 3 shirase, konoha)
+                    sw.Write(new byte[2]);//endless shirase hiscore?
                 }
             }
             return false;
+        }
+
+        public bool readPass()
+        {
+            //read the pass and put it into verifyPass
+            BinaryReader file = new BinaryReader(File.OpenRead(temp.name + ".usr"));
+            if (file.ReadString() != temp.name)//read name
+                return false;
+            if (file.ReadByte() != 0x01)//read save version, compare to current
+                return false;
+            //read and parse the password
+            UInt16 passdata = file.ReadUInt16();
+            if (passdata >> 15 == 1)//pass protected
+            {
+                if (((passdata >> 12) & 0x3) == 7)//invalid pass length
+                {
+                    return false;
+                }
+                verifyPass.Add((byte)((passdata >> 10) & 0x0003));
+                verifyPass.Add((byte)((passdata >> 8) & 0x0003));
+                verifyPass.Add((byte)((passdata >> 6) & 0x0003));
+                verifyPass.Add((byte)((passdata >> 4) & 0x0003));
+                verifyPass.Add((byte)((passdata >> 2) & 0x0003));
+                verifyPass.Add((byte)(passdata & 0x0003));
+            }
+            return true;
+        }
+
+        public bool readUserData()
+        {
+            //read the pass and put it into verifyPass
+            FileStream file = File.OpenRead(temp.name + ".usr");
+            if (file.Read(new byte[3], 0, 3).ToString() != temp.name)//read name
+                return false;
+            if (file.ReadByte() == 0x01)//read save version
+                return false;
+            //read and parse the password
+            byte passHeader = (byte)file.ReadByte();//the first byte contains password verification and length
+            if (passHeader >> 7 == 1)//pass protected
+            {
+                if ((passHeader & 0x7F) == 7)//invalid pass length
+                {
+                    return false;
+                }
+                verifyPass.Add((byte)((passHeader & 0x0C) >> 2));
+                verifyPass.Add((byte)(passHeader & 0x03));
+                byte tempByte = (byte)file.ReadByte();
+                verifyPass.Add((byte)(tempByte >> 6));
+                verifyPass.Add((byte)((passHeader & 0x30) >> 4));
+                verifyPass.Add((byte)((passHeader & 0x0C) >> 2));
+                verifyPass.Add((byte)(tempByte & 0x03));
+            }
+            //global points
+            //tgm3 points
+            //GM certs
+            //shirase
+            return true;
         }
     }
 }
