@@ -20,8 +20,6 @@ namespace TGMsim
         long startTime;
         long interval;
 
-        int menuSelection;
-
         Controller pad1 = new Controller();
         Rules rules = new Rules();
 
@@ -35,8 +33,11 @@ namespace TGMsim
 
         Field field1;
         Login login;
+        GameSelect gSel;
+        ModeSelect mSel;
 
         List<List<GameResult>> hiscoreTable = new List<List<GameResult>>();
+        bool saved;
         
 
         public Form1()
@@ -52,6 +53,8 @@ namespace TGMsim
 
             imgBuffer = (Image)new Bitmap(this.ClientSize.Width, this.ClientSize.Height);
 
+            hiscoreTable.Add(new List<GameResult>());
+
             graphics = this.CreateGraphics();
             drawBuffer = Graphics.FromImage(imgBuffer);
             
@@ -60,10 +63,6 @@ namespace TGMsim
         public void gameLoop()
         {
             timer.start();
-            //field1.randomize();
-            
-            //tetrng.delete();
-            //field1 = new Field(pad1, rules);
 
             while (this.Created)
             {
@@ -101,10 +100,15 @@ namespace TGMsim
                     break;
                 case 2:
                     menuState = 2;
-                    menuSelection = 0;
+                    gSel = new GameSelect();
                     break;
-
+                case 3:
+                    menuState = 3;
+                    loadHiscores(1);
+                    mSel = new ModeSelect(gSel.menuSelection);
+                    break;
                 case 4:
+                    saved = false;
                     menuState = 5;
                     FPS = 59.84;
                     field1 = new Field(pad1, rules);
@@ -123,17 +127,34 @@ namespace TGMsim
                 case 0: //title
                     titleLogic();
                     break;
-                case 1:
+                case 1: //login
                     loginLogic();
+                    break;
+                case 2: //game select
+                    gSel.logic(pad1);
+                    if ((pad1.inputRot1 | pad1.inputRot3) == 1)
+                        changeMenu(3);
+                    break;
+                case 3: //mode select
+                    mSel.logic(pad1);
+                    if ((pad1.inputRot1 | pad1.inputRot3) == 1)
+                    {
+                        //TODO: change rules based on what game and mode is selected
+                        changeMenu(4);
+                    }
+                    if (pad1.inputRot2 == 1)
+                        changeMenu(2);
                     break;
                 case 4: //ingame
                     if (field1.gameRunning == false)
                     {
-                        field1.results.username = player.name;
-                        //Todo: save a hiscore
-
-                        if (testHiscore(field1.results))
-                            saveHiscore(field1.results);
+                        //test and save a hiscore ONCE
+                        if (saved == false)
+                        {
+                            field1.results.username = player.name;
+                            field1.newHiscore = testHiscore(field1.results);
+                            saved = true;
+                        }
 
                     }
                     if (field1.cont == true)
@@ -148,11 +169,11 @@ namespace TGMsim
 
             login.logic(pad1);
 
-            if (pad1.inputStart == 1 && login.loggedin)
+            if (login.loggedin)
             {
                 pad1.inputStart = 0;
                 player = login.temp;
-                changeMenu(4);
+                changeMenu(2);
             }
         }
 
@@ -181,6 +202,14 @@ namespace TGMsim
                 case 1:
                     drawBuffer.DrawString("login", DefaultFont, new SolidBrush(Color.White), 100, 20);
                     login.render(drawBuffer);
+                    break;
+                case 2:
+                    drawBuffer.DrawString("game select", DefaultFont, new SolidBrush(Color.White), 100, 20);
+                    gSel.render(drawBuffer);
+                    break;
+                case 3:
+                    drawBuffer.DrawString("mode select", DefaultFont, new SolidBrush(Color.White), 100, 20);
+                    mSel.render(drawBuffer);
                     break;
                 case 4:
                     field1.draw(drawBuffer);
@@ -215,48 +244,140 @@ namespace TGMsim
             if (hiscoreTable.Count == 0) //oh no! error reading the file!
                 return false;
 
-            for (int i = 0; i < hiscoreTable[gameResult.game - 1].Count; i++)
+            switch (gameResult.game)
             {
-                if (hiscoreTable[gameResult.game - 1][i].grade < gameResult.grade)
-                {
-                    //insert the new score here
-                    return true;
-                }
-                if (hiscoreTable[gameResult.game - 1][i].grade == gameResult.grade)
-                {
-                    //compare level
-                    if (hiscoreTable[gameResult.game - 1][i].level < gameResult.level)
+                case 0:
+                    for (int i = 0; i < hiscoreTable[0].Count; i++ ) //for each entry in TGM1
                     {
-                        return true;
-                    }
-                    if (hiscoreTable[gameResult.game - 1][i].level == gameResult.level)
-                    {
-                        //compare time
-                        if (hiscoreTable[gameResult.game - 1][i].time < gameResult.time)
+                        if (hiscoreTable[0][i].grade < gameResult.grade)
                         {
+                            saveHiscore(gameResult, gameResult.game, i);
                             return true;
                         }
+                        if (hiscoreTable[0][i].grade == gameResult.grade)
+                        {
+                            //compare time
+                            if (hiscoreTable[0][i].time > gameResult.time)
+                            {
+                                saveHiscore(gameResult, gameResult.game, i);
+                                return true;
+                            }
+                        }
+                        //else try the next one.
                     }
-                }
-                //else try the next one.
-            }
+                    break;
+                /*default:
+                    for (int i = 0; i < hiscoreTable[gameResult.game - 1].Count; i++)
+                    {
+                        if (hiscoreTable[gameResult.game - 1][i].grade < gameResult.grade)
+                        {
+                            //insert the new score here
+                            return true;
+                        }
+                        if (hiscoreTable[gameResult.game - 1][i].grade == gameResult.grade)
+                        {
+                            //compare level
+                            if (hiscoreTable[gameResult.game - 1][i].level < gameResult.level)
+                            {
+                                return true;
+                            }
+                            if (hiscoreTable[gameResult.game - 1][i].level == gameResult.level)
+                            {
+                                //compare time
+                                if (hiscoreTable[gameResult.game - 1][i].time < gameResult.time)
+                                {
+                                    return true;
+                                }
+                            }
+                        }
+                        //else try the next one.
+                    }
+                    break;*/
+        }
             return false;
         }
 
-        private void saveHiscore(GameResult gameResult)
+        private void saveHiscore(GameResult gameResult, int g, int place)
         {
-            throw new NotImplementedException();
+
+            hiscoreTable[g].Insert(place, gameResult);
+            hiscoreTable[g].RemoveAt(hiscoreTable[g].Count - 1);
+
+            //TODO: write to the file
+            string hiFile = "gm" + (g+1) + ".dat";
+            File.Delete(hiFile);
+            using (FileStream fsStream = new FileStream(hiFile, FileMode.Create))
+            using (BinaryWriter sw = new BinaryWriter(fsStream, Encoding.UTF8))
+            {
+                for (int i = 0; i < hiscoreTable[g].Count; i++)
+                {
+                    sw.Write(hiscoreTable[g][i].username);
+                    sw.Write(hiscoreTable[g][i].grade);
+                    long temptime = hiscoreTable[g][i].time;
+                    sw.Write(temptime);
+                }
+            }
         }
         
         private void loadHiscores (int game)
         {
-            string filename = "default.gm" + game.ToString();
+            string filename = "gm" + game.ToString() + ".dat";
             if (!File.Exists(filename))
             {
-                return;
+                if (game == 1)
+                    defaultTGMScores();
             }
-
+            
+            BinaryReader scores = new BinaryReader(File.OpenRead(filename));
+            if (scores.BaseStream.Length == 0)
+                defaultTGMScores();
             //otherwise, load up the hiscores into memory!
+
+            
+            while (true)
+            {
+                GameResult tempRes = new GameResult();
+                tempRes.username = scores.ReadString();
+                tempRes.grade = scores.ReadInt32();
+                tempRes.time = scores.ReadInt64();
+                hiscoreTable[game - 1].Add(tempRes);
+                if (scores.BaseStream.Position == scores.BaseStream.Length)
+                    break;
+            }
+        }
+
+        public bool defaultTGMScores()
+        {
+            using (FileStream fsStream = new FileStream("gm1.dat", FileMode.OpenOrCreate))
+            using (BinaryWriter sw = new BinaryWriter(fsStream, Encoding.UTF8))
+            {
+                long temptime;
+                sw.Write("SAK");
+                sw.Write(11);
+                temptime = 540000;
+                sw.Write(temptime);
+                sw.Write("CHI");
+                sw.Write(10);
+                temptime = 480000;
+                sw.Write(temptime);
+                sw.Write("NAI");
+                sw.Write(9);
+                temptime = 420000;
+                sw.Write(temptime);
+                sw.Write("MIZ");
+                sw.Write(6);
+                temptime = 360000;
+                sw.Write(temptime);
+                sw.Write("KAR");
+                sw.Write(5);
+                temptime = 300000;
+                sw.Write(temptime);
+                sw.Write("NAG");
+                sw.Write(4);
+                temptime = 240000;
+                sw.Write(temptime);
+            }
+            return false;
         }
     }
 }

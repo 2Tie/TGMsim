@@ -48,12 +48,11 @@ namespace TGMsim
 
         public bool inCredits = false;
         int creditsProgress;
+        public bool newHiscore = false;
 
         public int bravoCounter = 0;
 
         public int softCounter = 0;
-
-        double FPS;
 
         Rules ruleset;
 
@@ -85,20 +84,6 @@ namespace TGMsim
 
             pad = ctlr;
             ruleset = rules;
-
-            switch(rules.gameRules)
-            {
-                case 1:
-                    FPS = 59.84;
-                    break;
-                case 2:
-                    FPS = 61.68;
-                    break;
-                case 3:
-                    FPS = 60.00;
-                    break;
-            }
-
 
             Random random = new Random();
 
@@ -235,6 +220,9 @@ namespace TGMsim
             }
 
             drawBuffer.DrawString("Bravos: " + bravoCounter, SystemFonts.DefaultFont, debugBrush, 200, 740);
+
+            if (newHiscore)
+                drawBuffer.DrawString("New Hiscore", SystemFonts.DefaultFont, debugBrush, 200, 700);
 
             //time
             drawBuffer.DrawString(string.Format("{0,2:00}:{1,2:00}:{2,2:00}", min, sec, msec10), SystemFonts.DefaultFont, debugBrush, 100, 700);
@@ -488,10 +476,18 @@ namespace TGMsim
                                     }
 
                                     //update grade
-                                    if(grade < ruleset.gradePointsTGM1.Count - 1)
+                                    bool checking = true;
+                                    while (checking == true)
                                     {
-                                        if (score >= ruleset.gradePointsTGM1[grade + 1])
-                                            grade++;
+                                        if (grade < ruleset.gradePointsTGM1.Count - 1)
+                                        {
+                                            if (score >= ruleset.gradePointsTGM1[grade + 1])
+                                            {
+                                                grade++;
+                                            }
+                                            else
+                                                checking = false;
+                                        }
                                     }
 
                                     if (level >= 999 && inCredits == false)
@@ -562,7 +558,7 @@ namespace TGMsim
                     if (pad.inputHold == 1 && ruleset.hold == true && swappedHeld == false)
                     {
                         Tetromino tempTet;
-                        if (heldPiece.id != null)
+                        if (heldPiece.id != 0)
                         {
                             tempTet = new Tetromino(heldPiece.id);
                             heldPiece = new Tetromino(activeTet.id);
@@ -676,7 +672,7 @@ namespace TGMsim
             //in the future, the little fadeout animation goes here!
 
             results = new GameResult();
-            results.game = ruleset.gameRules;
+            results.game = ruleset.gameRules - 1;
             results.username = "TEST";
             results.grade = grade;
             results.score = score;

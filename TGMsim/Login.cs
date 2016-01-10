@@ -134,7 +134,6 @@ namespace TGMsim
                                     startPressed = true;
                                     if (tempPass.Count == 0)
                                     {
-                                        throw new NotImplementedException();
                                         temp.passProtected = false;
                                         menuSelection = 5;
                                     }
@@ -222,7 +221,12 @@ namespace TGMsim
                         if (menuSelection == 3)//setup
                         {
                             readPass();
-                            menuSelection = 4;
+                            if (verifyPass.Count == 0)
+                            {
+                                menuSelection = 5;
+                            }
+                            else
+                                menuSelection = 4;
                         }
                     }
                 }
@@ -325,27 +329,26 @@ namespace TGMsim
 
         public bool readUserData()
         {
-            //read the pass and put it into verifyPass
-            FileStream file = File.OpenRead(temp.name + ".usr");
-            if (file.Read(new byte[3], 0, 3).ToString() != temp.name)//read name
+            //read the user data and pass it to the game
+            BinaryReader file = new BinaryReader(File.OpenRead(temp.name + ".usr"));
+            if (file.ReadString() != temp.name)//read name
                 return false;
-            if (file.ReadByte() == 0x01)//read save version
+            if (file.ReadByte() != 0x01)//read save version, compare to current
                 return false;
             //read and parse the password
-            byte passHeader = (byte)file.ReadByte();//the first byte contains password verification and length
-            if (passHeader >> 7 == 1)//pass protected
+            UInt16 passdata = file.ReadUInt16();
+            if (passdata >> 15 == 1)//pass protected
             {
-                if ((passHeader & 0x7F) == 7)//invalid pass length
+                if (((passdata >> 12) & 0x3) == 7)//invalid pass length
                 {
                     return false;
                 }
-                verifyPass.Add((byte)((passHeader & 0x0C) >> 2));
-                verifyPass.Add((byte)(passHeader & 0x03));
-                byte tempByte = (byte)file.ReadByte();
-                verifyPass.Add((byte)(tempByte >> 6));
-                verifyPass.Add((byte)((passHeader & 0x30) >> 4));
-                verifyPass.Add((byte)((passHeader & 0x0C) >> 2));
-                verifyPass.Add((byte)(tempByte & 0x03));
+                verifyPass.Add((byte)((passdata >> 10) & 0x0003));
+                verifyPass.Add((byte)((passdata >> 8) & 0x0003));
+                verifyPass.Add((byte)((passdata >> 6) & 0x0003));
+                verifyPass.Add((byte)((passdata >> 4) & 0x0003));
+                verifyPass.Add((byte)((passdata >> 2) & 0x0003));
+                verifyPass.Add((byte)(passdata & 0x0003));
             }
             //global points
             //tgm3 points
@@ -353,5 +356,7 @@ namespace TGMsim
             //shirase
             return true;
         }
+
+        
     }
 }

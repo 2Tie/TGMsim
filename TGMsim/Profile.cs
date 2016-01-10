@@ -10,7 +10,7 @@ namespace TGMsim
     {
         public String name;
         public int decoration = 0;
-        public int globalDecoration;
+        public int globalDecoration = 0;
         public bool displayGlobal = false;
         public List<byte> password;
         public bool passProtected = false;
