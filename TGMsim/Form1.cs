@@ -313,8 +313,7 @@ namespace TGMsim
                 {
                     sw.Write(hiscoreTable[g][i].username);
                     sw.Write(hiscoreTable[g][i].grade);
-                    long temptime = hiscoreTable[g][i].time;
-                    sw.Write(temptime);
+                    sw.Write(hiscoreTable[g][i].time);
                 }
             }
         }

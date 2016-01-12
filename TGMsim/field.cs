@@ -45,6 +45,7 @@ namespace TGMsim
         public int grade = 0;
         public int score = 0;
         public int combo = 1;
+        public bool comboing = false;
 
         public bool inCredits = false;
         int creditsProgress;
@@ -434,11 +435,13 @@ namespace TGMsim
                                         bravoCounter++;
                                         bravo = 4;
                                     }
-
                                     combo = combo + (2 * full.Count) - 2;
                                     //give points
                                     if (!inCredits)
-                                        score += ((int)Math.Ceiling((double)(level + full.Count) / 4) + softCounter) * full.Count * ((full.Count * 2) - 1) * combo * bravo;
+                                        score += ((int)Math.Ceiling((double)(level + full.Count) / 4) + softCounter) * full.Count * ((full.Count * 2) - 1) * bravo;
+                                    if (comboing)
+                                        score *= combo;
+                                    comboing = true;
 
                                     //check GM conditions
                                     if(GMflags.Count == 0 && level >= 300)
@@ -506,6 +509,7 @@ namespace TGMsim
                                     timerCount = ruleset.baseARE;
 
                                     combo = 1;
+                                    comboing = false;
                                     
                                 }
 
