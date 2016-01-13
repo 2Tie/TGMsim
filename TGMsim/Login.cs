@@ -48,6 +48,7 @@ namespace TGMsim
 
 
                         }
+                        else username[menuSelection] = username[menuSelection - 1];
                     }
                     else if (pad1.inputRot2 == 1 && menuSelection != 0)
                     {
@@ -249,10 +250,12 @@ namespace TGMsim
                     drawBuffer.DrawString("*", SystemFonts.DefaultFont, new SolidBrush(Color.White), 400 + 10 * i, 340);
             }
             drawBuffer.DrawString(getLetter(username[0]), SystemFonts.DefaultFont, new SolidBrush(Color.White), 400, 300);
+            if (menuSelection > 0)
             drawBuffer.DrawString(getLetter(username[1]), SystemFonts.DefaultFont, new SolidBrush(Color.White), 409, 300);
+            if (menuSelection > 1)
             drawBuffer.DrawString(getLetter(username[2]), SystemFonts.DefaultFont, new SolidBrush(Color.White), 418, 300);
-            if (menuSelection < 3)
-                drawBuffer.DrawString("↑", SystemFonts.DefaultFont, new SolidBrush(Color.White), 398 + (9*menuSelection), 315);
+            //if (menuSelection < 3)
+            //    drawBuffer.DrawString("↑", SystemFonts.DefaultFont, new SolidBrush(Color.White), 398 + (9*menuSelection), 315);
 
 #if DEBUG
             if (menuSelection == 3 || menuSelection == 4)
