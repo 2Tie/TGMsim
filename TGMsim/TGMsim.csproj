@@ -90,6 +90,21 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Audio\SE\SEB_disappear.wav" />
+    <Content Include="Audio\SE\SEB_fall.wav" />
+    <Content Include="Audio\SE\SEB_instal.wav" />
+    <Content Include="Audio\SE\SEB_mino1.wav" />
+    <Content Include="Audio\SE\SEB_mino2.wav" />
+    <Content Include="Audio\SE\SEB_mino3.wav" />
+    <Content Include="Audio\SE\SEB_mino4.wav" />
+    <Content Include="Audio\SE\SEB_mino5.wav" />
+    <Content Include="Audio\SE\SEB_mino6.wav" />
+    <Content Include="Audio\SE\SEB_mino7.wav" />
+    <Content Include="Audio\SE\SEB_prerotate.wav" />
+    <Content Include="Audio\SE\SEP_levelchange.wav" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

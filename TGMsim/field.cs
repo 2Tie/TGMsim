@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Media;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -62,6 +64,8 @@ namespace TGMsim
         public bool cont = false;
 
         List<Color> tetColors = new List<Color>();
+
+        List<System.Windows.Media.MediaPlayer> badAudio = new List<System.Windows.Media.MediaPlayer>();
 
         Pen gridPen = new Pen(new SolidBrush(Color.White));
 
@@ -304,6 +308,7 @@ namespace TGMsim
                             full.Clear();
                             currentTimer = (int)Field.timerType.ARE;
                             timerCount = ruleset.baseARE;
+                            playSound("SEB_fall");
                         }
                         else
                         {
@@ -326,10 +331,12 @@ namespace TGMsim
                                     nextTet[i] = nextTet[i + 1];
                                 }
                                 nextTet[nextTet.Count - 1] = generatePiece();
+                                playSound("SEB_mino" + nextTet[nextTet.Count - 1].id);
                             }
                             else
                             {
                                 activeTet = generatePiece();
+                                playSound("SEB_mino" + activeTet.id);
                             }
 
                             int intRot = 0;
@@ -338,7 +345,10 @@ namespace TGMsim
                             if (pad.inputPressedRot2)
                                 intRot -= 1;
                             if (intRot != 0)
+                            {
                                 rotatePiece(activeTet, intRot);
+                                playSound("SEB_prerotate");
+                            }
 
                             gravCounter = 0;
 
@@ -487,6 +497,7 @@ namespace TGMsim
                                             if (score >= ruleset.gradePointsTGM1[grade + 1])
                                             {
                                                 grade++;
+                                                playSound("SEP_levelchange");
                                             }
                                             else
                                                 checking = false;
@@ -501,6 +512,7 @@ namespace TGMsim
                                     //start timer
                                     currentTimer = (int)Field.timerType.LineClear;
                                     timerCount = ruleset.baseLineClear;
+                                    playSound("SEB_dissappear");
 
                                 }
                                 else //start the ARE, check if new grav level
@@ -518,6 +530,8 @@ namespace TGMsim
                                     if (level >= ruleset.gravLevelsTGM1[gravLevel + 1])
                                         gravLevel++;
                                 }
+
+                                playSound("SEB_instal");
 
                                 return;
                                 
@@ -1724,6 +1738,20 @@ namespace TGMsim
                 {
                     tet.bits[p].y--;
                 }
+            }
+        }
+
+
+
+        private void playSound(string sound)
+        {
+            var mediaPlayer = new System.Windows.Media.MediaPlayer();
+            badAudio.Add(mediaPlayer);
+            badAudio[badAudio.Count - 1].Open(new Uri(@"Audio\SE\" + sound + ".wav", UriKind.Relative));
+            badAudio[badAudio.Count - 1].Play();
+            if (badAudio.Count > 15)
+            {
+                badAudio.RemoveRange(0, 10);
             }
         }
     }
