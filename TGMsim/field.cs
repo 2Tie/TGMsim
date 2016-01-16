@@ -480,11 +480,7 @@ namespace TGMsim
                                         //check for awarding GM
                                         if (GMflags[0] && GMflags[1] && GMflags[2])
                                         {
-                                            //credits roll in future, for now just gibe GM?
                                             isGM = true;
-
-                                            
-                                            //gameRunning = false;
                                         }
                                     }
 
@@ -492,7 +488,7 @@ namespace TGMsim
                                     bool checking = true;
                                     while (checking == true)
                                     {
-                                        if (grade < ruleset.gradePointsTGM1.Count - 1)
+                                        if (grade < ruleset.gradePointsTGM1.Count)
                                         {
                                             if (score >= ruleset.gradePointsTGM1[grade + 1])
                                             {
@@ -502,6 +498,8 @@ namespace TGMsim
                                             else
                                                 checking = false;
                                         }
+                                        else
+                                            checking = false;
                                     }
 
                                     if (level >= 999 && inCredits == false)
@@ -1747,8 +1745,8 @@ namespace TGMsim
         {
             var mediaPlayer = new System.Windows.Media.MediaPlayer();
             badAudio.Add(mediaPlayer);
-            badAudio[badAudio.Count - 1].Open(new Uri(@"Audio\SE\" + sound + ".wav", UriKind.Relative));
-            badAudio[badAudio.Count - 1].Play();
+            //badAudio[badAudio.Count - 1].Open(new Uri(@"Audio\SE\" + sound + ".wav", UriKind.Relative));
+            //badAudio[badAudio.Count - 1].Play();
             if (badAudio.Count > 15)
             {
                 badAudio.RemoveRange(0, 10);
