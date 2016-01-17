@@ -146,6 +146,7 @@ namespace TGMsim
                         changeMenu(2);
                     break;
                 case 4: //ingame
+                    field1.logic();
                     if (field1.gameRunning == false)
                     {
                         //test and save a hiscore ONCE
@@ -159,7 +160,8 @@ namespace TGMsim
                     }
                     if (field1.cont == true)
                         field1 = new Field(pad1, rules);
-                    field1.logic();
+                    if (field1.exit == true)
+                        changeMenu(2);
                     break;
             }
         }

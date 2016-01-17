@@ -62,6 +62,7 @@ namespace TGMsim
         public GameResult results;
 
         public bool cont = false;
+        public bool exit = false;
 
         List<Color> tetColors = new List<Color>();
 
@@ -195,6 +196,9 @@ namespace TGMsim
 
                 drawBuffer.DrawString("Press start to", SystemFonts.DefaultFont, new SolidBrush(Color.White), 200, 250);
                 drawBuffer.DrawString("restart the field!", SystemFonts.DefaultFont, new SolidBrush(Color.White), 200, 260);
+
+                drawBuffer.DrawString("Press B to", SystemFonts.DefaultFont, new SolidBrush(Color.White), 200, 280);
+                drawBuffer.DrawString("return to menu!", SystemFonts.DefaultFont, new SolidBrush(Color.White), 200, 290);
             }
 
 
@@ -679,6 +683,8 @@ namespace TGMsim
                 {
                     cont = true;
                 }
+                if (pad.inputPressedRot2)
+                    exit = true;
             }
         }
 
