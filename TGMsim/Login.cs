@@ -58,7 +58,7 @@ namespace TGMsim
 
                     if (pad1.inputH == 1)
                     {
-                        username[menuSelection] = (username[menuSelection] + 1) % 26; //increase the currently selected letter
+                        username[menuSelection] = (username[menuSelection] + 1) % 27; //increase the currently selected letter
                         delaytimer = 5;
                     }
                     else if (pad1.inputH == -1)

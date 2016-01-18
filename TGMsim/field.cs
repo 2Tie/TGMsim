@@ -126,6 +126,7 @@ namespace TGMsim
                 }
                 gameField.Add(tempList);
             }
+            playSound("ready");
         }
 
         public void randomize()
@@ -263,14 +264,12 @@ namespace TGMsim
             if (startTime.elapsedTime > 1000 && starting == 1)
             {
                 starting = 2;
-                //play READY
-                playSound("ready");
+                //play GO
+                playSound("go");
             }
             if (startTime.elapsedTime > 2000 && starting == 2)
             {
                 starting = 0;
-                //play GO
-                playSound("go");
             }
 
             if (starting == 0)
