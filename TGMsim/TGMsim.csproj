@@ -92,8 +92,11 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <Content Include="Audio\SE\go.wav" />
+    <Content Include="Audio\SE\ready.wav" />
     <Content Include="Audio\SE\SEB_disappear.wav" />
     <Content Include="Audio\SE\SEB_fall.wav" />
+    <Content Include="Audio\SE\SEB_fixa.wav" />
     <Content Include="Audio\SE\SEB_instal.wav" />
     <Content Include="Audio\SE\SEB_mino1.wav" />
     <Content Include="Audio\SE\SEB_mino2.wav" />

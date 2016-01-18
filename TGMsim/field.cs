@@ -32,6 +32,7 @@ namespace TGMsim
 
         public GameTimer timer = new GameTimer();
         public GameTimer contTime = new GameTimer();
+        public GameTimer startTime = new GameTimer();
         public int min, sec, msec, msec10;
 
         public bool swappedHeld;
@@ -49,6 +50,7 @@ namespace TGMsim
         public int combo = 1;
         public bool comboing = false;
 
+        public int starting = 1;
         public bool inCredits = false;
         int creditsProgress;
         public bool newHiscore = false;
@@ -111,8 +113,10 @@ namespace TGMsim
             }
 
             gameRunning = true;
+            starting = 1;
 
             timer.start();
+            startTime.start();
             for (int i = 0; i < 10; i++)
             {
                 List<int> tempList = new List<int>();
@@ -218,6 +222,7 @@ namespace TGMsim
 
             //game stats
             drawBuffer.DrawString("Score: " + score, SystemFonts.DefaultFont, debugBrush, 90, 740);
+            drawBuffer.DrawString("Combo: " + combo, SystemFonts.DefaultFont, debugBrush, 90, 750);
             if (isGM)
                 drawBuffer.DrawString("Grade: GM", SystemFonts.DefaultFont, debugBrush, 90, 730);
             else
@@ -255,438 +260,455 @@ namespace TGMsim
 
         public void logic()
         {
-            if (gameRunning == true)
+            if (startTime.elapsedTime > 1000 && starting == 1)
             {
-                //timing logic
-                long temptimeVAR = (long)(timer.elapsedTime*59.84/60);
-                min = (int)Math.Floor((double)temptimeVAR / 60000);
-                temptimeVAR -= min * 60000;
-                sec = (int)Math.Floor((double)temptimeVAR / 1000);
-                temptimeVAR -= sec * 1000;
-                msec = (int)temptimeVAR;
-                msec10 = (int)(msec/10);
+                starting = 2;
+                //play READY
+                playSound("ready");
+            }
+            if (startTime.elapsedTime > 2000 && starting == 2)
+            {
+                starting = 0;
+                //play GO
+                playSound("go");
+            }
 
-                
-
-                //check inputs and handle logic pertaining to them
-                //pad.poll();
-                if (pad.inputH == 1 || pad.inputH == -1)
+            if (starting == 0)
+            {
+                if (gameRunning == true)
                 {
-                    if (inputDelayH > 0)
+                    //timing logic
+                    long temptimeVAR = (long)(timer.elapsedTime * 59.84 / 60);
+                    min = (int)Math.Floor((double)temptimeVAR / 60000);
+                    temptimeVAR -= min * 60000;
+                    sec = (int)Math.Floor((double)temptimeVAR / 1000);
+                    temptimeVAR -= sec * 1000;
+                    msec = (int)temptimeVAR;
+                    msec10 = (int)(msec / 10);
+
+
+
+                    //check inputs and handle logic pertaining to them
+                    //pad.poll();
+                    if (pad.inputH == 1 || pad.inputH == -1)
                     {
-                        inputDelayH--;
-                    }
-                    if (inputDelayH == -1)
-                        inputDelayH = ruleset.baseDAS;
-                }
-                else
-                    inputDelayH = -1;
-
-                if (inCredits)
-                {
-                    creditsProgress++;
-                    if (pad.inputStart == 1 && ruleset.gameRules == 1)
-                        creditsProgress += 3;
-                }
-
-                //GAME LOGIC
-
-                //check ID of current tetromino.
-                if (activeTet.id == 0)
-                {
-                    if (currentTimer == (int)Field.timerType.LineClear)  //if timer is line clear and done, settle pieces and start ARE
-                    {
-                        if (timerCount == 0)
+                        if (inputDelayH > 0)
                         {
-                            //settle pieces and start ARE
-                            for (int i = 0; i < full.Count; i++ )
+                            inputDelayH--;
+                        }
+                        if (inputDelayH == -1)
+                            inputDelayH = ruleset.baseDAS;
+                    }
+                    else
+                        inputDelayH = -1;
+
+                    if (inCredits)
+                    {
+                        creditsProgress++;
+                        if (pad.inputStart == 1 && ruleset.gameRules == 1)
+                            creditsProgress += 3;
+                    }
+
+                    //GAME LOGIC
+
+                    //check ID of current tetromino.
+                    if (activeTet.id == 0)
+                    {
+                        if (currentTimer == (int)Field.timerType.LineClear)  //if timer is line clear and done, settle pieces and start ARE
+                        {
+                            if (timerCount == 0)
                             {
-                                for(int j = full[i]; j > 0; j--)
+                                //settle pieces and start ARE
+                                for (int i = 0; i < full.Count; i++)
                                 {
-                                    for(int k = 0; k < 10; k++)
+                                    for (int j = full[i]; j > 0; j--)
                                     {
-                                        gameField[k][j] = gameField[k][j - 1];
+                                        for (int k = 0; k < 10; k++)
+                                        {
+                                            gameField[k][j] = gameField[k][j - 1];
+                                        }
                                     }
                                 }
-                            }
-                            full.Clear();
-                            currentTimer = (int)Field.timerType.ARE;
-                            timerCount = ruleset.baseARE;
-                            playSound("SEB_fall");
-                        }
-                        else
-                        {
-                            timerCount--;
-                            return;
-                        }
-                    }
-                    //elseif timer is ARE and done, get next tetromino
-                    else if (currentTimer == (int)Field.timerType.ARE)
-                    {
-                        if (timerCount == 0)
-                        {
-                            //get next tetromino, generate another for "next"
-                            if (ruleset.nextNum > 0)
-                            {
-                                activeTet = nextTet[0];
-                                groundTimer = ruleset.baseLock;
-                                for (int i = 0; i < nextTet.Count - 1; i++)
-                                {
-                                    nextTet[i] = nextTet[i + 1];
-                                }
-                                nextTet[nextTet.Count - 1] = generatePiece();
-                                playSound("SEB_mino" + nextTet[nextTet.Count - 1].id);
+                                full.Clear();
+                                currentTimer = (int)Field.timerType.ARE;
+                                timerCount = ruleset.baseARE;
+                                playSound("SEB_fall");
                             }
                             else
                             {
-                                activeTet = generatePiece();
-                                playSound("SEB_mino" + activeTet.id);
+                                timerCount--;
+                                return;
                             }
-
-                            int intRot = 0;
-                            if (pad.inputPressedRot1)
-                                intRot += 1;
-                            if (pad.inputPressedRot2)
-                                intRot -= 1;
-                            if (intRot != 0)
-                            {
-                                rotatePiece(activeTet, intRot);
-                                playSound("SEB_prerotate");
-                            }
-
-                            gravCounter = 0;
-
-                            bool blocked = false;
-
-                            blocked = !emptyUnderTet(activeTet);
-
-                            if (blocked)
-                            {
-                                endGame();
-                            }
-                            softCounter = 0;
                         }
-                        else
+                        //elseif timer is ARE and done, get next tetromino
+                        else if (currentTimer == (int)Field.timerType.ARE)
                         {
-                            timerCount--;
-                            return;
-                        }
-                    }
-                }
-                else  //else, check collision below
-                {
-                    bool floored = false;
-
-                    for (int i = 0; i < 4; i++ )
-                    {
-                        if (activeTet.bits[i].y + 1 >= 21)
-                        {
-                            floored = true;
-                            break;
-                        } 
-                        else if (gameField[activeTet.bits[i].x][activeTet.bits[i].y + 1] != 0)
-                        {
-                            floored = true;
-                            break;
-                        }
-                    }
-
-                    if (floored == true)
-                    {
-                        //check lock delay if grounded
-                        if (currentTimer == (int)Field.timerType.LockDelay)
-                        {
-                            //if lock delay up, place piece.
-                            if (groundTimer == 0)
+                            if (timerCount == 0)
                             {
-                                if(level % 100 != 99 && level != 998)
-                                    level++;
+                                //get next tetromino, generate another for "next"
+                                if (ruleset.nextNum > 0)
+                                {
+                                    activeTet = nextTet[0];
+                                    groundTimer = ruleset.baseLock;
+                                    for (int i = 0; i < nextTet.Count - 1; i++)
+                                    {
+                                        nextTet[i] = nextTet[i + 1];
+                                    }
+                                    nextTet[nextTet.Count - 1] = generatePiece();
+                                    playSound("SEB_mino" + nextTet[nextTet.Count - 1].id);
+                                }
+                                else
+                                {
+                                    activeTet = generatePiece();
+                                    playSound("SEB_mino" + activeTet.id);
+                                }
 
-                                if (inCredits == true && creditsProgress >= ruleset.creditsLength)
+                                int intRot = 0;
+                                if (pad.inputPressedRot1)
+                                    intRot += 1;
+                                if (pad.inputPressedRot2)
+                                    intRot -= 1;
+                                if (intRot != 0)
+                                {
+                                    rotatePiece(activeTet, intRot);
+                                    playSound("SEB_prerotate");
+                                }
+
+                                gravCounter = 0;
+
+                                bool blocked = false;
+
+                                blocked = !emptyUnderTet(activeTet);
+
+                                if (blocked)
                                 {
                                     endGame();
                                 }
+                                softCounter = 0;
+                            }
+                            else
+                            {
+                                timerCount--;
+                                return;
+                            }
+                        }
+                    }
+                    else  //else, check collision below
+                    {
+                        bool floored = false;
 
-                                for (int i = 0; i < 4; i++)
-                                {
-                                    gameField[activeTet.bits[i].x][activeTet.bits[i].y] = activeTet.id;
-                                }
-                                activeTet.id = 0;
-                                //check for full rows and screenclears
-                                
-                                int tetCount = 0;
+                        for (int i = 0; i < 4; i++)
+                        {
+                            if (activeTet.bits[i].y + 1 >= 21)
+                            {
+                                floored = true;
+                                break;
+                            }
+                            else if (gameField[activeTet.bits[i].x][activeTet.bits[i].y + 1] != 0)
+                            {
+                                floored = true;
+                                break;
+                            }
+                        }
 
-                                for(int i = 0; i < 20; i++)
+                        if (floored == true)
+                        {
+                            //check lock delay if grounded
+                            if (currentTimer == (int)Field.timerType.LockDelay)
+                            {
+                                //if lock delay up, place piece.
+                                if (groundTimer == 0)
                                 {
-                                    int columnCount = 0;
-                                    for(int j = 0; j < 10; j++)
-                                    {
-                                        if (gameField[j][i+1] != 0)
-                                        {
-                                            columnCount++;
-                                            tetCount++;
-                                        }
-                                    }
-                                    if (columnCount == 10)
-                                    {
-                                        full.Add(i + 1);
-                                        tetCount -= 10;
-                                    }
-                                }
-
-                                if (full.Count > 0)  //if full rows, clear the rows, start the line clear timer, give points
-                                {
-                                    for(int i = 0; i < full.Count; i++)
-                                    {
-                                        for (int j = 0; j < 10; j++)
-                                            gameField[j][full[i]] = 0;
+                                    if (level % 100 != 99 && level != 998)
                                         level++;
-                                    }
-                                    //calculate combo!
-                                    int bravo = 1;
-                                    if (tetCount == 0)
-                                    {
-                                        bravoCounter++;
-                                        bravo = 4;
-                                    }
-                                    combo = combo + (2 * full.Count) - 2;
-                                    //give points
-                                    if (!inCredits)
-                                        score += ((int)Math.Ceiling((double)(level + full.Count) / 4) + softCounter) * full.Count * ((full.Count * 2) - 1) * bravo;
-                                    if (comboing)
-                                        score *= combo;
-                                    else 
-                                        combo = 1;
-                                    comboing = true;
 
-                                    //check GM conditions
-                                    if(GMflags.Count == 0 && level >= 300)
+                                    if (inCredits == true && creditsProgress >= ruleset.creditsLength)
                                     {
-                                        if (score >= 12000 && timer.elapsedTime <= 255000)
-                                            GMflags.Add(true);
-                                        else
-                                            GMflags.Add(false);
+                                        endGame();
                                     }
-                                    else if(GMflags.Count == 1 && level >= 500)
+
+                                    for (int i = 0; i < 4; i++)
                                     {
-                                        if (score >= 40000 && timer.elapsedTime <= 450000)
-                                            GMflags.Add(true);
-                                        else
-                                            GMflags.Add(false);
+                                        gameField[activeTet.bits[i].x][activeTet.bits[i].y] = activeTet.id;
                                     }
-                                    else if(GMflags.Count == 2 && level >= 999)
+                                    activeTet.id = 0;
+                                    //check for full rows and screenclears
+
+                                    int tetCount = 0;
+
+                                    for (int i = 0; i < 20; i++)
                                     {
-                                        level = 999;
-                                        if (score >= 126000 && timer.elapsedTime <= 810000)
-                                            GMflags.Add(true);
-                                        else
-                                            GMflags.Add(false);
-
-
-                                        //check for awarding GM
-                                        if (GMflags[0] && GMflags[1] && GMflags[2])
+                                        int columnCount = 0;
+                                        for (int j = 0; j < 10; j++)
                                         {
-                                            isGM = true;
+                                            if (gameField[j][i + 1] != 0)
+                                            {
+                                                columnCount++;
+                                                tetCount++;
+                                            }
+                                        }
+                                        if (columnCount == 10)
+                                        {
+                                            full.Add(i + 1);
+                                            tetCount -= 10;
                                         }
                                     }
 
-                                    //update grade
-                                    bool checking = true;
-                                    while (checking == true)
+                                    if (full.Count > 0)  //if full rows, clear the rows, start the line clear timer, give points
                                     {
-                                        if (grade < ruleset.gradePointsTGM1.Count - 1)
+                                        for (int i = 0; i < full.Count; i++)
                                         {
-                                            if (score >= ruleset.gradePointsTGM1[grade + 1])
+                                            for (int j = 0; j < 10; j++)
+                                                gameField[j][full[i]] = 0;
+                                            level++;
+                                        }
+                                        //calculate combo!
+                                        int bravo = 1;
+                                        if (tetCount == 0)
+                                        {
+                                            bravoCounter++;
+                                            bravo = 4;
+                                        }
+                                        combo = combo + (2 * full.Count) - 2;
+                                        //give points
+                                        if (!inCredits)
+                                            score += ((int)Math.Ceiling((double)(level + full.Count) / 4) + softCounter) * full.Count * ((full.Count * 2) - 1) * bravo;
+                                        if (comboing)
+                                            score *= combo;
+                                        else
+                                            combo = 1;
+                                        comboing = true;
+
+                                        //check GM conditions
+                                        if (GMflags.Count == 0 && level >= 300)
+                                        {
+                                            if (score >= 12000 && timer.elapsedTime <= 255000)
+                                                GMflags.Add(true);
+                                            else
+                                                GMflags.Add(false);
+                                        }
+                                        else if (GMflags.Count == 1 && level >= 500)
+                                        {
+                                            if (score >= 40000 && timer.elapsedTime <= 450000)
+                                                GMflags.Add(true);
+                                            else
+                                                GMflags.Add(false);
+                                        }
+                                        else if (GMflags.Count == 2 && level >= 999)
+                                        {
+                                            level = 999;
+                                            if (score >= 126000 && timer.elapsedTime <= 810000)
+                                                GMflags.Add(true);
+                                            else
+                                                GMflags.Add(false);
+
+
+                                            //check for awarding GM
+                                            if (GMflags[0] && GMflags[1] && GMflags[2])
                                             {
-                                                grade++;
-                                                playSound("SEP_levelchange");
+                                                isGM = true;
+                                            }
+                                        }
+
+                                        //update grade
+                                        bool checking = true;
+                                        while (checking == true)
+                                        {
+                                            if (grade < ruleset.gradePointsTGM1.Count - 1)
+                                            {
+                                                if (score >= ruleset.gradePointsTGM1[grade + 1])
+                                                {
+                                                    grade++;
+                                                    playSound("SEP_levelchange");
+                                                }
+                                                else
+                                                    checking = false;
                                             }
                                             else
                                                 checking = false;
                                         }
-                                        else
-                                            checking = false;
-                                    }
 
-                                    if (level >= 999 && inCredits == false)
+                                        if (level >= 999 && inCredits == false)
+                                        {
+                                            triggerCredits();
+                                        }
+
+                                        //start timer
+                                        currentTimer = (int)Field.timerType.LineClear;
+                                        timerCount = ruleset.baseLineClear;
+                                        playSound("SEB_dissappear");
+
+                                    }
+                                    else //start the ARE, check if new grav level
                                     {
-                                        triggerCredits();
+                                        currentTimer = (int)Field.timerType.ARE;
+                                        timerCount = ruleset.baseARE;
+
+                                        combo = 1;
+                                        comboing = false;
+
                                     }
 
-                                    //start timer
-                                    currentTimer = (int)Field.timerType.LineClear;
-                                    timerCount = ruleset.baseLineClear;
-                                    playSound("SEB_dissappear");
+                                    if (gravLevel < ruleset.gravLevelsTGM1.Count - 1)
+                                    {
+                                        if (level >= ruleset.gravLevelsTGM1[gravLevel + 1])
+                                            gravLevel++;
+                                    }
+
+                                    playSound("SEB_fixa");
+
+                                    return;
 
                                 }
-                                else //start the ARE, check if new grav level
+                                else
                                 {
-                                    currentTimer = (int)Field.timerType.ARE;
-                                    timerCount = ruleset.baseARE;
-
-                                    combo = 1;
-                                    comboing = false;
-                                    
+                                    gravCounter = 0;
+                                    groundTimer--;
                                 }
-
-                                if (gravLevel < ruleset.gravLevelsTGM1.Count - 1)
-                                {
-                                    if (level >= ruleset.gravLevelsTGM1[gravLevel + 1])
-                                        gravLevel++;
-                                }
-
-                                playSound("SEB_instal");
-
-                                return;
-                                
                             }
                             else
                             {
-                                gravCounter = 0;
-                                groundTimer--;
+                                currentTimer = (int)Field.timerType.LockDelay;
+                                playSound("SEB_instal");
+                                //timerCount = ruleset.baseLock;
                             }
                         }
                         else
-                        {
-                            currentTimer = (int)Field.timerType.LockDelay;
-                            //timerCount = ruleset.baseLock;
-                        }
-                    }
-                    else
-                        currentTimer = (int)Field.timerType.ARE;
-
-
-
-                    int blockDrop = 0;// make it here so we can drop faster
-
-
-                    //check saved inputs and act on them accordingly
-                    
-
-                    if (pad.inputV == 1 && ruleset.hardDrop == 1)
-                    {
-                        blockDrop = 19;
-                        gravCounter = 0;
-                    }
-                    else if (pad.inputV == -1 && inputDelayV == 0)
-                    {
-                        blockDrop = 1;
-                        softCounter++;
-                        gravCounter = 0;
-                        if(currentTimer == (int)Field.timerType.LockDelay)
-                            groundTimer = 0;
-                    }
-
-                    if (pad.inputHold == 1 && ruleset.hold == true && swappedHeld == false)
-                    {
-                        Tetromino tempTet;
-                        if (heldPiece.id != 0)
-                        {
-                            tempTet = new Tetromino(heldPiece.id);
-                            heldPiece = new Tetromino(activeTet.id);
-                            activeTet = tempTet;
-                            groundTimer = ruleset.baseLock;
-                        }
-                        else
-                        {
-                            heldPiece = new Tetromino(activeTet.id);
-                            activeTet.id = 0;
                             currentTimer = (int)Field.timerType.ARE;
-                            timerCount = ruleset.baseARE;
-                        }
-                        swappedHeld = true;
-                    }
-                    int rot = (pad.inputRot1 | pad.inputRot3) - pad.inputRot2;
-                    if (rot != 0)
-                        rotatePiece(activeTet, rot);
 
-                   
 
-                    if (pad.inputH == 1 && (inputDelayH < 1 || inputDelayH == ruleset.baseDAS))
-                    {
-                        bool safe = true;
-                        //check to the right of each bit
-                        for (int i = 0; i < 4; i++)
+
+                        int blockDrop = 0;// make it here so we can drop faster
+
+
+                        //check saved inputs and act on them accordingly
+
+
+                        if (pad.inputV == 1 && ruleset.hardDrop == 1)
                         {
-                            if (activeTet.bits[i].x + 1 == 10)
-                            {
-                                safe = false;
-                                break;
-                            }
-                            if (gameField[activeTet.bits[i].x + 1][activeTet.bits[i].y] != 0)
-                            {
-                                safe = false;
-                                break;
-                            }
+                            blockDrop = 19;
+                            gravCounter = 0;
                         }
-                        if (safe) //if it's fine, move them all right one
+                        else if (pad.inputV == -1 && inputDelayV == 0)
                         {
+                            blockDrop = 1;
+                            softCounter++;
+                            gravCounter = 0;
+                            if (currentTimer == (int)Field.timerType.LockDelay)
+                                groundTimer = 0;
+                        }
+
+                        if (pad.inputHold == 1 && ruleset.hold == true && swappedHeld == false)
+                        {
+                            Tetromino tempTet;
+                            if (heldPiece.id != 0)
+                            {
+                                tempTet = new Tetromino(heldPiece.id);
+                                heldPiece = new Tetromino(activeTet.id);
+                                activeTet = tempTet;
+                                groundTimer = ruleset.baseLock;
+                            }
+                            else
+                            {
+                                heldPiece = new Tetromino(activeTet.id);
+                                activeTet.id = 0;
+                                currentTimer = (int)Field.timerType.ARE;
+                                timerCount = ruleset.baseARE;
+                            }
+                            swappedHeld = true;
+                        }
+                        int rot = (pad.inputRot1 | pad.inputRot3) - pad.inputRot2;
+                        if (rot != 0)
+                            rotatePiece(activeTet, rot);
+
+
+
+                        if (pad.inputH == 1 && (inputDelayH < 1 || inputDelayH == ruleset.baseDAS))
+                        {
+                            bool safe = true;
+                            //check to the right of each bit
                             for (int i = 0; i < 4; i++)
                             {
-                                activeTet.bits[i].x++;
+                                if (activeTet.bits[i].x + 1 == 10)
+                                {
+                                    safe = false;
+                                    break;
+                                }
+                                if (gameField[activeTet.bits[i].x + 1][activeTet.bits[i].y] != 0)
+                                {
+                                    safe = false;
+                                    break;
+                                }
+                            }
+                            if (safe) //if it's fine, move them all right one
+                            {
+                                for (int i = 0; i < 4; i++)
+                                {
+                                    activeTet.bits[i].x++;
+                                }
                             }
                         }
-                    }
-                    else if (pad.inputH == -1 && (inputDelayH < 1 || inputDelayH == ruleset.baseDAS))
-                    {
-                        bool safe = true;
-                        //check to the right of each bit
-                        for (int i = 0; i < 4; i++)
+                        else if (pad.inputH == -1 && (inputDelayH < 1 || inputDelayH == ruleset.baseDAS))
                         {
-                            if (activeTet.bits[i].x - 1 == -1)
-                            {
-                                safe = false;
-                                break;
-                            }
-                            if (gameField[activeTet.bits[i].x - 1][activeTet.bits[i].y] != 0)
-                            {
-                                safe = false;
-                                break;
-                            }
-                        }
-                        if (safe) //if it's fine, move them all right one
-                        {
+                            bool safe = true;
+                            //check to the right of each bit
                             for (int i = 0; i < 4; i++)
                             {
-                                activeTet.bits[i].x-=1;
+                                if (activeTet.bits[i].x - 1 == -1)
+                                {
+                                    safe = false;
+                                    break;
+                                }
+                                if (gameField[activeTet.bits[i].x - 1][activeTet.bits[i].y] != 0)
+                                {
+                                    safe = false;
+                                    break;
+                                }
+                            }
+                            if (safe) //if it's fine, move them all right one
+                            {
+                                for (int i = 0; i < 4; i++)
+                                {
+                                    activeTet.bits[i].x -= 1;
+                                }
                             }
                         }
+
+                        //calc gravity LAST sso I-jumps are doable?
+                        gravCounter += ruleset.gravTableTGM1[gravLevel]; //add our current gravity strength
+
+
+
+                        for (int tempGrav = gravCounter; tempGrav >= 256; tempGrav = tempGrav - 256)
+                        {
+                            blockDrop++;
+                        }
+                        if (blockDrop > 0 && currentTimer != (int)Field.timerType.LockDelay)
+                        {
+                            gravCounter = 0;
+                            tetGrav(activeTet, blockDrop);
+
+
+                        }
+
+                        //handle ghost piece logic
+                        ghostPiece = activeTet.clone();
+
+                        tetGrav(ghostPiece, 20);
+
                     }
 
-                    //calc gravity LAST sso I-jumps are doable?
-                    gravCounter += ruleset.gravTableTGM1[gravLevel]; //add our current gravity strength
-
-
-
-                    for (int tempGrav = gravCounter; tempGrav >= 256; tempGrav = tempGrav - 256)
-                    {
-                        blockDrop++;
-                    }
-                    if (blockDrop > 0 && currentTimer != (int)Field.timerType.LockDelay)
-                    {
-                        gravCounter = 0;
-                        tetGrav(activeTet, blockDrop);
-                        
-
-                    }
-
-                    //handle ghost piece logic
-                    ghostPiece = activeTet.clone();
-
-                    tetGrav(ghostPiece, 20);
 
                 }
-
-
-            }
-            else //gamerunning == false
-            {
-                if (pad.inputStart == 1)
+                else //gamerunning == false
                 {
-                    cont = true;
+                    if (pad.inputStart == 1)
+                    {
+                        cont = true;
+                    }
+                    if (pad.inputPressedRot2)
+                        exit = true;
                 }
-                if (pad.inputPressedRot2)
-                    exit = true;
             }
         }
 
@@ -1753,8 +1775,8 @@ namespace TGMsim
         {
             var mediaPlayer = new System.Windows.Media.MediaPlayer();
             badAudio.Add(mediaPlayer);
-            //badAudio[badAudio.Count - 1].Open(new Uri(@"Audio\SE\" + sound + ".wav", UriKind.Relative));
-            //badAudio[badAudio.Count - 1].Play();
+            badAudio[badAudio.Count - 1].Open(new Uri(@"Audio\SE\" + sound + ".wav", UriKind.Relative));
+            badAudio[badAudio.Count - 1].Play();
             if (badAudio.Count > 15)
             {
                 badAudio.RemoveRange(0, 10);

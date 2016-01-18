@@ -133,7 +133,12 @@ namespace TGMsim
                 case 2: //game select
                     gSel.logic(pad1);
                     if ((pad1.inputRot1 | pad1.inputRot3) == 1)
-                        changeMenu(3);
+                    {
+                        if (gSel.menuSelection == 5)
+                            changeMenu(8);
+                        else
+                            changeMenu(3);
+                    }
                     break;
                 case 3: //mode select
                     mSel.logic(pad1);
