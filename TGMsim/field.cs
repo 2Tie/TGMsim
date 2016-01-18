@@ -455,6 +455,8 @@ namespace TGMsim
                                         score += ((int)Math.Ceiling((double)(level + full.Count) / 4) + softCounter) * full.Count * ((full.Count * 2) - 1) * bravo;
                                     if (comboing)
                                         score *= combo;
+                                    else 
+                                        combo = 1;
                                     comboing = true;
 
                                     //check GM conditions
@@ -492,7 +494,7 @@ namespace TGMsim
                                     bool checking = true;
                                     while (checking == true)
                                     {
-                                        if (grade < ruleset.gradePointsTGM1.Count)
+                                        if (grade < ruleset.gradePointsTGM1.Count - 1)
                                         {
                                             if (score >= ruleset.gradePointsTGM1[grade + 1])
                                             {
