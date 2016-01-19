@@ -67,25 +67,25 @@ namespace TGMsim
         public bool cont = false;
         public bool exit = false;
 
-        List<Color> tetColors = new List<Color>();
+        List<System.Drawing.Color> tetColors = new List<System.Drawing.Color>();
 
         NAudio.Wave.WaveOutEvent soundList = new NAudio.Wave.WaveOutEvent();
         NAudio.Vorbis.VorbisWaveReader vorbisStream;
-        CachedSound s_Ready;
-        CachedSound s_Go;
-        CachedSound s_Tet1;
-        CachedSound s_Tet2;
-        CachedSound s_Tet3;
-        CachedSound s_Tet4;
-        CachedSound s_Tet5;
-        CachedSound s_Tet6;
-        CachedSound s_Tet7;
-        CachedSound s_PreRot;
-        CachedSound s_Contact;
-        CachedSound s_Lock;
-        CachedSound s_Clear;
-        CachedSound s_Impact;
-        CachedSound s_Grade;
+        System.Windows.Media.MediaPlayer s_Ready = new System.Windows.Media.MediaPlayer();
+        System.Windows.Media.MediaPlayer s_Go = new System.Windows.Media.MediaPlayer();
+        System.Windows.Media.MediaPlayer s_Tet1 = new System.Windows.Media.MediaPlayer();
+        System.Windows.Media.MediaPlayer s_Tet2 = new System.Windows.Media.MediaPlayer();
+        System.Windows.Media.MediaPlayer s_Tet3 = new System.Windows.Media.MediaPlayer();
+        System.Windows.Media.MediaPlayer s_Tet4 = new System.Windows.Media.MediaPlayer();
+        System.Windows.Media.MediaPlayer s_Tet5 = new System.Windows.Media.MediaPlayer();
+        System.Windows.Media.MediaPlayer s_Tet6 = new System.Windows.Media.MediaPlayer();
+        System.Windows.Media.MediaPlayer s_Tet7 = new System.Windows.Media.MediaPlayer();
+        System.Windows.Media.MediaPlayer s_PreRot = new System.Windows.Media.MediaPlayer();
+        System.Windows.Media.MediaPlayer s_Contact = new System.Windows.Media.MediaPlayer();
+        System.Windows.Media.MediaPlayer s_Lock = new System.Windows.Media.MediaPlayer();
+        System.Windows.Media.MediaPlayer s_Clear = new System.Windows.Media.MediaPlayer();
+        System.Windows.Media.MediaPlayer s_Impact = new System.Windows.Media.MediaPlayer();
+        System.Windows.Media.MediaPlayer s_Grade = new System.Windows.Media.MediaPlayer();
 
         Pen gridPen = new Pen(new SolidBrush(Color.White));
 
@@ -107,21 +107,21 @@ namespace TGMsim
             tetColors.Add(Color.Green);
             tetColors.Add(Color.Yellow);
 
-            s_Ready = registerSound("SEP_ready");
-            s_Go = registerSound("SEP_go");
-            s_Tet1 = registerSound("SEB_mino1");
-            s_Tet2 = registerSound("SEB_mino2");
-            s_Tet3 = registerSound("SEB_mino3");
-            s_Tet4 = registerSound("SEB_mino4");
-            s_Tet5 = registerSound("SEB_mino5");
-            s_Tet6 = registerSound("SEB_mino6");
-            s_Tet7 = registerSound("SEB_mino7");
-            s_PreRot = registerSound("SEB_prerotate");
-            s_Contact = registerSound("SEB_fixa");
-            s_Lock = registerSound("SEB_instal");
-            s_Clear = registerSound("SEB_disappear");
-            s_Impact = registerSound("SEB_fall");
-            s_Grade = registerSound("SEP_levelchange");
+            s_Ready.Open(new Uri(Environment.CurrentDirectory + @"\Audio\SE\SEP_ready.wav"));
+            s_Go.Open(new Uri(Environment.CurrentDirectory + @"/Audio/SE/SEP_go.wav"));
+            s_Tet1.Open(new Uri(Environment.CurrentDirectory + @"/Audio/SE/SEB_mino1.wav"));
+            s_Tet2.Open(new Uri(Environment.CurrentDirectory + @"/Audio/SE/SEB_mino2.wav"));
+            s_Tet3.Open(new Uri(Environment.CurrentDirectory + @"/Audio/SE/SEB_mino3.wav"));
+            s_Tet4.Open(new Uri(Environment.CurrentDirectory + @"/Audio/SE/SEB_mino4.wav"));
+            s_Tet5.Open(new Uri(Environment.CurrentDirectory + @"/Audio/SE/SEB_mino5.wav"));
+            s_Tet6.Open(new Uri(Environment.CurrentDirectory + @"/Audio/SE/SEB_mino6.wav"));
+            s_Tet7.Open(new Uri(Environment.CurrentDirectory + @"/Audio/SE/SEB_mino7.wav"));
+            s_PreRot.Open(new Uri(Environment.CurrentDirectory + @"/Audio/SE/SEB_prerotate.wav"));
+            s_Contact.Open(new Uri(Environment.CurrentDirectory + @"/Audio/SE/SEB_fixa.wav"));
+            s_Lock.Open(new Uri(Environment.CurrentDirectory + @"/Audio/SE/SEB_instal.wav"));
+            s_Clear.Open(new Uri(Environment.CurrentDirectory + @"/Audio/SE/SEB_disappear.wav"));
+            s_Impact.Open(new Uri(Environment.CurrentDirectory + @"/Audio/SE/SEB_fall.wav"));
+            s_Grade.Open(new Uri(Environment.CurrentDirectory + @"/Audio/SE/SEP_levelchange.wav"));
 
             pad = ctlr;
             ruleset = rules;
@@ -159,7 +159,7 @@ namespace TGMsim
                 }
                 gameField.Add(tempList);
             }
-            SEManager.Instance.PlaySound(s_Ready);
+            playSound(s_Ready);
         }
 
         public void randomize()
@@ -298,7 +298,7 @@ namespace TGMsim
             {
                 starting = 2;
                 //play GO
-                SEManager.Instance.PlaySound(s_Go);
+                playSound(s_Go);
             }
             if (startTime.elapsedTime > 2000 && starting == 2)
             {
@@ -372,7 +372,7 @@ namespace TGMsim
                                 full.Clear();
                                 currentTimer = (int)Field.timerType.ARE;
                                 timerCount = ruleset.baseARE;
-                                SEManager.Instance.PlaySound(s_Impact);
+                                playSound(s_Impact);
                             }
                             else
                             {
@@ -399,25 +399,25 @@ namespace TGMsim
                                     switch(nextTet[nextTet.Count - 1].id)
                                     {
                                         case 1:
-                                            SEManager.Instance.PlaySound(s_Tet1);
+                                            playSound(s_Tet1);
                                             break;
                                         case 2:
-                                            SEManager.Instance.PlaySound(s_Tet2);
+                                            playSound(s_Tet2);
                                             break;
                                         case 3:
-                                            SEManager.Instance.PlaySound(s_Tet3);
+                                            playSound(s_Tet3);
                                             break;
                                         case 4:
-                                            SEManager.Instance.PlaySound(s_Tet4);
+                                            playSound(s_Tet4);
                                             break;
                                         case 5:
-                                            SEManager.Instance.PlaySound(s_Tet5);
+                                            playSound(s_Tet5);
                                             break;
                                         case 6:
-                                            SEManager.Instance.PlaySound(s_Tet6);
+                                            playSound(s_Tet6);
                                             break;
                                         case 7:
-                                            SEManager.Instance.PlaySound(s_Tet7);
+                                            playSound(s_Tet7);
                                             break;
                                     }
                                 }
@@ -428,25 +428,25 @@ namespace TGMsim
                                     switch (activeTet.id)
                                     {
                                         case 1:
-                                            SEManager.Instance.PlaySound(s_Tet1);
+                                            playSound(s_Tet1);
                                             break;
                                         case 2:
-                                            SEManager.Instance.PlaySound(s_Tet2);
+                                            playSound(s_Tet2);
                                             break;
                                         case 3:
-                                            SEManager.Instance.PlaySound(s_Tet3);
+                                            playSound(s_Tet3);
                                             break;
                                         case 4:
-                                            SEManager.Instance.PlaySound(s_Tet4);
+                                            playSound(s_Tet4);
                                             break;
                                         case 5:
-                                            SEManager.Instance.PlaySound(s_Tet5);
+                                            playSound(s_Tet5);
                                             break;
                                         case 6:
-                                            SEManager.Instance.PlaySound(s_Tet6);
+                                            playSound(s_Tet6);
                                             break;
                                         case 7:
-                                            SEManager.Instance.PlaySound(s_Tet7);
+                                            playSound(s_Tet7);
                                             break;
                                     }
                                 }
@@ -459,7 +459,7 @@ namespace TGMsim
                                 if (intRot != 0)
                                 {
                                     rotatePiece(activeTet, intRot);
-                                    SEManager.Instance.PlaySound(s_PreRot);
+                                    playSound(s_PreRot);
                                 }
 
                                 gravCounter = 0;
@@ -607,7 +607,7 @@ namespace TGMsim
                                                 if (score >= ruleset.gradePointsTGM1[grade + 1])
                                                 {
                                                     grade++;
-                                                    SEManager.Instance.PlaySound(s_Grade);
+                                                    playSound(s_Grade);
                                                 }
                                                 else
                                                     checking = false;
@@ -624,7 +624,7 @@ namespace TGMsim
                                         //start timer
                                         currentTimer = (int)Field.timerType.LineClear;
                                         timerCount = ruleset.baseLineClear;
-                                        SEManager.Instance.PlaySound(s_Clear);
+                                        playSound(s_Clear);
 
                                     }
                                     else //start the ARE, check if new grav level
@@ -643,7 +643,7 @@ namespace TGMsim
                                             gravLevel++;
                                     }
 
-                                    SEManager.Instance.PlaySound(s_Contact);
+                                    playSound(s_Contact);
 
                                     return;
 
@@ -657,7 +657,7 @@ namespace TGMsim
                             else
                             {
                                 currentTimer = (int)Field.timerType.LockDelay;
-                                SEManager.Instance.PlaySound(s_Lock);
+                                playSound(s_Lock);
                                 //timerCount = ruleset.baseLock;
                             }
                         }
@@ -1860,10 +1860,10 @@ namespace TGMsim
 
 
 
-        private CachedSound registerSound(string sound)
+        private void playSound(System.Windows.Media.MediaPlayer sound)
         {
-            var tempS = new CachedSound(@"Audio\SE\" + sound + ".wav");
-            return tempS;
+            sound.Position = new TimeSpan(0);
+            sound.Play();
         }
 
         private void playMusic()
