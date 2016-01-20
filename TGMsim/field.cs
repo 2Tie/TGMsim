@@ -128,14 +128,14 @@ namespace TGMsim
 
             Random random = new Random();
 
-            activeTet = new Tetromino(random.Next(4) + 1); //first piece cannot be S, Z, or O
-            for (int j = 0; j < lastTet.Count - 1; j++)
-            {
-                lastTet[j] = lastTet[j + 1];
-            }
-            lastTet[lastTet.Count - 1] = activeTet.id;
+            activeTet = new Tetromino(0); //first piece cannot be S, Z, or O
+            //for (int j = 0; j < lastTet.Count - 1; j++)
+            //{
+            //    lastTet[j] = lastTet[j + 1];
+            //}
+            //lastTet[lastTet.Count - 1] = activeTet.id;
 
-            ghostPiece = activeTet.clone();
+            //ghostPiece = activeTet.clone();
 
             if (nextTet.Count == 0 && ruleset.nextNum > 0) //generate nextTet
             {
@@ -223,6 +223,12 @@ namespace TGMsim
             for (int i = 1; i < 22; i++)
                 drawBuffer.DrawLine(gridPen, x, y + 25 * i, x + width, y + 25 * i);
 
+            //Starting things
+            if (starting == 1)
+                drawBuffer.DrawString("Ready", SystemFonts.DefaultFont, new SolidBrush(Color.White), 200, 200);
+            if (starting == 2)
+                drawBuffer.DrawString("Go", SystemFonts.DefaultFont, new SolidBrush(Color.White), 200, 200);
+
 
             //endgame stats
             if (gameRunning == false)
@@ -244,7 +250,6 @@ namespace TGMsim
             SolidBrush debugBrush = new SolidBrush(Color.White);
 
             //tech stats
-            drawBuffer.DrawString("Current Timer: " + currentTimer.ToString(), SystemFonts.DefaultFont, debugBrush, 20, 750);
             drawBuffer.DrawString("Grav Level: " + ruleset.gravTableTGM1[gravLevel].ToString(), SystemFonts.DefaultFont, debugBrush, 20, 760);
             if (!inCredits)
                 drawBuffer.DrawString("Current Level: " + level, SystemFonts.DefaultFont, debugBrush, 200, 760);
