@@ -109,9 +109,13 @@ namespace TGMsim
                     break;
                 case 4:
                     saved = false;
-                    menuState = 5;
+                    menuState = 4;
                     FPS = 59.84;
                     field1 = new Field(pad1, rules);
+                    break;
+
+                case 8:
+                    menuState = 8;
                     break;
             }
 
@@ -168,6 +172,10 @@ namespace TGMsim
                     if (field1.exit == true)
                         changeMenu(2);
                     break;
+                case 8://settings
+                    if (pad1.inputPressedRot2)
+                        changeMenu(2);
+                    break;
             }
         }
 
@@ -220,6 +228,9 @@ namespace TGMsim
                     break;
                 case 4:
                     field1.draw(drawBuffer);
+                    break;
+                case 8:
+                    drawBuffer.DrawString("preferences", DefaultFont, new SolidBrush(Color.White), 100, 20);
                     break;
             }
 
