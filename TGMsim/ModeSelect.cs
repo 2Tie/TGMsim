@@ -21,18 +21,24 @@ namespace TGMsim
         {
             if (pad.inputV != dInput)
             {
-                selection += pad.inputV;
-                if (selection == -1)
-                    selection = 0;
-                dInput = pad.inputH;
+                selection = (selection - pad.inputV);
+                dInput = pad.inputV;
             }
+
             switch(game)
             {
                 case 2:
                 case 3:
-                case 4:
                     if (selection == 2)
+                        selection = 0;
+                    if (selection == -1)
                         selection = 1;
+                    break;
+                case 4:
+                    if (selection == 3)
+                        selection = 0;
+                    if (selection == -1)
+                        selection = 2;
                     break;
                 default:
                     if (selection == 1)
@@ -44,7 +50,7 @@ namespace TGMsim
         {
             if (game == 4)
             {
-                drawBuffer.DrawString("Konoha", SystemFonts.DefaultFont, new SolidBrush(Color.White), 400, 400);
+                drawBuffer.DrawString("Custom Mode", SystemFonts.DefaultFont, new SolidBrush(Color.White), 400, 400);
             }
             else
                 drawBuffer.DrawString("Master", SystemFonts.DefaultFont, new SolidBrush(Color.White), 400, 400);
@@ -59,6 +65,7 @@ namespace TGMsim
                     break;
                 case 4://bonus
                     drawBuffer.DrawString("~Eternal Shirase~", SystemFonts.DefaultFont, new SolidBrush(Color.White), 400, 412);
+                    drawBuffer.DrawString("Konoha", SystemFonts.DefaultFont, new SolidBrush(Color.White), 400, 424);
                     break;
             }
             drawBuffer.DrawString(game.ToString(), SystemFonts.DefaultFont, new SolidBrush(Color.White), 200, 700);

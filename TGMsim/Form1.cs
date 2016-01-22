@@ -138,18 +138,43 @@ namespace TGMsim
                     gSel.logic(pad1);
                     if ((pad1.inputRot1 | pad1.inputRot3) == 1)
                     {
-                        if (gSel.menuSelection == 5)
+                        if (gSel.menuSelection == 5) //settings
                             changeMenu(8);
-                        else
+                        else if (gSel.menuSelection == 4) //Bonus
+                        {
                             changeMenu(3);
+                        }
+                        else
+                        {
+                            rules.setGame(gSel.menuSelection + 1);
+                            changeMenu(3);
+                        }
                     }
                     break;
                 case 3: //mode select
                     mSel.logic(pad1);
                     if ((pad1.inputRot1 | pad1.inputRot3) == 1)
                     {
-                        //TODO: change rules based on what game and mode is selected
-                        changeMenu(4);
+                        //TODO: change rules based on what mode is selected
+                        if (gSel.menuSelection != 4)
+                            changeMenu(4);
+                        else
+                        {
+                            switch (mSel.selection)
+                            {
+                                case 0://Custom
+                                    changeMenu(7);
+                                    break;
+                                case 1://eternal shirase
+                                    rules.setGame(4);
+                                    //TODO
+                                    break;
+                                case 2://konoha
+                                    rules.setGame(4);
+                                    //TODO
+                                    break;
+                            }
+                        }
                     }
                     if (pad1.inputRot2 == 1)
                         changeMenu(2);

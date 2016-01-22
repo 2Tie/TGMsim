@@ -38,11 +38,12 @@ namespace TGMsim
 
         public List<string> gradesTGM1 = new List<string> { "9", "8", "7", "6", "5", "4", "3", "2", "1", "S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "S9"};
 
-        void SetGame(int game)
+        public void setGame(int game)
         {
+            gameRules = game;
             switch (game)
             {
-                case 1:
+                case 1: //TGM
                     nextNum = 1;
                     hold = false;
                     hardDrop = 0;
@@ -59,7 +60,7 @@ namespace TGMsim
                     creditsLength = 2968; //taken from nullpomino, though estimates place it around 2961. still need to verify
                     showGrade = true;
                     break;
-                case 2:
+                case 2: //TGM2 OR TAP
                     nextNum = 1;
                     hold = false;
                     hardDrop = 1;
@@ -75,7 +76,23 @@ namespace TGMsim
                     fieldH = 20;
                     showGrade = true;
                     break;
-                case 3:
+                case 3: //TGM2 OR TAP
+                    nextNum = 1;
+                    hold = false;
+                    hardDrop = 1;
+                    rotation = 0;
+                    baseARE = 25;
+                    baseDAS = 14;
+                    baseLock = 30;
+                    baseLineClear = 40;
+                    gravType = 0;
+                    baseGrav = 4;
+                    genAttps = 6;
+                    fieldW = 10;
+                    fieldH = 20;
+                    showGrade = true;
+                    break;
+                case 4: //TI
                     nextNum = 3;
                     hold = true;
                     hardDrop = 1;
