@@ -112,6 +112,8 @@ namespace TGMsim
                     menuState = 4;
                     FPS = 59.84;
                     field1 = new Field(pad1, rules);
+                    if (player.name == "   ")
+                        field1.godmode = true;
                     break;
 
                 case 8:
@@ -184,7 +186,7 @@ namespace TGMsim
                     if (field1.gameRunning == false)
                     {
                         //test and save a hiscore ONCE
-                        if (saved == false)
+                        if (saved == false && field1.godmode == false)
                         {
                             field1.results.username = player.name;
                             field1.newHiscore = testHiscore(field1.results);

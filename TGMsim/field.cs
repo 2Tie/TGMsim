@@ -7,6 +7,7 @@ using System.Media;
 using System.Text;
 using System.Threading.Tasks;
 using NAudio;
+using System.Windows.Forms;
 
 namespace TGMsim
 {
@@ -63,6 +64,10 @@ namespace TGMsim
         Rules ruleset;
 
         public GameResult results;
+
+        public bool godmode = false;
+        public bool bigmode = false;
+        public bool g20 = false;
 
         public bool cont = false;
         public bool exit = false;
@@ -159,6 +164,7 @@ namespace TGMsim
                 }
                 gameField.Add(tempList);
             }
+            playMusic("level 5 idk");
             playSound(s_Ready);
         }
 
@@ -807,18 +813,34 @@ namespace TGMsim
 
         private void endGame()
         {
-            gameRunning = false;
-            //in the future, the little fadeout animation goes here!
+            if (godmode == true && level != 999)
+            {
+                gameField = new List<List<int>>();
+                for (int i = 0; i < 10; i++)
+                {
+                    List<int> tempList = new List<int>();
+                    for (int j = 0; j < 21; j++)
+                    {
+                        tempList.Add(0); // at least nine types; seven tetrominoes, invisible, and garbage
+                    }
+                    gameField.Add(tempList);
+                }
+            }
+            else
+            {
+                gameRunning = false;
+                //in the future, the little fadeout animation goes here!
 
-            stopMusic();
-            results = new GameResult();
-            results.game = ruleset.gameRules - 1;
-            results.username = "TEST";
-            results.grade = grade;
-            results.score = score;
-            results.time = timer.elapsedTime;
-            results.level = level;
-            contTime.start();
+                stopMusic();
+                results = new GameResult();
+                results.game = ruleset.gameRules - 1;
+                results.username = "TEST";
+                results.grade = grade;
+                results.score = score;
+                results.time = timer.elapsedTime;
+                results.level = level;
+                contTime.start();
+            }
         }
 
         private void triggerCredits()
@@ -1871,12 +1893,21 @@ namespace TGMsim
             sound.Play();
         }
 
-        private void playMusic()
+        private void playMusic(string song)
         {
-            vorbisStream = new NAudio.Vorbis.VorbisWaveReader(@"Audio\level 5.ogg");
-            LoopStream loop = new LoopStream(vorbisStream);
-            soundList.Init(loop);
-            soundList.Play();
+            try
+            {
+                vorbisStream = new NAudio.Vorbis.VorbisWaveReader(@"Audio\" + song + ".ogg");
+                LoopStream loop = new LoopStream(vorbisStream);
+                soundList.Init(loop);
+                soundList.Play();
+
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("The file \"" + song + ".ogg\" was not found!", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                //throw;
+            }
         }
 
         private void stopMusic()
