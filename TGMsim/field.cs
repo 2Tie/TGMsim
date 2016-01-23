@@ -62,6 +62,8 @@ namespace TGMsim
         public int softCounter = 0;
 
         Rules ruleset;
+        Mode mode;
+        int curTheme;
 
         public GameResult results;
 
@@ -97,7 +99,7 @@ namespace TGMsim
         Controller pad;
         int inputDelayH = 0, inputDelayV = 0;
 
-        public Field(Controller ctlr, Rules rules)
+        public Field(Controller ctlr, Rules rules, Mode m2)
         {
             x = 275;
             y = 100;
@@ -130,6 +132,7 @@ namespace TGMsim
 
             pad = ctlr;
             ruleset = rules;
+            mode = m2;
 
             Random random = new Random();
 
@@ -164,7 +167,7 @@ namespace TGMsim
                 }
                 gameField.Add(tempList);
             }
-            playMusic("level 5 idk");
+            playMusic("level 1");
             playSound(s_Ready);
         }
 
@@ -215,7 +218,7 @@ namespace TGMsim
             }
 
             //draw the ghost piece
-            if (level < 100 && ghostPiece != null && activeTet.id == ghostPiece.id)
+            if (level < mode.themes[0] && ghostPiece != null && activeTet.id == ghostPiece.id)
             {
                 for (int i = 0; i < 4; i++)
                 {
@@ -314,17 +317,10 @@ namespace TGMsim
             if (startTime.elapsedTime > 2000 && starting == 2)
             {
                 starting = 0;
-                //playMusic();
             }
 
             if (starting == 0)
             {
-                //music logic
-                if (soundList.PlaybackState == NAudio.Wave.PlaybackState.Stopped)
-                {
-                    //soundList.Stop();
-                    //soundList.Play();
-                }
 
                 if (gameRunning == true)
                 {
@@ -518,7 +514,7 @@ namespace TGMsim
                                 //if lock delay up, place piece.
                                 if (groundTimer == 0)
                                 {
-                                    if (level % 100 != 99 && level != 998)
+                                    if (level % 100 != 99 && level != (mode.endLevel - 1))
                                         level++;
 
                                     if (inCredits == true && creditsProgress >= ruleset.creditsLength)
@@ -593,7 +589,7 @@ namespace TGMsim
                                             else
                                                 GMflags.Add(false);
                                         }
-                                        else if (GMflags.Count == 2 && level >= 999)
+                                        else if (GMflags.Count == 2 && level >= mode.endLevel)
                                         {
                                             level = 999;
                                             if (score >= 126000 && timer.elapsedTime <= 810000)
@@ -627,7 +623,7 @@ namespace TGMsim
                                                 checking = false;
                                         }
 
-                                        if (level >= 999 && inCredits == false)
+                                        if (level >= mode.endLevel && inCredits == false)
                                         {
                                             triggerCredits();
                                         }
@@ -655,6 +651,20 @@ namespace TGMsim
                                     }
 
                                     playSound(s_Contact);
+
+                                    if (mode.themes.Count != curTheme)
+                                    if (level > mode.themes[curTheme + 1])
+                                    {
+                                        curTheme++;
+                                        if (curTheme == 3)
+                                            playMusic("level 2");
+                                        if (curTheme == 5)
+                                            playMusic("level 3");
+                                        if (curTheme == 8)
+                                            playMusic("level 4");
+                                        if (curTheme == 10)
+                                            playMusic("level 5");
+                                    }
 
                                     return;
 
@@ -813,7 +823,7 @@ namespace TGMsim
 
         private void endGame()
         {
-            if (godmode == true && level != 999)
+            if (godmode == true && level != mode.endLevel)
             {
                 gameField = new List<List<int>>();
                 for (int i = 0; i < 10; i++)
@@ -840,6 +850,7 @@ namespace TGMsim
                 results.time = timer.elapsedTime;
                 results.level = level;
                 contTime.start();
+                playMusic("results");
             }
         }
 
@@ -847,6 +858,7 @@ namespace TGMsim
         {
             timer.stop();
             inCredits = true;
+            playMusic("credits");
 
         }
 

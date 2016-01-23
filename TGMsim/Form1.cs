@@ -111,7 +111,9 @@ namespace TGMsim
                     saved = false;
                     menuState = 4;
                     FPS = 59.84;
-                    field1 = new Field(pad1, rules);
+                    Mode m = new Mode();
+                    m.setMode(0);
+                    field1 = new Field(pad1, rules, m);
                     if (player.name == "   ")
                         field1.godmode = true;
                     break;
@@ -195,7 +197,11 @@ namespace TGMsim
 
                     }
                     if (field1.cont == true)
-                        field1 = new Field(pad1, rules);
+                    {
+                        Mode m = new Mode();
+                        m.setMode(0);
+                        field1 = new Field(pad1, rules, m);
+                    }
                     if (field1.exit == true)
                         changeMenu(2);
                     break;

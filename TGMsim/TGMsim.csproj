@@ -66,6 +66,7 @@
     <Compile Include="GameTimer.cs" />
     <Compile Include="Login.cs" />
     <Compile Include="LoopStream.cs" />
+    <Compile Include="Mode.cs" />
     <Compile Include="ModeSelect.cs" />
     <Compile Include="Profile.cs" />
     <Compile Include="Program.cs" />
