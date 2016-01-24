@@ -375,7 +375,12 @@ namespace TGMsim
                                             gameField[k][j] = gameField[k][j - 1];
                                         }
                                     }
+                                    for (int k = 0; k < 10; k++)
+                                    {
+                                        gameField[k][0] = 0;
+                                    }
                                 }
+                                
                                 full.Clear();
                                 currentTimer = (int)Field.timerType.ARE;
                                 timerCount = ruleset.baseARE;
