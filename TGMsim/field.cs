@@ -206,14 +206,24 @@ namespace TGMsim
                 }
             }
 
+            //draw the next piece
             if (ruleset.nextNum > 0)
             {
                 for (int i = 0; i < ruleset.nextNum; i++)
                 {
                     for (int j = 0; j < 4; j++)
                     {
-                        drawBuffer.FillRectangle(new SolidBrush(tetColors[nextTet[i].id]), x + 25 * nextTet[i].bits[j].x, y + 25 * nextTet[i].bits[j].y - 75, 25, 25);
+                        drawBuffer.FillRectangle(new SolidBrush(tetColors[nextTet[i].id]), x + i*70 + 15 * nextTet[i].bits[j].x + 40, y + 15 * nextTet[i].bits[j].y - 75, 15, 15);
                     }
+                }
+            }
+
+            //draw the hold piece
+            if(ruleset.hold == true && heldPiece != null)
+            {
+                for (int i = 0; i < 4; i++)
+                {
+                    drawBuffer.FillRectangle(new SolidBrush(tetColors[heldPiece.id]), x - 75 + 15 * heldPiece.bits[i].x, y - 50 + 15 * heldPiece.bits[i].y, 15, 15);
                 }
             }
 
@@ -397,94 +407,7 @@ namespace TGMsim
                         {
                             if (timerCount == 0)
                             {
-                                //get next tetromino, generate another for "next"
-                                if (ruleset.nextNum > 0)
-                                {
-                                    activeTet = nextTet[0];
-                                    groundTimer = ruleset.baseLock;
-                                    for (int i = 0; i < nextTet.Count - 1; i++)
-                                    {
-                                        nextTet[i] = nextTet[i + 1];
-                                    }
-                                    nextTet[nextTet.Count - 1] = generatePiece();
-                                    //playSound("SEB_mino" + nextTet[nextTet.Count - 1].id);
-                                    switch(nextTet[nextTet.Count - 1].id)
-                                    {
-                                        case 1:
-                                            playSound(s_Tet1);
-                                            break;
-                                        case 2:
-                                            playSound(s_Tet2);
-                                            break;
-                                        case 3:
-                                            playSound(s_Tet3);
-                                            break;
-                                        case 4:
-                                            playSound(s_Tet4);
-                                            break;
-                                        case 5:
-                                            playSound(s_Tet5);
-                                            break;
-                                        case 6:
-                                            playSound(s_Tet6);
-                                            break;
-                                        case 7:
-                                            playSound(s_Tet7);
-                                            break;
-                                    }
-                                }
-                                else
-                                {
-                                    activeTet = generatePiece();
-                                    //playSound("SEB_mino" + activeTet.id);
-                                    switch (activeTet.id)
-                                    {
-                                        case 1:
-                                            playSound(s_Tet1);
-                                            break;
-                                        case 2:
-                                            playSound(s_Tet2);
-                                            break;
-                                        case 3:
-                                            playSound(s_Tet3);
-                                            break;
-                                        case 4:
-                                            playSound(s_Tet4);
-                                            break;
-                                        case 5:
-                                            playSound(s_Tet5);
-                                            break;
-                                        case 6:
-                                            playSound(s_Tet6);
-                                            break;
-                                        case 7:
-                                            playSound(s_Tet7);
-                                            break;
-                                    }
-                                }
-
-                                int intRot = 0;
-                                if (pad.inputPressedRot1)
-                                    intRot += 1;
-                                if (pad.inputPressedRot2)
-                                    intRot -= 1;
-                                if (intRot != 0)
-                                {
-                                    rotatePiece(activeTet, intRot);
-                                    playSound(s_PreRot);
-                                }
-
-                                gravCounter = 0;
-
-                                bool blocked = false;
-
-                                blocked = !emptyUnderTet(activeTet);
-
-                                if (blocked)
-                                {
-                                    endGame();
-                                }
-                                softCounter = 0;
+                                spawnPiece();
                             }
                             else
                             {
@@ -715,7 +638,7 @@ namespace TGMsim
                         if (pad.inputHold == 1 && ruleset.hold == true && swappedHeld == false)
                         {
                             Tetromino tempTet;
-                            if (heldPiece.id != 0)
+                            if (heldPiece != null)
                             {
                                 tempTet = new Tetromino(heldPiece.id);
                                 heldPiece = new Tetromino(activeTet.id);
@@ -725,7 +648,7 @@ namespace TGMsim
                             else
                             {
                                 heldPiece = new Tetromino(activeTet.id);
-                                activeTet.id = 0;
+                                spawnPiece();
                                 currentTimer = (int)Field.timerType.ARE;
                                 timerCount = ruleset.baseARE;
                             }
@@ -825,6 +748,98 @@ namespace TGMsim
                 }
             }
         }
+
+            private void spawnPiece()
+            {
+                //get next tetromino, generate another for "next"
+                                if (ruleset.nextNum > 0)
+                                {
+                                    activeTet = nextTet[0];
+                                    groundTimer = ruleset.baseLock;
+                                    for (int i = 0; i < nextTet.Count - 1; i++)
+                                    {
+                                        nextTet[i] = nextTet[i + 1];
+                                    }
+                                    nextTet[nextTet.Count - 1] = generatePiece();
+                                    switch(nextTet[nextTet.Count - 1].id)
+                                    {
+                                        case 1:
+                                            playSound(s_Tet1);
+                                            break;
+                                        case 2:
+                                            playSound(s_Tet2);
+                                            break;
+                                        case 3:
+                                            playSound(s_Tet3);
+                                            break;
+                                        case 4:
+                                            playSound(s_Tet4);
+                                            break;
+                                        case 5:
+                                            playSound(s_Tet5);
+                                            break;
+                                        case 6:
+                                            playSound(s_Tet6);
+                                            break;
+                                        case 7:
+                                            playSound(s_Tet7);
+                                            break;
+                                    }
+                                }
+                                else
+                                {
+                                    activeTet = generatePiece();
+                                    switch (activeTet.id)
+                                    {
+                                        case 1:
+                                            playSound(s_Tet1);
+                                            break;
+                                        case 2:
+                                            playSound(s_Tet2);
+                                            break;
+                                        case 3:
+                                            playSound(s_Tet3);
+                                            break;
+                                        case 4:
+                                            playSound(s_Tet4);
+                                            break;
+                                        case 5:
+                                            playSound(s_Tet5);
+                                            break;
+                                        case 6:
+                                            playSound(s_Tet6);
+                                            break;
+                                        case 7:
+                                            playSound(s_Tet7);
+                                            break;
+                                    }
+                                }
+
+                                int intRot = 0;
+                                if (pad.inputPressedRot1)
+                                    intRot += 1;
+                                if (pad.inputPressedRot2)
+                                    intRot -= 1;
+                                if (intRot != 0)
+                                {
+                                    rotatePiece(activeTet, intRot);
+                                    playSound(s_PreRot);
+                                }
+
+                                gravCounter = 0;
+
+                                bool blocked = false;
+
+                                blocked = !emptyUnderTet(activeTet);
+
+                                if (blocked)
+                                {
+                                    endGame();
+                                }
+                                softCounter = 0;
+
+                                swappedHeld = false;
+                            }
 
         private void endGame()
         {
