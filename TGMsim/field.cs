@@ -99,7 +99,7 @@ namespace TGMsim
         Controller pad;
         int inputDelayH = 0, inputDelayV = 0;
 
-        public Field(Controller ctlr, Rules rules, Mode m2)
+        public Field(Controller ctlr, Rules rules, Mode m2, NAudio.Vorbis.VorbisWaveReader music)
         {
             x = 275;
             y = 100;
@@ -133,6 +133,7 @@ namespace TGMsim
             pad = ctlr;
             ruleset = rules;
             mode = m2;
+            vorbisStream = music;
 
             Random random = new Random();
 

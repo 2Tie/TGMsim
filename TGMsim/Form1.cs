@@ -38,7 +38,9 @@ namespace TGMsim
 
         List<List<GameResult>> hiscoreTable = new List<List<GameResult>>();
         bool saved;
-        
+
+        NAudio.Vorbis.VorbisWaveReader musicStream;
+        NAudio.Wave.WaveOutEvent songPlayer = new NAudio.Wave.WaveOutEvent();
 
         public Form1()
         {
@@ -57,6 +59,8 @@ namespace TGMsim
 
             graphics = this.CreateGraphics();
             drawBuffer = Graphics.FromImage(imgBuffer);
+
+            playMusic("title");
             
         }
 
@@ -97,9 +101,13 @@ namespace TGMsim
                 case 1:
                     menuState = 1;
                     login = new Login();
+                    playMusic("login");
                     break;
                 case 2:
+                    if (menuState != 3)
+                        playMusic("menu");
                     menuState = 2;
+                    FPS = 60.00;
                     gSel = new GameSelect();
                     break;
                 case 3:
@@ -112,14 +120,21 @@ namespace TGMsim
                     menuState = 4;
                     FPS = 59.84;
                     Mode m = new Mode();
+                    stopMusic();
                     m.setMode(0);
-                    field1 = new Field(pad1, rules, m);
+                    field1 = new Field(pad1, rules, m, musicStream);
                     if (player.name == "   ")
                         field1.godmode = true;
                     break;
 
+                case 6: //hiscores
+                    mSel.game += 0; //current game
+                    mSel.selection += 0; //current mode
+                    break;
+
                 case 8:
                     menuState = 8;
+                    playMusic("settings");
                     break;
             }
 
@@ -182,6 +197,8 @@ namespace TGMsim
                     }
                     if (pad1.inputRot2 == 1)
                         changeMenu(2);
+                    if (pad1.inputHold == 1)
+                        changeMenu(6);//hiscores for mode
                     break;
                 case 4: //ingame
                     field1.logic();
@@ -200,7 +217,7 @@ namespace TGMsim
                     {
                         Mode m = new Mode();
                         m.setMode(0);
-                        field1 = new Field(pad1, rules, m);
+                        field1 = new Field(pad1, rules, m, musicStream);
                     }
                     if (field1.exit == true)
                         changeMenu(2);
@@ -428,6 +445,28 @@ namespace TGMsim
                 sw.Write(temptime);
             }
             return false;
+        }
+        private void playMusic(string song)
+        {
+            try
+            {
+                musicStream = new NAudio.Vorbis.VorbisWaveReader(@"Audio\" + song + ".ogg");
+                LoopStream loop = new LoopStream(musicStream);
+                songPlayer.Init(loop);
+                songPlayer.Play();
+
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("The file \"" + song + ".ogg\" was not found!", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                //throw;
+            }
+        }
+
+        private void stopMusic()
+        {
+            songPlayer.Stop();
+            songPlayer.Dispose();
         }
     }
 }
