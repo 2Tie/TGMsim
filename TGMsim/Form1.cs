@@ -121,7 +121,7 @@ namespace TGMsim
                     FPS = 59.84;
                     Mode m = new Mode();
                     stopMusic();
-                    m.setMode(0);
+                    m.setMode(mSel.selection);
                     field1 = new Field(pad1, rules, m, musicStream);
                     if (player.name == "   ")
                         field1.godmode = true;
@@ -186,11 +186,18 @@ namespace TGMsim
                                     break;
                                 case 1://eternal shirase
                                     rules.setGame(4);
-                                    //TODO
+                                    var m = new Mode();
+                                    m.setMode(2);
+                                    m.endLevel = 0;
+                                    //todo: add more gimmicks, loop?
                                     break;
                                 case 2://konoha
                                     rules.setGame(4);
-                                    //TODO
+                                    m = new Mode();
+                                    m.endLevel = 0;
+                                    m.gradedBy = 2;
+                                    m.limitType = 3;
+                                    m.limit = 180000;//three minutes
                                     break;
                             }
                         }
@@ -216,7 +223,7 @@ namespace TGMsim
                     if (field1.cont == true)
                     {
                         Mode m = new Mode();
-                        m.setMode(0);
+                        m.setMode(field1.mode.id);
                         field1 = new Field(pad1, rules, m, musicStream);
                     }
                     if (field1.exit == true)

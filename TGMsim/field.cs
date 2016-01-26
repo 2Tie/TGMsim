@@ -62,8 +62,8 @@ namespace TGMsim
         public int softCounter = 0;
 
         Rules ruleset;
-        Mode mode;
-        int curTheme;
+        public Mode mode;
+        int curSection;
 
         public GameResult results;
 
@@ -75,6 +75,7 @@ namespace TGMsim
         public bool exit = false;
 
         List<System.Drawing.Color> tetColors = new List<System.Drawing.Color>();
+        Color frameColour;
 
         NAudio.Wave.WaveOutEvent soundList = new NAudio.Wave.WaveOutEvent();
         NAudio.Vorbis.VorbisWaveReader vorbisStream;
@@ -168,6 +169,23 @@ namespace TGMsim
                 }
                 gameField.Add(tempList);
             }
+
+            switch (mode.id)
+            {
+                case 0:
+                    frameColour = Color.LightGray;
+                    break;
+                case 1:
+                    frameColour = Color.DarkRed;
+                    break;
+                case 2:
+                    frameColour = Color.DarkBlue;
+                    break;
+            }
+
+            if (mode.exam)
+                frameColour = Color.Gold;
+
             playMusic("level 1");
             playSound(s_Ready);
         }
@@ -197,6 +215,12 @@ namespace TGMsim
                         drawBuffer.FillRectangle(new SolidBrush(tetColors[block]), x + 25 * i, y + j * 25, 25, 25);
                 }
             }
+
+            //draw the frame
+            drawBuffer.FillRectangle(new SolidBrush(frameColour), x - 5, y - 5 + 25, width + 10, 5);
+            drawBuffer.FillRectangle(new SolidBrush(frameColour), x - 5, y + height + 25, width + 10, 5);
+            drawBuffer.FillRectangle(new SolidBrush(frameColour), x - 5, y - 5 + 25, 5, height + 10);
+            drawBuffer.FillRectangle(new SolidBrush(frameColour), x + width, y - 5 + 25, 5, height + 10);
 
             //draw the current piece
             if (activeTet.id != 0)
@@ -229,19 +253,13 @@ namespace TGMsim
             }
 
             //draw the ghost piece
-            if (level < mode.themes[0] && ghostPiece != null && activeTet.id == ghostPiece.id)
+            if (level < mode.sections[0] && ghostPiece != null && activeTet.id == ghostPiece.id)
             {
                 for (int i = 0; i < 4; i++)
                 {
                     drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(100, tetColors[ghostPiece.id])), x + 25 * ghostPiece.bits[i].x, y + 25 * ghostPiece.bits[i].y, 25, 25);
                 }
             }
-
-            //draw the grid
-            for (int i = 1; i < 11; i++)
-                drawBuffer.DrawLine(gridPen, x + 25 * i, y + 25, x + 25 * i, y + height + 25);
-            for (int i = 1; i < 22; i++)
-                drawBuffer.DrawLine(gridPen, x, y + 25 * i, x + width, y + 25 * i);
 
             //Starting things
             if (starting == 1)
@@ -267,6 +285,13 @@ namespace TGMsim
 
 
 #if DEBUG
+
+            //draw the playfieldgrid
+            for (int i = 1; i < 11; i++)
+                drawBuffer.DrawLine(gridPen, x + 25 * i, y + 25, x + 25 * i, y + height + 25);
+            for (int i = 1; i < 22; i++)
+                drawBuffer.DrawLine(gridPen, x, y + 25 * i, x + width, y + 25 * i);
+
             SolidBrush debugBrush = new SolidBrush(Color.White);
 
             //tech stats
@@ -581,17 +606,17 @@ namespace TGMsim
 
                                     playSound(s_Contact);
 
-                                    if (mode.themes.Count != curTheme)
-                                    if (level > mode.themes[curTheme + 1])
+                                    if (mode.sections.Count != curSection)
+                                    if (level > mode.sections[curSection + 1])
                                     {
-                                        curTheme++;
-                                        if (curTheme == 3)
+                                        curSection++;
+                                        if (curSection == 3)
                                             playMusic("level 2");
-                                        if (curTheme == 5)
+                                        if (curSection == 5)
                                             playMusic("level 3");
-                                        if (curTheme == 8)
+                                        if (curSection == 8)
                                             playMusic("level 4");
-                                        if (curTheme == 10)
+                                        if (curSection == 10)
                                             playMusic("level 5");
                                     }
 

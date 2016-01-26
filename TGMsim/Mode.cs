@@ -15,58 +15,64 @@ namespace TGMsim
             public int endLvl;
         }
 
+        public int id = 0;
         public int endLevel = 999;
-        public List<int> themes = new List<int>();
+        public List<int> sections = new List<int>();
         public bool bigmode = false;
         public bool g20 = false;
         public bool shiraseGrades = false;
         public int gradedBy = 0; //points, grade points, level, bravo, time
+        public int limitType = 0; //none, line, level, time
+        public int limit = 0;
         public List<Gimmick> gimList = new List<Gimmick>();
 
         public void setMode(int mode)
         {
-            switch(mode)//Master, Death, shirase
+            switch(mode)//Master, Death, shirase, sprint
             {
                 case 0:
+                    id = 0;
                     endLevel = 999;
-                    themes.Add(100);
-                    themes.Add(200);
-                    themes.Add(300);
-                    themes.Add(400);
-                    themes.Add(500);
-                    themes.Add(600);
-                    themes.Add(700);
-                    themes.Add(800);
-                    themes.Add(900);
+                    sections.Add(100);
+                    sections.Add(200);
+                    sections.Add(300);
+                    sections.Add(400);
+                    sections.Add(500);
+                    sections.Add(600);
+                    sections.Add(700);
+                    sections.Add(800);
+                    sections.Add(900);
                     break;
                 case 1:
+                    id = 1;
                     endLevel = 999;
-                    themes.Add(100);
-                    themes.Add(200);
-                    themes.Add(300);
-                    themes.Add(400);
-                    themes.Add(500);
-                    themes.Add(600);
-                    themes.Add(700);
-                    themes.Add(800);
-                    themes.Add(900);
+                    sections.Add(100);
+                    sections.Add(200);
+                    sections.Add(300);
+                    sections.Add(400);
+                    sections.Add(500);
+                    sections.Add(600);
+                    sections.Add(700);
+                    sections.Add(800);
+                    sections.Add(900);
                     g20 = true;
-                    gradedBy = 3;
+                    gradedBy = 2;
                     break;
                 case 2:
+                    id = 2;
                     endLevel = 1299;
-                    themes.Add(100);
-                    themes.Add(200);
-                    themes.Add(300);
-                    themes.Add(400);
-                    themes.Add(500);
-                    themes.Add(600);
-                    themes.Add(700);
-                    themes.Add(800);
-                    themes.Add(900);
-                    themes.Add(1000);
-                    themes.Add(1100);
-                    themes.Add(1200);
+                    sections.Add(100);
+                    sections.Add(200);
+                    sections.Add(300);
+                    sections.Add(400);
+                    sections.Add(500);
+                    sections.Add(600);
+                    sections.Add(700);
+                    sections.Add(800);
+                    sections.Add(900);
+                    sections.Add(1000);
+                    sections.Add(1100);
+                    sections.Add(1200);
                     var gL = new Gimmick();
                     gL.type = 2;
                     gL.startLvl = 700;
@@ -77,7 +83,7 @@ namespace TGMsim
                     gL.startLvl = 1000;
                     gL.endLvl = 1299;
                     gimList.Add(gL);
-                    gradedBy = 3;
+                    gradedBy = 2;
                     shiraseGrades = true;
                     break;
             }
