@@ -24,6 +24,9 @@ namespace TGMsim
 
         public List<int> full = new List<int>();
 
+        public List<int> medals = new List<int>() { 0, 0, 0, 0, 0, 0 };
+
+        public List<int> sectionTimes = new List<int>();
         public List<bool> GMflags = new List<bool>();
 
         public bool isGM = false;
@@ -51,6 +54,9 @@ namespace TGMsim
         public int score = 0;
         public int combo = 1;
         public bool comboing = false;
+        public int gradePoints = 0;
+        public int gradeLevel = 0;
+        public int gradeTime = 0;
 
         public int starting = 1;
         public bool inCredits = false;
@@ -94,6 +100,7 @@ namespace TGMsim
         System.Windows.Media.MediaPlayer s_Clear = new System.Windows.Media.MediaPlayer();
         System.Windows.Media.MediaPlayer s_Impact = new System.Windows.Media.MediaPlayer();
         System.Windows.Media.MediaPlayer s_Grade = new System.Windows.Media.MediaPlayer();
+        System.Windows.Media.MediaPlayer s_Hold = new System.Windows.Media.MediaPlayer();
 
         Pen gridPen = new Pen(new SolidBrush(Color.White));
 
@@ -130,6 +137,7 @@ namespace TGMsim
             s_Clear.Open(new Uri(Environment.CurrentDirectory + @"/Audio/SE/SEB_disappear.wav"));
             s_Impact.Open(new Uri(Environment.CurrentDirectory + @"/Audio/SE/SEB_fall.wav"));
             s_Grade.Open(new Uri(Environment.CurrentDirectory + @"/Audio/SE/SEP_levelchange.wav"));
+            s_Hold.Open(new Uri(Environment.CurrentDirectory + @"/Audio/SE/SEB_hold.wav"));
 
             pad = ctlr;
             ruleset = rules;
@@ -305,7 +313,10 @@ namespace TGMsim
             }
 
             //game stats
-            drawBuffer.DrawString("Score: " + score, SystemFonts.DefaultFont, debugBrush, 90, 740);
+            if (ruleset.gameRules == 1)
+                drawBuffer.DrawString("Score: " + score, SystemFonts.DefaultFont, debugBrush, 90, 740);
+            else
+                drawBuffer.DrawString("gradeScore: " + gradePoints, SystemFonts.DefaultFont, debugBrush, 90, 740);
             drawBuffer.DrawString("Combo: " + combo, SystemFonts.DefaultFont, debugBrush, 90, 750);
             if (isGM)
                 drawBuffer.DrawString("Grade: GM", SystemFonts.DefaultFont, debugBrush, 90, 730);
@@ -444,6 +455,13 @@ namespace TGMsim
                     }
                     else  //else, check collision below
                     {
+                        gradeTime++;
+                        if (gradeTime > ruleset.decayRate[grade] && gradePoints != 0 && !comboing)
+                        {
+                            gradeTime = 0;
+                            gradePoints--;
+                        }
+
                         bool floored = false;
 
                         for (int i = 0; i < 4; i++)
@@ -518,14 +536,25 @@ namespace TGMsim
                                             bravoCounter++;
                                             bravo = 4;
                                         }
-                                        combo = combo + (2 * full.Count) - 2;
                                         //give points
-                                        if (!inCredits)
-                                            score += ((int)Math.Ceiling((double)(level + full.Count) / 4) + softCounter) * full.Count * ((full.Count * 2) - 1) * bravo;
-                                        if (comboing)
-                                            score *= combo;
+                                        if (ruleset.gameRules == 1)
+                                        {
+                                            combo = combo + (2 * full.Count) - 2;
+                                            if (!inCredits)
+                                                score += ((int)Math.Ceiling((double)(level + full.Count) / 4) + softCounter) * full.Count * ((full.Count * 2) - 1) * bravo;
+                                            if (comboing)
+                                                score *= combo;
+                                            else
+                                                combo = 1;
+                                        }
                                         else
-                                            combo = 1;
+                                        {
+                                            if (full.Count > 1)
+                                                combo += full.Count;
+                                            if (!inCredits)
+                                                gradePoints += (int)(Math.Ceiling(ruleset.baseGradePts[full.Count - 1][grade] * ruleset.comboTable[full.Count - 1][combo]) * Math.Ceiling((double)level / 250));
+
+                                        }
                                         comboing = true;
 
                                         //check GM conditions
@@ -560,21 +589,40 @@ namespace TGMsim
                                         }
 
                                         //update grade
-                                        bool checking = true;
-                                        while (checking == true)
+
+                                        if (ruleset.gameRules == 1)
                                         {
-                                            if (grade < ruleset.gradePointsTGM1.Count - 1)
+                                            bool checking = true;
+                                            while (checking == true)
                                             {
-                                                if (score >= ruleset.gradePointsTGM1[grade + 1])
+
+                                                if (grade < ruleset.gradePointsTGM1.Count - 1)
                                                 {
-                                                    grade++;
-                                                    playSound(s_Grade);
+                                                    if (score >= ruleset.gradePointsTGM1[grade + 1])
+                                                    {
+                                                        grade++;
+                                                        playSound(s_Grade);
+                                                    }
+                                                    else
+                                                        checking = false;
                                                 }
                                                 else
                                                     checking = false;
+
                                             }
-                                            else
-                                                checking = false;
+                                        }
+                                        else
+                                        {
+                                            if (gradePoints > 99)
+                                            {
+                                                if (grade < ruleset.gradesTGM2.Count - 1)
+                                                {
+                                                    grade++;
+                                                    gradePoints = 0;
+                                                    if (ruleset.gameRules != 4)
+                                                        playSound(s_Grade);
+                                                }
+                                            }
                                         }
 
                                         if (level >= mode.endLevel && inCredits == false)
@@ -679,6 +727,7 @@ namespace TGMsim
                                 timerCount = ruleset.baseARE;
                             }
                             swappedHeld = true;
+                            s_Hold.Play();
                         }
                         int rot = (pad.inputRot1 | pad.inputRot3) - pad.inputRot2;
                         if (rot != 0)

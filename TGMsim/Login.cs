@@ -279,7 +279,7 @@ namespace TGMsim
             using (BinaryWriter sw = new BinaryWriter(fsStream, Encoding.UTF8))
             {
                 sw.Write(temp.name);
-                sw.Write((byte)0x01);//version number
+                sw.Write((byte)0x02);//version number
                 //one byte for password, the first bit if pass-protected, three bits for length (up to six) and then two bits for each digit (four possible inputs each, ABCH)
                 UInt16 passData = new UInt16();
                 if (!temp.passProtected)
@@ -299,6 +299,7 @@ namespace TGMsim
                     sw.Write(new byte[4]);//TGM3 points
                     sw.Write(new byte[2]);//Official GM certifications (1, 2, tap, tap death, 3, 3 shirase, konoha)
                     sw.Write(new byte[2]);//endless shirase hiscore?
+                    sw.Write(new byte[8]);//current TI grade + previous seven rankings
                 }
             }
             return false;
@@ -310,7 +311,7 @@ namespace TGMsim
             BinaryReader file = new BinaryReader(File.OpenRead(temp.name + ".usr"));
             if (file.ReadString() != temp.name)//read name
                 return false;
-            if (file.ReadByte() != 0x01)//read save version, compare to current
+            if (file.ReadByte() != 0x02)//read save version, compare to current
                 return false;
             //read and parse the password
             UInt16 passdata = file.ReadUInt16();
@@ -357,6 +358,7 @@ namespace TGMsim
             //tgm3 points
             //GM certs
             //shirase
+            //TI grade data
             return true;
         }
 

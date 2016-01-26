@@ -29,6 +29,11 @@ namespace TGMsim
 
         public bool showGrade = true;
 
+        public List<List<double>> comboTable = new List<List<double>>();
+
+        public List<int> decayRate = new List<int>() { 125, 80, 80, 50, 45, 45, 45, 40, 40, 40, 40, 40, 30, 30, 30, 20, 20, 20, 20, 20, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 10};
+        public List<List<int>> baseGradePts = new List<List<int>>();
+
         public List<int> gravTableTGM1 = new List<int> {4, 6, 8, 10, 12, 16, 32, 48, 64, 80, 96, 112, 128, 144, 4, 32, 64, 96, 128, 160, 192, 224, 256, 512, 768, 1024, 1280, 1024, 768, 5120};
         //public List<int> gravTableTGM1 = new List<int> { 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 160, 192, 224, 256, 512, 768, 1024, 1280, 1024, 768, 5120 };
 
@@ -37,6 +42,26 @@ namespace TGMsim
         public List<int> gradePointsTGM1 = new List<int> { 0, 400, 800, 1400, 2000, 3500, 5500, 8000, 12000, 16000, 22000, 30000, 40000, 52000, 66000, 82000, 100000, 120000};
 
         public List<string> gradesTGM1 = new List<string> { "9", "8", "7", "6", "5", "4", "3", "2", "1", "S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "S9"};
+        public List<string> gradesTGM2 = new List<string> { "9", "8", "7", "6", "5", "4", "4", "3", "3", "2", "2", "2", "1", "1", "1", "S1", "S1", "S1", "S2", "S3", "S4", "S4", "S4", "S5", "S5", "S6", "S6", "S7", "S7", "S8", "S8", "S9" };
+
+        public Rules()
+        {
+            comboTable.Add(new List<double>() { 1.0, 1.2, 1.2, 1.4, 1.4, 1.4, 1.4, 1.5, 1.5, 2.0 });
+            comboTable.Add(new List<double>() { 1.0, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2.5 });
+            comboTable.Add(new List<double>() { 1.0, 1.5, 1.8, 2.0, 2.2, 2.3, 2.4, 2.5, 2.6, 3.0 });
+            comboTable.Add(new List<double>() { 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0 });
+            baseGradePts.Add(new List<int>() { 10, 10, 10, 10, 10, 5, 5, 5, 5, 5 });
+            baseGradePts.Add(new List<int>() { 20, 20, 20, 15, 15, 15, 10, 10, 10, 10 });
+            baseGradePts.Add(new List<int>() { 40, 30, 30, 30, 20, 20, 20, 15, 15, 15 });
+            baseGradePts.Add(new List<int>() { 50, 40, 40, 40, 40, 30, 30, 30, 30, 30 });
+            for (int i = 0; i < 22; i++)
+            {
+                baseGradePts[0].Add(2);
+                baseGradePts[1].Add(12);
+                baseGradePts[2].Add(13);
+                baseGradePts[3].Add(30);
+            }
+        }
 
         public void setGame(int game)
         {

@@ -21,6 +21,7 @@ namespace TGMsim
         public bool bigmode = false;
         public bool g20 = false;
         public bool shiraseGrades = false;
+        public bool exam = false;
         public int gradedBy = 0; //points, grade points, level, bravo, time
         public int limitType = 0; //none, line, level, time
         public int limit = 0;
