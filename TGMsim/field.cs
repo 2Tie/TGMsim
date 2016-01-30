@@ -73,9 +73,11 @@ namespace TGMsim
 
         public GameResult results;
 
+        public bool cheating = false;
         public bool godmode = false;
         public bool bigmode = false;
         public bool g20 = false;
+        public bool g0 = false;
 
         public bool cont = false;
         public bool exit = false;
@@ -163,20 +165,7 @@ namespace TGMsim
                 }
             }
 
-            gameRunning = true;
-            starting = 1;
-
-            timer.start();
-            startTime.start();
-            for (int i = 0; i < 10; i++)
-            {
-                List<int> tempList = new List<int>();
-                for (int j = 0; j < 21; j++)
-                {
-                    tempList.Add(0); // at least nine types; seven tetrominoes, invisible, and garbage
-                }
-                gameField.Add(tempList);
-            }
+            g20 = mode.g20;
 
             switch (mode.id)
             {
@@ -193,6 +182,21 @@ namespace TGMsim
 
             if (mode.exam)
                 frameColour = Color.Gold;
+
+            gameRunning = true;
+            starting = 1;
+
+            timer.start();
+            startTime.start();
+            for (int i = 0; i < 10; i++)
+            {
+                List<int> tempList = new List<int>();
+                for (int j = 0; j < 21; j++)
+                {
+                    tempList.Add(0); // at least nine types; seven tetrominoes, invisible, and garbage
+                }
+                gameField.Add(tempList);
+            }
 
             playMusic("level 1");
             playSound(s_Ready);
@@ -233,7 +237,7 @@ namespace TGMsim
             //draw the current piece
             if (activeTet.id != 0)
             {
-                for (int i = 0; i < 4; i++)
+                for (int i = 0; i < activeTet.bits.Count; i++)
                 {
                     drawBuffer.FillRectangle(new SolidBrush(tetColors[activeTet.id]), x + 25 * activeTet.bits[i].x, y + 25 * activeTet.bits[i].y, 25, 25);
                 }
@@ -263,7 +267,7 @@ namespace TGMsim
             //draw the ghost piece
             if (level < mode.sections[0] && ghostPiece != null && activeTet.id == ghostPiece.id)
             {
-                for (int i = 0; i < 4; i++)
+                for (int i = 0; i < activeTet.bits.Count; i++)
                 {
                     drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(100, tetColors[ghostPiece.id])), x + 25 * ghostPiece.bits[i].x, y + 25 * ghostPiece.bits[i].y, 25, 25);
                 }
@@ -338,18 +342,6 @@ namespace TGMsim
 
             //tets
             drawBuffer.DrawString(lastTet[0] + " " + lastTet[1] + " " + lastTet[2] + " " + lastTet[3], SystemFonts.DefaultFont, debugBrush, 100, 720);
-            for (int i = 0; i < 4; i++)
-            {
-                drawBuffer.DrawString(activeTet.bits[i].x + " " + activeTet.bits[i].y, SystemFonts.DefaultFont, debugBrush, 160 + (32 * i), 720);
-            }
-
-            if (ghostPiece != null)
-            {
-                for (int i = 0; i < 4; i++)
-                {
-                    drawBuffer.DrawString(ghostPiece.bits[i].x + " " + ghostPiece.bits[i].y, SystemFonts.DefaultFont, debugBrush, 160 + (32 * i), 710);
-                }
-            }
 #endif
         }
 
@@ -464,7 +456,7 @@ namespace TGMsim
 
                         bool floored = false;
 
-                        for (int i = 0; i < 4; i++)
+                        for (int i = 0; i < activeTet.bits.Count; i++)
                         {
                             if (activeTet.bits[i].y + 1 >= 21)
                             {
@@ -494,7 +486,7 @@ namespace TGMsim
                                         endGame();
                                     }
 
-                                    for (int i = 0; i < 4; i++)
+                                    for (int i = 0; i < activeTet.bits.Count; i++)
                                     {
                                         gameField[activeTet.bits[i].x][activeTet.bits[i].y] = activeTet.id;
                                     }
@@ -625,7 +617,7 @@ namespace TGMsim
                                             }
                                         }
 
-                                        if (level >= mode.endLevel && inCredits == false)
+                                        if (mode.endLevel != 0 && level >= mode.endLevel && inCredits == false)
                                         {
                                             triggerCredits();
                                         }
@@ -739,7 +731,7 @@ namespace TGMsim
                         {
                             bool safe = true;
                             //check to the right of each bit
-                            for (int i = 0; i < 4; i++)
+                            for (int i = 0; i < activeTet.bits.Count; i++)
                             {
                                 if (activeTet.bits[i].x + 1 == 10)
                                 {
@@ -754,7 +746,7 @@ namespace TGMsim
                             }
                             if (safe) //if it's fine, move them all right one
                             {
-                                for (int i = 0; i < 4; i++)
+                                for (int i = 0; i < activeTet.bits.Count; i++)
                                 {
                                     activeTet.bits[i].x++;
                                 }
@@ -764,7 +756,7 @@ namespace TGMsim
                         {
                             bool safe = true;
                             //check to the right of each bit
-                            for (int i = 0; i < 4; i++)
+                            for (int i = 0; i < activeTet.bits.Count; i++)
                             {
                                 if (activeTet.bits[i].x - 1 == -1)
                                 {
@@ -779,7 +771,7 @@ namespace TGMsim
                             }
                             if (safe) //if it's fine, move them all right one
                             {
-                                for (int i = 0; i < 4; i++)
+                                for (int i = 0; i < activeTet.bits.Count; i++)
                                 {
                                     activeTet.bits[i].x -= 1;
                                 }
@@ -787,7 +779,6 @@ namespace TGMsim
                         }
 
                         //calc gravity LAST sso I-jumps are doable?
-                        gravCounter += ruleset.gravTableTGM1[gravLevel]; //add our current gravity strength
 
 
 
@@ -795,13 +786,25 @@ namespace TGMsim
                         {
                             blockDrop++;
                         }
-                        if (blockDrop > 0 && currentTimer != (int)Field.timerType.LockDelay)
+
+
+                        gravCounter += ruleset.gravTableTGM1[gravLevel]; //add our current gravity strength
+                        if (g20)
+                        {
+                            blockDrop = 19;
+                        }
+                        if (g0)
+                            blockDrop = 0;
+
+                        if (blockDrop > 0)// && currentTimer != (int)Field.timerType.LockDelay)
                         {
                             gravCounter = 0;
                             tetGrav(activeTet, blockDrop);
 
 
                         }
+
+
 
                         //handle ghost piece logic
                         ghostPiece = activeTet.clone();
@@ -824,97 +827,97 @@ namespace TGMsim
             }
         }
 
-            private void spawnPiece()
+        private void spawnPiece()
+        {
+            //get next tetromino, generate another for "next"
+            if (ruleset.nextNum > 0)
             {
-                //get next tetromino, generate another for "next"
-                                if (ruleset.nextNum > 0)
-                                {
-                                    activeTet = nextTet[0];
-                                    groundTimer = ruleset.baseLock;
-                                    for (int i = 0; i < nextTet.Count - 1; i++)
-                                    {
-                                        nextTet[i] = nextTet[i + 1];
-                                    }
-                                    nextTet[nextTet.Count - 1] = generatePiece();
-                                    switch(nextTet[nextTet.Count - 1].id)
-                                    {
-                                        case 1:
-                                            playSound(s_Tet1);
-                                            break;
-                                        case 2:
-                                            playSound(s_Tet2);
-                                            break;
-                                        case 3:
-                                            playSound(s_Tet3);
-                                            break;
-                                        case 4:
-                                            playSound(s_Tet4);
-                                            break;
-                                        case 5:
-                                            playSound(s_Tet5);
-                                            break;
-                                        case 6:
-                                            playSound(s_Tet6);
-                                            break;
-                                        case 7:
-                                            playSound(s_Tet7);
-                                            break;
-                                    }
-                                }
-                                else
-                                {
-                                    activeTet = generatePiece();
-                                    switch (activeTet.id)
-                                    {
-                                        case 1:
-                                            playSound(s_Tet1);
-                                            break;
-                                        case 2:
-                                            playSound(s_Tet2);
-                                            break;
-                                        case 3:
-                                            playSound(s_Tet3);
-                                            break;
-                                        case 4:
-                                            playSound(s_Tet4);
-                                            break;
-                                        case 5:
-                                            playSound(s_Tet5);
-                                            break;
-                                        case 6:
-                                            playSound(s_Tet6);
-                                            break;
-                                        case 7:
-                                            playSound(s_Tet7);
-                                            break;
-                                    }
-                                }
+                activeTet = nextTet[0];
+                groundTimer = ruleset.baseLock;
+                for (int i = 0; i < nextTet.Count - 1; i++)
+                {
+                    nextTet[i] = nextTet[i + 1];
+                }
+                nextTet[nextTet.Count - 1] = generatePiece();
+                switch (nextTet[nextTet.Count - 1].id)
+                {
+                    case 1:
+                        playSound(s_Tet1);
+                        break;
+                    case 2:
+                        playSound(s_Tet2);
+                        break;
+                    case 3:
+                        playSound(s_Tet3);
+                        break;
+                    case 4:
+                        playSound(s_Tet4);
+                        break;
+                    case 5:
+                        playSound(s_Tet5);
+                        break;
+                    case 6:
+                        playSound(s_Tet6);
+                        break;
+                    case 7:
+                        playSound(s_Tet7);
+                        break;
+                }
+            }
+            else
+            {
+                activeTet = generatePiece();
+                switch (activeTet.id)
+                {
+                    case 1:
+                        playSound(s_Tet1);
+                        break;
+                    case 2:
+                        playSound(s_Tet2);
+                        break;
+                    case 3:
+                        playSound(s_Tet3);
+                        break;
+                    case 4:
+                        playSound(s_Tet4);
+                        break;
+                    case 5:
+                        playSound(s_Tet5);
+                        break;
+                    case 6:
+                        playSound(s_Tet6);
+                        break;
+                    case 7:
+                        playSound(s_Tet7);
+                        break;
+                }
+            }
 
-                                int intRot = 0;
-                                if (pad.inputPressedRot1)
-                                    intRot += 1;
-                                if (pad.inputPressedRot2)
-                                    intRot -= 1;
-                                if (intRot != 0)
-                                {
-                                    rotatePiece(activeTet, intRot);
-                                    playSound(s_PreRot);
-                                }
+            int intRot = 0;
+            if (pad.inputPressedRot1)
+                intRot += 1;
+            if (pad.inputPressedRot2)
+                intRot -= 1;
+            if (intRot != 0)
+            {
+                rotatePiece(activeTet, intRot);
+                playSound(s_PreRot);
+            }
 
-                                gravCounter = 0;
+            gravCounter = 0;
 
-                                bool blocked = false;
+            bool blocked = false;
 
-                                blocked = !emptyUnderTet(activeTet);
+            blocked = !emptyUnderTet(activeTet);
 
-                                if (blocked)
-                                {
-                                    endGame();
-                                }
-                                softCounter = 0;
+            if (blocked)
+            {
+                endGame();
+            }
+            softCounter = 0;
 
-                                swappedHeld = false;
-                            }
+            swappedHeld = false;
+        }
 
         private void endGame()
         {
@@ -2012,7 +2015,7 @@ namespace TGMsim
             }
             catch (Exception)
             {
-                MessageBox.Show("The file \"" + song + ".ogg\" was not found!", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                //MessageBox.Show("The file \"" + song + ".ogg\" was not found!", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
                 //throw;
             }
         }
