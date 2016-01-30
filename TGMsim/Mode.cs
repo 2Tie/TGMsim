@@ -74,6 +74,7 @@ namespace TGMsim
                     sections.Add(1000);
                     sections.Add(1100);
                     sections.Add(1200);
+                    g20 = true;
                     var gL = new Gimmick();
                     gL.type = 2;
                     gL.startLvl = 700;

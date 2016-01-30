@@ -118,13 +118,29 @@ namespace TGMsim
                 case 4:
                     saved = false;
                     menuState = 4;
-                    FPS = 59.84;
+                    switch (gSel.menuSelection)
+                    {
+                        case 0:
+                            FPS = 59.84;
+                            break;
+                        case 1:
+                        case 2:
+                            FPS = 61.68;
+                            break;
+                        case 3:
+                            FPS = 60.00;
+                            break;
+                    }
                     Mode m = new Mode();
                     stopMusic();
                     m.setMode(mSel.selection);
                     field1 = new Field(pad1, rules, m, musicStream);
                     if (player.name == "   ")
+                    {
+                        field1.cheating = true;
                         field1.godmode = true;
+                        field1.g0 = true;
+                    }
                     break;
 
                 case 6: //hiscores
@@ -198,6 +214,7 @@ namespace TGMsim
                                     m.gradedBy = 2;
                                     m.limitType = 3;
                                     m.limit = 180000;//three minutes
+                                    field1.bigmode = true;
                                     break;
                             }
                         }
@@ -212,7 +229,7 @@ namespace TGMsim
                     if (field1.gameRunning == false)
                     {
                         //test and save a hiscore ONCE
-                        if (saved == false && field1.godmode == false)
+                        if (saved == false && field1.cheating == false)
                         {
                             field1.results.username = player.name;
                             field1.newHiscore = testHiscore(field1.results);
@@ -290,6 +307,8 @@ namespace TGMsim
                     drawBuffer.DrawString("preferences", DefaultFont, new SolidBrush(Color.White), 100, 20);
                     break;
             }
+            if (menuState > 1)
+                drawBuffer.DrawString(player.name, DefaultFont, new SolidBrush(Color.White), 1000, 20);
 
 #if DEBUG
             SolidBrush debugBrush = new SolidBrush(Color.White);
@@ -465,7 +484,7 @@ namespace TGMsim
             }
             catch (Exception)
             {
-                MessageBox.Show("The file \"" + song + ".ogg\" was not found!", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                //MessageBox.Show("The file \"" + song + ".ogg\" was not found!", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
                 //throw;
             }
         }

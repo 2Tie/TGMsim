@@ -20,6 +20,7 @@ namespace TGMsim
         int delaytimer = 5;
         int lastinput = 0;
         bool startPressed = false;
+        int loginErr;
 
         public Login()
         {
@@ -41,10 +42,17 @@ namespace TGMsim
                             temp.name = getLetter(username[0]) + getLetter(username[1]) + getLetter(username[2]);
                             if (File.Exists(temp.name + ".usr"))
                             {
-                                registering = false;
+                                if (readUserData())
+                                    registering = false;
+                                else
+                                {
+                                    menuSelection = 0;
+                                    loginErr = 1;
+                                }
                             }
                             else
                                 registering = true;
+                            loginErr = 0;
 
 
                         }
@@ -96,7 +104,7 @@ namespace TGMsim
                                     {
                                         tempPass.Clear();
                                         verifyPass.Clear();
-                                        menuSelection = 3;
+                                        loginErr = 2;
                                     }
                                 }
                                 startPressed = true;
@@ -189,6 +197,9 @@ namespace TGMsim
                                     }
                                     else//if they don't
                                     {
+                                        menuSelection = 0;
+                                        loginErr = 2;
+                                        verifyPass.Clear();
                                         tempPass.Clear();
                                     }
                                 }
@@ -249,6 +260,11 @@ namespace TGMsim
                 for (int i = 0; i < verifyPass.Count; i++)
                     drawBuffer.DrawString("*", SystemFonts.DefaultFont, new SolidBrush(Color.White), 400 + 10 * i, 340);
             }
+
+            if (loginErr == 1)
+                drawBuffer.DrawString("There was an error reading the profile specified. Try again or delete the file.", SystemFonts.DefaultFont, new SolidBrush(Color.White), 200, 200);
+            if (loginErr == 2)
+                drawBuffer.DrawString("That password was incorrect. Please try again.", SystemFonts.DefaultFont, new SolidBrush(Color.White), 200, 200);
             drawBuffer.DrawString(getLetter(username[0]), SystemFonts.DefaultFont, new SolidBrush(Color.White), 400, 300);
             if (menuSelection > 0)
             drawBuffer.DrawString(getLetter(username[1]), SystemFonts.DefaultFont, new SolidBrush(Color.White), 409, 300);
@@ -337,11 +353,11 @@ namespace TGMsim
             BinaryReader file = new BinaryReader(File.OpenRead(temp.name + ".usr"));
             if (file.ReadString() != temp.name)//read name
                 return false;
-            if (file.ReadByte() != 0x01)//read save version, compare to current
+            if (file.ReadByte() != 0x02)//read save version, compare to current
                 return false;
             //read and parse the password
             UInt16 passdata = file.ReadUInt16();
-            if (passdata >> 15 == 1)//pass protected
+            /*if (passdata >> 15 == 1)//pass protected
             {
                 if (((passdata >> 12) & 0x3) == 7)//invalid pass length
                 {
@@ -353,7 +369,7 @@ namespace TGMsim
                 verifyPass.Add((byte)((passdata >> 4) & 0x0003));
                 verifyPass.Add((byte)((passdata >> 2) & 0x0003));
                 verifyPass.Add((byte)(passdata & 0x0003));
-            }
+            }*/
             //global points
             //tgm3 points
             //GM certs
