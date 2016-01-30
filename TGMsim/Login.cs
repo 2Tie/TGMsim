@@ -58,16 +58,16 @@ namespace TGMsim
 
                     if (pad1.inputH == 1)
                     {
-                        username[menuSelection] = (username[menuSelection] + 1) % 27; //increase the currently selected letter
+                        username[menuSelection] = (username[menuSelection] + 1) % 46; //increase the currently selected letter
                         delaytimer = 5;
                     }
                     else if (pad1.inputH == -1)
                     {
                         
-                        username[menuSelection] = (username[menuSelection] - 1) % 27;//decrease the currently selected letter
+                        username[menuSelection] = (username[menuSelection] - 1) % 46;//decrease the currently selected letter
                         if (username[menuSelection] == -1)
                         {
-                            username[menuSelection] = 26;
+                            username[menuSelection] = 45;
                         }
                         delaytimer = 5;
                     }
@@ -270,7 +270,7 @@ namespace TGMsim
 
         string getLetter(int i)
         {
-            return "ABCDEFGHIJKLMNOPQRSTUVWXYZ ".Substring(i, 1);
+            return "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!?.#$%&'ß ".Substring(i, 1);
         }
 
         public bool writeUser()
