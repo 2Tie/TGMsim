@@ -88,6 +88,11 @@ namespace TGMsim
                     gradedBy = 2;
                     shiraseGrades = true;
                     break;
+                case 3:
+                    id = 3;
+                    gradedBy = 4;
+                    limitType = 1;
+                    break;
             }
         }
         

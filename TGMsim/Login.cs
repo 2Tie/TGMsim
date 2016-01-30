@@ -197,7 +197,7 @@ namespace TGMsim
                                     }
                                     else//if they don't
                                     {
-                                        menuSelection = 0;
+                                        menuSelection = 2;
                                         loginErr = 2;
                                         verifyPass.Clear();
                                         tempPass.Clear();

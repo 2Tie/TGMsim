@@ -112,7 +112,7 @@ namespace TGMsim
                     break;
                 case 3:
                     menuState = 3;
-                    loadHiscores(1);
+                    loadHiscores(gSel.menuSelection + 1);
                     mSel = new ModeSelect(gSel.menuSelection);
                     break;
                 case 4:
@@ -144,8 +144,9 @@ namespace TGMsim
                     break;
 
                 case 6: //hiscores
-                    mSel.game += 0; //current game
-                    mSel.selection += 0; //current mode
+                    menuState = 6;
+                    //loadHiscores(mSel.game + 1);
+                    playMusic("hiscores");
                     break;
 
                 case 8:
@@ -211,10 +212,12 @@ namespace TGMsim
                                     rules.setGame(4);
                                     m = new Mode();
                                     m.endLevel = 0;
-                                    m.gradedBy = 2;
+                                    m.gradedBy = 3;
                                     m.limitType = 3;
                                     m.limit = 180000;//three minutes
                                     field1.bigmode = true;
+                                    break;
+                                case 3://40 sprint
                                     break;
                             }
                         }
@@ -245,6 +248,10 @@ namespace TGMsim
                     }
                     if (field1.exit == true)
                         changeMenu(2);
+                    break;
+                case 6://hiscores
+                    if (pad1.inputPressedRot2)
+                        changeMenu(3);
                     break;
                 case 8://settings
                     if (pad1.inputPressedRot2)
@@ -303,6 +310,24 @@ namespace TGMsim
                 case 4:
                     field1.draw(drawBuffer);
                     break;
+                case 6:
+                    drawBuffer.DrawString("hiscores", DefaultFont, new SolidBrush(Color.White), 100, 20);
+
+                    for (int i = 0; i < 6; i++ )
+                    {
+                        drawBuffer.DrawString(hiscoreTable[0][i].username, DefaultFont, new SolidBrush(Color.White), 400, 100 + 30 * i);
+                        drawBuffer.DrawString(rules.gradesTGM1[hiscoreTable[0][i].grade], DefaultFont, new SolidBrush(Color.White), 430, 100 + 30 * i);
+                        var temptimeVAR = hiscoreTable[0][i].time;
+                        var min = (int)Math.Floor((double)temptimeVAR / 60000);
+                        temptimeVAR -= min * 60000;
+                        var sec = (int)Math.Floor((double)temptimeVAR / 1000);
+                        temptimeVAR -= sec * 1000;
+                        var msec = (int)temptimeVAR;
+                        var msec10 = (int)(msec / 10);
+                        drawBuffer.DrawString(string.Format("{0,2:00}:{1,2:00}:{2,2:00}", min, sec, msec10), DefaultFont, new SolidBrush(Color.White), 460, 100 + 30 * i);
+                    }
+
+                        break;
                 case 8:
                     drawBuffer.DrawString("preferences", DefaultFont, new SolidBrush(Color.White), 100, 20);
                     break;
@@ -419,6 +444,8 @@ namespace TGMsim
             {
                 if (game == 1)
                     defaultTGMScores();
+                if (game == 2)
+                    defaultTGM2Scores();
             }
             
             BinaryReader scores = new BinaryReader(File.OpenRead(filename));
@@ -426,15 +453,22 @@ namespace TGMsim
                 defaultTGMScores();
             //otherwise, load up the hiscores into memory!
 
-            
+            bool reading = true;
             while (true)
             {
-                GameResult tempRes = new GameResult();
-                tempRes.username = scores.ReadString();
-                tempRes.grade = scores.ReadInt32();
-                tempRes.time = scores.ReadInt64();
-                hiscoreTable[game - 1].Add(tempRes);
-                if (scores.BaseStream.Position == scores.BaseStream.Length)
+                switch (game)
+                {
+                    case 1:
+                        GameResult tempRes = new GameResult();
+                        tempRes.username = scores.ReadString();
+                        tempRes.grade = scores.ReadInt32();
+                        tempRes.time = scores.ReadInt64();
+                        hiscoreTable[game - 1].Add(tempRes);
+                        if (scores.BaseStream.Position == scores.BaseStream.Length)
+                            reading = false;
+                        break;
+                }
+                if (reading == false)
                     break;
             }
         }
@@ -470,7 +504,11 @@ namespace TGMsim
                 temptime = 240000;
                 sw.Write(temptime);
             }
-            return false;
+            return true;
+        }
+        public bool defaultTGM2Scores()
+        {
+            return true;
         }
         private void playMusic(string song)
         {
