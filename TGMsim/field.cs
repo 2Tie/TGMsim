@@ -947,6 +947,7 @@ namespace TGMsim
                 results.score = score;
                 results.time = timer.elapsedTime;
                 results.level = level;
+                results.medals = medals;
                 contTime.start();
                 playMusic("results");
             }

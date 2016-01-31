@@ -15,6 +15,7 @@ namespace TGMsim
         public int grade;
         public int level;
         public string username;
+        public List<int> medals;
 
     }
 }

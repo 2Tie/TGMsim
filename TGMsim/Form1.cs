@@ -56,6 +56,9 @@ namespace TGMsim
             imgBuffer = (Image)new Bitmap(this.ClientSize.Width, this.ClientSize.Height);
 
             hiscoreTable.Add(new List<GameResult>());
+            hiscoreTable.Add(new List<GameResult>());
+            hiscoreTable.Add(new List<GameResult>());
+            hiscoreTable.Add(new List<GameResult>());
 
             graphics = this.CreateGraphics();
             drawBuffer = Graphics.FromImage(imgBuffer);
@@ -315,9 +318,9 @@ namespace TGMsim
 
                     for (int i = 0; i < 6; i++ )
                     {
-                        drawBuffer.DrawString(hiscoreTable[0][i].username, DefaultFont, new SolidBrush(Color.White), 400, 100 + 30 * i);
-                        drawBuffer.DrawString(rules.gradesTGM1[hiscoreTable[0][i].grade], DefaultFont, new SolidBrush(Color.White), 430, 100 + 30 * i);
-                        var temptimeVAR = hiscoreTable[0][i].time;
+                        drawBuffer.DrawString(hiscoreTable[mSel.game][i].username, DefaultFont, new SolidBrush(Color.White), 400, 100 + 30 * i);
+                        drawBuffer.DrawString(rules.gradesTGM1[hiscoreTable[mSel.game][i].grade], DefaultFont, new SolidBrush(Color.White), 430, 100 + 30 * i);
+                        var temptimeVAR = hiscoreTable[mSel.game][i].time;
                         var min = (int)Math.Floor((double)temptimeVAR / 60000);
                         temptimeVAR -= min * 60000;
                         var sec = (int)Math.Floor((double)temptimeVAR / 1000);
@@ -325,6 +328,13 @@ namespace TGMsim
                         var msec = (int)temptimeVAR;
                         var msec10 = (int)(msec / 10);
                         drawBuffer.DrawString(string.Format("{0,2:00}:{1,2:00}:{2,2:00}", min, sec, msec10), DefaultFont, new SolidBrush(Color.White), 460, 100 + 30 * i);
+                        if (mSel.game != 0)
+                        {
+                            for (int j = 0; j < 6; j++)
+                            {
+                                drawBuffer.DrawString(hiscoreTable[mSel.game][i].medals[j].ToString(), DefaultFont, new SolidBrush(Color.White), 520 + 10*j, 100 + 30 * i);
+                            }
+                        }
                     }
 
                         break;
@@ -433,6 +443,11 @@ namespace TGMsim
                     sw.Write(hiscoreTable[g][i].username);
                     sw.Write(hiscoreTable[g][i].grade);
                     sw.Write(hiscoreTable[g][i].time);
+                    if (g != 0)
+                    {
+                        for (int j = 0; j < 6; j++ )
+                            sw.Write((byte)hiscoreTable[g][i].medals[j] & 0xFF);
+                    }
                 }
             }
         }
@@ -456,10 +471,11 @@ namespace TGMsim
             bool reading = true;
             while (true)
             {
+
+                GameResult tempRes = new GameResult();
                 switch (game)
                 {
                     case 1:
-                        GameResult tempRes = new GameResult();
                         tempRes.username = scores.ReadString();
                         tempRes.grade = scores.ReadInt32();
                         tempRes.time = scores.ReadInt64();
@@ -467,6 +483,20 @@ namespace TGMsim
                         if (scores.BaseStream.Position == scores.BaseStream.Length)
                             reading = false;
                         break;
+                    case 2:
+                        tempRes.username = scores.ReadString();
+                        tempRes.grade = scores.ReadInt32();
+                        tempRes.time = scores.ReadInt64();
+                        tempRes.medals = new List<int>();
+                        for (int i = 0; i < 6; i++)
+                        {
+                            tempRes.medals.Add((int)scores.ReadByte());
+                        }
+                        hiscoreTable[game - 1].Add(tempRes);
+                        if (scores.BaseStream.Position == scores.BaseStream.Length)
+                            reading = false;
+                        break;
+
                 }
                 if (reading == false)
                     break;
@@ -508,6 +538,41 @@ namespace TGMsim
         }
         public bool defaultTGM2Scores()
         {
+            using (FileStream fsStream = new FileStream("gm2.dat", FileMode.Create))
+            using (BinaryWriter sw = new BinaryWriter(fsStream, Encoding.UTF8))
+            {
+                long temptime;
+                sw.Write("T.A");
+                sw.Write(9);
+                temptime = 1200000;
+                sw.Write(temptime);
+                sw.Write(new byte[6]);
+                sw.Write("T.A");
+                sw.Write(6);
+                temptime = 1080000;
+                sw.Write(temptime);
+                sw.Write(new byte[6]);
+                sw.Write("T.A");
+                sw.Write(3);
+                temptime = 960000;
+                sw.Write(temptime);
+                sw.Write(new byte[6]);
+                sw.Write("T.A");
+                sw.Write(3);
+                temptime = 1200000;
+                sw.Write(temptime);
+                sw.Write(new byte[6]);
+                sw.Write("T.A");
+                sw.Write(2);
+                temptime = 1080000;
+                sw.Write(temptime);
+                sw.Write(new byte[6]);
+                sw.Write("T.A");
+                sw.Write(1);
+                temptime = 960000;
+                sw.Write(temptime);
+                sw.Write(new byte[6]);
+            }
             return true;
         }
         private void playMusic(string song)
