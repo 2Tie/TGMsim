@@ -461,6 +461,8 @@ namespace TGMsim
                     defaultTGMScores();
                 if (game == 2)
                     defaultTGM2Scores();
+                if (game == 3)
+                    defaultTAPScores();
             }
             
             BinaryReader scores = new BinaryReader(File.OpenRead(filename));
@@ -483,7 +485,7 @@ namespace TGMsim
                         if (scores.BaseStream.Position == scores.BaseStream.Length)
                             reading = false;
                         break;
-                    case 2:
+                    default:
                         tempRes.username = scores.ReadString();
                         tempRes.grade = scores.ReadInt32();
                         tempRes.time = scores.ReadInt64();
@@ -492,6 +494,7 @@ namespace TGMsim
                         {
                             tempRes.medals.Add((int)scores.ReadByte());
                         }
+                        tempRes.lineC = (int)scores.ReadByte();
                         hiscoreTable[game - 1].Add(tempRes);
                         if (scores.BaseStream.Position == scores.BaseStream.Length)
                             reading = false;
@@ -546,32 +549,72 @@ namespace TGMsim
                 sw.Write(9);
                 temptime = 1200000;
                 sw.Write(temptime);
-                sw.Write(new byte[6]);
+                sw.Write(new byte[7]);
                 sw.Write("T.A");
                 sw.Write(6);
                 temptime = 1080000;
                 sw.Write(temptime);
-                sw.Write(new byte[6]);
+                sw.Write(new byte[7]);
                 sw.Write("T.A");
                 sw.Write(3);
                 temptime = 960000;
                 sw.Write(temptime);
-                sw.Write(new byte[6]);
+                sw.Write(new byte[7]);
                 sw.Write("T.A");
                 sw.Write(3);
                 temptime = 1200000;
                 sw.Write(temptime);
-                sw.Write(new byte[6]);
+                sw.Write(new byte[7]);
                 sw.Write("T.A");
                 sw.Write(2);
                 temptime = 1080000;
                 sw.Write(temptime);
-                sw.Write(new byte[6]);
+                sw.Write(new byte[7]);
                 sw.Write("T.A");
                 sw.Write(1);
                 temptime = 960000;
                 sw.Write(temptime);
-                sw.Write(new byte[6]);
+                sw.Write(new byte[7]);
+            }
+            return true;
+        }
+
+        public bool defaultTAPScores()
+        {
+            using (FileStream fsStream = new FileStream("gm3.dat", FileMode.Create))
+            using (BinaryWriter sw = new BinaryWriter(fsStream, Encoding.UTF8))
+            {
+                long temptime;
+                sw.Write("T.A");
+                sw.Write(9);
+                temptime = 1200000;
+                sw.Write(temptime);
+                sw.Write(new byte[7]);
+                sw.Write("T.A");
+                sw.Write(6);
+                temptime = 1080000;
+                sw.Write(temptime);
+                sw.Write(new byte[7]);
+                sw.Write("T.A");
+                sw.Write(3);
+                temptime = 960000;
+                sw.Write(temptime);
+                sw.Write(new byte[7]);
+                sw.Write("T.A");
+                sw.Write(3);
+                temptime = 1200000;
+                sw.Write(temptime);
+                sw.Write(new byte[7]);
+                sw.Write("T.A");
+                sw.Write(2);
+                temptime = 1080000;
+                sw.Write(temptime);
+                sw.Write(new byte[7]);
+                sw.Write("T.A");
+                sw.Write(1);
+                temptime = 960000;
+                sw.Write(temptime);
+                sw.Write(new byte[7]);
             }
             return true;
         }
