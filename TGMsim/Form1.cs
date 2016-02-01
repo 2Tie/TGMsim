@@ -463,6 +463,8 @@ namespace TGMsim
                     defaultTGM2Scores();
                 if (game == 3)
                     defaultTAPScores();
+                if (game == 4)
+                    defaultTGM3Scores();
             }
             
             BinaryReader scores = new BinaryReader(File.OpenRead(filename));
@@ -616,6 +618,10 @@ namespace TGMsim
                 sw.Write(temptime);
                 sw.Write(new byte[7]);
             }
+            return true;
+        }
+        public bool defaultTGM3Scores()
+        {
             return true;
         }
         private void playMusic(string song)
