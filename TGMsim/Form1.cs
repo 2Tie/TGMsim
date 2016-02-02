@@ -468,8 +468,6 @@ namespace TGMsim
             }
             
             BinaryReader scores = new BinaryReader(File.OpenRead(filename));
-            if (scores.BaseStream.Length == 0)
-                defaultTGMScores();
             //otherwise, load up the hiscores into memory!
 
             bool reading = true;

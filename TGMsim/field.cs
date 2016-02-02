@@ -1054,7 +1054,7 @@ namespace TGMsim
                                     break;
                                 case 1:
                                     //TODO: test for upkick if TGM3
-                                    if (ruleset.gameRules == 3 && ((gameField[tet.bits[0].x - 1 + xOffset][tet.bits[0].y] != 0 || gameField[tet.bits[0].x + 1 + xOffset][tet.bits[0].y] != 0) && tet.kicked == 0))
+                                    if (ruleset.gameRules == 4 && ((gameField[tet.bits[0].x - 1 + xOffset][tet.bits[0].y] != 0 || gameField[tet.bits[0].x + 1 + xOffset][tet.bits[0].y] != 0) && tet.kicked == 0))
                                     {
                                         yOffset = -1;
                                         tet.kicked = 1;
