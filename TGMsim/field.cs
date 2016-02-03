@@ -38,6 +38,7 @@ namespace TGMsim
         public GameTimer timer = new GameTimer();
         public GameTimer contTime = new GameTimer();
         public GameTimer startTime = new GameTimer();
+        public GameTimer sectionTime = new GameTimer();
         public int min, sec, msec, msec10;
 
         public bool swappedHeld;
@@ -64,6 +65,11 @@ namespace TGMsim
         public bool newHiscore = false;
 
         public int bravoCounter = 0;
+        public int tetrises = 0;
+        public int totalTets = 0;
+        public int rotations = 0;
+        bool recoverChecking = false;
+        public int recoveries = 0;
 
         public int softCounter = 0;
 
@@ -188,6 +194,7 @@ namespace TGMsim
 
             timer.start();
             startTime.start();
+            sectionTime.start();
             for (int i = 0; i < 10; i++)
             {
                 List<int> tempList = new List<int>();
@@ -332,7 +339,13 @@ namespace TGMsim
                 drawBuffer.DrawString("-*".Substring(Convert.ToInt32(GMflags[i]), 1), SystemFonts.DefaultFont, debugBrush, 200 + i * 8, 730);
             }
 
-            drawBuffer.DrawString("Bravos: " + bravoCounter, SystemFonts.DefaultFont, debugBrush, 200, 740);
+            if (ruleset.gameRules == 1)
+                drawBuffer.DrawString("Bravos: " + bravoCounter, SystemFonts.DefaultFont, debugBrush, 200, 740);
+            else
+            {
+                drawBuffer.DrawString(medals[0] + " " + medals[1] + " " + medals[2] + " " + medals[3] + " " + medals[4] + " " + medals[5], SystemFonts.DefaultFont, debugBrush, 200, 740);
+                drawBuffer.DrawString(totalTets.ToString(), SystemFonts.DefaultFont, debugBrush, 400, 740);
+            }
 
             if (newHiscore)
                 drawBuffer.DrawString("New Hiscore", SystemFonts.DefaultFont, debugBrush, 200, 700);
@@ -513,6 +526,9 @@ namespace TGMsim
                                         }
                                     }
 
+                                    if (tetCount >= 150)
+                                        recoverChecking = true;
+
                                     if (full.Count > 0)  //if full rows, clear the rows, start the line clear timer, give points
                                     {
                                         for (int i = 0; i < full.Count; i++)
@@ -522,6 +538,10 @@ namespace TGMsim
                                             level++;
                                         }
                                         //calculate combo!
+
+                                        if (full.Count == 4)
+                                            tetrises++;
+
                                         int bravo = 1;
                                         if (tetCount == 0)
                                         {
@@ -542,7 +562,7 @@ namespace TGMsim
                                         else
                                         {
                                             if (full.Count > 1)
-                                                combo += full.Count;
+                                                combo++;
                                             if (!inCredits)
                                                 gradePoints += (int)(Math.Ceiling(ruleset.baseGradePts[full.Count - 1][grade] * ruleset.comboTable[full.Count - 1][combo]) * Math.Ceiling((double)level / 250));
 
@@ -617,6 +637,95 @@ namespace TGMsim
                                             }
                                         }
 
+                                        if (mode.sections.Count != curSection)
+                                            if (level >= mode.sections[curSection])
+                                            {
+                                                curSection++;
+                                                if (curSection == 3)
+                                                    playMusic("level 2");
+                                                if (curSection == 5)
+                                                    playMusic("level 3");
+                                                if (curSection == 8)
+                                                    playMusic("level 4");
+                                                if (curSection == 10)
+                                                    playMusic("level 5");
+
+                                                if (ruleset.gameRules != 1)
+                                                {
+                                                    if (sectionTime.elapsedTime < 50000 && medals[2] < 1)
+                                                        medals[2] = 1;
+                                                    if (sectionTime.elapsedTime < 55000 && medals[2] < 2)
+                                                        medals[2] = 2;
+                                                    if (sectionTime.elapsedTime < 60000 && medals[2] < 3)
+                                                        medals[2] = 3;
+
+                                                    if (curSection == 3)
+                                                        if ((rotations * 5) / (totalTets * 6) >= 1)
+                                                        {
+                                                            medals[1] = 1;
+                                                            rotations = 0;
+                                                            totalTets = 0;
+                                                        }
+                                                    if (curSection == 7)
+                                                        if ((rotations * 5) / (totalTets * 6) >= 1)
+                                                        {
+                                                            medals[1] = 2;
+                                                            rotations = 0;
+                                                            totalTets = 0;
+                                                        }
+                                                    sectionTime.stop();
+
+                                                    sectionTime.start();
+                                                }
+                                            }
+
+                                        //check medal conditions!!
+                                        if (ruleset.gameRules != 1)
+                                        {
+                                            //AC
+                                            if (bravoCounter == 1 && medals[0] == 0)
+                                                medals[0] = 1;
+                                            if (bravoCounter == 2 && medals[0] == 1)
+                                                medals[0] = 2;
+                                            if (bravoCounter == 3 && medals[0] == 2)
+                                                medals[0] = 3;
+
+                                            //RO
+                                            
+                                            //ST
+
+
+                                            //SK
+                                            int tt = 1;
+                                            if (mode.id == 1 || mode.id == 2)
+                                                tt = 2;
+                                            if (mode.bigmode == true)
+                                                tt = 10;
+                                            if (tetrises == (int)(Math.Ceiling((double)10/tt)) && medals[3] == 0)
+                                                medals[3] = 1;
+
+                                            //RE
+                                            if (recoverChecking == true && tetCount <= 70)
+                                                recoveries++;
+                                            if (recoveries == 1 && medals[4] == 0)
+                                                medals[4] = 1;
+                                            if (recoveries == 2 && medals[4] == 0)
+                                                medals[4] = 2;
+                                            if (recoveries == 4 && medals[4] == 0)
+                                                medals[4] = 3;
+                                            //CO
+                                            int big = 1;
+                                            if (mode.bigmode == true)
+                                                big = 2;
+                                            if ((int)(Math.Ceiling((double)4 / big)) == combo)
+                                                medals[5] = 1;
+                                            if ((int)(Math.Ceiling((double)5 / big)) == combo)
+                                                medals[5] = 2;
+                                            if ((int)(Math.Ceiling((double)7 / big)) == combo)
+                                                medals[5] = 3;
+                                            
+                                        }
+
                                         if (mode.endLevel != 0 && level >= mode.endLevel && inCredits == false)
                                         {
                                             triggerCredits();
@@ -646,19 +755,7 @@ namespace TGMsim
 
                                     playSound(s_Contact);
 
-                                    if (mode.sections.Count != curSection)
-                                    if (level > mode.sections[curSection + 1])
-                                    {
-                                        curSection++;
-                                        if (curSection == 3)
-                                            playMusic("level 2");
-                                        if (curSection == 5)
-                                            playMusic("level 3");
-                                        if (curSection == 8)
-                                            playMusic("level 4");
-                                        if (curSection == 10)
-                                            playMusic("level 5");
-                                    }
+                                    
 
                                     return;
 
@@ -955,6 +1052,13 @@ namespace TGMsim
 
         private void triggerCredits()
         {
+            if ((rotations * 5) / (totalTets * 6) >= 1)
+            {
+                medals[1] = 3;
+                rotations = 0;
+                totalTets = 0;
+            }
+
             timer.stop();
             inCredits = true;
             playMusic("credits");
@@ -965,6 +1069,8 @@ namespace TGMsim
         {
             int xOffset = 0; //for kicks
             int yOffset = 0;
+
+            rotations++;
 
             switch (tet.id)
             {
@@ -1913,6 +2019,7 @@ namespace TGMsim
 
         public Tetromino generatePiece()
         {
+            totalTets++;
             Random piece = new Random();
             int tempID = 0;
             for (int j = 0; j < ruleset.genAttps; j++)
