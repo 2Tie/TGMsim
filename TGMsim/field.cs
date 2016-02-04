@@ -206,7 +206,7 @@ namespace TGMsim
             }
 
             playMusic("level 1");
-            playSound(s_Ready);
+            //playSound(s_Ready);
         }
 
         public void randomize()
@@ -280,10 +280,17 @@ namespace TGMsim
                 }
             }
 
+
+            //GUI
+            drawBuffer.FillRectangle(new SolidBrush(Color.White), 600, 200, 60, 8);
+            drawBuffer.FillRectangle(new SolidBrush(Color.Orange), 600, 200, (int)(ruleset.gravTableTGM1[gravLevel] / (ruleset.baseGrav * 20)) * 60, 8);
+            if (mode.g20 == true || ruleset.gravTableTGM1[gravLevel] == ruleset.baseGrav * 20)
+                drawBuffer.FillRectangle(new SolidBrush(Color.Red), 600, 200, 60, 8);
+
             //Starting things
-            if (starting == 1)
-                drawBuffer.DrawString("Ready", SystemFonts.DefaultFont, new SolidBrush(Color.White), 200, 200);
             if (starting == 2)
+                drawBuffer.DrawString("Ready", SystemFonts.DefaultFont, new SolidBrush(Color.White), 200, 200);
+            if (starting == 3)
                 drawBuffer.DrawString("Go", SystemFonts.DefaultFont, new SolidBrush(Color.White), 200, 200);
 
 
@@ -363,10 +370,16 @@ namespace TGMsim
             if (startTime.elapsedTime > 1000 && starting == 1)
             {
                 starting = 2;
+                //play READY
+                playSound(s_Ready);
+            }
+            if (startTime.elapsedTime > 2000 && starting == 2)
+            {
+                starting = 3;
                 //play GO
                 playSound(s_Go);
             }
-            if (startTime.elapsedTime > 2000 && starting == 2)
+            if (startTime.elapsedTime > 3000 && starting == 3)
             {
                 starting = 0;
             }
@@ -652,11 +665,14 @@ namespace TGMsim
 
                                                 if (ruleset.gameRules != 1)
                                                 {
-                                                    if (sectionTime.elapsedTime < 50000 && medals[2] < 1)
+                                                    int sectime = 60000;
+                                                    if (mode.id == 1 || mode.id == 2)
+                                                        sectime = 45000;
+                                                    if (sectionTime.elapsedTime < sectime - 10000 && medals[2] < 1)
                                                         medals[2] = 1;
-                                                    if (sectionTime.elapsedTime < 55000 && medals[2] < 2)
+                                                    if (sectionTime.elapsedTime < sectime - 5000 && medals[2] < 2)
                                                         medals[2] = 2;
-                                                    if (sectionTime.elapsedTime < 60000 && medals[2] < 3)
+                                                    if (sectionTime.elapsedTime < sectime && medals[2] < 3)
                                                         medals[2] = 3;
 
                                                     if (curSection == 3)
