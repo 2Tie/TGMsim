@@ -283,7 +283,7 @@ namespace TGMsim
 
             //GUI
             drawBuffer.FillRectangle(new SolidBrush(Color.White), 600, 200, 60, 8);
-            drawBuffer.FillRectangle(new SolidBrush(Color.Orange), 600, 200, (int)(ruleset.gravTableTGM1[gravLevel] / (ruleset.baseGrav * 20)) * 60, 8);
+            drawBuffer.FillRectangle(new SolidBrush(Color.Orange), 600, 200, (int)Math.Round((double)ruleset.gravTableTGM1[gravLevel] / (ruleset.baseGrav * 20)) * 60, 8);
             if (mode.g20 == true || ruleset.gravTableTGM1[gravLevel] == ruleset.baseGrav * 20)
                 drawBuffer.FillRectangle(new SolidBrush(Color.Red), 600, 200, 60, 8);
 
@@ -574,10 +574,16 @@ namespace TGMsim
                                         }
                                         else
                                         {
-                                            if (full.Count > 1)
-                                                combo++;
-                                            if (!inCredits)
-                                                gradePoints += (int)(Math.Ceiling(ruleset.baseGradePts[full.Count - 1][grade] * ruleset.comboTable[full.Count - 1][combo]) * Math.Ceiling((double)level / 250));
+                                            if (mode.id == 0)
+                                            {
+                                                if (full.Count > 1)
+                                                    combo++;
+                                                if (!inCredits)
+                                                    gradePoints += (int)(Math.Ceiling(ruleset.baseGradePts[full.Count - 1][grade] * ruleset.comboTable[full.Count - 1][combo]) * Math.Ceiling((double)level / 250));
+                                            }
+                                            if (mode.id == 1)
+                                                if (level >= 500)
+                                                    gradeLevel = 32;
 
                                         }
                                         comboing = true;

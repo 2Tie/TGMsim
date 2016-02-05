@@ -395,6 +395,31 @@ namespace TGMsim
                         //else try the next one.
                     }
                     break;
+                case 1:
+                    for (int i = 0; i < hiscoreTable[1].Count; i++)
+                    {
+                        if (hiscoreTable[1][i].grade < gameResult.grade)
+                        {
+                            saveHiscore(gameResult, gameResult.game, i);
+                            return true;
+                        }
+                        if (hiscoreTable[1][i].grade == gameResult.grade)
+                        {
+                            //compare line
+                            if (hiscoreTable[1][i].lineC < gameResult.lineC)
+                            {
+                                saveHiscore(gameResult, gameResult.game, i);
+                                return true;
+                            }
+                            //compare time
+                            if (hiscoreTable[1][i].time > gameResult.time)
+                            {
+                                saveHiscore(gameResult, gameResult.game, i);
+                                return true;
+                            }
+                        }
+                    }
+                    break;
                 /*default:
                     for (int i = 0; i < hiscoreTable[gameResult.game - 1].Count; i++)
                     {
