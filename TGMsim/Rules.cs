@@ -27,6 +27,8 @@ namespace TGMsim
         public int fieldW = 10;
         public int fieldH = 20;
 
+        public double FPS = 60.00;
+
         public bool showGrade = true;
 
         public List<List<double>> comboTable = new List<List<double>>();
@@ -43,6 +45,7 @@ namespace TGMsim
 
         public List<string> gradesTGM1 = new List<string> { "9", "8", "7", "6", "5", "4", "3", "2", "1", "S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "S9"};
         public List<string> gradesTGM2 = new List<string> { "9", "8", "7", "6", "5", "4", "4", "3", "3", "2", "2", "2", "1", "1", "1", "S1", "S1", "S1", "S2", "S3", "S4", "S4", "S4", "S5", "S5", "S6", "S6", "S7", "S7", "S8", "S8", "S9" };
+        public List<int> gradeIntTGM2 = new List<int> { 0, 1, 2, 3, 4, 5, 5, 6, 6, 7, 7, 7, 8, 8, 8, 9, 9, 9, 10, 11, 12, 12, 12, 13, 13, 14, 14, 15, 15, 16, 16, 17 };
 
         public Rules()
         {
@@ -69,6 +72,7 @@ namespace TGMsim
             switch (game)
             {
                 case 1: //TGM
+                    FPS = 59.84;
                     nextNum = 1;
                     hold = false;
                     hardDrop = 0;
@@ -86,6 +90,7 @@ namespace TGMsim
                     showGrade = true;
                     break;
                 case 2: //TGM2 OR TAP
+                    FPS = 61.68;
                     nextNum = 1;
                     hold = false;
                     hardDrop = 1;
@@ -102,6 +107,7 @@ namespace TGMsim
                     showGrade = true;
                     break;
                 case 3: //TGM2 OR TAP
+                    FPS = 61.68;
                     nextNum = 1;
                     hold = false;
                     hardDrop = 1;
@@ -118,6 +124,7 @@ namespace TGMsim
                     showGrade = true;
                     break;
                 case 4: //TI
+                    FPS = 60.00;
                     nextNum = 3;
                     hold = true;
                     hardDrop = 1;

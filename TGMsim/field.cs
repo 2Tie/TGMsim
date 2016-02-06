@@ -205,7 +205,7 @@ namespace TGMsim
                 gameField.Add(tempList);
             }
 
-            playMusic("level 1");
+            playMusic("Level 1");
             //playSound(s_Ready);
         }
 
@@ -390,7 +390,7 @@ namespace TGMsim
                 if (gameRunning == true)
                 {
                     //timing logic
-                    long temptimeVAR = (long)(timer.elapsedTime * 59.84 / 60);
+                    long temptimeVAR = (long)(timer.elapsedTime * ruleset.FPS / 60);
                     min = (int)Math.Floor((double)temptimeVAR / 60000);
                     temptimeVAR -= min * 60000;
                     sec = (int)Math.Floor((double)temptimeVAR / 1000);
@@ -589,16 +589,18 @@ namespace TGMsim
                                         comboing = true;
 
                                         //check GM conditions
+                                        long temptime = (long)((timer.elapsedTime * ruleset.FPS) / 60);
+
                                         if (GMflags.Count == 0 && level >= 300)
                                         {
-                                            if (score >= 12000 && timer.elapsedTime <= 255000)
+                                            if (score >= 12000 && temptime <= 255000)
                                                 GMflags.Add(true);
                                             else
                                                 GMflags.Add(false);
                                         }
                                         else if (GMflags.Count == 1 && level >= 500)
                                         {
-                                            if (score >= 40000 && timer.elapsedTime <= 450000)
+                                            if (score >= 40000 && temptime <= 450000)
                                                 GMflags.Add(true);
                                             else
                                                 GMflags.Add(false);
@@ -606,7 +608,7 @@ namespace TGMsim
                                         else if (GMflags.Count == 2 && level >= mode.endLevel)
                                         {
                                             level = 999;
-                                            if (score >= 126000 && timer.elapsedTime <= 810000)
+                                            if (score >= 126000 && temptime <= 810000)
                                                 GMflags.Add(true);
                                             else
                                                 GMflags.Add(false);
@@ -661,13 +663,17 @@ namespace TGMsim
                                             {
                                                 curSection++;
                                                 if (curSection == 3)
-                                                    playMusic("level 2");
+                                                {
+                                                    stopMusic();
+                                                    playMusic("Level 2");
+                                                }
                                                 if (curSection == 5)
-                                                    playMusic("level 3");
+                                                    playMusic("Level 3");
                                                 if (curSection == 8)
-                                                    playMusic("level 4");
+                                                    playMusic("Level 4");
                                                 if (curSection == 10)
-                                                    playMusic("level 5");
+                                                    stopMusic();
+                                                    playMusic("Level 5");
 
                                                 if (ruleset.gameRules != 1)
                                                 {
@@ -900,7 +906,7 @@ namespace TGMsim
                         //calc gravity LAST sso I-jumps are doable?
 
 
-
+                        if (!g0)
                         for (int tempGrav = gravCounter; tempGrav >= 256; tempGrav = tempGrav - 256)
                         {
                             blockDrop++;
@@ -912,8 +918,7 @@ namespace TGMsim
                         {
                             blockDrop = 19;
                         }
-                        if (g0)
-                            blockDrop = 0;
+                        
 
                         if (blockDrop > 0)// && currentTimer != (int)Field.timerType.LockDelay)
                         {
@@ -958,57 +963,63 @@ namespace TGMsim
                     nextTet[i] = nextTet[i + 1];
                 }
                 nextTet[nextTet.Count - 1] = generatePiece();
-                switch (nextTet[nextTet.Count - 1].id)
+                if (starting == 0)
                 {
-                    case 1:
-                        playSound(s_Tet1);
-                        break;
-                    case 2:
-                        playSound(s_Tet2);
-                        break;
-                    case 3:
-                        playSound(s_Tet3);
-                        break;
-                    case 4:
-                        playSound(s_Tet4);
-                        break;
-                    case 5:
-                        playSound(s_Tet5);
-                        break;
-                    case 6:
-                        playSound(s_Tet6);
-                        break;
-                    case 7:
-                        playSound(s_Tet7);
-                        break;
+                    switch (nextTet[nextTet.Count - 1].id)
+                    {
+                        case 1:
+                            playSound(s_Tet1);
+                            break;
+                        case 2:
+                            playSound(s_Tet2);
+                            break;
+                        case 3:
+                            playSound(s_Tet3);
+                            break;
+                        case 4:
+                            playSound(s_Tet4);
+                            break;
+                        case 5:
+                            playSound(s_Tet5);
+                            break;
+                        case 6:
+                            playSound(s_Tet6);
+                            break;
+                        case 7:
+                            playSound(s_Tet7);
+                            break;
+                    }
                 }
             }
             else
             {
                 activeTet = generatePiece();
-                switch (activeTet.id)
+                if (starting == 0)
                 {
-                    case 1:
-                        playSound(s_Tet1);
-                        break;
-                    case 2:
-                        playSound(s_Tet2);
-                        break;
-                    case 3:
-                        playSound(s_Tet3);
-                        break;
-                    case 4:
-                        playSound(s_Tet4);
-                        break;
-                    case 5:
-                        playSound(s_Tet5);
-                        break;
-                    case 6:
-                        playSound(s_Tet6);
-                        break;
-                    case 7:
-                        playSound(s_Tet7);
-                        break;
+                    switch (activeTet.id)
+                    {
+                        case 1:
+                            playSound(s_Tet1);
+                            break;
+                        case 2:
+                            playSound(s_Tet2);
+                            break;
+                        case 3:
+                            playSound(s_Tet3);
+                            break;
+                        case 4:
+                            playSound(s_Tet4);
+                            break;
+                        case 5:
+                            playSound(s_Tet5);
+                            break;
+                        case 6:
+                            playSound(s_Tet6);
+                            break;
+                        case 7:
+                            playSound(s_Tet7);
+                            break;
+                    }
                 }
             }
 
@@ -1062,12 +1073,16 @@ namespace TGMsim
                 results = new GameResult();
                 results.game = ruleset.gameRules - 1;
                 results.username = "TEST";
-                results.grade = grade;
+                if (ruleset.gameRules == 1)
+                    results.grade = grade;
+                else
+                    results.grade = ruleset.gradeIntTGM2[grade];
                 results.score = score;
-                results.time = timer.elapsedTime;
+                results.time = (int)((timer.elapsedTime * ruleset.FPS)/60);
                 results.level = level;
                 results.medals = medals;
                 contTime.start();
+                stopMusic();
                 playMusic("results");
             }
         }
@@ -1083,6 +1098,7 @@ namespace TGMsim
 
             timer.stop();
             inCredits = true;
+            stopMusic();
             playMusic("credits");
 
         }

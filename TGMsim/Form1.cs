@@ -395,24 +395,24 @@ namespace TGMsim
                         //else try the next one.
                     }
                     break;
-                case 1:
-                    for (int i = 0; i < hiscoreTable[1].Count; i++)
+                default:
+                    for (int i = 0; i < hiscoreTable[gameResult.game].Count; i++)
                     {
-                        if (hiscoreTable[1][i].grade < gameResult.grade)
+                        if (hiscoreTable[gameResult.game][i].grade < gameResult.grade)
                         {
                             saveHiscore(gameResult, gameResult.game, i);
                             return true;
                         }
-                        if (hiscoreTable[1][i].grade == gameResult.grade)
+                        if (hiscoreTable[gameResult.game][i].grade == gameResult.grade)
                         {
                             //compare line
-                            if (hiscoreTable[1][i].lineC < gameResult.lineC)
+                            if (hiscoreTable[gameResult.game][i].lineC < gameResult.lineC)
                             {
                                 saveHiscore(gameResult, gameResult.game, i);
                                 return true;
                             }
                             //compare time
-                            if (hiscoreTable[1][i].time > gameResult.time)
+                            if (hiscoreTable[gameResult.game][i].time > gameResult.time)
                             {
                                 saveHiscore(gameResult, gameResult.game, i);
                                 return true;
@@ -471,7 +471,8 @@ namespace TGMsim
                     if (g != 0)
                     {
                         for (int j = 0; j < 6; j++ )
-                            sw.Write((byte)hiscoreTable[g][i].medals[j] & 0xFF);
+                            sw.Write((byte)(hiscoreTable[g][i].medals[j] & 0xFF));
+                        sw.Write((byte)hiscoreTable[g][i].lineC);
                     }
                 }
             }
