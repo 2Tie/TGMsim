@@ -37,9 +37,10 @@ namespace TGMsim
         public List<List<int>> baseGradePts = new List<List<int>>();
 
         public List<int> gravTableTGM1 = new List<int> {4, 6, 8, 10, 12, 16, 32, 48, 64, 80, 96, 112, 128, 144, 4, 32, 64, 96, 128, 160, 192, 224, 256, 512, 768, 1024, 1280, 1024, 768, 5120};
-        //public List<int> gravTableTGM1 = new List<int> { 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 160, 192, 224, 256, 512, 768, 1024, 1280, 1024, 768, 5120 };
-
         public List<int> gravLevelsTGM1 = new List<int> {0, 30, 35, 40, 50, 60, 70, 80, 90, 100, 120, 140, 160, 170, 200, 220, 230, 233, 236, 239, 243, 247, 251, 300, 330, 360, 400, 420, 450, 500};
+
+        public List<List<int>> delayTableTGM2 = new List<List<int>>();
+        public List<List<int>> delayTableTAP = new List<List<int>>();
 
         public List<int> gradePointsTGM1 = new List<int> { 0, 400, 800, 1400, 2000, 3500, 5500, 8000, 12000, 16000, 22000, 30000, 40000, 52000, 66000, 82000, 100000, 120000};
 
@@ -64,6 +65,17 @@ namespace TGMsim
                 baseGradePts[2].Add(13);
                 baseGradePts[3].Add(30);
             }
+
+            delayTableTGM2.Add(new List<int> {25, 25, 25, 16, 12, 12});//ARE
+            delayTableTGM2.Add(new List<int> {16,10,10,10,10,8});//DAS
+            delayTableTGM2.Add(new List<int> {30,30,30,30,30,17});//LOCK
+            delayTableTGM2.Add(new List<int> {40,25,16,12,6,6,6});//LINE CLEAR
+
+            delayTableTAP.Add(new List<int> { 25, 25, 25, 16, 12, 12 });
+            delayTableTAP.Add(new List<int> { 25, 25, 16, 12, 6, 6 });//line ARE
+            delayTableTAP.Add(new List<int> { 14, 8, 8, 8, 8, 6 });
+            delayTableTAP.Add(new List<int> { 30, 30, 30, 30, 30, 17 });
+            delayTableTAP.Add(new List<int> { 40, 25, 16, 12, 6, 6 });
         }
 
         public void setGame(int game)

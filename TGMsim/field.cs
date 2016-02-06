@@ -283,8 +283,8 @@ namespace TGMsim
 
             //GUI
             drawBuffer.FillRectangle(new SolidBrush(Color.White), 600, 200, 60, 8);
-            drawBuffer.FillRectangle(new SolidBrush(Color.Orange), 600, 200, (int)Math.Round((double)ruleset.gravTableTGM1[gravLevel] / (ruleset.baseGrav * 20)) * 60, 8);
-            if (mode.g20 == true || ruleset.gravTableTGM1[gravLevel] == ruleset.baseGrav * 20)
+            drawBuffer.FillRectangle(new SolidBrush(Color.Orange), 600, 200, (int)Math.Round((double)ruleset.gravTableTGM1[gravLevel] / Math.Pow(256,ruleset.gravType + 1) * 20) * 60, 8);
+            if (mode.g20 == true || ruleset.gravTableTGM1[gravLevel] == Math.Pow(256, ruleset.gravType + 1) * 20)
                 drawBuffer.FillRectangle(new SolidBrush(Color.Red), 600, 200, 60, 8);
 
             //Starting things
@@ -448,7 +448,10 @@ namespace TGMsim
                                 
                                 full.Clear();
                                 currentTimer = (int)Field.timerType.ARE;
-                                timerCount = ruleset.baseARE;
+                                if (ruleset.gameRules == 3)
+                                    timerCount = ruleset.baseARELine;
+                                else
+                                    timerCount = ruleset.baseARE;
                                 playSound(s_Impact);
                             }
                             else
@@ -662,6 +665,8 @@ namespace TGMsim
                                             if (level >= mode.sections[curSection])
                                             {
                                                 curSection++;
+
+                                                //MUSIC
                                                 if (curSection == 3)
                                                 {
                                                     stopMusic();
@@ -675,6 +680,46 @@ namespace TGMsim
                                                     stopMusic();
                                                     playMusic("Level 5");
 
+                                                //DELAYS
+                                                if (ruleset.gameRules == 2)
+                                                {
+                                                    switch(curSection)
+                                                    {
+                                                        case 9:
+                                                        case 8:
+                                                        case 7:
+                                                        case 6:
+                                                        case 5:
+                                                            ruleset.baseARE = ruleset.delayTableTGM2[0][curSection - 4];
+                                                            ruleset.baseDAS = ruleset.delayTableTGM2[1][curSection - 4];
+                                                            ruleset.baseLock = ruleset.delayTableTGM2[2][curSection - 4];
+                                                            ruleset.baseLineClear = ruleset.delayTableTGM2[3][curSection - 4];
+                                                            break;
+                                                        default:
+                                                            break;
+                                                    }
+                                                }
+                                                if (ruleset.gameRules == 3)
+                                                {
+                                                    switch (curSection)
+                                                    {
+                                                        case 9:
+                                                        case 8:
+                                                        case 7:
+                                                        case 6:
+                                                        case 5:
+                                                            ruleset.baseARE = ruleset.delayTableTAP[0][curSection - 4];
+                                                            ruleset.baseARELine = ruleset.delayTableTAP[1][curSection - 4];
+                                                            ruleset.baseDAS = ruleset.delayTableTAP[2][curSection - 4];
+                                                            ruleset.baseLock = ruleset.delayTableTAP[3][curSection - 4];
+                                                            ruleset.baseLineClear = ruleset.delayTableTAP[4][curSection - 4];
+                                                            break;
+                                                        default:
+                                                            break;
+                                                    }
+                                                }
+
+                                                //MEDALS
                                                 if (ruleset.gameRules != 1)
                                                 {
                                                     int sectime = 60000;
