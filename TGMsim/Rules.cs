@@ -16,6 +16,7 @@ namespace TGMsim
         public int rotation = 0; //TGM, TGM3, SRS
 
         public int baseARE = 30;
+        public int baseARELine = 30;
         public int baseDAS = 14;
         public int baseLock = 30;
         public int baseLineClear = 41;
@@ -108,6 +109,7 @@ namespace TGMsim
                     hardDrop = 1;
                     rotation = 0;
                     baseARE = 25;
+                    baseARELine = 25;
                     baseDAS = 14;
                     baseLock = 30;
                     baseLineClear = 40;
@@ -125,6 +127,7 @@ namespace TGMsim
                     hardDrop = 1;
                     rotation = 0;
                     baseARE = 25;
+                    baseARELine = 25;
                     baseDAS = 14;
                     baseLock = 30;
                     baseLineClear = 40;

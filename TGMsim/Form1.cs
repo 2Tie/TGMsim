@@ -115,6 +115,7 @@ namespace TGMsim
                     break;
                 case 3:
                     menuState = 3;
+                    if (gSel.menuSelection != 4)
                     loadHiscores(gSel.menuSelection + 1);
                     mSel = new ModeSelect(gSel.menuSelection);
                     break;
@@ -214,11 +215,17 @@ namespace TGMsim
                                 case 2://konoha
                                     rules.setGame(4);
                                     m = new Mode();
+                                    m.setMode(0);
                                     m.endLevel = 0;
                                     m.gradedBy = 3;
                                     m.limitType = 3;
                                     m.limit = 180000;//three minutes
-                                    field1.bigmode = true;
+                                    m.bigmode = true;
+
+                                    saved = false;
+                                    menuState = 4;
+                                    stopMusic();
+                                    field1 = new Field(pad1, rules, m, musicStream);
                                     break;
                                 case 3://40 sprint
                                     break;
@@ -227,7 +234,7 @@ namespace TGMsim
                     }
                     if (pad1.inputRot2 == 1)
                         changeMenu(2);
-                    if (pad1.inputHold == 1)
+                    if (pad1.inputHold == 1 && mSel.game != 4)
                         changeMenu(6);//hiscores for mode
                     break;
                 case 4: //ingame
@@ -255,6 +262,10 @@ namespace TGMsim
                 case 6://hiscores
                     if (pad1.inputPressedRot2)
                         changeMenu(3);
+                    break;
+                case 7:
+                    if (pad1.inputPressedRot2)
+                        changeMenu(2);
                     break;
                 case 8://settings
                     if (pad1.inputPressedRot2)
@@ -318,7 +329,9 @@ namespace TGMsim
 
                     for (int i = 0; i < 6; i++ )
                     {
-                        drawBuffer.DrawString(hiscoreTable[mSel.game][i].username, DefaultFont, new SolidBrush(Color.White), 400, 100 + 30 * i);
+                        drawBuffer.DrawString(hiscoreTable[mSel.game][i].username, DefaultFont, new SolidBrush(Color.White), 350, 100 + 30 * i);
+                        if (mSel.game == 3)
+                            drawBuffer.DrawString(hiscoreTable[mSel.game][i].level.ToString(), DefaultFont, new SolidBrush(Color.White), 390, 100 + 30 * i);
                         drawBuffer.DrawString(rules.gradesTGM1[hiscoreTable[mSel.game][i].grade], DefaultFont, new SolidBrush(Color.White), 430, 100 + 30 * i);
                         var temptimeVAR = hiscoreTable[mSel.game][i].time;
                         var min = (int)Math.Floor((double)temptimeVAR / 60000);
@@ -395,6 +408,33 @@ namespace TGMsim
                         //else try the next one.
                     }
                     break;
+                case 4:
+                    for (int i = 0; i < hiscoreTable[0].Count; i++ )
+                    {
+                        if (hiscoreTable[4][i].level < gameResult.level)
+                        {
+                            saveHiscore(gameResult, gameResult.game, i);
+                            return true;
+                        }
+                        if (hiscoreTable[4][i].level == gameResult.level)
+                        {
+                            if (hiscoreTable[4][i].grade < gameResult.grade)
+                            {
+                                saveHiscore(gameResult, gameResult.game, i);
+                                return true;
+                            }
+                            if (hiscoreTable[4][i].grade == gameResult.grade)
+                            {
+                                if (hiscoreTable[gameResult.game][i].time > gameResult.time)
+                                {
+                                    saveHiscore(gameResult, gameResult.game, i);
+                                    return true;
+                                }
+                            }
+                        }
+                        
+                    }
+                    break;
                 default:
                     for (int i = 0; i < hiscoreTable[gameResult.game].Count; i++)
                     {
@@ -420,33 +460,6 @@ namespace TGMsim
                         }
                     }
                     break;
-                /*default:
-                    for (int i = 0; i < hiscoreTable[gameResult.game - 1].Count; i++)
-                    {
-                        if (hiscoreTable[gameResult.game - 1][i].grade < gameResult.grade)
-                        {
-                            //insert the new score here
-                            return true;
-                        }
-                        if (hiscoreTable[gameResult.game - 1][i].grade == gameResult.grade)
-                        {
-                            //compare level
-                            if (hiscoreTable[gameResult.game - 1][i].level < gameResult.level)
-                            {
-                                return true;
-                            }
-                            if (hiscoreTable[gameResult.game - 1][i].level == gameResult.level)
-                            {
-                                //compare time
-                                if (hiscoreTable[gameResult.game - 1][i].time < gameResult.time)
-                                {
-                                    return true;
-                                }
-                            }
-                        }
-                        //else try the next one.
-                    }
-                    break;*/
         }
             return false;
         }
@@ -472,8 +485,11 @@ namespace TGMsim
                     {
                         for (int j = 0; j < 6; j++ )
                             sw.Write((byte)(hiscoreTable[g][i].medals[j] & 0xFF));
-                        sw.Write((byte)hiscoreTable[g][i].lineC);
                     }
+                    if (g == 1 || g == 2)
+                        sw.Write((byte)hiscoreTable[g][i].lineC);
+                    if (g == 3)
+                        sw.Write((int)hiscoreTable[g][i].level);
                 }
             }
         }
@@ -507,6 +523,20 @@ namespace TGMsim
                         tempRes.username = scores.ReadString();
                         tempRes.grade = scores.ReadInt32();
                         tempRes.time = scores.ReadInt64();
+                        hiscoreTable[game - 1].Add(tempRes);
+                        if (scores.BaseStream.Position == scores.BaseStream.Length)
+                            reading = false;
+                        break;
+                    case 4:
+                        tempRes.username = scores.ReadString();
+                        tempRes.grade = scores.ReadInt32();
+                        tempRes.time = scores.ReadInt64();
+                        tempRes.medals = new List<int>();
+                        for (int i = 0; i < 6; i++)
+                        {
+                            tempRes.medals.Add((int)scores.ReadByte());
+                        }
+                        tempRes.level = scores.ReadInt32();
                         hiscoreTable[game - 1].Add(tempRes);
                         if (scores.BaseStream.Position == scores.BaseStream.Length)
                             reading = false;
@@ -646,6 +676,47 @@ namespace TGMsim
         }
         public bool defaultTGM3Scores()
         {
+            using (FileStream fsStream = new FileStream("gm4.dat", FileMode.Create))
+            using (BinaryWriter sw = new BinaryWriter(fsStream, Encoding.UTF8))
+            {
+                long temptime;
+                sw.Write("ARK");
+                sw.Write(6);
+                temptime = 1200000;
+                sw.Write(temptime);
+                sw.Write(new byte[6]);
+                sw.Write(500);
+                sw.Write("ARK");
+                sw.Write(4);
+                temptime = 1080000;
+                sw.Write(temptime);
+                sw.Write(new byte[6]);
+                sw.Write(400);
+                sw.Write("ARK");
+                sw.Write(3);
+                temptime = 1200000;
+                sw.Write(temptime);
+                sw.Write(new byte[6]);
+                sw.Write(400);
+                sw.Write("ARK");
+                sw.Write(2);
+                temptime = 960000;
+                sw.Write(temptime);
+                sw.Write(new byte[6]);
+                sw.Write(300);
+                sw.Write("ARK");
+                sw.Write(2);
+                temptime = 1080000;
+                sw.Write(temptime);
+                sw.Write(new byte[6]);
+                sw.Write(300);
+                sw.Write("ARK");
+                sw.Write(1);
+                temptime = 960000;
+                sw.Write(temptime);
+                sw.Write(new byte[6]);
+                sw.Write(200);
+            }
             return true;
         }
         private void playMusic(string song)

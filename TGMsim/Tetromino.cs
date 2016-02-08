@@ -15,106 +15,187 @@ namespace TGMsim
         public int x = 0;
         public int y = 0;
         public int kicked = 0;
+        public bool large = false;
 
-        public List<BlockBit> bits = new List<BlockBit>();
+        public List<BlockBit> bits = new List<BlockBit>(); //first four will always be the "small" version
         
 
-        public Tetromino(int i)
+        public Tetromino(int i, bool big)
         {
-            for (int j = 0; j < 4; j++ )
+            int pips = 4;
+            if (big)
+                pips = 16;
+            for (int j = 0; j < pips; j++)
             {
-                bits.Add(new BlockBit());
+                //bits.Add(new BlockBit());
             }
             id = i;
+            large = big;
             switch (i)
             {
-                case 1:
-                    bits[0].x = 3;
-                    bits[0].y = 1;
-                    bits[1].x = 4;
-                    bits[1].y = 1;
-                    bits[2].x = 5;
-                    bits[2].y = 1;
-                    bits[3].x = 6;
-                    bits[3].y = 1;
+                case 1://I
+                    bits.Add(new BlockBit(3, 1));
+                    bits.Add(new BlockBit(4, 1));
+                    bits.Add(new BlockBit(5, 1));
+                    bits.Add(new BlockBit(6, 1));
+                    if (big)
+                    {
+                        bits.Add(new BlockBit(3, 2));
+                        bits.Add(new BlockBit(4, 2));
+                        bits.Add(new BlockBit(5, 2));
+                        bits.Add(new BlockBit(6, 2));
+                        bits.Add(new BlockBit(2, 1));
+                        bits.Add(new BlockBit(2, 2));
+                        bits.Add(new BlockBit(7, 1));
+                        bits.Add(new BlockBit(7, 2));
+                        bits.Add(new BlockBit(8, 1));
+                        bits.Add(new BlockBit(8, 2));
+                        bits.Add(new BlockBit(9, 1));
+                        bits.Add(new BlockBit(9, 2));
+                    }
                     break;
-                case 2:
-                    bits[0].x = 3;
-                    bits[0].y = 1;
-                    bits[1].x = 4;
-                    bits[1].y = 1;
-                    bits[2].x = 5;
-                    bits[2].y = 1;
-                    bits[3].x = 4;
-                    bits[3].y = 2;
+                case 2://T
+                    bits.Add(new BlockBit(3, 1));
+                    bits.Add(new BlockBit(4, 1));
+                    bits.Add(new BlockBit(5, 1));
+                    bits.Add(new BlockBit(4, 2));
+                    if (big)
+                    {
+                        bits.Add(new BlockBit(5, 2));
+                        bits.Add(new BlockBit(3, 2));
+                        bits.Add(new BlockBit(2, 1));
+                        bits.Add(new BlockBit(2, 2));
+                        bits.Add(new BlockBit(6, 1));
+                        bits.Add(new BlockBit(7, 1));
+                        bits.Add(new BlockBit(6, 2));
+                        bits.Add(new BlockBit(7, 2));
+                        bits.Add(new BlockBit(4, 3));
+                        bits.Add(new BlockBit(5, 3));
+                        bits.Add(new BlockBit(4, 4));
+                        bits.Add(new BlockBit(5, 4));
+                    }
                     break;
-                case 3:
-                    bits[0].x = 3;
-                    bits[0].y = 1;
-                    bits[1].x = 4;
-                    bits[1].y = 1;
-                    bits[2].x = 5;
-                    bits[2].y = 1;
-                    bits[3].x = 3;
-                    bits[3].y = 2;
+                case 3://L
+                    bits.Add(new BlockBit(3, 1));
+                    bits.Add(new BlockBit(4, 1));
+                    bits.Add(new BlockBit(5, 1));
+                    bits.Add(new BlockBit(3, 2));
+                    if (big)
+                    {
+                        bits.Add(new BlockBit(4, 2));
+                        bits.Add(new BlockBit(5, 2));
+                        bits.Add(new BlockBit(6, 1));
+                        bits.Add(new BlockBit(6, 2));
+                        bits.Add(new BlockBit(2, 1));
+                        bits.Add(new BlockBit(2, 2));
+                        bits.Add(new BlockBit(7, 1));
+                        bits.Add(new BlockBit(7, 2));
+                        bits.Add(new BlockBit(2, 3));
+                        bits.Add(new BlockBit(3, 3));
+                        bits.Add(new BlockBit(2, 4));
+                        bits.Add(new BlockBit(3, 4));
+                    }
                     break;
-                case 4:
-                    bits[0].x = 3;
-                    bits[0].y = 1;
-                    bits[1].x = 4;
-                    bits[1].y = 1;
-                    bits[2].x = 5;
-                    bits[2].y = 1;
-                    bits[3].x = 5;
-                    bits[3].y = 2;
+                case 4://J
+                    bits.Add(new BlockBit(3, 1));
+                    bits.Add(new BlockBit(4, 1));
+                    bits.Add(new BlockBit(5, 1));
+                    bits.Add(new BlockBit(5, 2));
+                    if (big)
+                    {
+                        bits.Add(new BlockBit(4, 2));
+                        bits.Add(new BlockBit(3, 2));
+                        bits.Add(new BlockBit(6, 1));
+                        bits.Add(new BlockBit(6, 2));
+                        bits.Add(new BlockBit(2, 1));
+                        bits.Add(new BlockBit(2, 2));
+                        bits.Add(new BlockBit(7, 1));
+                        bits.Add(new BlockBit(7, 2));
+                        bits.Add(new BlockBit(6, 3));
+                        bits.Add(new BlockBit(7, 3));
+                        bits.Add(new BlockBit(6, 4));
+                        bits.Add(new BlockBit(7, 4));
+                    }
                     break;
-                case 5:
-                    bits[0].x = 3;
-                    bits[0].y = 2;
-                    bits[1].x = 4;
-                    bits[1].y = 2;
-                    bits[2].x = 4;
-                    bits[2].y = 1;
-                    bits[3].x = 5;
-                    bits[3].y = 1;
+                case 5://S
+                    bits.Add(new BlockBit(3, 2));
+                    bits.Add(new BlockBit(4, 2));
+                    bits.Add(new BlockBit(4, 1));
+                    bits.Add(new BlockBit(5, 1));
+                    if (big)
+                    {
+                        bits.Add(new BlockBit(7, 1));
+                        bits.Add(new BlockBit(6, 1));
+                        bits.Add(new BlockBit(6, 2));
+                        bits.Add(new BlockBit(5, 2));
+                        bits.Add(new BlockBit(4, 3));
+                        bits.Add(new BlockBit(5, 3));
+                        bits.Add(new BlockBit(2, 3));
+                        bits.Add(new BlockBit(3, 3));
+                        bits.Add(new BlockBit(4, 4));
+                        bits.Add(new BlockBit(5, 4));
+                        bits.Add(new BlockBit(2, 4));
+                        bits.Add(new BlockBit(3, 4));
+                    }
                     break;
-                case 6:
-                    bits[0].x = 3;
-                    bits[0].y = 1;
-                    bits[1].x = 4;
-                    bits[1].y = 1;
-                    bits[2].x = 4;
-                    bits[2].y = 2;
-                    bits[3].x = 5;
-                    bits[3].y = 2;
+                case 6://Z
+                    bits.Add(new BlockBit(3, 1));
+                    bits.Add(new BlockBit(4, 1));
+                    bits.Add(new BlockBit(4, 2));
+                    bits.Add(new BlockBit(5, 2));
+                    if (big)
+                    {
+                        bits.Add(new BlockBit(3, 2));
+                        bits.Add(new BlockBit(2, 1));
+                        bits.Add(new BlockBit(2, 2));
+                        bits.Add(new BlockBit(5, 1));
+                        bits.Add(new BlockBit(4, 3));
+                        bits.Add(new BlockBit(5, 3));
+                        bits.Add(new BlockBit(6, 3));
+                        bits.Add(new BlockBit(7, 3));
+                        bits.Add(new BlockBit(4, 4));
+                        bits.Add(new BlockBit(5, 4));
+                        bits.Add(new BlockBit(6, 4));
+                        bits.Add(new BlockBit(7, 4));
+                    }
                     break;
-                case 7:
-                    bits[0].x = 4;
-                    bits[0].y = 1;
-                    bits[1].x = 5;
-                    bits[1].y = 1;
-                    bits[2].x = 5;
-                    bits[2].y = 2;
-                    bits[3].x = 4;
-                    bits[3].y = 2;
+                case 7://O
+                    bits.Add(new BlockBit(4, 1));
+                    bits.Add(new BlockBit(5, 1));
+                    bits.Add(new BlockBit(5, 2));
+                    bits.Add(new BlockBit(4, 2));
+                    if (big)
+                    {
+                        bits.Add(new BlockBit(6, 1));
+                        bits.Add(new BlockBit(7, 1));
+                        bits.Add(new BlockBit(6, 2));
+                        bits.Add(new BlockBit(7, 2));
+                        bits.Add(new BlockBit(4, 3));
+                        bits.Add(new BlockBit(4, 4));
+                        bits.Add(new BlockBit(5, 3));
+                        bits.Add(new BlockBit(5, 4));
+                        bits.Add(new BlockBit(6, 3));
+                        bits.Add(new BlockBit(7, 3));
+                        bits.Add(new BlockBit(6, 4));
+                        bits.Add(new BlockBit(7, 4));
+                    }
                     break;
             }
         }
 
         public Tetromino clone()
         {
-            Tetromino newTet = new Tetromino(id);
-            for (int i = 0; i < 4; i++ )
+            Tetromino newTet = new Tetromino(id, large);
+            for (int i = 0; i < bits.Count; i++ )
             {
                 int x, y;
                 for (x = 0; x < bits[i].x; x++ )
                 {
-                    
                 }
                 for (y = 0; y < bits[i].y; y++ )
                 {
-
                 }
+
                 newTet.bits[i].x = x;
                 newTet.bits[i].y = y;
             }

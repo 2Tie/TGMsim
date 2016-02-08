@@ -154,7 +154,7 @@ namespace TGMsim
 
             Random random = new Random();
 
-            activeTet = new Tetromino(0); //first piece cannot be S, Z, or O
+            activeTet = new Tetromino(0, false); //first piece cannot be S, Z, or O
             //for (int j = 0; j < lastTet.Count - 1; j++)
             //{
             //    lastTet[j] = lastTet[j + 1];
@@ -283,7 +283,7 @@ namespace TGMsim
 
             //GUI
             drawBuffer.FillRectangle(new SolidBrush(Color.White), 600, 200, 60, 8);
-            drawBuffer.FillRectangle(new SolidBrush(Color.Orange), 600, 200, (int)Math.Round((double)ruleset.gravTableTGM1[gravLevel] / Math.Pow(256,ruleset.gravType + 1) * 20) * 60, 8);
+            drawBuffer.FillRectangle(new SolidBrush(Color.Orange), 600, 200, (int)Math.Round((double)ruleset.gravTableTGM1[gravLevel] * 60 / (Math.Pow(256, ruleset.gravType + 1) * 20)), 8);
             if (mode.g20 == true || ruleset.gravTableTGM1[gravLevel] == Math.Pow(256, ruleset.gravType + 1) * 20)
                 drawBuffer.FillRectangle(new SolidBrush(Color.Red), 600, 200, 60, 8);
 
@@ -361,7 +361,7 @@ namespace TGMsim
             drawBuffer.DrawString(string.Format("{0,2:00}:{1,2:00}:{2,2:00}", min, sec, msec10), SystemFonts.DefaultFont, debugBrush, 100, 700);
 
             //tets
-            drawBuffer.DrawString(lastTet[0] + " " + lastTet[1] + " " + lastTet[2] + " " + lastTet[3], SystemFonts.DefaultFont, debugBrush, 100, 720);
+            drawBuffer.DrawString("20G: " + g20 + " Big: " + mode.bigmode, SystemFonts.DefaultFont, debugBrush, 100, 720);
 #endif
         }
 
@@ -673,12 +673,20 @@ namespace TGMsim
                                                     playMusic("Level 2");
                                                 }
                                                 if (curSection == 5)
+                                                {
+                                                    stopMusic();
                                                     playMusic("Level 3");
+                                                }
                                                 if (curSection == 8)
+                                                {
+                                                    stopMusic();
                                                     playMusic("Level 4");
+                                                }
                                                 if (curSection == 10)
+                                                {
                                                     stopMusic();
                                                     playMusic("Level 5");
+                                                }
 
                                                 //DELAYS
                                                 if (ruleset.gameRules == 2)
@@ -876,14 +884,14 @@ namespace TGMsim
                             Tetromino tempTet;
                             if (heldPiece != null)
                             {
-                                tempTet = new Tetromino(heldPiece.id);
-                                heldPiece = new Tetromino(activeTet.id);
+                                tempTet = new Tetromino(heldPiece.id, mode.bigmode);
+                                heldPiece = new Tetromino(activeTet.id, false);
                                 activeTet = tempTet;
                                 groundTimer = ruleset.baseLock;
                             }
                             else
                             {
-                                heldPiece = new Tetromino(activeTet.id);
+                                heldPiece = new Tetromino(activeTet.id, false);
                                 spawnPiece();
                                 currentTimer = (int)Field.timerType.ARE;
                                 timerCount = ruleset.baseARE;
@@ -900,15 +908,18 @@ namespace TGMsim
                         if (pad.inputH == 1 && (inputDelayH < 1 || inputDelayH == ruleset.baseDAS))
                         {
                             bool safe = true;
+                            int dst = 1;
+                            if (mode.bigmode)
+                                dst = 2;
                             //check to the right of each bit
                             for (int i = 0; i < activeTet.bits.Count; i++)
                             {
-                                if (activeTet.bits[i].x + 1 == 10)
+                                if (activeTet.bits[i].x + dst > 9)
                                 {
                                     safe = false;
                                     break;
                                 }
-                                if (gameField[activeTet.bits[i].x + 1][activeTet.bits[i].y] != 0)
+                                if (gameField[activeTet.bits[i].x + dst][activeTet.bits[i].y] != 0)
                                 {
                                     safe = false;
                                     break;
@@ -918,22 +929,25 @@ namespace TGMsim
                             {
                                 for (int i = 0; i < activeTet.bits.Count; i++)
                                 {
-                                    activeTet.bits[i].x++;
+                                    activeTet.bits[i].x += dst;
                                 }
                             }
                         }
                         else if (pad.inputH == -1 && (inputDelayH < 1 || inputDelayH == ruleset.baseDAS))
                         {
                             bool safe = true;
+                            int dst = 1;
+                            if (mode.bigmode)
+                                dst = 2;
                             //check to the right of each bit
                             for (int i = 0; i < activeTet.bits.Count; i++)
                             {
-                                if (activeTet.bits[i].x - 1 == -1)
+                                if (activeTet.bits[i].x - dst < 0)
                                 {
                                     safe = false;
                                     break;
                                 }
-                                if (gameField[activeTet.bits[i].x - 1][activeTet.bits[i].y] != 0)
+                                if (gameField[activeTet.bits[i].x - dst][activeTet.bits[i].y] != 0)
                                 {
                                     safe = false;
                                     break;
@@ -943,7 +957,7 @@ namespace TGMsim
                             {
                                 for (int i = 0; i < activeTet.bits.Count; i++)
                                 {
-                                    activeTet.bits[i].x -= 1;
+                                    activeTet.bits[i].x -= dst;
                                 }
                             }
                         }
@@ -1002,6 +1016,8 @@ namespace TGMsim
             if (ruleset.nextNum > 0)
             {
                 activeTet = nextTet[0];
+                if (mode.bigmode && activeTet.id == 5)
+                    activeTet.bits[0].x = 7;
                 groundTimer = ruleset.baseLock;
                 for (int i = 0; i < nextTet.Count - 1; i++)
                 {
@@ -1243,11 +1259,11 @@ namespace TGMsim
                                     break;
                                 case 1:
                                     //TODO: test for upkick if TGM3
-                                    if (ruleset.gameRules == 4 && ((gameField[tet.bits[0].x - 1 + xOffset][tet.bits[0].y] != 0 || gameField[tet.bits[0].x + 1 + xOffset][tet.bits[0].y] != 0) && tet.kicked == 0))
-                                    {
-                                        yOffset = -1;
-                                        tet.kicked = 1;
-                                    }
+                                    //if (ruleset.gameRules == 4 && ((gameField[tet.bits[0].x + xOffset][tet.bits[0].y - 1] != 0 || gameField[tet.bits[0].x + 1 + xOffset][tet.bits[0].y] != 0) && tet.kicked == 0))
+                                    //{
+                                    //    yOffset = -1;
+                                    //    tet.kicked = 1;
+                                    //}
 
                                     for (int i = 1; i < 4; i++)
                                     {
@@ -2124,7 +2140,7 @@ namespace TGMsim
                 lastTet[j] = lastTet[j + 1];
             }
 
-            Tetromino tempTet = new Tetromino(tempID);
+            Tetromino tempTet = new Tetromino(tempID, mode.bigmode);
             lastTet[lastTet.Count - 1] = tempTet.id;
 
             return tempTet;
@@ -2133,7 +2149,7 @@ namespace TGMsim
         public bool emptyUnderTet(Tetromino tet)
         {
             bool status = true;
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < tet.bits.Count; i++)
             {
                 if (gameField[tet.bits[i].x][tet.bits[i].y] != 0)
                 {
@@ -2150,7 +2166,7 @@ namespace TGMsim
             for (g = 0; g < i; g++)
             {
                 bool breakout = false;
-                for (int p = 0; p < 4; p++)
+                for (int p = 0; p < tet.bits.Count; p++)
                 {
                     if (gameField[tet.bits[p].x][tet.bits[p].y + g] != 0)
                     {
@@ -2159,7 +2175,7 @@ namespace TGMsim
                         break;
                     }
                 }
-                for (int p = 0; p < 4; p++)
+                for (int p = 0; p < tet.bits.Count; p++)
                 {
                     if (tet.bits[p].y + g == 20)
                     {
@@ -2171,7 +2187,7 @@ namespace TGMsim
                 if (breakout)
                     break;
             }
-            for (int p = 0; p < 4; p++)
+            for (int p = 0; p < tet.bits.Count; p++)
             {
                 tet.bits[p].y += g;
             }
@@ -2179,7 +2195,7 @@ namespace TGMsim
             //failsafe for now, ugh
             if (!emptyUnderTet(tet))
             {
-                for (int p =0; p < 4; p++)
+                for (int p =0; p < tet.bits.Count; p++)
                 {
                     tet.bits[p].y--;
                 }

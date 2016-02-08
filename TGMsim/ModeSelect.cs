@@ -69,6 +69,7 @@ namespace TGMsim
                     break;
             }
             drawBuffer.DrawString(game.ToString(), SystemFonts.DefaultFont, new SolidBrush(Color.White), 200, 700);
+            drawBuffer.DrawString(selection.ToString(), SystemFonts.DefaultFont, new SolidBrush(Color.White), 200, 700);
         }
     }
 }
