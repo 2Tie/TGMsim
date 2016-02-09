@@ -14,5 +14,10 @@ namespace TGMsim
             x = newX;
             y = newY;
         }
+        public void move(int offX, int offY)
+        {
+            x += offX;
+            y += offY;
+        }
     }
 }
