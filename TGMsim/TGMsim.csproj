@@ -32,11 +32,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NAudio">
-      <HintPath>..\..\..\Visual Studio 2013\NAudio.dll</HintPath>
+    <Reference Include="NAudio, Version=1.7.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>include\NAudio.dll</HintPath>
     </Reference>
-    <Reference Include="NAudio.Vorbis">
-      <HintPath>..\..\..\Visual Studio 2013\NAudio.Vorbis.dll</HintPath>
+    <Reference Include="NAudio.Vorbis, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>include\NAudio.Vorbis.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="System" />
@@ -85,7 +87,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <None Include="Audio\level 5.ogg" />
+    <None Include="Audio\level 5.ogg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -99,23 +103,59 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
-    <Content Include="Audio\SE\SEB_disappear.wav" />
-    <Content Include="Audio\SE\SEB_fall.wav" />
-    <Content Include="Audio\SE\SEB_fixa.wav" />
-    <Content Include="Audio\SE\SEB_instal.wav" />
-    <Content Include="Audio\SE\SEB_mino1.wav" />
-    <Content Include="Audio\SE\SEB_mino2.wav" />
-    <Content Include="Audio\SE\SEB_mino3.wav" />
-    <Content Include="Audio\SE\SEB_mino4.wav" />
-    <Content Include="Audio\SE\SEB_mino5.wav" />
-    <Content Include="Audio\SE\SEB_mino6.wav" />
-    <Content Include="Audio\SE\SEB_mino7.wav" />
-    <Content Include="Audio\SE\SEB_prerotate.wav" />
-    <Content Include="Audio\SE\SEP_go.wav" />
-    <Content Include="Audio\SE\SEP_levelchange.wav" />
-    <Content Include="Audio\SE\SEP_ready.wav" />
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Audio\SE\SEB_disappear.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Audio\SE\SEB_fall.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Audio\SE\SEB_fixa.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Audio\SE\SEB_instal.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Audio\SE\SEB_mino1.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Audio\SE\SEB_mino2.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Audio\SE\SEB_mino3.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Audio\SE\SEB_mino4.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Audio\SE\SEB_mino5.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Audio\SE\SEB_mino6.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Audio\SE\SEB_mino7.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Audio\SE\SEB_prerotate.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Audio\SE\SEP_go.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Audio\SE\SEP_levelchange.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Audio\SE\SEP_ready.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="include\NAudio.dll" />
+    <Content Include="include\NAudio.Vorbis.dll" />
+    <Content Include="include\NAudio.WindowsMediaFormat.dll" />
+    <Content Include="include\NVorbis.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -569,11 +569,15 @@ namespace TGMsim
                                         {
                                             combo = combo + (2 * full.Count) - 2;
                                             if (!inCredits)
-                                                score += ((int)Math.Ceiling((double)(level + full.Count) / 4) + softCounter) * full.Count * ((full.Count * 2) - 1) * bravo;
-                                            if (comboing)
-                                                score *= combo;
-                                            else
-                                                combo = 1;
+                                            {
+                                                if (softCounter > 20)
+                                                    throw new IndexOutOfRangeException();
+                                                int newscore = ((int)Math.Ceiling((double)level + full.Count / 4) + softCounter) * full.Count * ((full.Count * 2) - 1) * bravo;
+                                                if (comboing)
+                                                    newscore *= combo;
+
+                                                score += newscore;
+                                            }
                                         }
                                         else
                                         {
@@ -1219,7 +1223,7 @@ namespace TGMsim
                             }
                             break;
                         case 1:
-                            if (tet.bits[2].x - 2 >= 0 && tet.bits[2].x + 1 <= 9)
+                            if (tet.bits[2].x - (2 * bigOffset) >= 0 && tet.bits[2].x + (1 * bigOffset) <= 9)
                             {
                                 if (gameField[tet.bits[2].x - (2 * bigOffset)][tet.bits[2].y] == 0 && gameField[tet.bits[2].x - (1 * bigOffset)][tet.bits[2].y] == 0 && gameField[tet.bits[2].x + (1 * bigOffset)][tet.bits[2].y] == 0)
                                 {
@@ -1267,24 +1271,24 @@ namespace TGMsim
                             {
                                 case 0:
                                     //test for OoB bump
-                                    if (tet.bits[1].y - 1 < 0)
+                                    if (tet.bits[1].y - (1 * bigOffset) < 0)
                                     {
-                                        yOffset = 1;
+                                        yOffset = (1 * bigOffset);
                                     }
                                     else
                                     {
-                                        if (gameField[tet.bits[1].x][tet.bits[1].y - 1] != 0) //test no-spin scenarios
+                                        if (gameField[tet.bits[1].x][tet.bits[1].y - (1 * bigOffset)] != 0) //test no-spin scenarios
                                         {
                                             break;
                                         }
                                     }
                                     for (int i = 1; i < 4; i++) //test the three x locations
                                     {
-                                        if (tet.bits[1].x - 1 + ((i % 3) - 1) < 0 || tet.bits[1].x + 1 + ((i % 3) - 1) > 9)//test for OoB shenanigans
+                                        if (tet.bits[1].x - ((1 + ((i % 3) - 1)) * bigOffset) < 0 || tet.bits[1].x + ((1 + ((i % 3) - 1)) * bigOffset) > 9)//test for OoB shenanigans
                                         {
                                             continue;
                                         }
-                                        if (gameField[tet.bits[0].x + 1 + ((i % 3) - 1)][tet.bits[0].y - 1 + yOffset] == 0 && gameField[tet.bits[1].x + ((i % 3) - 1)][tet.bits[1].y + yOffset] == 0 && gameField[tet.bits[2].x + ((i % 3) - 1)][tet.bits[2].y + yOffset] == 0 && gameField[tet.bits[3].x + ((i % 3) - 1)][tet.bits[3].y + yOffset] == 0)
+                                        if (gameField[tet.bits[0].x + ((1 + ((i % 3) - 1)) * bigOffset)][tet.bits[0].y - (1 * bigOffset) + yOffset] == 0 && gameField[tet.bits[1].x + ((((i % 3) - 1)) * bigOffset)][tet.bits[1].y + yOffset] == 0 && gameField[tet.bits[2].x + ((((i % 3) - 1)) * bigOffset)][tet.bits[2].y + yOffset] == 0 && gameField[tet.bits[3].x + ((((i % 3) - 1)) * bigOffset)][tet.bits[3].y + yOffset] == 0)
                                         {
                                             tet.bits[0].x += 1 + ((i % 3) - 1);
                                             tet.bits[0].y += 1 + yOffset;
@@ -1294,6 +1298,11 @@ namespace TGMsim
                                             tet.bits[2].y += -1 + yOffset;
                                             tet.bits[3].x += 1 + ((i % 3) - 1);
                                             tet.bits[3].y += -1 + yOffset;
+
+                                            if (mode.bigmode)
+                                            {
+                                                
+                                            }
 
                                             tet.rotation = 1;
 
@@ -2038,10 +2047,10 @@ namespace TGMsim
                     switch (tet.rotation)
                     {
                         case 0:
-                            if (tet.bits[0].y - 2 < 0)
+                            if (tet.bits[0].y - (2 * bigOffset) < 0)
                             {
                                 //set an offset
-                                yOffset = 1;
+                                yOffset = (1 * bigOffset);
                             }
                             else
                             {
@@ -2050,11 +2059,11 @@ namespace TGMsim
 
                             for (int i = 1; i < 4; i++)
                             {
-                                if (tet.bits[1].x - 1 + ((i % 3) - 1) < 0 || tet.bits[1].x + 1 + ((i % 3) - 1) > 9)//test for OoB shenanigans
+                                if (tet.bits[1].x - ((1 + ((i % 3) - 1)) * bigOffset) < 0 || tet.bits[1].x + ((1 + ((i % 3) - 1)) * bigOffset) > 9)//test for OoB shenanigans
                                 {
                                     continue;
                                 }
-                                if (gameField[tet.bits[0].x + ((i % 3) - 1)][tet.bits[0].y - 2 + yOffset] == 0 && gameField[tet.bits[0].x + ((i % 3) - 1)][tet.bits[0].y - 1 + yOffset] == 0 && gameField[tet.bits[1].x + ((i % 3) - 1)][tet.bits[1].y + yOffset] == 0 && gameField[tet.bits[2].x + ((i % 3) - 1)][tet.bits[2].y + yOffset] == 0)
+                                if (gameField[tet.bits[0].x + (((i % 3) - 1) * bigOffset)][tet.bits[0].y - (2 * bigOffset) + yOffset] == 0 && gameField[tet.bits[0].x + (((i % 3) - 1) * bigOffset)][tet.bits[0].y - (1 * bigOffset) + yOffset] == 0 && gameField[tet.bits[1].x + (((i % 3) - 1) * bigOffset)][tet.bits[1].y + yOffset] == 0 && gameField[tet.bits[2].x + (((i % 3) - 1) * bigOffset)][tet.bits[2].y + yOffset] == 0)
                                 {
                                     tet.bits[0].x += 1 + ((i % 3) - 1);
                                     tet.bits[0].y += yOffset;
@@ -2065,6 +2074,21 @@ namespace TGMsim
                                     tet.bits[3].x += -2 + ((i % 3) - 1);
                                     tet.bits[3].y += (yOffset - 1);
 
+                                    if (mode.bigmode)
+                                    {
+                                        tet.bits[0].move(-5, -3);
+                                        tet.bits[4].move(-5, -2);
+                                        tet.bits[5].move(-4, -1);
+                                        tet.bits[6].move(-4, -1);
+                                        tet.bits[7].move(0, -1);
+                                        tet.bits[8].move(0, -1);
+                                        tet.bits[9].move(0, -1);
+                                        tet.bits[10].move(0, -1);
+                                        tet.bits[11].move(0, -1);
+                                        tet.bits[14].move(2, -1);
+                                        tet.bits[15].move(2, -1);
+                                    }
+
                                     tet.rotation = 1;
 
                                     break;
@@ -2074,11 +2098,11 @@ namespace TGMsim
                         case 1:
                             for (int i = 1; i < 4; i++)
                             {
-                                if (tet.bits[1].x - 1 + ((i % 3) - 1) < 0 || tet.bits[1].x + 1 + ((i % 3) - 1) > 9)//test for OoB shenanigans
+                                if (tet.bits[1].x - ((1 + ((i % 3) - 1)) * bigOffset) < 0 || tet.bits[1].x + ((1 + ((i % 3) - 1)) * bigOffset) > 9)//test for OoB shenanigans
                                 {
                                     continue;
                                 }
-                                if (gameField[tet.bits[0].x - 1 + xOffset + ((i % 3) - 1)][tet.bits[0].y] == 0 && gameField[tet.bits[0].x + xOffset + ((i % 3) - 1)][tet.bits[0].y] == 0 && gameField[tet.bits[0].x + xOffset + ((i % 3) - 1)][tet.bits[0].y - 1] == 0 && gameField[tet.bits[0].x + 1 + xOffset + ((i % 3) - 1)][tet.bits[0].y - 1] == 0)
+                                if (gameField[tet.bits[0].x - ((1 + xOffset + ((i % 3) - 1)) * bigOffset)][tet.bits[0].y] == 0 && gameField[tet.bits[0].x + ((xOffset + ((i % 3) - 1)) * bigOffset)][tet.bits[0].y] == 0 && gameField[tet.bits[0].x + ((xOffset + ((i % 3) - 1)) * bigOffset)][tet.bits[0].y - (1 * bigOffset)] == 0 && gameField[tet.bits[0].x + ((1 + xOffset + ((i % 3) - 1)) * bigOffset)][tet.bits[0].y - (1 * bigOffset)] == 0)
                                 {
                                     tet.bits[2].x += 1 + xOffset + ((i % 3) - 1);
                                     tet.bits[1].y += 1;
@@ -2086,6 +2110,21 @@ namespace TGMsim
                                     tet.bits[0].x += -1 + xOffset + ((i % 3) - 1);
                                     tet.bits[3].x += 2 + xOffset + ((i % 3) - 1);
                                     tet.bits[3].y += 1;
+
+                                    if (mode.bigmode)
+                                    {
+                                        tet.bits[0].move(5, 3);
+                                        tet.bits[4].move(5, 2);
+                                        tet.bits[5].move(4, 1);
+                                        tet.bits[6].move(4, 1);
+                                        tet.bits[7].move(0, 1);
+                                        tet.bits[8].move(0, 1);
+                                        tet.bits[9].move(0, 1);
+                                        tet.bits[10].move(0, 1);
+                                        tet.bits[11].move(0, 1);
+                                        tet.bits[14].move(-2, 1);
+                                        tet.bits[15].move(-2, 1);
+                                    }
 
                                     tet.rotation = 0;
 
