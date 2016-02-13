@@ -1093,7 +1093,7 @@ namespace TGMsim
                 intRot += 1;
             if (pad.inputPressedRot2)
                 intRot -= 1;
-            if (intRot != 0)
+            if (intRot != 0 && activeTet.id != 7)
             {
                 rotatePiece(activeTet, intRot);
                 playSound(s_PreRot);
@@ -1116,7 +1116,7 @@ namespace TGMsim
 
         private void endGame()
         {
-            if (godmode == true && level != mode.endLevel)
+            if (godmode == true && !inCredits)
             {
                 gameField = new List<List<int>>();
                 for (int i = 0; i < 10; i++)
@@ -1137,7 +1137,7 @@ namespace TGMsim
                 stopMusic();
                 results = new GameResult();
                 results.game = ruleset.gameRules - 1;
-                results.username = "TEST";
+                results.username = "CHEATS";
                 if (ruleset.gameRules == 1)
                     results.grade = grade;
                 else
