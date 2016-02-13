@@ -282,10 +282,58 @@ namespace TGMsim
 
 
             //GUI
-            drawBuffer.FillRectangle(new SolidBrush(Color.White), 600, 200, 60, 8);
-            drawBuffer.FillRectangle(new SolidBrush(Color.Orange), 600, 200, (int)Math.Round((double)ruleset.gravTableTGM1[gravLevel] * 60 / (Math.Pow(256, ruleset.gravType + 1) * 20)), 8);
+            Color gravColor, gravMeter;
+            switch (ruleset.gameRules)
+            {
+                case 1:
+                    gravColor = Color.White;
+                    gravMeter = Color.Teal;
+                    break;
+                case 3:
+                    gravColor = Color.Green;
+                    gravMeter = Color.Orange;
+                    break;
+                default:
+                    gravColor = Color.White;
+                    gravMeter = Color.Orange;
+                    break;
+
+            }
+
+
+            drawBuffer.FillRectangle(new SolidBrush(gravColor), 600, 550, 60, 8);
+            drawBuffer.FillRectangle(new SolidBrush(gravMeter), 600, 550, (int)Math.Round(((double)ruleset.gravTableTGM1[gravLevel] * 60) / ((Math.Pow(256, ruleset.gravType + 1) * 20))), 8);
             if (mode.g20 == true || ruleset.gravTableTGM1[gravLevel] == Math.Pow(256, ruleset.gravType + 1) * 20)
-                drawBuffer.FillRectangle(new SolidBrush(Color.Red), 600, 200, 60, 8);
+                drawBuffer.FillRectangle(new SolidBrush(Color.Red), 600, 550, 60, 8);
+
+            //SMALL TEXT
+            //levels
+            drawBuffer.DrawString(level.ToString(), SystemFonts.DefaultFont, new SolidBrush(Color.White), 610, 530);
+            drawBuffer.DrawString(mode.sections[curSection].ToString(), SystemFonts.DefaultFont, new SolidBrush(Color.White), 610, 570);
+
+            drawBuffer.DrawString(score.ToString(), SystemFonts.DefaultFont, new SolidBrush(Color.White), 610, 400);
+
+            if (ruleset.gameRules == 1)
+            {
+                drawBuffer.DrawString("Next Grade:", SystemFonts.DefaultFont, new SolidBrush(Color.White), 600, 240);
+                if (grade != ruleset.gradePointsTGM1.Count)
+                    drawBuffer.DrawString(ruleset.gradePointsTGM1[grade + 1].ToString(), SystemFonts.DefaultFont, new SolidBrush(Color.White), 600, 260);
+                else
+                    drawBuffer.DrawString("999", SystemFonts.DefaultFont, new SolidBrush(Color.White), 600, 260);
+            }
+
+            if (godmode)
+                drawBuffer.DrawString("GodMode", SystemFonts.DefaultFont, new SolidBrush(Color.Orange), 20, 680);
+            if (g0)
+                drawBuffer.DrawString("0G Mode", SystemFonts.DefaultFont, new SolidBrush(Color.Orange), 20, 700);
+            if (mode.bigmode)
+                drawBuffer.DrawString("Big Mode", SystemFonts.DefaultFont, new SolidBrush(Color.Orange), 20, 720);
+
+            //BIGGER TEXT
+            drawBuffer.DrawString("Points", SystemFonts.DefaultFont, new SolidBrush(Color.White), 600, 380);
+
+            //GRADE TEXT
+            drawBuffer.DrawString(ruleset.gradesTGM1[grade].ToString(), SystemFonts.DefaultFont, new SolidBrush(Color.White), 600, 100);
 
             //Starting things
             if (starting == 2)
