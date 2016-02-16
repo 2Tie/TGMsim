@@ -86,7 +86,7 @@ namespace TGMsim
         {
 
             switch (menuState) //clean up the current menu
-            {  //title, login, game select, mode select, ingame, results, hiscore roll, custom game, settings
+            {  //title, login, game select, mode select, ingame, results, hiscore roll, custom game, settings, cheats
                 case 0:
                     break;
                 case 1:
@@ -96,7 +96,7 @@ namespace TGMsim
             }
 
             switch (newMenu) //activate the new menu
-            {  //title, login, game select, mode select, ingame, results, hiscore roll, custom game, settings
+            {  //title, login, game select, mode select, ingame, results, hiscore roll, custom game, settings, cheats
                 case 0:
                     menuState = 0;
                     FPS = 60.00;
@@ -156,6 +156,9 @@ namespace TGMsim
                 case 8:
                     menuState = 8;
                     playMusic("settings");
+                    break;
+                case 9:
+                    menuState = 9;
                     break;
             }
 
@@ -271,6 +274,27 @@ namespace TGMsim
                     if (pad1.inputPressedRot2)
                         changeMenu(2);
                     break;
+                case 9://cheats
+                    if (pad1.inputPressedRot1 || pad1.inputPressedRot2 || pad1.inputPressedRot3)
+                        changeMenu(2);
+                    if (pad1.inputH == 1)
+                    //set current cheat to on
+                    { 
+
+                    }
+                    if (pad1.inputH == -1)//set current cheat off
+                    {
+
+                    }
+                    if (pad1.inputV == 1)//go up a cheat
+                    {
+
+                    }
+                    if (pad1.inputV == -1)//go down a cheat
+                    {
+
+                    }
+                    break;
             }
         }
 
@@ -283,7 +307,10 @@ namespace TGMsim
             {
                 pad1.inputStart = 0;
                 player = login.temp;
-                changeMenu(2);
+                if (player.name == "   ")
+                    changeMenu(9);
+                else
+                    changeMenu(2);
             }
         }
 
@@ -353,6 +380,9 @@ namespace TGMsim
                         break;
                 case 8:
                     drawBuffer.DrawString("preferences", DefaultFont, new SolidBrush(Color.White), 100, 20);
+                    break;
+                case 9:
+                    drawBuffer.DrawString("cheats", DefaultFont, new SolidBrush(Color.White), 100, 20);
                     break;
             }
             if (menuState > 1)
