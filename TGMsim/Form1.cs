@@ -35,6 +35,7 @@ namespace TGMsim
         Login login;
         GameSelect gSel;
         ModeSelect mSel;
+        CheatMenu cMen;
 
         List<List<GameResult>> hiscoreTable = new List<List<GameResult>>();
         bool saved;
@@ -59,6 +60,8 @@ namespace TGMsim
             hiscoreTable.Add(new List<GameResult>());
             hiscoreTable.Add(new List<GameResult>());
             hiscoreTable.Add(new List<GameResult>());
+
+            cMen = new CheatMenu();
 
             graphics = this.CreateGraphics();
             drawBuffer = Graphics.FromImage(imgBuffer);
@@ -138,12 +141,15 @@ namespace TGMsim
                     Mode m = new Mode();
                     stopMusic();
                     m.setMode(mSel.selection);
+                    if (player.name == "   ")
+                        m.bigmode = cMen.cheats[3];
                     field1 = new Field(pad1, rules, m, musicStream);
                     if (player.name == "   ")
                     {
                         field1.cheating = true;
-                        field1.godmode = true;
-                        field1.g0 = true;
+                        field1.godmode = cMen.cheats[0];
+                        field1.g20 = cMen.cheats[1];
+                        field1.g0 = cMen.cheats[2];
                     }
                     break;
 
@@ -277,23 +283,7 @@ namespace TGMsim
                 case 9://cheats
                     if (pad1.inputPressedRot1 || pad1.inputPressedRot2 || pad1.inputPressedRot3)
                         changeMenu(2);
-                    if (pad1.inputH == 1)
-                    //set current cheat to on
-                    { 
-
-                    }
-                    if (pad1.inputH == -1)//set current cheat off
-                    {
-
-                    }
-                    if (pad1.inputV == 1)//go up a cheat
-                    {
-
-                    }
-                    if (pad1.inputV == -1)//go down a cheat
-                    {
-
-                    }
+                    cMen.logic(pad1);
                     break;
             }
         }
@@ -383,6 +373,7 @@ namespace TGMsim
                     break;
                 case 9:
                     drawBuffer.DrawString("cheats", DefaultFont, new SolidBrush(Color.White), 100, 20);
+                    cMen.render(drawBuffer);
                     break;
             }
             if (menuState > 1)

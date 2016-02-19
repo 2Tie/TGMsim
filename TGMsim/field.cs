@@ -154,7 +154,7 @@ namespace TGMsim
 
             Random random = new Random();
 
-            activeTet = new Tetromino(0, false); //first piece cannot be S, Z, or O
+            activeTet = new Tetromino(0, mode.bigmode); //first piece cannot be S, Z, or O
             //for (int j = 0; j < lastTet.Count - 1; j++)
             //{
             //    lastTet[j] = lastTet[j + 1];
@@ -183,6 +183,9 @@ namespace TGMsim
                     break;
                 case 2:
                     frameColour = Color.DarkBlue;
+                    break;
+                case 3:
+                    frameColour = Color.DarkGreen;
                     break;
             }
 
