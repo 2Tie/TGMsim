@@ -17,7 +17,7 @@ namespace TGMsim
         bool registering;
         int menuSelection;
         public bool loggedin = false;
-        int delaytimer = 5;
+        int delaytimer = 10;
         int lastinput = 0;
         bool startPressed = false;
         int loginErr;
@@ -36,7 +36,7 @@ namespace TGMsim
                     if ((pad1.inputRot1 | pad1.inputRot3) == 1)
                     {
                         menuSelection += 1;
-                        delaytimer = 5;
+                        delaytimer = 10;
                         if (menuSelection == 3) //then check if it's a registered nick, else register it!
                         {
                             temp.name = getLetter(username[0]) + getLetter(username[1]) + getLetter(username[2]);
@@ -61,13 +61,13 @@ namespace TGMsim
                     else if (pad1.inputRot2 == 1 && menuSelection != 0)
                     {
                         menuSelection -= 1;
-                        delaytimer = 5;
+                        delaytimer = 10;
                     }
 
                     if (pad1.inputH == 1)
                     {
                         username[menuSelection] = (username[menuSelection] + 1) % 46; //increase the currently selected letter
-                        delaytimer = 5;
+                        delaytimer = 10;
                     }
                     else if (pad1.inputH == -1)
                     {
@@ -77,7 +77,7 @@ namespace TGMsim
                         {
                             username[menuSelection] = 45;
                         }
-                        delaytimer = 5;
+                        delaytimer = 10;
                     }
                 }
                 else //password stuff
