@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Input;
 using System.IO;
+using System.Drawing.Text;
 
 namespace TGMsim
 {
@@ -27,7 +28,9 @@ namespace TGMsim
         Graphics graphics, drawBuffer;
 
         Profile player;
-        
+
+        PrivateFontCollection fonts = new PrivateFontCollection();
+        Font f_Maestro;
 
         int menuState = 0; //title, login, game select, mode select, ingame, results, hiscore roll, custom game, settings
 
@@ -53,6 +56,9 @@ namespace TGMsim
             this.ClientSize = new Size(1280, 780);
 
             interval = (long)TimeSpan.FromSeconds(1.0 / FPS).TotalMilliseconds;
+            fonts.AddFontFile(@"Res\AmaticSC-Regular.ttf");
+            FontFamily test = fonts.Families[0];
+            f_Maestro = new System.Drawing.Font(test.Name, 12, GraphicsUnit.Pixel);
 
             imgBuffer = (Image)new Bitmap(this.ClientSize.Width, this.ClientSize.Height);
 
@@ -281,7 +287,7 @@ namespace TGMsim
                         changeMenu(2);
                     break;
                 case 9://cheats
-                    if (pad1.inputPressedRot1 || pad1.inputPressedRot2 || pad1.inputPressedRot3)
+                    if (pad1.inputStart == 1)
                         changeMenu(2);
                     cMen.logic(pad1);
                     break;
@@ -324,7 +330,7 @@ namespace TGMsim
             {
                 case 0:
                     drawBuffer.DrawString("TGM sim title screen thingy", DefaultFont, new SolidBrush(Color.White), 500, 300);
-                    drawBuffer.DrawString("Press Start", DefaultFont, new SolidBrush(Color.White), 550, 400);
+                    drawBuffer.DrawString("PRESS START", f_Maestro, new SolidBrush(Color.White), 550, 400);
                     break;
                 case 1:
                     drawBuffer.DrawString("login", DefaultFont, new SolidBrush(Color.White), 100, 20);
@@ -492,7 +498,7 @@ namespace TGMsim
             hiscoreTable[g].RemoveAt(hiscoreTable[g].Count - 1);
 
             //TODO: write to the file
-            string hiFile = "gm" + (g+1) + ".dat";
+            string hiFile = "Sav/gm" + (g+1) + ".dat";
             File.Delete(hiFile);
             using (FileStream fsStream = new FileStream(hiFile, FileMode.Create))
             using (BinaryWriter sw = new BinaryWriter(fsStream, Encoding.UTF8))
@@ -517,7 +523,7 @@ namespace TGMsim
         
         private void loadHiscores (int game)
         {
-            string filename = "gm" + game.ToString() + ".dat";
+            string filename = "Sav/gm" + game.ToString() + ".dat";
             if (!File.Exists(filename))
             {
                 if (game == 1)
@@ -585,7 +591,7 @@ namespace TGMsim
 
         public bool defaultTGMScores()
         {
-            using (FileStream fsStream = new FileStream("gm1.dat", FileMode.OpenOrCreate))
+            using (FileStream fsStream = new FileStream("Sav/gm1.dat", FileMode.OpenOrCreate))
             using (BinaryWriter sw = new BinaryWriter(fsStream, Encoding.UTF8))
             {
                 long temptime;
@@ -618,7 +624,7 @@ namespace TGMsim
         }
         public bool defaultTGM2Scores()
         {
-            using (FileStream fsStream = new FileStream("gm2.dat", FileMode.Create))
+            using (FileStream fsStream = new FileStream("Sav/gm2.dat", FileMode.Create))
             using (BinaryWriter sw = new BinaryWriter(fsStream, Encoding.UTF8))
             {
                 long temptime;
@@ -658,7 +664,7 @@ namespace TGMsim
 
         public bool defaultTAPScores()
         {
-            using (FileStream fsStream = new FileStream("gm3.dat", FileMode.Create))
+            using (FileStream fsStream = new FileStream("Sav/gm3.dat", FileMode.Create))
             using (BinaryWriter sw = new BinaryWriter(fsStream, Encoding.UTF8))
             {
                 long temptime;
@@ -697,7 +703,7 @@ namespace TGMsim
         }
         public bool defaultTGM3Scores()
         {
-            using (FileStream fsStream = new FileStream("gm4.dat", FileMode.Create))
+            using (FileStream fsStream = new FileStream("Sav/gm4.dat", FileMode.Create))
             using (BinaryWriter sw = new BinaryWriter(fsStream, Encoding.UTF8))
             {
                 long temptime;
@@ -744,7 +750,7 @@ namespace TGMsim
         {
             try
             {
-                musicStream = new NAudio.Vorbis.VorbisWaveReader(@"Audio\" + song + ".ogg");
+                musicStream = new NAudio.Vorbis.VorbisWaveReader(@"Res\Audio\" + song + ".ogg");
                 LoopStream loop = new LoopStream(musicStream);
                 songPlayer.Init(loop);
                 songPlayer.Play();

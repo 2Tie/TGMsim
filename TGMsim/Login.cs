@@ -40,7 +40,17 @@ namespace TGMsim
                         if (menuSelection == 3) //then check if it's a registered nick, else register it!
                         {
                             temp.name = getLetter(username[0]) + getLetter(username[1]) + getLetter(username[2]);
-                            if (File.Exists(temp.name + ".usr"))
+
+                            if (temp.name == "   ")
+                            {
+                                //skip user creation
+                                loggedin = true;
+                                pad1.inputPressedRot1 = false;
+                                pad1.inputPressedRot2 = false;
+                                pad1.inputPressedRot3 = false;
+                            }
+
+                            if (File.Exists("Sav/" + temp.name + ".usr"))
                             {
                                 if (readUserData())
                                     registering = false;
@@ -291,7 +301,7 @@ namespace TGMsim
 
         public bool writeUser()
         {
-            using (FileStream fsStream = new FileStream(temp.name + ".usr", FileMode.Create))
+            using (FileStream fsStream = new FileStream("Sav/" + temp.name + ".usr", FileMode.Create))
             using (BinaryWriter sw = new BinaryWriter(fsStream, Encoding.UTF8))
             {
                 sw.Write(temp.name);
@@ -324,7 +334,7 @@ namespace TGMsim
         public bool readPass()
         {
             //read the pass and put it into verifyPass
-            BinaryReader file = new BinaryReader(File.OpenRead(temp.name + ".usr"));
+            BinaryReader file = new BinaryReader(File.OpenRead("Sav/" + temp.name + ".usr"));
             if (file.ReadString() != temp.name)//read name
                 return false;
             if (file.ReadByte() != 0x02)//read save version, compare to current
@@ -350,7 +360,7 @@ namespace TGMsim
         public bool readUserData()
         {
             //read the user data and pass it to the game
-            BinaryReader file = new BinaryReader(File.OpenRead(temp.name + ".usr"));
+            BinaryReader file = new BinaryReader(File.OpenRead("Sav/" + temp.name + ".usr"));
             if (file.ReadString() != temp.name)//read name
                 return false;
             if (file.ReadByte() != 0x02)//read save version, compare to current

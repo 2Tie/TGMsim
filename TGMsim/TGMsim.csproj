@@ -88,13 +88,16 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <None Include="Audio\level 1.ogg">
+    <None Include="Res\AmaticSC-Regular.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Res\Audio\Level 1.ogg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Audio\Level 2.ogg">
+    <None Include="Res\Audio\Level 2.ogg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Audio\level 5.ogg">
+    <None Include="Res\Audio\Level 5.ogg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Properties\Settings.settings">
@@ -106,6 +109,21 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="Res\Maestro.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Sav\gm1.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Sav\gm2.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Sav\gm3.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Sav\gm4.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -114,49 +132,49 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Audio\SE\SEB_disappear.wav">
+    <Content Include="Res\Audio\SE\SEB_disappear.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Audio\SE\SEB_fall.wav">
+    <Content Include="Res\Audio\SE\SEB_fall.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Audio\SE\SEB_fixa.wav">
+    <Content Include="Res\Audio\SE\SEB_fixa.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Audio\SE\SEB_instal.wav">
+    <Content Include="Res\Audio\SE\SEB_instal.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Audio\SE\SEB_mino1.wav">
+    <Content Include="Res\Audio\SE\SEB_mino1.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Audio\SE\SEB_mino2.wav">
+    <Content Include="Res\Audio\SE\SEB_mino2.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Audio\SE\SEB_mino3.wav">
+    <Content Include="Res\Audio\SE\SEB_mino3.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Audio\SE\SEB_mino4.wav">
+    <Content Include="Res\Audio\SE\SEB_mino4.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Audio\SE\SEB_mino5.wav">
+    <Content Include="Res\Audio\SE\SEB_mino5.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Audio\SE\SEB_mino6.wav">
+    <Content Include="Res\Audio\SE\SEB_mino6.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Audio\SE\SEB_mino7.wav">
+    <Content Include="Res\Audio\SE\SEB_mino7.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Audio\SE\SEB_prerotate.wav">
+    <Content Include="Res\Audio\SE\SEB_prerotate.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Audio\SE\SEP_go.wav">
+    <Content Include="Res\Audio\SE\SEP_go.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Audio\SE\SEP_levelchange.wav">
+    <Content Include="Res\Audio\SE\SEP_levelchange.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Audio\SE\SEP_ready.wav">
+    <Content Include="Res\Audio\SE\SEP_ready.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="include\NAudio.dll" />
@@ -164,6 +182,7 @@
     <Content Include="include\NAudio.WindowsMediaFormat.dll" />
     <Content Include="include\NVorbis.dll" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

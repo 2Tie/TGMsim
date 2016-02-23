@@ -45,6 +45,10 @@ namespace TGMsim
             {
                 drawBuffer.DrawString(cheats[i].ToString(), SystemFonts.DefaultFont, new SolidBrush(Color.White), 300, 200 + (15 * i));
             }
+            drawBuffer.DrawString("GOD MODE", SystemFonts.DefaultFont, new SolidBrush(Color.White), 220, 200);
+            drawBuffer.DrawString("20G", SystemFonts.DefaultFont, new SolidBrush(Color.White), 220, 215);
+            drawBuffer.DrawString("0G", SystemFonts.DefaultFont, new SolidBrush(Color.White), 220, 230);
+            drawBuffer.DrawString("BIG MODE", SystemFonts.DefaultFont, new SolidBrush(Color.White), 220, 245);
             drawBuffer.DrawString("►", SystemFonts.DefaultFont, new SolidBrush(Color.White), 294, 200 + (15 * selection));
         }
     }
