@@ -20,6 +20,7 @@ namespace TGMsim
         public List<int> sections = new List<int>();
         public bool bigmode = false;
         public bool g20 = false;
+        public bool easyGen = false;
         public bool shiraseGrades = false;
         public bool exam = false;
         public int gradedBy = 0; //points, grade points, level, bravo, time

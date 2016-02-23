@@ -130,22 +130,22 @@ namespace TGMsim
             tetColors.Add(Color.Green);
             tetColors.Add(Color.Yellow);
 
-            s_Ready.Open(new Uri(Environment.CurrentDirectory + @"\Audio\SE\SEP_ready.wav"));
-            s_Go.Open(new Uri(Environment.CurrentDirectory + @"/Audio/SE/SEP_go.wav"));
-            s_Tet1.Open(new Uri(Environment.CurrentDirectory + @"/Audio/SE/SEB_mino1.wav"));
-            s_Tet2.Open(new Uri(Environment.CurrentDirectory + @"/Audio/SE/SEB_mino2.wav"));
-            s_Tet3.Open(new Uri(Environment.CurrentDirectory + @"/Audio/SE/SEB_mino3.wav"));
-            s_Tet4.Open(new Uri(Environment.CurrentDirectory + @"/Audio/SE/SEB_mino4.wav"));
-            s_Tet5.Open(new Uri(Environment.CurrentDirectory + @"/Audio/SE/SEB_mino5.wav"));
-            s_Tet6.Open(new Uri(Environment.CurrentDirectory + @"/Audio/SE/SEB_mino6.wav"));
-            s_Tet7.Open(new Uri(Environment.CurrentDirectory + @"/Audio/SE/SEB_mino7.wav"));
-            s_PreRot.Open(new Uri(Environment.CurrentDirectory + @"/Audio/SE/SEB_prerotate.wav"));
-            s_Contact.Open(new Uri(Environment.CurrentDirectory + @"/Audio/SE/SEB_fixa.wav"));
-            s_Lock.Open(new Uri(Environment.CurrentDirectory + @"/Audio/SE/SEB_instal.wav"));
-            s_Clear.Open(new Uri(Environment.CurrentDirectory + @"/Audio/SE/SEB_disappear.wav"));
-            s_Impact.Open(new Uri(Environment.CurrentDirectory + @"/Audio/SE/SEB_fall.wav"));
-            s_Grade.Open(new Uri(Environment.CurrentDirectory + @"/Audio/SE/SEP_levelchange.wav"));
-            s_Hold.Open(new Uri(Environment.CurrentDirectory + @"/Audio/SE/SEB_hold.wav"));
+            s_Ready.Open(new Uri(Environment.CurrentDirectory + @"\Res\Audio\SE\SEP_ready.wav"));
+            s_Go.Open(new Uri(Environment.CurrentDirectory + @"/Res/Audio/SE/SEP_go.wav"));
+            s_Tet1.Open(new Uri(Environment.CurrentDirectory + @"/Res/Audio/SE/SEB_mino1.wav"));
+            s_Tet2.Open(new Uri(Environment.CurrentDirectory + @"/Res/Audio/SE/SEB_mino2.wav"));
+            s_Tet3.Open(new Uri(Environment.CurrentDirectory + @"/Res/Audio/SE/SEB_mino3.wav"));
+            s_Tet4.Open(new Uri(Environment.CurrentDirectory + @"/Res/Audio/SE/SEB_mino4.wav"));
+            s_Tet5.Open(new Uri(Environment.CurrentDirectory + @"/Res/Audio/SE/SEB_mino5.wav"));
+            s_Tet6.Open(new Uri(Environment.CurrentDirectory + @"/Res/Audio/SE/SEB_mino6.wav"));
+            s_Tet7.Open(new Uri(Environment.CurrentDirectory + @"/Res/Audio/SE/SEB_mino7.wav"));
+            s_PreRot.Open(new Uri(Environment.CurrentDirectory + @"/Res/Audio/SE/SEB_prerotate.wav"));
+            s_Contact.Open(new Uri(Environment.CurrentDirectory + @"/Res/Audio/SE/SEB_fixa.wav"));
+            s_Lock.Open(new Uri(Environment.CurrentDirectory + @"/Res/Audio/SE/SEB_instal.wav"));
+            s_Clear.Open(new Uri(Environment.CurrentDirectory + @"/Res/Audio/SE/SEB_disappear.wav"));
+            s_Impact.Open(new Uri(Environment.CurrentDirectory + @"/Res/Audio/SE/SEB_fall.wav"));
+            s_Grade.Open(new Uri(Environment.CurrentDirectory + @"/Res/Audio/SE/SEP_levelchange.wav"));
+            s_Hold.Open(new Uri(Environment.CurrentDirectory + @"/Res/Audio/SE/SEB_hold.wav"));
 
             pad = ctlr;
             ruleset = rules;
@@ -2259,8 +2259,15 @@ namespace TGMsim
             {
                 bool copy = false;
                 tempID = piece.Next(7) + 1;
+
+                
+
                 for (int k = 0; k < lastTet.Count; k++)
                 {
+                    while (mode.easyGen == true && (tempID == 5 || tempID == 6))
+                    {
+                        tempID = piece.Next(7) + 1;
+                    }
                     if (tempID == lastTet[k])
                     {
                         copy = true;
@@ -2269,6 +2276,7 @@ namespace TGMsim
                 if (copy == false)
                     break;
             }
+
             for (int j = 0; j < lastTet.Count - 1; j++)
             {
                 lastTet[j] = lastTet[j + 1];
@@ -2348,7 +2356,7 @@ namespace TGMsim
         {
             try
             {
-                vorbisStream = new NAudio.Vorbis.VorbisWaveReader(@"Audio\" + song + ".ogg");
+                vorbisStream = new NAudio.Vorbis.VorbisWaveReader(@"Res\Audio\" + song + ".ogg");
                 LoopStream loop = new LoopStream(vorbisStream);
                 soundList.Init(loop);
                 soundList.Play();

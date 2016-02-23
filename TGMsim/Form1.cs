@@ -72,7 +72,7 @@ namespace TGMsim
             graphics = this.CreateGraphics();
             drawBuffer = Graphics.FromImage(imgBuffer);
 
-            playMusic("title");
+            playMusic("Title");
             
         }
 
@@ -113,11 +113,15 @@ namespace TGMsim
                 case 1:
                     menuState = 1;
                     login = new Login();
-                    playMusic("login");
+                    stopMusic();
+                    playMusic("Login");
                     break;
                 case 2:
                     if (menuState != 3)
-                        playMusic("menu");
+                    {
+                        stopMusic();
+                        playMusic("Menu");
+                    }
                     menuState = 2;
                     FPS = 60.00;
                     gSel = new GameSelect();
@@ -162,12 +166,14 @@ namespace TGMsim
                 case 6: //hiscores
                     menuState = 6;
                     //loadHiscores(mSel.game + 1);
-                    playMusic("hiscores");
+                    stopMusic();
+                    playMusic("Hiscores");
                     break;
 
                 case 8:
                     menuState = 8;
-                    playMusic("settings");
+                    stopMusic();
+                    playMusic("Settings");
                     break;
                 case 9:
                     menuState = 9;
@@ -236,6 +242,7 @@ namespace TGMsim
                                     m.limitType = 3;
                                     m.limit = 180000;//three minutes
                                     m.bigmode = true;
+                                    m.easyGen = true;
 
                                     saved = false;
                                     menuState = 4;
@@ -758,7 +765,7 @@ namespace TGMsim
             }
             catch (Exception)
             {
-                //MessageBox.Show("The file \"" + song + ".ogg\" was not found!", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                MessageBox.Show("The file \"" + song + ".ogg\" was not found!", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
                 //throw;
             }
         }
