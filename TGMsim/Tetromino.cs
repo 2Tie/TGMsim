@@ -16,6 +16,8 @@ namespace TGMsim
         public int y = 0;
         public int kicked = 0;
         public bool large = false;
+        public bool bone = false;
+        public bool swapped = false;
 
         public List<BlockBit> bits = new List<BlockBit>(); //first four will always be the "small" version
         
@@ -198,6 +200,10 @@ namespace TGMsim
 
                 newTet.bits[i].x = x;
                 newTet.bits[i].y = y;
+                if (this.bone)
+                    newTet.bone = true;
+                if (!this.bone)
+                    newTet.bone = false;
             }
             return newTet;
         }

@@ -115,6 +115,7 @@ namespace TGMsim
                                         tempPass.Clear();
                                         verifyPass.Clear();
                                         loginErr = 2;
+                                        menuSelection = 2;
                                     }
                                 }
                                 startPressed = true;
@@ -274,7 +275,7 @@ namespace TGMsim
             if (loginErr == 1)
                 drawBuffer.DrawString("There was an error reading the profile specified. Try again or delete the file.", SystemFonts.DefaultFont, new SolidBrush(Color.White), 200, 200);
             if (loginErr == 2)
-                drawBuffer.DrawString("That password was incorrect. Please try again.", SystemFonts.DefaultFont, new SolidBrush(Color.White), 200, 200);
+                drawBuffer.DrawString("The password doesn't match. Please try again.", SystemFonts.DefaultFont, new SolidBrush(Color.White), 200, 200);
             drawBuffer.DrawString(getLetter(username[0]), SystemFonts.DefaultFont, new SolidBrush(Color.White), 400, 300);
             if (menuSelection > 0)
             drawBuffer.DrawString(getLetter(username[1]), SystemFonts.DefaultFont, new SolidBrush(Color.White), 409, 300);

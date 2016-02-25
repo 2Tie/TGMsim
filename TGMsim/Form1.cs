@@ -150,7 +150,10 @@ namespace TGMsim
                     }
                     Mode m = new Mode();
                     stopMusic();
-                    m.setMode(mSel.selection);
+                    if (mSel.game == 3 && mSel.selection == 1)
+                        m.setMode(2);
+                    else
+                        m.setMode(mSel.selection);
                     if (player.name == "   ")
                         m.bigmode = cMen.cheats[3];
                     field1 = new Field(pad1, rules, m, musicStream);
@@ -158,7 +161,8 @@ namespace TGMsim
                     {
                         field1.cheating = true;
                         field1.godmode = cMen.cheats[0];
-                        field1.g20 = cMen.cheats[1];
+                        if (cMen.cheats[1])
+                            field1.g20 = cMen.cheats[1];
                         field1.g0 = cMen.cheats[2];
                     }
                     break;
@@ -199,16 +203,45 @@ namespace TGMsim
                     gSel.logic(pad1);
                     if ((pad1.inputRot1 | pad1.inputRot3) == 1)
                     {
-                        if (gSel.menuSelection == 5) //settings
-                            changeMenu(8);
-                        else if (gSel.menuSelection == 4) //Bonus
+                        if (gSel.prompt)
                         {
-                            changeMenu(3);
+                            if (gSel.menuSelection == 1)
+                            {
+                                cMen = new CheatMenu();
+                                changeMenu(1);
+                            }
+                            else
+                            {
+                                gSel.menuSelection = 0;
+                                gSel.prompt = false;
+                            }
                         }
                         else
                         {
-                            rules.setGame(gSel.menuSelection + 1);
-                            changeMenu(3);
+                            if (gSel.menuSelection == 5) //settings
+                                changeMenu(8);
+                            else if (gSel.menuSelection == 4) //Bonus
+                            {
+                                changeMenu(3);
+                            }
+                            else
+                            {
+                                rules.setGame(gSel.menuSelection + 1);
+                                changeMenu(3);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (pad1.inputRot2 == 1)
+                        {
+                            gSel.menuSelection = 0;
+                            if (gSel.prompt)
+                                gSel.prompt = false;
+                            else
+                            {
+                                gSel.prompt = true;
+                            }
                         }
                     }
                     break;
@@ -275,7 +308,7 @@ namespace TGMsim
                     if (field1.cont == true)
                     {
                         Mode m = new Mode();
-                        m.setMode(field1.mode.id);
+                        m = field1.mode;
                         field1 = new Field(pad1, rules, m, musicStream);
                     }
                     if (field1.exit == true)
@@ -765,7 +798,7 @@ namespace TGMsim
             }
             catch (Exception)
             {
-                MessageBox.Show("The file \"" + song + ".ogg\" was not found!", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                //MessageBox.Show("The file \"" + song + ".ogg\" was not found!", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
                 //throw;
             }
         }

@@ -10,7 +10,7 @@ namespace TGMsim
     {
         public struct Gimmick
         {
-            public int type; //fading, vanishing, garbage, bones, invisible
+            public int type; //fading, vanishing, garbage, bones, ice
             public int startLvl;
             public int endLvl;
         }
@@ -30,7 +30,7 @@ namespace TGMsim
 
         public void setMode(int mode)
         {
-            switch(mode)//Master, Death, shirase, sprint
+            switch(mode)//Master, Death, shirase, sprint, rounds
             {
                 case 0:
                     id = 0;
@@ -78,13 +78,13 @@ namespace TGMsim
                     g20 = true;
                     var gL = new Gimmick();
                     gL.type = 2;
-                    gL.startLvl = 700;
-                    gL.endLvl = 900;
+                    gL.startLvl = 100;//700;
+                    gL.endLvl = 500;//1000;
                     gimList.Add(gL);
                     gL = new Gimmick();
                     gL.type = 3;
-                    gL.startLvl = 1000;
-                    gL.endLvl = 1299;
+                    gL.startLvl = 200;//1000;
+                    gL.endLvl = 400;///1299;
                     gimList.Add(gL);
                     gradedBy = 2;
                     shiraseGrades = true;
