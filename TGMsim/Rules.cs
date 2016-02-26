@@ -44,6 +44,9 @@ namespace TGMsim
 
         public List<List<int>> delayTableTGM2 = new List<List<int>>();
         public List<List<int>> delayTableTAP = new List<List<int>>();
+        public List<List<int>> delayTableDeath = new List<List<int>>();
+        public List<List<int>> delayTableTGM3 = new List<List<int>>();
+        public List<List<int>> delayTableShirase = new List<List<int>>();
 
         public List<int> gradePointsTGM1 = new List<int> { 0, 400, 800, 1400, 2000, 3500, 5500, 8000, 12000, 16000, 22000, 30000, 40000, 52000, 66000, 82000, 100000, 120000};
 
@@ -80,6 +83,28 @@ namespace TGMsim
             delayTableTAP.Add(new List<int> { 14, 8, 8, 8, 8, 6 });
             delayTableTAP.Add(new List<int> { 30, 30, 30, 30, 30, 17 });
             delayTableTAP.Add(new List<int> { 40, 25, 16, 12, 6, 6 });
+
+            //death
+            delayTableDeath.Add(new List<int> { 16, 12, 12, 6, 5, 4 });
+            delayTableDeath.Add(new List<int> { 12, 6, 6, 6, 5, 4 });
+            delayTableDeath.Add(new List<int> { 10, 10, 9, 8, 6, 6 });
+            delayTableDeath.Add(new List<int> { 30, 26, 22, 18, 15, 15 });
+            delayTableDeath.Add(new List<int> { 12, 6, 6, 6, 5, 4 });
+
+            //tgm3
+            delayTableTGM3.Add(new List<int> { 25, 25, 25, 16, 12, 12, 6, 5, 4 });
+            delayTableTGM3.Add(new List<int> { 25, 25, 16, 12, 6, 6, 6, 5, 4 });
+            delayTableTGM3.Add(new List<int> { 14, 8, 8, 8, 8, 6, 6, 6, 6 });
+            delayTableTGM3.Add(new List<int> { 30, 30, 30, 30, 30, 17, 17, 15, 15 });
+            delayTableTGM3.Add(new List<int> { 40, 25, 16, 12, 6, 6, 6, 6, 6 });
+
+            //shirase
+            delayTableShirase.Add(new List<int> { 10, 10, 10, 4, 4, 4, 4, 4, 4 });
+            delayTableShirase.Add(new List<int> { 6, 5, 4, 4, 3, 3, 3, 3, 4 });
+            delayTableShirase.Add(new List<int> { 8, 6, 6, 6, 4, 4, 4, 4, 4 });
+            delayTableShirase.Add(new List<int> { 18, 18, 17, 15, 13, 12, 10, 8, 15 });
+            delayTableShirase.Add(new List<int> { 6, 5, 4, 4, 3, 3, 3, 3, 6 });
+
         }
 
         public void setGame(int game)

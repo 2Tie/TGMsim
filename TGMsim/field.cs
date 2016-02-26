@@ -191,9 +191,19 @@ namespace TGMsim
                     break;
                 case 1:
                     frameColour = Color.DarkRed;
+                    ruleset.baseARE = ruleset.delayTableDeath[0][0];
+                    ruleset.baseARELine = ruleset.delayTableDeath[1][0];
+                    ruleset.baseDAS = ruleset.delayTableDeath[2][0];
+                    ruleset.baseLock = ruleset.delayTableDeath[3][0];
+                    ruleset.baseLineClear = ruleset.delayTableDeath[4][0];
                     break;
                 case 2:
                     frameColour = Color.DarkBlue;
+                    ruleset.baseARE = ruleset.delayTableShirase[0][0];
+                    ruleset.baseARELine = ruleset.delayTableShirase[1][0];
+                    ruleset.baseDAS = ruleset.delayTableShirase[2][0];
+                    ruleset.baseLock = ruleset.delayTableShirase[3][0];
+                    ruleset.baseLineClear = ruleset.delayTableShirase[4][0];
                     break;
                 case 3:
                     frameColour = Color.DarkGreen;
@@ -230,7 +240,8 @@ namespace TGMsim
                 gameField.Add(tempList);
             }
 
-            playMusic("Level 1");
+            updateMusic();
+            //playMusic("Level 1");
             //playSound(s_Ready);
         }
 
@@ -369,7 +380,10 @@ namespace TGMsim
             //SMALL TEXT
             //levels
             drawBuffer.DrawString(level.ToString(), SystemFonts.DefaultFont, new SolidBrush(Color.White), 610, 530);
-            drawBuffer.DrawString(mode.sections[curSection].ToString(), SystemFonts.DefaultFont, new SolidBrush(Color.White), 610, 570);
+            if (mode.sections.Count == curSection)
+                drawBuffer.DrawString(mode.sections[curSection - 1].ToString(), SystemFonts.DefaultFont, new SolidBrush(Color.White), 610, 570);
+            else
+                drawBuffer.DrawString(mode.sections[curSection].ToString(), SystemFonts.DefaultFont, new SolidBrush(Color.White), 610, 570);
 
             drawBuffer.DrawString(score.ToString(), SystemFonts.DefaultFont, new SolidBrush(Color.White), 610, 400);
 
@@ -716,7 +730,7 @@ namespace TGMsim
                                             {
                                                 if (softCounter > 20)
                                                     throw new IndexOutOfRangeException();
-                                                int newscore = ((int)Math.Ceiling((double)level + full.Count / 4) + softCounter) * full.Count * ((full.Count * 2) - 1) * bravo;
+                                                int newscore = ((int)Math.Ceiling((double)(level + full.Count) / 4) + softCounter) * full.Count * ((full.Count * 2) - 1) * bravo;
                                                 if (comboing)
                                                     newscore *= combo;
 
@@ -819,89 +833,155 @@ namespace TGMsim
                                                 curSection++;
 
                                                 //MUSIC
-                                                if (curSection == 3)
-                                                {
-                                                    stopMusic();
-                                                    playMusic("Level 2");
-                                                }
-                                                if (curSection == 5)
-                                                {
-                                                    stopMusic();
-                                                    playMusic("Level 3");
-                                                }
-                                                if (curSection == 8)
-                                                {
-                                                    stopMusic();
-                                                    playMusic("Level 4");
-                                                }
-                                                if (curSection == 10)
-                                                {
-                                                    stopMusic();
-                                                    playMusic("Level 5");
-                                                }
+                                                updateMusic();
 
                                                 //DELAYS
-                                                if (ruleset.gameRules == 2)
+                                                if (mode.id == 0 || mode.id == 3)//Master
                                                 {
-                                                    switch(curSection)
+                                                    if (ruleset.gameRules == 2)
                                                     {
-                                                        case 9:
-                                                        case 8:
-                                                        case 7:
-                                                        case 6:
-                                                        case 5:
-                                                            ruleset.baseARE = ruleset.delayTableTGM2[0][curSection - 4 + speedBonus];
-                                                            ruleset.baseDAS = ruleset.delayTableTGM2[1][curSection - 4 + speedBonus];
-                                                            ruleset.baseLock = ruleset.delayTableTGM2[2][curSection - 4 + speedBonus];
-                                                            ruleset.baseLineClear = ruleset.delayTableTGM2[3][curSection - 4 + speedBonus];
-                                                            break;
-                                                        default:
-                                                            break;
+                                                        switch (curSection + speedBonus)
+                                                        {
+                                                            case 9:
+                                                            case 8:
+                                                            case 7:
+                                                            case 6:
+                                                            case 5:
+                                                                ruleset.baseARE = ruleset.delayTableTGM2[0][curSection - 4 + speedBonus];
+                                                                ruleset.baseDAS = ruleset.delayTableTGM2[1][curSection - 4 + speedBonus];
+                                                                ruleset.baseLock = ruleset.delayTableTGM2[2][curSection - 4 + speedBonus];
+                                                                ruleset.baseLineClear = ruleset.delayTableTGM2[3][curSection - 4 + speedBonus];
+                                                                break;
+                                                            default:
+                                                                break;
+                                                        }
                                                     }
-                                                }
-                                                if (ruleset.gameRules == 3)
-                                                {
-                                                    switch (curSection)
+                                                    if (ruleset.gameRules == 3)
                                                     {
-                                                        case 9:
-                                                        case 8:
-                                                        case 7:
-                                                        case 6:
-                                                        case 5:
-                                                            ruleset.baseARE = ruleset.delayTableTAP[0][curSection - 4 + speedBonus];
-                                                            ruleset.baseARELine = ruleset.delayTableTAP[1][curSection - 4 + speedBonus];
-                                                            ruleset.baseDAS = ruleset.delayTableTAP[2][curSection - 4 + speedBonus];
-                                                            ruleset.baseLock = ruleset.delayTableTAP[3][curSection - 4 + speedBonus];
-                                                            ruleset.baseLineClear = ruleset.delayTableTAP[4][curSection - 4 + speedBonus];
-                                                            break;
-                                                        default:
-                                                            break;
+                                                        switch (curSection + speedBonus)
+                                                        {
+                                                            case 9:
+                                                            case 8:
+                                                            case 7:
+                                                            case 6:
+                                                            case 5:
+                                                                ruleset.baseARE = ruleset.delayTableTAP[0][curSection - 4 + speedBonus];
+                                                                ruleset.baseARELine = ruleset.delayTableTAP[1][curSection - 4 + speedBonus];
+                                                                ruleset.baseDAS = ruleset.delayTableTAP[2][curSection - 4 + speedBonus];
+                                                                ruleset.baseLock = ruleset.delayTableTAP[3][curSection - 4 + speedBonus];
+                                                                ruleset.baseLineClear = ruleset.delayTableTAP[4][curSection - 4 + speedBonus];
+                                                                break;
+                                                            default:
+                                                                break;
+                                                        }
                                                     }
-                                                }
 
-                                                if (ruleset.gameRules == 3)
+                                                    if (ruleset.gameRules == 4)
+                                                    {
+                                                        switch (curSection + speedBonus)
+                                                        {
+                                                            case 17:
+                                                            case 16:
+                                                            case 15:
+                                                            case 14:
+                                                            case 13:
+                                                            case 12:
+                                                            case 11:
+                                                            case 10:
+                                                            case 9:
+                                                            case 8:
+                                                            case 7:
+                                                            case 6:
+                                                            case 5:
+                                                                ruleset.baseARE = ruleset.delayTableTGM3[0][curSection - 4 + speedBonus];
+                                                                ruleset.baseARELine = ruleset.delayTableTGM3[1][curSection - 4 + speedBonus];
+                                                                ruleset.baseDAS = ruleset.delayTableTGM3[2][curSection - 4 + speedBonus];
+                                                                ruleset.baseLock = ruleset.delayTableTGM3[3][curSection - 4 + speedBonus];
+                                                                ruleset.baseLineClear = ruleset.delayTableTGM3[4][curSection - 4 + speedBonus];
+                                                                break;
+                                                            default:
+                                                                break;
+                                                        }
+                                                    }
+                                                }
+                                                if (mode.id == 1)//death
                                                 {
                                                     switch (curSection)
                                                     {
+                                                        case 9:
+                                                        case 8:
+                                                        case 7:
+                                                        case 6:
+                                                        case 5:
+                                                            ruleset.baseARE = ruleset.delayTableDeath[0][ruleset.delayTableDeath.Count - 1];
+                                                            ruleset.baseARELine = ruleset.delayTableDeath[1][ruleset.delayTableDeath.Count - 1];
+                                                            ruleset.baseDAS = ruleset.delayTableDeath[2][ruleset.delayTableDeath.Count - 1];
+                                                            ruleset.baseLock = ruleset.delayTableDeath[3][ruleset.delayTableDeath.Count - 1];
+                                                            ruleset.baseLineClear = ruleset.delayTableDeath[4][ruleset.delayTableDeath.Count - 1];
+                                                            break;
+                                                        case 4:
+                                                        case 3:
+                                                        case 2:
+                                                        case 1:
+                                                        case 0:
+                                                            ruleset.baseARE = ruleset.delayTableDeath[0][curSection];
+                                                            ruleset.baseARELine = ruleset.delayTableDeath[0][curSection];
+                                                            ruleset.baseDAS = ruleset.delayTableDeath[0][curSection];
+                                                            ruleset.baseLock = ruleset.delayTableDeath[0][curSection];
+                                                            ruleset.baseLineClear = ruleset.delayTableDeath[0][curSection];
+                                                            break;
+                                                    }
+                                                }
+                                                if (mode.id == 2 || mode.id == 4) //shirase
+                                                {
+                                                    switch (curSection)
+                                                    {
+                                                        case 13:
                                                         case 12:
                                                         case 11:
+                                                            ruleset.baseARE = ruleset.delayTableShirase[0][curSection - 5];
+                                                            ruleset.baseARELine = ruleset.delayTableShirase[0][curSection - 5];
+                                                            ruleset.baseDAS = ruleset.delayTableShirase[0][curSection - 5];
+                                                            ruleset.baseLock = ruleset.delayTableShirase[0][curSection - 5];
+                                                            ruleset.baseLineClear = ruleset.delayTableShirase[0][curSection - 5];
+                                                            break;
                                                         case 10:
                                                         case 9:
                                                         case 8:
                                                         case 7:
                                                         case 6:
-                                                        case 5:
-                                                            ruleset.baseARE = ruleset.delayTableTAP[0][curSection - 4 + speedBonus];
-                                                            ruleset.baseARELine = ruleset.delayTableTAP[1][curSection - 4 + speedBonus];
-                                                            ruleset.baseDAS = ruleset.delayTableTAP[2][curSection - 4 + speedBonus];
-                                                            ruleset.baseLock = ruleset.delayTableTAP[3][curSection - 4 + speedBonus];
-                                                            ruleset.baseLineClear = ruleset.delayTableTAP[4][curSection - 4 + speedBonus];
+                                                            ruleset.baseARE = ruleset.delayTableShirase[0][5];
+                                                            ruleset.baseARELine = ruleset.delayTableShirase[0][5];
+                                                            ruleset.baseDAS = ruleset.delayTableShirase[0][5];
+                                                            ruleset.baseLock = ruleset.delayTableShirase[0][5];
+                                                            ruleset.baseLineClear = ruleset.delayTableShirase[0][5];
                                                             break;
-                                                        default:
+                                                        case 5:
+                                                            ruleset.baseARE = ruleset.delayTableShirase[0][4];
+                                                            ruleset.baseARELine = ruleset.delayTableShirase[0][4];
+                                                            ruleset.baseDAS = ruleset.delayTableShirase[0][4];
+                                                            ruleset.baseLock = ruleset.delayTableShirase[0][4];
+                                                            ruleset.baseLineClear = ruleset.delayTableShirase[0][4];
+                                                            break;
+                                                        case 4:
+                                                        case 3:
+                                                            ruleset.baseARE = ruleset.delayTableShirase[0][3];
+                                                            ruleset.baseARELine = ruleset.delayTableShirase[0][3];
+                                                            ruleset.baseDAS = ruleset.delayTableShirase[0][3];
+                                                            ruleset.baseLock = ruleset.delayTableShirase[0][3];
+                                                            ruleset.baseLineClear = ruleset.delayTableShirase[0][3];
+                                                            break;
+                                                        case 2:
+                                                        case 1:
+                                                        case 0:
+                                                            ruleset.baseARE = ruleset.delayTableShirase[0][curSection];
+                                                            ruleset.baseARELine = ruleset.delayTableShirase[0][curSection];
+                                                            ruleset.baseDAS = ruleset.delayTableShirase[0][curSection];
+                                                            ruleset.baseLock = ruleset.delayTableShirase[0][curSection];
+                                                            ruleset.baseLineClear = ruleset.delayTableShirase[0][curSection];
                                                             break;
                                                     }
                                                 }
-
                                                 
 
                                                 //MEDALS
@@ -2538,6 +2618,40 @@ namespace TGMsim
         {
             soundList.Stop();
             soundList.Dispose();
+        }
+
+        private void updateMusic()
+        {
+            if (curSection + speedBonus == 0)
+            {
+                stopMusic();
+                playMusic("Level 1");
+            }
+            if (curSection + speedBonus == 3)
+            {
+                stopMusic();
+                playMusic("Level 2");
+            }
+            if (curSection + speedBonus == 5)
+            {
+                stopMusic();
+                playMusic("Level 3");
+            }
+            if (curSection + speedBonus == 8)
+            {
+                stopMusic();
+                playMusic("Level 4");
+            }
+            if (curSection + speedBonus == 10)
+            {
+                stopMusic();
+                playMusic("Level 5");
+            }
+            if (curSection + speedBonus == 15)
+            {
+                stopMusic();
+                playMusic("Level 6");
+            }
         }
     }
 }
