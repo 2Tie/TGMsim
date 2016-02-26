@@ -1159,7 +1159,7 @@ namespace TGMsim
                         gravCounter += gravTable[gravLevel]; //add our current gravity strength
 
 
-                        if (g20 || (ruleset.gameRules < 4 && gravTable[gravLevel] == Math.Pow(256, ruleset.gravType + 1) * 20))
+                        if (g20 || (gravTable[gravLevel] == Math.Pow(256, ruleset.gravType + 1) * 20))
                         {
                             blockDrop = 19;
                         }
