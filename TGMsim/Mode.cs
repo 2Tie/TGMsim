@@ -23,6 +23,7 @@ namespace TGMsim
         public bool easyGen = false;
         public bool shiraseGrades = false;
         public bool exam = false;
+        public int lvlBonus = 0;
         public int gradedBy = 0; //points, grade points, level, bravo, time
         public int limitType = 0; //none, line, level, time
         public int limit = 0;
@@ -44,6 +45,7 @@ namespace TGMsim
                     sections.Add(700);
                     sections.Add(800);
                     sections.Add(900);
+                    sections.Add(999);
                     break;
                 case 1:
                     id = 1;
@@ -57,7 +59,8 @@ namespace TGMsim
                     sections.Add(700);
                     sections.Add(800);
                     sections.Add(900);
-                    g20 = true;
+                    sections.Add(999);
+                    lvlBonus = 5;
                     gradedBy = 2;
                     break;
                 case 2:
@@ -75,16 +78,16 @@ namespace TGMsim
                     sections.Add(1000);
                     sections.Add(1100);
                     sections.Add(1200);
-                    g20 = true;
+                    lvlBonus = 5;
                     var gL = new Gimmick();
-                    gL.type = 2;
-                    gL.startLvl = 100;//700;
-                    gL.endLvl = 500;//1000;
+                    gL.type = 2;//2
+                    gL.startLvl = 700;
+                    gL.endLvl = 1000;
                     gimList.Add(gL);
                     gL = new Gimmick();
                     gL.type = 3;
-                    gL.startLvl = 200;//1000;
-                    gL.endLvl = 400;///1299;
+                    gL.startLvl = 1000;
+                    gL.endLvl = 1299;
                     gimList.Add(gL);
                     gradedBy = 2;
                     shiraseGrades = true;
