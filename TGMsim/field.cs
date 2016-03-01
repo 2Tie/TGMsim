@@ -1087,7 +1087,7 @@ namespace TGMsim
 
                                     while (gravLevel < gravTable.Count - 1)
                                     {
-                                        if (level + (speedBonus * 100) >= gravTable[gravLevel + 1])
+                                        if (level + (speedBonus * 100) >= ruleset.gravLevelsTGM1[gravLevel + 1])
                                             gravLevel++;
                                         else
                                             break;
