@@ -81,7 +81,7 @@ namespace TGMsim
                     }
                     else if (pad1.inputH == -1)
                     {
-                        
+
                         username[menuSelection] = (username[menuSelection] - 1) % 46;//decrease the currently selected letter
                         if (username[menuSelection] == -1)
                         {
@@ -125,7 +125,7 @@ namespace TGMsim
                                 //read input, then add to the list
                                 startPressed = false;
                                 //wait until input's released or a new one is added
-                                
+
                                 if (pad1.inputRot1 == 1)
                                 {
                                     verifyPass.Add((byte)0x0);
@@ -142,7 +142,7 @@ namespace TGMsim
                                 {
                                     verifyPass.Add((byte)0x3);
                                 }
-                                
+
                             }
                         }
                         if (menuSelection == 3) //start password input
@@ -185,7 +185,7 @@ namespace TGMsim
                                 {
                                     tempPass.Add((byte)0x3);
                                 }
-                                
+
                             }
                         }
                     }
@@ -255,6 +255,9 @@ namespace TGMsim
                 }
             }
             else
+                if (pad1.inputH == 0)
+                    delaytimer = 0;
+                else
                 delaytimer -= 1;
         }
 
