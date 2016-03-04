@@ -86,10 +86,10 @@ namespace TGMsim
                     {
                         bits.Add(new BlockBit(4, 2));
                         bits.Add(new BlockBit(5, 2));
-                        bits.Add(new BlockBit(6, 1));
-                        bits.Add(new BlockBit(6, 2));
                         bits.Add(new BlockBit(2, 1));
                         bits.Add(new BlockBit(2, 2));
+                        bits.Add(new BlockBit(6, 1));
+                        bits.Add(new BlockBit(6, 2));
                         bits.Add(new BlockBit(7, 1));
                         bits.Add(new BlockBit(7, 2));
                         bits.Add(new BlockBit(2, 3));
@@ -107,10 +107,10 @@ namespace TGMsim
                     {
                         bits.Add(new BlockBit(4, 2));
                         bits.Add(new BlockBit(3, 2));
-                        bits.Add(new BlockBit(6, 1));
-                        bits.Add(new BlockBit(6, 2));
                         bits.Add(new BlockBit(2, 1));
                         bits.Add(new BlockBit(2, 2));
+                        bits.Add(new BlockBit(6, 1));
+                        bits.Add(new BlockBit(6, 2));
                         bits.Add(new BlockBit(7, 1));
                         bits.Add(new BlockBit(7, 2));
                         bits.Add(new BlockBit(6, 3));

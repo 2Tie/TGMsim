@@ -743,7 +743,7 @@ namespace TGMsim
                                             {
                                                 if (full.Count > 1)
                                                     combo++;
-                                                if (!inCredits)
+                                                if (!inCredits && mode.gradedBy == 1)
                                                     gradePoints += (int)(Math.Ceiling(ruleset.baseGradePts[full.Count - 1][grade] * ruleset.comboTable[full.Count - 1][combo]) * Math.Ceiling((double)level / 250));
                                             }
                                             if (mode.id == 1)
@@ -1149,8 +1149,8 @@ namespace TGMsim
                             Tetromino tempTet;
                             if (heldPiece != null)
                             {
-                                tempTet = heldPiece.clone();// new Tetromino(heldPiece.id, mode.bigmode);
-                                heldPiece = activeTet.clone(); // new Tetromino(activeTet.id, false);
+                                tempTet = new Tetromino(heldPiece.id, mode.bigmode);
+                                heldPiece = new Tetromino(activeTet.id, false);
                                 activeTet = tempTet;
                                 groundTimer = ruleset.baseLock;
                             }
@@ -1566,7 +1566,9 @@ namespace TGMsim
 
                                             if (mode.bigmode)
                                             {
-                                                
+                                                tet.bits[5].move(2, -2);
+                                                tet.bits[6].move(2, -2);
+                                                tet.bits[7].move(3, -3);
                                             }
 
                                             tet.rotation = 1;
@@ -1599,6 +1601,19 @@ namespace TGMsim
                                             tet.bits[2].y += 2 + yOffset;
                                             tet.bits[3].x += -1 + xOffset + ((i % 3) - 1);
                                             tet.bits[3].y += yOffset;
+
+                                            if (mode.bigmode)
+                                            {
+                                                tet.bits[2].move(0, 1);
+                                                tet.bits[4].move(0, -1);
+                                                tet.bits[5].move(-2, 4);
+                                                tet.bits[6].move(-2, 4);
+                                                tet.bits[7].move(-3, 5);
+                                                tet.bits[8].move(0, 2);
+                                                tet.bits[9].move(0, 2);
+                                                tet.bits[10].move(0, 2);
+                                                tet.bits[11].move(0, 2);
+                                            }
 
                                             tet.rotation = 2;
 
@@ -1635,6 +1650,20 @@ namespace TGMsim
                                             tet.bits[3].x += -1 + ((i % 3) - 1);
                                             tet.bits[3].y += yOffset;
 
+                                            if (mode.bigmode)
+                                            {
+                                                tet.bits[2].move(0, -1);
+                                                tet.bits[3].move(2, 0);
+                                                tet.bits[4].move(0, 1);
+                                                tet.bits[5].move(2, -4);
+                                                tet.bits[6].move(2, -4);
+                                                tet.bits[7].move(3, -5);
+                                                tet.bits[8].move(-4, -2);
+                                                tet.bits[9].move(-4, -2);
+                                                tet.bits[10].move(-4, -2);
+                                                tet.bits[11].move(-4, -2);
+                                            }
+
                                             tet.rotation = 3;
 
                                             break;
@@ -1657,6 +1686,18 @@ namespace TGMsim
                                             tet.bits[2].y += -1;
                                             tet.bits[3].x += 1 + xOffset + ((i % 3) - 1);
                                             tet.bits[3].y += 1;
+
+                                            if (mode.bigmode)
+                                            {
+                                                tet.bits[3].move(-2, 0);
+                                                tet.bits[5].move(-2, 2);
+                                                tet.bits[6].move(-2, 2);
+                                                tet.bits[7].move(-3, 3);
+                                                tet.bits[8].move(4, 0);
+                                                tet.bits[9].move(4, 0);
+                                                tet.bits[10].move(4, 0);
+                                                tet.bits[11].move(4, 0);
+                                            }
 
                                             tet.rotation = 0;
 
@@ -1698,6 +1739,18 @@ namespace TGMsim
                                             tet.bits[3].x += -1 + ((i % 3) - 1);
                                             tet.bits[3].y += -1 + yOffset;
 
+                                            if (mode.bigmode)
+                                            {
+                                                tet.bits[3].move(2, 0);
+                                                tet.bits[5].move(2, -2);
+                                                tet.bits[6].move(2, -2);
+                                                tet.bits[7].move(3, -3);
+                                                tet.bits[8].move(-4, 0);
+                                                tet.bits[9].move(-4, 0);
+                                                tet.bits[10].move(-4, 0);
+                                                tet.bits[11].move(-4, 0);
+                                            }
+
                                             tet.rotation = 3;
 
                                             break;
@@ -1720,6 +1773,13 @@ namespace TGMsim
                                             tet.bits[2].y += 1;
                                             tet.bits[3].x += -1 + xOffset + ((i % 3) - 1);
                                             tet.bits[3].y += 1;
+
+                                            if (mode.bigmode)
+                                            {
+                                                tet.bits[5].move(-2, 2);
+                                                tet.bits[6].move(-2, 2);
+                                                tet.bits[7].move(-3, 3);
+                                            }
 
                                             tet.rotation = 0;
 
@@ -1756,6 +1816,19 @@ namespace TGMsim
                                             tet.bits[3].x += 1 + ((i % 3) - 1);
                                             tet.bits[3].y += yOffset;
 
+                                            if (mode.bigmode)
+                                            {
+                                                tet.bits[2].move(0, -1);
+                                                tet.bits[4].move(0, 1);
+                                                tet.bits[5].move(2, -4);
+                                                tet.bits[6].move(2, -4);
+                                                tet.bits[7].move(3, -5);
+                                                tet.bits[8].move(0, -2);
+                                                tet.bits[9].move(0, -2);
+                                                tet.bits[10].move(0, -2);
+                                                tet.bits[11].move(0, -2);
+                                            }
+
                                             tet.rotation = 1;
 
                                             break;
@@ -1777,6 +1850,20 @@ namespace TGMsim
                                             tet.bits[1].y += 1;
                                             tet.bits[2].x += -1 + xOffset + ((i % 3) - 1);
                                             tet.bits[3].x += 1 + xOffset + ((i % 3) - 1);
+
+                                            if (mode.bigmode)
+                                            {
+                                                tet.bits[2].move(0, 1);
+                                                tet.bits[3].move(-2, 0);
+                                                tet.bits[4].move(0, -1);
+                                                tet.bits[5].move(-2, 4);
+                                                tet.bits[6].move(-2, 4);
+                                                tet.bits[7].move(-3, 5);
+                                                tet.bits[8].move(4, 2);
+                                                tet.bits[9].move(4, 2);
+                                                tet.bits[10].move(4, 2);
+                                                tet.bits[11].move(4, 2);
+                                            }
 
                                             tet.rotation = 2;
 
@@ -1830,6 +1917,23 @@ namespace TGMsim
                                             tet.bits[3].x += 2 + ((i % 3) - 1);
                                             tet.bits[3].y += yOffset;
 
+
+                                            if (mode.bigmode)
+                                            {
+                                                tet.bits[4].move(1, -1);
+                                                tet.bits[5].move(0, -2);
+                                                tet.bits[6].move(2, -2);
+                                                tet.bits[7].move(3, -3);
+                                                tet.bits[8].move(0, 2);
+                                                tet.bits[9].move(0, 2);
+                                                tet.bits[10].move(0, 2);
+                                                tet.bits[11].move(0, 2);
+                                                tet.bits[12].move(2, 0);
+                                                tet.bits[13].move(2, 0);
+                                                tet.bits[14].move(2, 0);
+                                                tet.bits[15].move(2, 0);
+                                            }
+
                                             tet.rotation = 1;
 
                                             break;
@@ -1852,6 +1956,22 @@ namespace TGMsim
                                             tet.bits[2].y += 2;
                                             tet.bits[3].x += xOffset + ((i % 3) - 1);
                                             tet.bits[3].y += -1;
+
+                                            if (mode.bigmode)
+                                            {
+                                                tet.bits[0].move(0, 2);
+                                                tet.bits[1].move(0, 2);
+                                                tet.bits[2].move(0, 2);
+                                                tet.bits[3].move(0, 2);
+                                                tet.bits[4].move(-1, 2);
+                                                tet.bits[5].move(-2, 3);
+                                                tet.bits[6].move(-2, 5);
+                                                tet.bits[7].move(-3, 4);
+                                                tet.bits[12].move(2, -2);
+                                                tet.bits[13].move(2, -2);
+                                                tet.bits[14].move(2, -2);
+                                                tet.bits[15].move(2, -2);
+                                            }
 
                                             tet.rotation = 2;
 
@@ -1888,6 +2008,26 @@ namespace TGMsim
                                             tet.bits[3].x += -2 + ((i % 3) - 1);
                                             tet.bits[3].y += -1 + yOffset;
 
+                                            if (mode.bigmode)
+                                            {
+                                                tet.bits[0].move(0, -2);
+                                                tet.bits[1].move(0, -2);
+                                                tet.bits[2].move(0, -2);
+                                                tet.bits[3].move(2, -2);
+                                                tet.bits[4].move(1, -2);
+                                                tet.bits[5].move(2, -1);
+                                                tet.bits[6].move(3, -5);
+                                                tet.bits[7].move(2, -4);
+                                                tet.bits[8].move(-2, 0);
+                                                tet.bits[9].move(-2, 0);
+                                                tet.bits[10].move(-2, 0);
+                                                tet.bits[11].move(-2, 0);
+                                                tet.bits[12].move(-4, -2);
+                                                tet.bits[13].move(-4, -2);
+                                                tet.bits[14].move(-4, -2);
+                                                tet.bits[15].move(-4, -2);
+                                            }
+
                                             tet.rotation = 3;
 
                                             break;
@@ -1910,6 +2050,22 @@ namespace TGMsim
                                             tet.bits[2].y += -1;
                                             tet.bits[3].x += xOffset + ((i % 3) - 1);
                                             tet.bits[3].y += 2;
+
+                                            if (mode.bigmode)
+                                            {
+                                                tet.bits[3].move(-2, 0);
+                                                tet.bits[4].move(-1, 1);
+                                                tet.bits[6].move(-3, 2);
+                                                tet.bits[7].move(-2, 3);
+                                                tet.bits[8].move(2, -2);
+                                                tet.bits[9].move(2, -2);
+                                                tet.bits[10].move(2, -2);
+                                                tet.bits[11].move(2, -2);
+                                                tet.bits[12].move(0, 4);
+                                                tet.bits[13].move(0, 4);
+                                                tet.bits[14].move(0, 4);
+                                                tet.bits[15].move(0, 4);
+                                            }
 
                                             tet.rotation = 0;
 
@@ -1957,6 +2113,22 @@ namespace TGMsim
                                                 tet.bits[3].x += ((i % 3) - 1);
                                                 tet.bits[3].y += -2 + yOffset;
 
+                                                if (mode.bigmode)
+                                                {
+                                                    tet.bits[3].move(2, 0);
+                                                    tet.bits[4].move(1, -1);
+                                                    tet.bits[6].move(3, -2);
+                                                    tet.bits[7].move(2, -3);
+                                                    tet.bits[8].move(-2, 2);
+                                                    tet.bits[9].move(-2, 2);
+                                                    tet.bits[10].move(-2, 2);
+                                                    tet.bits[11].move(-2, 2);
+                                                    tet.bits[12].move(0, -4);
+                                                    tet.bits[13].move(0, -4);
+                                                    tet.bits[14].move(0, -4);
+                                                    tet.bits[15].move(0, -4);
+                                                }
+
                                                 tet.rotation = 3;
 
                                                 break;
@@ -1979,6 +2151,22 @@ namespace TGMsim
                                             tet.bits[2].x += 1 + xOffset + ((i % 3) - 1);
                                             tet.bits[2].y += 1;
                                             tet.bits[3].x += -2 + xOffset + ((i % 3) - 1);
+
+                                            if (mode.bigmode)
+                                            {
+                                                tet.bits[4].move(-1, 1);
+                                                tet.bits[5].move(0, 2);
+                                                tet.bits[6].move(-2, 2);
+                                                tet.bits[7].move(-3, 3);
+                                                tet.bits[8].move(0, -2);
+                                                tet.bits[9].move(0, -2);
+                                                tet.bits[10].move(0, -2);
+                                                tet.bits[11].move(0, -2);
+                                                tet.bits[12].move(-2, 0);
+                                                tet.bits[13].move(-2, 0);
+                                                tet.bits[14].move(-2, 0);
+                                                tet.bits[15].move(-2, 0);
+                                            }
 
                                             tet.rotation = 0;
 
@@ -2015,6 +2203,22 @@ namespace TGMsim
                                             tet.bits[3].x += ((i % 3) - 1);
                                             tet.bits[3].y += 1 + yOffset;
 
+                                            if (mode.bigmode)
+                                            {
+                                                tet.bits[0].move(0, -2);
+                                                tet.bits[1].move(0, -2);
+                                                tet.bits[2].move(0, -2);
+                                                tet.bits[3].move(0, -2);
+                                                tet.bits[4].move(1, -2);
+                                                tet.bits[5].move(2, -3);
+                                                tet.bits[6].move(2, -5);
+                                                tet.bits[7].move(3, -4);
+                                                tet.bits[12].move(-2, 2);
+                                                tet.bits[13].move(-2, 2);
+                                                tet.bits[14].move(-2, 2);
+                                                tet.bits[15].move(-2, 2);
+                                            }
+
                                             tet.rotation = 1;
 
                                             break;
@@ -2037,6 +2241,26 @@ namespace TGMsim
                                             tet.bits[2].x += -1 + xOffset + ((i % 3) - 1);
                                             tet.bits[3].x += 2 + xOffset + ((i % 3) - 1);
                                             tet.bits[3].y += 1;
+
+                                            if (mode.bigmode)
+                                            {
+                                                tet.bits[0].move(0, 2);
+                                                tet.bits[1].move(0, 2);
+                                                tet.bits[2].move(0, 2);
+                                                tet.bits[3].move(-2, 2);
+                                                tet.bits[4].move(-1, 2);
+                                                tet.bits[5].move(-2, 1);
+                                                tet.bits[6].move(-3, 5);
+                                                tet.bits[7].move(-2, 4);
+                                                tet.bits[8].move(2, 0);
+                                                tet.bits[9].move(2, 0);
+                                                tet.bits[10].move(2, 0);
+                                                tet.bits[11].move(2, 0);
+                                                tet.bits[12].move(4, 2);
+                                                tet.bits[13].move(4, 2);
+                                                tet.bits[14].move(4, 2);
+                                                tet.bits[15].move(4, 2);
+                                            }
 
                                             tet.rotation = 2;
 
@@ -2090,6 +2314,22 @@ namespace TGMsim
                                             tet.bits[3].x += ((i % 3) - 1);
                                             tet.bits[3].y += -2 + yOffset;
 
+                                            if (mode.bigmode)
+                                            {
+                                                tet.bits[4].move(1, -1);
+                                                tet.bits[5].move(2, 0);
+                                                tet.bits[6].move(2, -2);
+                                                tet.bits[7].move(3, -3);
+                                                tet.bits[8].move(0, -2);
+                                                tet.bits[9].move(0, -2);
+                                                tet.bits[10].move(0, -2);
+                                                tet.bits[11].move(0, -2);
+                                                tet.bits[12].move(-2, 0);
+                                                tet.bits[13].move(-2, 0);
+                                                tet.bits[14].move(-2, 0);
+                                                tet.bits[15].move(-2, 0);
+                                            }
+
                                             tet.rotation = 1;
 
                                             break;
@@ -2112,6 +2352,24 @@ namespace TGMsim
                                             tet.bits[2].y += 2;
                                             tet.bits[3].x += -2 + xOffset + ((i % 3) - 1);
                                             tet.bits[3].y += 1;
+
+                                            if (mode.bigmode)
+                                            {
+                                                tet.bits[0].move(0, 1);
+                                                tet.bits[1].move(0, 1);
+                                                tet.bits[4].move(-1, 3);
+                                                tet.bits[5].move(0, 2);
+                                                tet.bits[6].move(-2, 3);
+                                                tet.bits[7].move(-3, 2);
+                                                tet.bits[8].move(-4, 4);
+                                                tet.bits[9].move(-4, 4);
+                                                tet.bits[10].move(-4, 4);
+                                                tet.bits[11].move(-4, 4);
+                                                tet.bits[12].move(2, 0);
+                                                tet.bits[13].move(2, 0);
+                                                tet.bits[14].move(2, 0);
+                                                tet.bits[15].move(2, 0);
+                                            }
 
                                             tet.rotation = 2;
 
@@ -2148,6 +2406,21 @@ namespace TGMsim
                                             tet.bits[3].x += ((i % 3) - 1);
                                             tet.bits[3].y += 1 + yOffset;
 
+                                            if (mode.bigmode)
+                                            {
+                                                tet.bits[0].move(0, -1);
+                                                tet.bits[1].move(0, -1);
+                                                tet.bits[3].move(2, 0);
+                                                tet.bits[4].move(1, -3);
+                                                tet.bits[5].move(0, -4);
+                                                tet.bits[6].move(2, -3);
+                                                tet.bits[7].move(3, -2);
+                                                tet.bits[12].move(-2, 0);
+                                                tet.bits[13].move(-2, 0);
+                                                tet.bits[14].move(-2, 0);
+                                                tet.bits[15].move(-2, 0);
+                                            }
+
                                             tet.rotation = 3;
 
                                             break;
@@ -2169,6 +2442,23 @@ namespace TGMsim
                                             tet.bits[2].x += 1 + xOffset + ((i % 3) - 1);
                                             tet.bits[2].y += -1;
                                             tet.bits[3].x += 2 + xOffset + ((i % 3) - 1);
+
+                                            if (mode.bigmode)
+                                            {
+                                                tet.bits[3].move(-2, 0);
+                                                tet.bits[4].move(-1, 1);
+                                                tet.bits[5].move(-2, 2);
+                                                tet.bits[6].move(-2, 2);
+                                                tet.bits[7].move(-3, 3);
+                                                tet.bits[8].move(4, -2);
+                                                tet.bits[9].move(4, -2);
+                                                tet.bits[10].move(4, -2);
+                                                tet.bits[11].move(4, -2);
+                                                tet.bits[12].move(2, 0);
+                                                tet.bits[13].move(2, 0);
+                                                tet.bits[14].move(2, 0);
+                                                tet.bits[15].move(2, 0);
+                                            }
 
                                             tet.rotation = 0;
 
@@ -2216,6 +2506,23 @@ namespace TGMsim
                                                 tet.bits[3].x += -2 + ((i % 3) - 1);
                                                 tet.bits[3].y += yOffset;
 
+                                                if (mode.bigmode)
+                                                {
+                                                    tet.bits[3].move(2, 0);
+                                                    tet.bits[4].move(1, -1);
+                                                    tet.bits[5].move(2, -2);
+                                                    tet.bits[6].move(2, -2);
+                                                    tet.bits[7].move(3, -3);
+                                                    tet.bits[8].move(-4, 2);
+                                                    tet.bits[9].move(-4, 2);
+                                                    tet.bits[10].move(-4, 2);
+                                                    tet.bits[11].move(-4, 2);
+                                                    tet.bits[12].move(-2, 0);
+                                                    tet.bits[13].move(-2, 0);
+                                                    tet.bits[14].move(-2, 0);
+                                                    tet.bits[15].move(-2, 0);
+                                                }
+
                                                 tet.rotation = 3;
 
                                                 break;
@@ -2239,6 +2546,22 @@ namespace TGMsim
                                             tet.bits[2].y += 1;
                                             tet.bits[3].x += xOffset + ((i % 3) - 1);
                                             tet.bits[3].y += 2;
+
+                                            if (mode.bigmode)
+                                            {
+                                                tet.bits[4].move(-1, 1);
+                                                tet.bits[5].move(-2, 0);
+                                                tet.bits[6].move(-2, 2);
+                                                tet.bits[7].move(-3, 3);
+                                                tet.bits[8].move(0, 2);
+                                                tet.bits[9].move(0, 2);
+                                                tet.bits[10].move(0, 2);
+                                                tet.bits[11].move(0, 2);
+                                                tet.bits[12].move(2, 0);
+                                                tet.bits[13].move(2, 0);
+                                                tet.bits[14].move(2, 0);
+                                                tet.bits[15].move(2, 0);
+                                            }
 
                                             tet.rotation = 0;
 
@@ -2275,6 +2598,24 @@ namespace TGMsim
                                             tet.bits[3].x += 2 + ((i % 3) - 1);
                                             tet.bits[3].y += -1 + yOffset;
 
+                                            if (mode.bigmode)
+                                            {
+                                                tet.bits[0].move(0, -1);
+                                                tet.bits[1].move(0, -1);
+                                                tet.bits[4].move(1, -3);
+                                                tet.bits[5].move(0, -2);
+                                                tet.bits[6].move(2, -3);
+                                                tet.bits[7].move(3, -2);
+                                                tet.bits[8].move(4, -4);
+                                                tet.bits[9].move(4, -4);
+                                                tet.bits[10].move(4, -4);
+                                                tet.bits[11].move(4, -4);
+                                                tet.bits[12].move(-2, 0);
+                                                tet.bits[13].move(-2, 0);
+                                                tet.bits[14].move(-2, 0);
+                                                tet.bits[15].move(-2, 0);
+                                            }
+
                                             tet.rotation = 1;
 
                                             break;
@@ -2297,6 +2638,21 @@ namespace TGMsim
                                             tet.bits[2].x += -1 + xOffset + ((i % 3) - 1);
                                             tet.bits[3].x += xOffset + ((i % 3) - 1);
                                             tet.bits[3].y += -1;
+
+                                            if (mode.bigmode)
+                                            {
+                                                tet.bits[0].move(0, 1);
+                                                tet.bits[1].move(0, 1);
+                                                tet.bits[3].move(-2, 0);
+                                                tet.bits[4].move(-1, 3);
+                                                tet.bits[5].move(0, 4);
+                                                tet.bits[6].move(-2, 3);
+                                                tet.bits[7].move(-3, 2);
+                                                tet.bits[12].move(2, 0);
+                                                tet.bits[13].move(2, 0);
+                                                tet.bits[14].move(2, 0);
+                                                tet.bits[15].move(2, 0);
+                                            }
 
                                             tet.rotation = 2;
 
@@ -2418,7 +2774,7 @@ namespace TGMsim
                                 {
                                     continue;
                                 }
-                                if (gameField[tet.bits[1].x - 1 + ((i % 3) - 1)][tet.bits[0].y - 1 + yOffset] == 0 && gameField[tet.bits[1].x - 1 + ((i % 3) - 1)][tet.bits[3].y + yOffset] == 0 && gameField[tet.bits[1].x + ((i % 3) - 1)][tet.bits[1].y + yOffset] == 0 && gameField[tet.bits[2].x + ((i % 3) - 1)][tet.bits[2].y + yOffset] == 0)
+                                if (gameField[tet.bits[1].x + 1 + ((i % 3) - 1)][tet.bits[0].y - 1 + yOffset] == 0 && gameField[tet.bits[1].x + 1 + ((i % 3) - 1)][tet.bits[3].y + yOffset] == 0 && gameField[tet.bits[1].x + ((i % 3) - 1)][tet.bits[1].y + yOffset] == 0 && gameField[tet.bits[2].x + ((i % 3) - 1)][tet.bits[2].y + yOffset] == 0)
                                 {
                                     tet.bits[0].x += 2 + ((i % 3) - 1);
                                     tet.bits[0].y += yOffset - 1;
@@ -2428,6 +2784,20 @@ namespace TGMsim
                                     tet.bits[2].y += yOffset - 1;
                                     tet.bits[3].x += -1 + ((i % 3) - 1);
                                     tet.bits[3].y += yOffset;
+
+                                    if (mode.bigmode)
+                                    {
+                                        tet.bits[0].move(0, 2);
+                                        tet.bits[4].move(3, -3);
+                                        tet.bits[5].move(5, -2);
+                                        tet.bits[6].move(4, -2);
+                                        tet.bits[7].move(2, -1);
+                                        tet.bits[10].move(0, -2);
+                                        tet.bits[11].move(0, -2);
+                                        tet.bits[14].move(0, -2);
+                                        tet.bits[15].move(0, -2);
+
+                                    }
 
                                     tet.rotation = 1;
 
@@ -2450,6 +2820,20 @@ namespace TGMsim
                                     tet.bits[0].x += (xOffset - 2) + ((i % 3) - 1);
                                     tet.bits[0].y += 1;
                                     tet.bits[3].x += (xOffset + 1) + ((i % 3) - 1);
+
+                                    if (mode.bigmode)
+                                    {
+                                        tet.bits[0].move(0, -2);
+                                        tet.bits[4].move(-3, 3);
+                                        tet.bits[5].move(-5, 2);
+                                        tet.bits[6].move(-4, 2);
+                                        tet.bits[7].move(-2, 1);
+                                        tet.bits[10].move(0, 2);
+                                        tet.bits[11].move(0, 2);
+                                        tet.bits[14].move(0, 2);
+                                        tet.bits[15].move(0, 2);
+
+                                    }
 
                                     tet.rotation = 0;
 
