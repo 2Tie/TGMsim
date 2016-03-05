@@ -56,9 +56,9 @@ namespace TGMsim
             this.ClientSize = new Size(1280, 780);
 
             interval = (long)TimeSpan.FromSeconds(1.0 / FPS).TotalMilliseconds;
-            fonts.AddFontFile(@"Res\AmaticSC-Regular.ttf");
-            FontFamily test = fonts.Families[0];
-            f_Maestro = new System.Drawing.Font(test.Name, 12, GraphicsUnit.Pixel);
+            fonts.AddFontFile(@"Res\Maestro.ttf");
+            FontFamily fontFam = fonts.Families[0];
+            f_Maestro = new System.Drawing.Font(fontFam, 16, GraphicsUnit.Pixel);
 
             imgBuffer = (Image)new Bitmap(this.ClientSize.Width, this.ClientSize.Height);
 
@@ -423,7 +423,7 @@ namespace TGMsim
                     break;
             }
             if (menuState > 1)
-                drawBuffer.DrawString(player.name, DefaultFont, new SolidBrush(Color.White), 1000, 20);
+                drawBuffer.DrawString(player.name, f_Maestro, new SolidBrush(Color.White), 1000, 20);
 
 #if DEBUG
             SolidBrush debugBrush = new SolidBrush(Color.White);

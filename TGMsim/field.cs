@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using NAudio;
 using System.Windows.Forms;
+using System.Drawing.Text;
 
 namespace TGMsim
 {
@@ -98,6 +99,9 @@ namespace TGMsim
         List<System.Drawing.Color> tetColors = new List<System.Drawing.Color>();
         Color frameColour;
 
+        PrivateFontCollection fonts = new PrivateFontCollection();
+        Font f_Maestro;
+
         NAudio.Wave.WaveOutEvent soundList = new NAudio.Wave.WaveOutEvent();
         NAudio.Vorbis.VorbisWaveReader vorbisStream;
         System.Windows.Media.MediaPlayer s_Ready = new System.Windows.Media.MediaPlayer();
@@ -153,6 +157,10 @@ namespace TGMsim
             s_Impact.Open(new Uri(Environment.CurrentDirectory + @"/Res/Audio/SE/SEB_fall.wav"));
             s_Grade.Open(new Uri(Environment.CurrentDirectory + @"/Res/Audio/SE/SEP_levelchange.wav"));
             s_Hold.Open(new Uri(Environment.CurrentDirectory + @"/Res/Audio/SE/SEB_hold.wav"));
+
+            fonts.AddFontFile(@"Res\Maestro.ttf");
+            FontFamily fontFam = fonts.Families[0];
+            f_Maestro = new System.Drawing.Font(fontFam, 16, GraphicsUnit.Pixel);
 
             pad = ctlr;
             ruleset = rules;
@@ -379,29 +387,28 @@ namespace TGMsim
 
             //SMALL TEXT
             //levels
-            drawBuffer.DrawString(level.ToString(), SystemFonts.DefaultFont, new SolidBrush(Color.White), 610, 530);
+            drawBuffer.DrawString(level.ToString(), f_Maestro, new SolidBrush(Color.White), 610, 530);
             if (mode.sections.Count == curSection)
-                drawBuffer.DrawString(mode.sections[curSection - 1].ToString(), SystemFonts.DefaultFont, new SolidBrush(Color.White), 610, 570);
+                drawBuffer.DrawString(mode.sections[curSection - 1].ToString(), f_Maestro, new SolidBrush(Color.White), 610, 570);
             else
-                drawBuffer.DrawString(mode.sections[curSection].ToString(), SystemFonts.DefaultFont, new SolidBrush(Color.White), 610, 570);
-
-            drawBuffer.DrawString(score.ToString(), SystemFonts.DefaultFont, new SolidBrush(Color.White), 610, 400);
+                drawBuffer.DrawString(mode.sections[curSection].ToString(), f_Maestro, new SolidBrush(Color.White), 610, 570);
 
             if (ruleset.gameRules == 1)
             {
-                drawBuffer.DrawString("Next Grade:", SystemFonts.DefaultFont, new SolidBrush(Color.White), 600, 240);
+                drawBuffer.DrawString(score.ToString(), f_Maestro, new SolidBrush(Color.White), 610, 400);
+                drawBuffer.DrawString("NEXT GRADE:", f_Maestro, new SolidBrush(Color.White), 600, 240);
                 if (grade != ruleset.gradePointsTGM1.Count)
-                    drawBuffer.DrawString(ruleset.gradePointsTGM1[grade + 1].ToString(), SystemFonts.DefaultFont, new SolidBrush(Color.White), 600, 260);
+                    drawBuffer.DrawString(ruleset.gradePointsTGM1[grade + 1].ToString(), f_Maestro, new SolidBrush(Color.White), 600, 260);
                 else
-                    drawBuffer.DrawString("999", SystemFonts.DefaultFont, new SolidBrush(Color.White), 600, 260);
+                    drawBuffer.DrawString("??????", f_Maestro, new SolidBrush(Color.White), 600, 260);
             }
 
             if (godmode)
-                drawBuffer.DrawString("GodMode", SystemFonts.DefaultFont, new SolidBrush(Color.Orange), 20, 680);
+                drawBuffer.DrawString("GODMODE", f_Maestro, new SolidBrush(Color.Orange), 20, 680);
             if (g0)
-                drawBuffer.DrawString("0G Mode", SystemFonts.DefaultFont, new SolidBrush(Color.Orange), 20, 700);
+                drawBuffer.DrawString("0G MODE", f_Maestro, new SolidBrush(Color.Orange), 20, 700);
             if (mode.bigmode)
-                drawBuffer.DrawString("Big Mode", SystemFonts.DefaultFont, new SolidBrush(Color.Orange), 20, 720);
+                drawBuffer.DrawString("BIG MODE", f_Maestro, new SolidBrush(Color.Orange), 20, 720);
 
             //BIGGER TEXT
             drawBuffer.DrawString("Points", SystemFonts.DefaultFont, new SolidBrush(Color.White), 600, 380);
