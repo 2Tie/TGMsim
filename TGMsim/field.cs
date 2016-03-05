@@ -2869,10 +2869,11 @@ namespace TGMsim
 
                 for (int k = 0; k < lastTet.Count; k++)
                 {
-                    while (mode.easyGen == true && (tempID == 5 || tempID == 6))
-                    {
-                        tempID = piece.Next(7) + 1;
-                    }
+                    tempID = piece.Next(5) + 1;//no S or Z
+
+                    if (tempID == 5)//offset the O back to proper ID
+                        tempID = 7;
+
                     if (tempID == lastTet[k])
                     {
                         copy = true;
