@@ -27,7 +27,7 @@ namespace TGMsim
 
         public List<int> medals = new List<int>() { 0, 0, 0, 0, 0, 0 };
 
-        public List<int> sectionTimes = new List<int>();
+        public List<long> sectionTimes = new List<long>();
         public List<bool> GMflags = new List<bool>();
 
         public bool isGM = false;
@@ -1018,6 +1018,15 @@ namespace TGMsim
                                                             rotations = 0;
                                                             totalTets = 0;
                                                         }
+
+
+                                                    if ((sectionTimes.Sum() / sectionTimes.Count) > sectionTime.elapsedTime)
+                                                    {
+                                                        //faster than average sectiontimes
+                                                    }
+
+
+                                                    sectionTimes.Add(sectionTime.elapsedTime);
                                                     sectionTime.stop();
 
                                                     sectionTime.start();
