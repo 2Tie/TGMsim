@@ -29,6 +29,7 @@ namespace TGMsim
 
         public List<long> sectionTimes = new List<long>();
         public List<bool> GMflags = new List<bool>();
+        public List<int> secTet = new List<int>();
 
         public bool isGM = false;
 
@@ -238,6 +239,8 @@ namespace TGMsim
             timer.start();
             startTime.start();
             sectionTime.start();
+            secTet.Add(0);
+
             for (int i = 0; i < 10; i++)
             {
                 List<int> tempList = new List<int>();
@@ -721,7 +724,10 @@ namespace TGMsim
                                         //calculate combo!
 
                                         if (full.Count == 4)
+                                        {
                                             tetrises++;
+                                            secTet[curSection]++;
+                                        }
 
                                         int bravo = 1;
                                         if (tetCount == 0)
@@ -763,35 +769,9 @@ namespace TGMsim
                                         //check GM conditions
                                         long temptime = (long)((timer.elapsedTime * ruleset.FPS) / 60);
 
-                                        if (GMflags.Count == 0 && level >= 300)
-                                        {
-                                            if (score >= 12000 && temptime <= 255000)
-                                                GMflags.Add(true);
-                                            else
-                                                GMflags.Add(false);
-                                        }
-                                        else if (GMflags.Count == 1 && level >= 500)
-                                        {
-                                            if (score >= 40000 && temptime <= 450000)
-                                                GMflags.Add(true);
-                                            else
-                                                GMflags.Add(false);
-                                        }
-                                        else if (GMflags.Count == 2 && level >= mode.endLevel)
-                                        {
-                                            level = 999;
-                                            if (score >= 126000 && temptime <= 810000)
-                                                GMflags.Add(true);
-                                            else
-                                                GMflags.Add(false);
 
 
-                                            //check for awarding GM
-                                            if (GMflags[0] && GMflags[1] && GMflags[2])
-                                            {
-                                                isGM = true;
-                                            }
-                                        }
+                                        
 
                                         //update grade
 
@@ -838,6 +818,7 @@ namespace TGMsim
                                             if (level >= mode.sections[curSection])
                                             {
                                                 curSection++;
+                                                secTet.Add(0);
 
                                                 //MUSIC
                                                 updateMusic();
@@ -1020,12 +1001,6 @@ namespace TGMsim
                                                         }
 
 
-                                                    if ((sectionTimes.Sum() / sectionTimes.Count) > sectionTime.elapsedTime)
-                                                    {
-                                                        //faster than average sectiontimes
-                                                    }
-
-
                                                     sectionTimes.Add(sectionTime.elapsedTime);
                                                     sectionTime.stop();
 
@@ -1078,6 +1053,125 @@ namespace TGMsim
                                             if ((int)(Math.Ceiling((double)7 / big)) == combo)
                                                 medals[5] = 3;
                                             
+                                        }
+
+
+                                        //GM FLAG CHECKS
+                                        switch (ruleset.gameRules)
+                                        {
+                                            case 1:
+                                                if (GMflags.Count == 0 && level >= 300)
+                                                {
+                                                    if (score >= 12000 && temptime <= 255000)
+                                                        GMflags.Add(true);
+                                                    else
+                                                        GMflags.Add(false);
+                                                }
+                                                else if (GMflags.Count == 1 && level >= 500)
+                                                {
+                                                    if (score >= 40000 && temptime <= 450000)
+                                                        GMflags.Add(true);
+                                                    else
+                                                        GMflags.Add(false);
+                                                }
+                                                else if (GMflags.Count == 2 && level >= mode.endLevel)
+                                                {
+                                                    level = 999;
+                                                    if (score >= 126000 && temptime <= 810000)
+                                                        GMflags.Add(true);
+                                                    else
+                                                        GMflags.Add(false);
+
+
+                                                    //check for awarding GM
+                                                    if (GMflags[0] && GMflags[1] && GMflags[2])
+                                                    {
+                                                        isGM = true;
+                                                    }
+                                                }
+                                                break;
+                                            case 2:
+                                                if (GMflags.Count == 0 && level >= 100)
+                                                {
+                                                    if (secTet[0] > 0 && temptime <= 90000)
+                                                        GMflags.Add(true);
+                                                    else
+                                                        GMflags.Add(false);
+                                                }
+                                                else if (GMflags.Count == 1 && level >= 200)
+                                                {
+                                                    if (secTet[1] > 0)
+                                                        GMflags.Add(true);
+                                                    else
+                                                        GMflags.Add(false);
+                                                }
+                                                else if (GMflags.Count == 2 && level >= 300)
+                                                {
+                                                    if (secTet[2] > 0)
+                                                        GMflags.Add(true);
+                                                    else
+                                                        GMflags.Add(false);
+                                                }
+                                                else if (GMflags.Count == 3 && level >= 400)
+                                                {
+                                                    if (secTet[3] > 0)
+                                                        GMflags.Add(true);
+                                                    else
+                                                        GMflags.Add(false);
+                                                }
+                                                else if (GMflags.Count == 4 && level >= 500)
+                                                {
+                                                    if (secTet[4] > 0)
+                                                        GMflags.Add(true);
+                                                    else
+                                                        GMflags.Add(false);
+
+                                                    if (temptime <= 360000)
+                                                        GMflags.Add(true);
+                                                    else
+                                                        GMflags.Add(false);
+                                                }
+                                                else if (GMflags.Count == 6 && level >= 600)
+                                                {
+                                                    if (secTet[5] > 0 && sectionTimes[5] > (sectionTimes[0] + sectionTimes[1] + sectionTimes[2] + sectionTimes[3] + sectionTimes[4]) / 5)
+                                                        GMflags.Add(true);
+                                                    else
+                                                        GMflags.Add(false);
+                                                }
+                                                else if (GMflags.Count == 7 && level >= 700)
+                                                {
+                                                    if (secTet[6] > 0 && sectionTimes[6] > (sectionTimes[0] + sectionTimes[1] + sectionTimes[2] + sectionTimes[3] + sectionTimes[4]) / 5)
+                                                        GMflags.Add(true);
+                                                    else
+                                                        GMflags.Add(false);
+                                                }
+                                                else if (GMflags.Count == 8 && level >= 800)
+                                                {
+                                                    if (secTet[7] > 0 && sectionTimes[7] > (sectionTimes[0] + sectionTimes[1] + sectionTimes[2] + sectionTimes[3] + sectionTimes[4]) / 5)
+                                                        GMflags.Add(true);
+                                                    else
+                                                        GMflags.Add(false);
+                                                }
+                                                else if (GMflags.Count == 9 && level >= 900)
+                                                {
+                                                    if (secTet[8] > 0 && sectionTimes[8] > (sectionTimes[0] + sectionTimes[1] + sectionTimes[2] + sectionTimes[3] + sectionTimes[4]) / 5)
+                                                        GMflags.Add(true);
+                                                    else
+                                                        GMflags.Add(false);
+                                                }
+                                                else if (GMflags.Count == 10 && level == 999)
+                                                {
+                                                    if (sectionTime.elapsedTime <= 45000 && temptime <= 570000 && grade == 17)
+                                                        GMflags.Add(true);
+                                                    else
+                                                        GMflags.Add(false);
+
+                                                    if (GMflags.Count(p => p == true) == 11)
+                                                    {
+                                                        grade = 18;
+                                                    }
+                                                }
+                                                break;
                                         }
 
                                         if (mode.endLevel != 0 && level >= mode.endLevel && inCredits == false)
@@ -1414,6 +1508,12 @@ namespace TGMsim
             {
                 gameRunning = false;
                 //in the future, the little fadeout animation goes here!
+
+                if (grade == 18)
+                {
+                    isGM = true;
+                }
+
 
                 stopMusic();
                 results = new GameResult();
