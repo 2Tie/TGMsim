@@ -267,7 +267,7 @@ namespace TGMsim
                                     //todo: add more gimmicks, loop?
                                     break;
                                 case 2://konoha
-                                    rules.setGame(4);
+                                    rules.setGame(5);
                                     m = new Mode();
                                     m.setMode(0);
                                     m.endLevel = 0;

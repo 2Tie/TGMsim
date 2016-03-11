@@ -167,11 +167,29 @@ namespace TGMsim
                     showGrade = true;
                     break;
                 case 4: //TI
-                    FPS = 60.00;
+                    FPS = 59.94;
                     nextNum = 3;
                     hold = true;
                     hardDrop = 1;
                     rotation = 1;
+                    baseARE = 25;
+                    baseDAS = 14;
+                    baseLock = 30;
+                    baseLineClear = 40;
+                    gravType = 1;
+                    baseGrav = 1024;
+                    genAttps = 6;
+                    fieldW = 10;
+                    fieldH = 20;
+                    showGrade = false;
+                    break;
+                case 5:
+                    FPS = 59.94;
+                    nextNum = 4;
+                    hold = true;
+                    hardDrop = 1;
+                    rotation = 1;
+                    //recycled from TGM3 until more is known
                     baseARE = 25;
                     baseDAS = 14;
                     baseLock = 30;
