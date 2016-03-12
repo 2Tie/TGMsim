@@ -371,6 +371,7 @@ namespace TGMsim
                     gravColor = Color.White;
                     gravMeter = Color.Teal;
                     break;
+                case 2:
                 case 3:
                     gravColor = Color.Green;
                     gravMeter = Color.Orange;
@@ -419,7 +420,7 @@ namespace TGMsim
             //GRADE TEXT
             if (ruleset.gameRules == 1)
                 drawBuffer.DrawString(ruleset.gradesTGM1[grade].ToString(), SystemFonts.DefaultFont, new SolidBrush(Color.White), 600, 100);
-            else if (ruleset.gameRules != 4)
+            else if (ruleset.gameRules < 4)
                 drawBuffer.DrawString(ruleset.gradesTGM1[gm2grade].ToString(), SystemFonts.DefaultFont, new SolidBrush(Color.White), 600, 100);
 
             //Starting things
@@ -495,7 +496,7 @@ namespace TGMsim
             //time
             drawBuffer.DrawString(string.Format("{0,2:00}:{1,2:00}:{2,2:00}", min, sec, msec10), SystemFonts.DefaultFont, debugBrush, 100, 700);
 
-            drawBuffer.DrawString("gimmicks - " + activeGim.Count.ToString(), SystemFonts.DefaultFont, debugBrush, 400, 700);
+            drawBuffer.DrawString("iputdely " + inputDelayH, SystemFonts.DefaultFont, debugBrush, 400, 700);
 #endif
         }
 
@@ -536,7 +537,10 @@ namespace TGMsim
 
                     //check inputs and handle logic pertaining to them
                     //pad.poll();
-                    if (pad.inputH == 1 || pad.inputH == -1)
+
+                    if (ruleset.gameRules == 5 && pad.inputPressedRot3 == true)
+                        inputDelayH = 0;
+                    else if (pad.inputH == 1 || pad.inputH == -1)
                     {
                         if (inputDelayH > 0)
                         {
@@ -589,7 +593,7 @@ namespace TGMsim
                                 
                                 full.Clear();
                                 currentTimer = (int)Field.timerType.ARE;
-                                if (ruleset.gameRules == 3)
+                                if (ruleset.gameRules >= 3)
                                     timerCount = ruleset.baseARELine;
                                 else
                                     timerCount = ruleset.baseARE;
@@ -804,12 +808,12 @@ namespace TGMsim
                                                 {
                                                     grade++;
                                                     gradePoints = 0;
-                                                    if (ruleset.gameRules != 4)
+                                                    if (ruleset.gameRules < 4)
                                                         if (ruleset.gradeIntTGM2[grade] != gm2grade)
                                                         {
                                                             gm2grade++;
-                                                        playSound(s_Grade);
-                                                            }
+                                                            playSound(s_Grade);
+                                                        }
                                                 }
                                             }
                                         }
@@ -864,7 +868,7 @@ namespace TGMsim
                                                         }
                                                     }
 
-                                                    if (ruleset.gameRules == 4)
+                                                    if (ruleset.gameRules >= 4)
                                                     {
                                                         switch (curSection + speedBonus)
                                                         {
@@ -1254,6 +1258,12 @@ namespace TGMsim
                                 groundTimer = 0;
                         }
 
+                        if (ruleset.gameRules == 5 && ruleset.hardDrop == 1 && pad.inputV == 1 && pad.inputPressedRot3 == true)
+                        {
+                            gravCounter = 0;
+                            groundTimer = 0;
+                        }
+
                         if (pad.inputHold == 1 && ruleset.hold == true && swappedHeld == false)
                         {
                             Tetromino tempTet;
@@ -1274,7 +1284,12 @@ namespace TGMsim
                             swappedHeld = true;
                             s_Hold.Play();
                         }
-                        int rot = (pad.inputRot1 | pad.inputRot3) - pad.inputRot2;
+                        int rot;
+                        if (ruleset.gameRules < 5)
+                            rot = (pad.inputRot1 | pad.inputRot3) - pad.inputRot2;
+                        else
+                            rot = pad.inputRot1 - pad.inputRot2;
+
                         if (rot != 0)
                             rotatePiece(activeTet, rot);
 
@@ -1468,10 +1483,13 @@ namespace TGMsim
                 intRot += 1;
             if (pad.inputPressedRot2)
                 intRot -= 1;
-            if (intRot != 0 && activeTet.id != 7)
+            if (intRot != 0 && activeTet.id != 7 && pad.inputRot1 + pad.inputRot2 == 0)
             {
-                rotatePiece(activeTet, intRot);
-                playSound(s_PreRot);
+                if (ruleset.gameRules == 5 || pad.inputRot3 == 0)
+                {
+                    rotatePiece(activeTet, intRot);
+                    playSound(s_PreRot);
+                }
             }
 
             gravCounter = 0;

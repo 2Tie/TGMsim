@@ -35,6 +35,7 @@ namespace TGMsim
             {
                 case 0:
                     id = 0;
+                    gradedBy = 1;
                     endLevel = 999;
                     sections.Add(100);
                     sections.Add(200);
