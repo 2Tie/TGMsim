@@ -25,16 +25,16 @@ namespace TGMsim
         public bool exam = false;
         public int lvlBonus = 0;
         public int gradedBy = 0; //points, grade points, level, bravo, time
-        public int limitType = 0; //none, line, level, time
+        public int limitType = 0; //none, line, level, time, bravo
         public int limit = 0;
         public List<Gimmick> gimList = new List<Gimmick>();
 
         public void setMode(int mode)
         {
-            switch(mode)//Master, Death, shirase, sprint, rounds
+            id = mode;
+            switch(mode)//Master, Death, shirase, sprint, garbage clear, rounds
             {
                 case 0:
-                    id = 0;
                     gradedBy = 1;
                     endLevel = 999;
                     sections.Add(100);
@@ -49,7 +49,6 @@ namespace TGMsim
                     sections.Add(999);
                     break;
                 case 1:
-                    id = 1;
                     endLevel = 999;
                     sections.Add(100);
                     sections.Add(200);
@@ -65,7 +64,6 @@ namespace TGMsim
                     gradedBy = 2;
                     break;
                 case 2:
-                    id = 2;
                     endLevel = 1299;
                     sections.Add(100);
                     sections.Add(200);
@@ -81,7 +79,7 @@ namespace TGMsim
                     sections.Add(1200);
                     lvlBonus = 5;
                     var gL = new Gimmick();
-                    gL.type = 2;//2
+                    gL.type = 2;
                     gL.startLvl = 700;
                     gL.endLvl = 1000;
                     gimList.Add(gL);
@@ -94,9 +92,14 @@ namespace TGMsim
                     shiraseGrades = true;
                     break;
                 case 3:
-                    id = 3;
                     gradedBy = 4;
                     limitType = 1;
+                    break;
+                case 4:
+                    gradedBy = 4;
+                    limitType = 4;
+                    limit = 1;
+                    sections.Add(999);
                     break;
             }
         }

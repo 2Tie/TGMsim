@@ -94,16 +94,6 @@ namespace TGMsim
         void changeMenu(int newMenu)
         {
 
-            switch (menuState) //clean up the current menu
-            {  //title, login, game select, mode select, ingame, results, hiscore roll, custom game, settings, cheats
-                case 0:
-                    break;
-                case 1:
-                    break;
-                case 4:
-                    break;
-            }
-
             switch (newMenu) //activate the new menu
             {  //title, login, game select, mode select, ingame, results, hiscore roll, custom game, settings, cheats
                 case 0:
@@ -145,6 +135,8 @@ namespace TGMsim
                             FPS = 61.68;
                             break;
                         case 3:
+                        case 4:
+                        case 5:
                             FPS = 60.00;
                             break;
                     }
@@ -218,9 +210,9 @@ namespace TGMsim
                         }
                         else
                         {
-                            if (gSel.menuSelection == 5) //settings
+                            if (gSel.menuSelection == 7) //settings
                                 changeMenu(8);
-                            else if (gSel.menuSelection == 4) //Bonus
+                            else if (gSel.menuSelection == 6) //Bonus
                             {
                                 changeMenu(3);
                             }
@@ -250,8 +242,26 @@ namespace TGMsim
                     if ((pad1.inputRot1 | pad1.inputRot3) == 1)
                     {
                         //TODO: change rules based on what mode is selected
-                        if (gSel.menuSelection != 4)
+                        if (gSel.menuSelection < 5)
                             changeMenu(4);
+                        else if (gSel.menuSelection == 5 && mSel.selection == 2) //konoha
+                        {
+                            rules.setGame(6);
+                            Mode m = new Mode();
+                            m.setMode(0);
+                            m.endLevel = 0;
+                            m.gradedBy = 3;
+                            m.limitType = 3;
+                            m.limit = 180000;//three minutes
+                            m.bigmode = true;
+                            m.easyGen = true;
+
+                            saved = false;
+                            menuState = 4;
+                            stopMusic();
+                            field1 = new Field(pad1, rules, m, musicStream);
+                            break;
+                        }
                         else
                         {
                             switch (mSel.selection)
@@ -266,16 +276,10 @@ namespace TGMsim
                                     m.endLevel = 0;
                                     //todo: add more gimmicks, loop?
                                     break;
-                                case 2://konoha
-                                    rules.setGame(5);
+                                case 2://garbage
+                                    rules.setGame(4);
                                     m = new Mode();
-                                    m.setMode(0);
-                                    m.endLevel = 0;
-                                    m.gradedBy = 3;
-                                    m.limitType = 3;
-                                    m.limit = 180000;//three minutes
-                                    m.bigmode = true;
-                                    m.easyGen = true;
+                                    m.setMode(4);
 
                                     saved = false;
                                     menuState = 4;
@@ -574,6 +578,12 @@ namespace TGMsim
                     defaultTAPScores();
                 if (game == 4)
                     defaultTGM3Scores();
+                if (game == 5)
+                    return;
+                if (game == 6)
+                    return;
+                if (game == 7)
+                    return;
             }
             
             BinaryReader scores = new BinaryReader(File.OpenRead(filename));

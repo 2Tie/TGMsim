@@ -171,13 +171,6 @@ namespace TGMsim
             Random random = new Random();
 
             activeTet = new Tetromino(0, mode.bigmode); //first piece cannot be S, Z, or O
-            //for (int j = 0; j < lastTet.Count - 1; j++)
-            //{
-            //    lastTet[j] = lastTet[j + 1];
-            //}
-            //lastTet[lastTet.Count - 1] = activeTet.id;
-
-            //ghostPiece = activeTet.clone();
 
             if (nextTet.Count == 0 && ruleset.nextNum > 0) //generate nextTet
             {
@@ -192,6 +185,7 @@ namespace TGMsim
             gravTable = ruleset.gravTableTGM1;
             if (ruleset.gameRules >= 4)
                 gravTable = ruleset.gravTableTGM3;
+
 
             switch (mode.id)
             {
@@ -251,6 +245,10 @@ namespace TGMsim
                 gameField.Add(tempList);
             }
 
+
+            if (mode.id == 4)
+                randomize();
+
             updateMusic();
             //playMusic("Level 1");
             //playSound(s_Ready);
@@ -259,9 +257,9 @@ namespace TGMsim
         public void randomize()
         {
             Random rng = new Random();
-            for (int i = 0; i < 50; i++)
+            for (int i = 0; i < 80; i++)
             {
-                gameField[rng.Next(10)][rng.Next(20)] = rng.Next(8);
+                gameField[rng.Next(10)][rng.Next(16) + 5] = rng.Next(8);
                 
             }
         }
@@ -418,10 +416,13 @@ namespace TGMsim
             drawBuffer.DrawString("Points", SystemFonts.DefaultFont, new SolidBrush(Color.White), 600, 380);
 
             //GRADE TEXT
-            if (ruleset.gameRules == 1)
-                drawBuffer.DrawString(ruleset.gradesTGM1[grade].ToString(), SystemFonts.DefaultFont, new SolidBrush(Color.White), 600, 100);
-            else if (ruleset.gameRules < 4)
-                drawBuffer.DrawString(ruleset.gradesTGM1[gm2grade].ToString(), SystemFonts.DefaultFont, new SolidBrush(Color.White), 600, 100);
+            if (ruleset.showGrade)
+            {
+                if (ruleset.gameRules == 1)
+                    drawBuffer.DrawString(ruleset.gradesTGM1[grade].ToString(), SystemFonts.DefaultFont, new SolidBrush(Color.White), 600, 100);
+                else
+                    drawBuffer.DrawString(ruleset.gradesTGM1[gm2grade].ToString(), SystemFonts.DefaultFont, new SolidBrush(Color.White), 600, 100);
+            }
 
             //Starting things
             if (starting == 2)
@@ -538,7 +539,7 @@ namespace TGMsim
                     //check inputs and handle logic pertaining to them
                     //pad.poll();
 
-                    if (ruleset.gameRules == 5 && pad.inputPressedRot3 == true)
+                    if (ruleset.gameRules == 6 && pad.inputPressedRot3 == true)
                         inputDelayH = 0;
                     else if (pad.inputH == 1 || pad.inputH == -1)
                     {
@@ -1258,7 +1259,7 @@ namespace TGMsim
                                 groundTimer = 0;
                         }
 
-                        if (ruleset.gameRules == 5 && ruleset.hardDrop == 1 && pad.inputV == 1 && pad.inputPressedRot3 == true)
+                        if (ruleset.gameRules == 6 && ruleset.hardDrop == 1 && pad.inputV == 1 && pad.inputPressedRot3 == true)
                         {
                             gravCounter = 0;
                             groundTimer = 0;
@@ -1285,7 +1286,7 @@ namespace TGMsim
                             s_Hold.Play();
                         }
                         int rot;
-                        if (ruleset.gameRules < 5)
+                        if (ruleset.gameRules < 6)
                             rot = (pad.inputRot1 | pad.inputRot3) - pad.inputRot2;
                         else
                             rot = pad.inputRot1 - pad.inputRot2;
@@ -1485,7 +1486,7 @@ namespace TGMsim
                 intRot -= 1;
             if (intRot != 0 && activeTet.id != 7 && pad.inputRot1 + pad.inputRot2 == 0)
             {
-                if (ruleset.gameRules == 5 || pad.inputRot3 == 0)
+                if (ruleset.gameRules == 6 || pad.inputRot3 == 0)
                 {
                     rotatePiece(activeTet, intRot);
                     playSound(s_PreRot);
