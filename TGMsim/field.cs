@@ -97,7 +97,8 @@ namespace TGMsim
         public bool cont = false;
         public bool exit = false;
 
-        List<System.Drawing.Color> tetColors = new List<System.Drawing.Color>();
+        List<Image> tetImgs = new List<Image>();
+        List<Image> tetSImgs = new List<Image>();
         Color frameColour;
 
         PrivateFontCollection fonts = new PrivateFontCollection();
@@ -133,14 +134,27 @@ namespace TGMsim
             y = 100;
             width = 250;
             height = 500;
-            tetColors.Add(Color.Transparent);
-            tetColors.Add(Color.Red);
-            tetColors.Add(Color.Cyan);
-            tetColors.Add(Color.Orange);
-            tetColors.Add(Color.Blue);
-            tetColors.Add(Color.Purple);
-            tetColors.Add(Color.Green);
-            tetColors.Add(Color.Yellow);
+
+            tetImgs.Add(null);
+            tetImgs.Add(Image.FromFile("Res/GFX/t1.png"));
+            tetImgs.Add(Image.FromFile("Res/GFX/t2.png"));
+            tetImgs.Add(Image.FromFile("Res/GFX/t3.png"));
+            tetImgs.Add(Image.FromFile("Res/GFX/t4.png"));
+            tetImgs.Add(Image.FromFile("Res/GFX/t5.png"));
+            tetImgs.Add(Image.FromFile("Res/GFX/t6.png"));
+            tetImgs.Add(Image.FromFile("Res/GFX/t7.png"));
+            tetImgs.Add(null);
+            tetImgs.Add(Image.FromFile("Res/GFX/t9.png"));
+
+            tetSImgs.Add(null);
+            tetSImgs.Add(Image.FromFile("Res/GFX/s1.png"));
+            tetSImgs.Add(Image.FromFile("Res/GFX/s2.png"));
+            tetSImgs.Add(Image.FromFile("Res/GFX/s3.png"));
+            tetSImgs.Add(Image.FromFile("Res/GFX/s4.png"));
+            tetSImgs.Add(Image.FromFile("Res/GFX/s5.png"));
+            tetSImgs.Add(Image.FromFile("Res/GFX/s6.png"));
+            tetSImgs.Add(Image.FromFile("Res/GFX/s7.png"));
+            tetSImgs.Add(null);
 
             s_Ready.Open(new Uri(Environment.CurrentDirectory + @"\Res\Audio\SE\SEP_ready.wav"));
             s_Go.Open(new Uri(Environment.CurrentDirectory + @"/Res/Audio/SE/SEP_go.wav"));
@@ -280,23 +294,26 @@ namespace TGMsim
                     else if (block == 9)
                         drawBuffer.FillRectangle(new SolidBrush(Color.DarkGray), x + 25 * i, y + j * 25, 25, 25);
                     else if (block % 8 != 0)
-                        drawBuffer.FillRectangle(new SolidBrush(tetColors[block]), x + 25 * i, y + j * 25, 25, 25);
+                    {
+                        drawBuffer.DrawImageUnscaled(tetImgs[block], x + 25 * i, y + j * 25, 25, 25);
+                        drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(130, Color.Black)), x + 25 * i, y + j * 25, 25, 25);
+                    }
 
                     //outline
                     if (block % 8 != 0 && block != 10)
                     {
                         if (i > 0)
                             if (gameField[i - 1][j] == 0)//left
-                                drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(178, Color.White)), x + 25 * i, y + j * 25, 2, 25);
+                                drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.White)), x + 25 * i, y + j * 25, 2, 25);
                         if (i < 9)
                             if (gameField[i + 1][j] == 0)//right
-                                drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(178, Color.White)), x + 25 * i + 23, y + j * 25, 2, 25);
+                                drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.White)), x + 25 * i + 23, y + j * 25, 2, 25);
                         if (j > 0)
                             if (gameField[i][j - 1] == 0)//down
-                                drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(178, Color.White)), x + 25 * i, y + j * 25, 25, 2);
+                                drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.White)), x + 25 * i, y + j * 25, 25, 2);
                         if (j < 20)
                             if (gameField[i][j + 1] == 0)//up
-                                drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(178, Color.White)), x + 25 * i, y + j * 25 + 23, 25, 2);
+                                drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.White)), x + 25 * i, y + j * 25 + 23, 25, 2);
                     }
                     
                 }
@@ -316,7 +333,15 @@ namespace TGMsim
                     if (activeTet.bone == true)
                         drawBuffer.FillRectangle(new SolidBrush(Color.DarkGray), x + 25 * activeTet.bits[i].x, y + 25 * activeTet.bits[i].y, 25, 25);
                     else
-                        drawBuffer.FillRectangle(new SolidBrush(tetColors[activeTet.id]), x + 25 * activeTet.bits[i].x, y + 25 * activeTet.bits[i].y, 25, 25);
+                    {
+                        if (groundTimer > 2 || groundTimer == 0)
+                        {
+                            drawBuffer.DrawImageUnscaled(tetImgs[activeTet.id], x + 25 * activeTet.bits[i].x, y + 25 * activeTet.bits[i].y);
+                            drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb((ruleset.baseLock - groundTimer) * 130 / ruleset.baseLock, Color.Black)), x + 25 * activeTet.bits[i].x, y + 25 * activeTet.bits[i].y, 25, 25);
+                        }
+                        else
+                            drawBuffer.DrawImageUnscaled(tetImgs[9], x + 25 * activeTet.bits[i].x, y + 25 * activeTet.bits[i].y);
+                    }
                 }
             }
 
@@ -330,7 +355,8 @@ namespace TGMsim
                         if (nextTet[i].bone == true)
                             drawBuffer.FillRectangle(new SolidBrush(Color.DarkGray), x + i * 70 + 15 * nextTet[i].bits[j].x + 40, y + 15 * nextTet[i].bits[j].y - 75, 15, 15);
                         else
-                            drawBuffer.FillRectangle(new SolidBrush(tetColors[nextTet[i].id]), x + i*70 + 15 * nextTet[i].bits[j].x + 40, y + 15 * nextTet[i].bits[j].y - 75, 15, 15);
+                            //drawBuffer.FillRectangle(new SolidBrush(tetColors[nextTet[i].id]), x + i*70 + 15 * nextTet[i].bits[j].x + 40, y + 15 * nextTet[i].bits[j].y - 75, 15, 15);
+                            drawBuffer.DrawImageUnscaled(tetSImgs[nextTet[i].id], x + i * 70 + 16 * nextTet[i].bits[j].x + 40, y + 16 * nextTet[i].bits[j].y - 75);
                     }
                 }
             }
@@ -343,16 +369,28 @@ namespace TGMsim
                     if (heldPiece.bone == true)
                         drawBuffer.FillRectangle(new SolidBrush(Color.DarkGray), x - 75 + 15 * heldPiece.bits[i].x, y - 50 + 15 * heldPiece.bits[i].y, 15, 15);
                     else
-                        drawBuffer.FillRectangle(new SolidBrush(tetColors[heldPiece.id]), x - 75 + 15 * heldPiece.bits[i].x, y - 50 + 15 * heldPiece.bits[i].y, 15, 15);
+                        //drawBuffer.FillRectangle(new SolidBrush(tetColors[heldPiece.id]), x - 75 + 15 * heldPiece.bits[i].x, y - 50 + 15 * heldPiece.bits[i].y, 15, 15);
+                        drawBuffer.DrawImageUnscaled(tetSImgs[heldPiece.id], x - 75 + 16 * heldPiece.bits[i].x, y - 50 + 16 * heldPiece.bits[i].y);
                 }
             }
 
             //draw the ghost piece
             if (level < mode.sections[0] && ghostPiece != null && activeTet.id == ghostPiece.id)
             {
+                
                 for (int i = 0; i < activeTet.bits.Count; i++)
                 {
-                    drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(100, tetColors[ghostPiece.id])), x + 25 * ghostPiece.bits[i].x, y + 25 * ghostPiece.bits[i].y, 25, 25);
+                    bool breakout = false;
+                    for (int j = 0; j < activeTet.bits.Count; j++)
+                    {
+                        if (activeTet.bits[j].x == ghostPiece.bits[i].x && activeTet.bits[j].y == ghostPiece.bits[i].y)
+                            breakout = true;
+                    }
+                    if (!breakout)
+                    {
+                        drawBuffer.DrawImageUnscaled(tetImgs[ghostPiece.id], x + 25 * ghostPiece.bits[i].x, y + 25 * ghostPiece.bits[i].y, 25, 25);
+                        drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(130, Color.Black)), x + 25 * ghostPiece.bits[i].x, y + 25 * ghostPiece.bits[i].y, 25, 25);
+                    }
                 }
             }
 
@@ -497,7 +535,7 @@ namespace TGMsim
             //time
             drawBuffer.DrawString(string.Format("{0,2:00}:{1,2:00}:{2,2:00}", min, sec, msec10), SystemFonts.DefaultFont, debugBrush, 100, 700);
 
-            drawBuffer.DrawString("iputdely " + inputDelayH, SystemFonts.DefaultFont, debugBrush, 400, 700);
+            drawBuffer.DrawString("groundTime " + groundTimer, SystemFonts.DefaultFont, debugBrush, 400, 700);
 #endif
         }
 
@@ -1252,11 +1290,16 @@ namespace TGMsim
                         }
                         else if (pad.inputV == -1 && inputDelayV == 0)
                         {
-                            blockDrop = 1;
-                            softCounter++;
-                            gravCounter = 0;
-                            if (currentTimer == (int)Field.timerType.LockDelay)
+                            if (!floored)
+                            {
+                                blockDrop = 1;
+                                softCounter++;
+                            }
+                            else
+                            {
+                                gravCounter = 0;
                                 groundTimer = 0;
+                            }
                         }
 
                         if (ruleset.gameRules == 6 && ruleset.hardDrop == 1 && pad.inputV == 1 && pad.inputPressedRot3 == true)
@@ -1374,7 +1417,7 @@ namespace TGMsim
                         if (blockDrop > 0)// && currentTimer != (int)Field.timerType.LockDelay)
                         {
                             gravCounter = 0;
-                            tetGrav(activeTet, blockDrop);
+                            tetGrav(activeTet, blockDrop, false);
 
 
                         }
@@ -1386,7 +1429,7 @@ namespace TGMsim
                         {
                             ghostPiece = activeTet.clone();
 
-                            tetGrav(ghostPiece, 20);
+                            tetGrav(ghostPiece, 22, true);
                         }
 
                     }
@@ -3216,7 +3259,7 @@ namespace TGMsim
 
             return status;
         }
-        public void tetGrav(Tetromino tet, int i)
+        public void tetGrav(Tetromino tet, int i, bool ghost)
         {
             int g = 0;
             for (g = 0; g < i; g++)
@@ -3245,13 +3288,17 @@ namespace TGMsim
             }
             for (int p = 0; p < tet.bits.Count; p++)
             {
+
                 tet.bits[p].y += g;
             }
+
+            if (g != 0 && ghost == false)
+                groundTimer = ruleset.baseLock;
 
             //failsafe for now, ugh
             if (!emptyUnderTet(tet))
             {
-                for (int p =0; p < tet.bits.Count; p++)
+                for (int p = 0; p < tet.bits.Count; p++)
                 {
                     tet.bits[p].y--;
                 }
