@@ -238,7 +238,7 @@ namespace TGMsim
             for (int i = 0; i < 10; i++)
             {
                 List<int> tempList = new List<int>();
-                for (int j = 0; j < 21; j++)
+                for (int j = 0; j < 22; j++)
                 {
                     tempList.Add(0); // at least nine types; seven tetrominoes, invisible, and garbage
                 }
@@ -272,7 +272,7 @@ namespace TGMsim
             //draw the pieces
             for (int i = 0; i < 10; i++)
             {
-                for (int j = 0; j < 21; j++)
+                for (int j = 1; j < 21; j++)
                 {
                     int block = gameField[i][j];
                     if (block == 10)
