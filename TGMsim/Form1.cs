@@ -506,6 +506,9 @@ namespace TGMsim
                         
                     }
                     break;
+                case 5:
+                    return false;
+                    break;
                 default:
                     for (int i = 0; i < hiscoreTable[gameResult.game].Count; i++)
                     {

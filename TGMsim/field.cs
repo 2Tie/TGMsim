@@ -244,7 +244,7 @@ namespace TGMsim
                     break;
             }
 
-            timer.start();
+            //timer.start();
             startTime.start();
             sectionTime.start();
             secTet.Add(0);
@@ -286,17 +286,17 @@ namespace TGMsim
             //draw the pieces
             for (int i = 0; i < 10; i++)
             {
-                for (int j = 1; j < 21; j++)
+                for (int j = 2; j < 22; j++)
                 {
                     int block = gameField[i][j];
                     if (block == 10)
-                        drawBuffer.FillRectangle(new SolidBrush(Color.DarkGray), x + 25 * i, y + j * 25, 25, 25); // WIP
+                        drawBuffer.FillRectangle(new SolidBrush(Color.DarkGray), x + 25 * i, y - 25 + j * 25, 25, 25); // WIP
                     else if (block == 9)
-                        drawBuffer.FillRectangle(new SolidBrush(Color.DarkGray), x + 25 * i, y + j * 25, 25, 25);
+                        drawBuffer.FillRectangle(new SolidBrush(Color.DarkGray), x + 25 * i, y - 25 + j * 25, 25, 25);
                     else if (block % 8 != 0)
                     {
-                        drawBuffer.DrawImageUnscaled(tetImgs[block], x + 25 * i, y + j * 25, 25, 25);
-                        drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(130, Color.Black)), x + 25 * i, y + j * 25, 25, 25);
+                        drawBuffer.DrawImageUnscaled(tetImgs[block], x + 25 * i, y - 25 + j * 25, 25, 25);
+                        drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(130, Color.Black)), x + 25 * i, y - 25 + j * 25, 25, 25);
                     }
 
                     //outline
@@ -304,16 +304,16 @@ namespace TGMsim
                     {
                         if (i > 0)
                             if (gameField[i - 1][j] == 0)//left
-                                drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.White)), x + 25 * i, y + j * 25, 3, 25);
+                                drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.White)), x + 25 * i, y - 25 + j * 25, 3, 25);
                         if (i < 9)
                             if (gameField[i + 1][j] == 0)//right
-                                drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.White)), x + 25 * i + 22, y + j * 25, 3, 25);
+                                drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.White)), x + 25 * i + 22, y - 25 + j * 25, 3, 25);
                         if (j > 0)
                             if (gameField[i][j - 1] == 0)//down
-                                drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.White)), x + 25 * i, y + j * 25, 25, 3);
-                        if (j < 20)
+                                drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.White)), x + 25 * i, y - 25 + j * 25, 25, 3);
+                        if (j < 21)
                             if (gameField[i][j + 1] == 0)//up
-                                drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.White)), x + 25 * i, y + j * 25 + 22, 25, 3);
+                                drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.White)), x + 25 * i, y - 25 + j * 25 + 22, 25, 3);
                     }
                     
                 }
@@ -331,16 +331,16 @@ namespace TGMsim
                 for (int i = 0; i < activeTet.bits.Count; i++)
                 {
                     if (activeTet.bone == true)
-                        drawBuffer.FillRectangle(new SolidBrush(Color.DarkGray), x + 25 * activeTet.bits[i].x, y + 25 * activeTet.bits[i].y, 25, 25);
+                        drawBuffer.FillRectangle(new SolidBrush(Color.DarkGray), x + 25 * activeTet.bits[i].x, y - 25 + 25 * activeTet.bits[i].y, 25, 25);
                     else
                     {
                         if (groundTimer > 2 || groundTimer == 0)
                         {
-                            drawBuffer.DrawImageUnscaled(tetImgs[activeTet.id], x + 25 * activeTet.bits[i].x, y + 25 * activeTet.bits[i].y);
-                            drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb((ruleset.baseLock - groundTimer) * 130 / ruleset.baseLock, Color.Black)), x + 25 * activeTet.bits[i].x, y + 25 * activeTet.bits[i].y, 25, 25);
+                            drawBuffer.DrawImageUnscaled(tetImgs[activeTet.id], x + 25 * activeTet.bits[i].x, y - 25 + 25 * activeTet.bits[i].y);
+                            drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb((ruleset.baseLock - groundTimer) * 130 / ruleset.baseLock, Color.Black)), x + 25 * activeTet.bits[i].x, y - 25 + 25 * activeTet.bits[i].y, 25, 25);
                         }
                         else
-                            drawBuffer.DrawImageUnscaled(tetImgs[9], x + 25 * activeTet.bits[i].x, y + 25 * activeTet.bits[i].y);
+                            drawBuffer.DrawImageUnscaled(tetImgs[9], x + 25 * activeTet.bits[i].x, y - 25 + 25 * activeTet.bits[i].y);
                     }
                 }
             }
@@ -388,8 +388,8 @@ namespace TGMsim
                     }
                     if (!breakout)
                     {
-                        drawBuffer.DrawImageUnscaled(tetImgs[ghostPiece.id], x + 25 * ghostPiece.bits[i].x, y + 25 * ghostPiece.bits[i].y, 25, 25);
-                        drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(130, Color.Black)), x + 25 * ghostPiece.bits[i].x, y + 25 * ghostPiece.bits[i].y, 25, 25);
+                        drawBuffer.DrawImageUnscaled(tetImgs[ghostPiece.id], x + 25 * ghostPiece.bits[i].x, y - 25 + 25 * ghostPiece.bits[i].y, 25, 25);
+                        drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(130, Color.Black)), x + 25 * ghostPiece.bits[i].x, y - 25 + 25 * ghostPiece.bits[i].y, 25, 25);
                     }
                 }
             }
@@ -556,6 +556,7 @@ namespace TGMsim
             if (startTime.elapsedTime > 3000 && starting == 3)
             {
                 starting = 0;
+                timer.start();
             }
 
             if (starting == 0)
@@ -661,13 +662,70 @@ namespace TGMsim
                     if (activeTet.id != 0)//else, check collision below
                     {
 
+                        if (pad.inputH == 1 && (inputDelayH < 1 || inputDelayH == ruleset.baseDAS))
+                        {
+                            bool safe = true;
+                            int dst = 1;
+                            if (mode.bigmode)
+                                dst = 2;
+                            //check to the right of each bit
+                            for (int i = 0; i < activeTet.bits.Count; i++)
+                            {
+                                if (activeTet.bits[i].x + dst > 9)
+                                {
+                                    safe = false;
+                                    break;
+                                }
+                                if (gameField[activeTet.bits[i].x + dst][activeTet.bits[i].y] != 0)
+                                {
+                                    safe = false;
+                                    break;
+                                }
+                            }
+                            if (safe) //if it's fine, move them all right one
+                            {
+                                for (int i = 0; i < activeTet.bits.Count; i++)
+                                {
+                                    activeTet.bits[i].x += dst;
+                                }
+                            }
+                        }
+                        else if (pad.inputH == -1 && (inputDelayH < 1 || inputDelayH == ruleset.baseDAS))
+                        {
+                            bool safe = true;
+                            int dst = 1;
+                            if (mode.bigmode)
+                                dst = 2;
+                            //check to the right of each bit
+                            for (int i = 0; i < activeTet.bits.Count; i++)
+                            {
+                                if (activeTet.bits[i].x - dst < 0)
+                                {
+                                    safe = false;
+                                    break;
+                                }
+                                if (gameField[activeTet.bits[i].x - dst][activeTet.bits[i].y] != 0)
+                                {
+                                    safe = false;
+                                    break;
+                                }
+                            }
+                            if (safe) //if it's fine, move them all right one
+                            {
+                                for (int i = 0; i < activeTet.bits.Count; i++)
+                                {
+                                    activeTet.bits[i].x -= dst;
+                                }
+                            }
+                        }
+
                         bool floored = false;
 
                         if (activeTet.id != 0)
                         {
                             for (int i = 0; i < activeTet.bits.Count; i++)
                             {
-                                if (activeTet.bits[i].y + 1 >= 21)
+                                if (activeTet.bits[i].y + 1 >= 22)
                                 {
                                     floored = true;
                                     break;
@@ -732,7 +790,7 @@ namespace TGMsim
 
                                     int tetCount = 0;
 
-                                    for (int i = 0; i < 20; i++)
+                                    for (int i = 0; i < 21; i++)
                                     {
                                         int columnCount = 0;
                                         for (int j = 0; j < 10; j++)
@@ -785,7 +843,7 @@ namespace TGMsim
                                             if (!inCredits)
                                             {
                                                 if (softCounter > 20)
-                                                    throw new IndexOutOfRangeException();
+                                                    softCounter = 20;
                                                 int newscore = ((int)Math.Ceiling((double)(level + full.Count) / 4) + softCounter) * full.Count * ((full.Count * 2) - 1) * bravo;
                                                 if (comboing)
                                                     newscore *= combo;
@@ -1339,7 +1397,7 @@ namespace TGMsim
 
 
 
-                        if (pad.inputH == 1 && (inputDelayH < 1 || inputDelayH == ruleset.baseDAS))
+                        /*if (pad.inputH == 1 && (inputDelayH < 1 || inputDelayH == ruleset.baseDAS))
                         {
                             bool safe = true;
                             int dst = 1;
@@ -1394,7 +1452,7 @@ namespace TGMsim
                                     activeTet.bits[i].x -= dst;
                                 }
                             }
-                        }
+                        }*/
 
                         //calc gravity LAST sso I-jumps are doable?
 
@@ -1559,7 +1617,7 @@ namespace TGMsim
                 for (int i = 0; i < 10; i++)
                 {
                     List<int> tempList = new List<int>();
-                    for (int j = 0; j < 21; j++)
+                    for (int j = 0; j < 22; j++)
                     {
                         tempList.Add(0); // at least nine types; seven tetrominoes, invisible, and garbage
                     }
@@ -3232,7 +3290,7 @@ namespace TGMsim
                 for (int j = 0; j < 10; j++ )
                     gameField[j][i] = 0;
             }
-            for (int i = 0; i < 20; i++)
+            for (int i = 0; i < 21; i++)
             {
                 for (int j = 0; j < 10; j++)
                 {
@@ -3241,8 +3299,8 @@ namespace TGMsim
             }
             for (int i = 0; i < num; i++)//works
                 for (int j = 0; j < 10; j++)
-                    if (gameField[j][20 - num] != 0)
-                        gameField[j][20 - i] = 9;
+                    if (gameField[j][21 - num] != 0)
+                        gameField[j][21 - i] = 9;
         }
 
         public bool emptyUnderTet(Tetromino tet)
@@ -3276,7 +3334,7 @@ namespace TGMsim
                 }
                 for (int p = 0; p < tet.bits.Count; p++)
                 {
-                    if (tet.bits[p].y + g == 20)
+                    if (tet.bits[p].y + g == 21)
                     {
                         breakout = true;
                         break;
