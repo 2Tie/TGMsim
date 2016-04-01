@@ -304,16 +304,16 @@ namespace TGMsim
                     {
                         if (i > 0)
                             if (gameField[i - 1][j] == 0)//left
-                                drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.White)), x + 25 * i, y + j * 25, 2, 25);
+                                drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.White)), x + 25 * i, y + j * 25, 3, 25);
                         if (i < 9)
                             if (gameField[i + 1][j] == 0)//right
-                                drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.White)), x + 25 * i + 23, y + j * 25, 2, 25);
+                                drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.White)), x + 25 * i + 22, y + j * 25, 3, 25);
                         if (j > 0)
                             if (gameField[i][j - 1] == 0)//down
-                                drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.White)), x + 25 * i, y + j * 25, 25, 2);
+                                drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.White)), x + 25 * i, y + j * 25, 25, 3);
                         if (j < 20)
                             if (gameField[i][j + 1] == 0)//up
-                                drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.White)), x + 25 * i, y + j * 25 + 23, 25, 2);
+                                drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.White)), x + 25 * i, y + j * 25 + 22, 25, 3);
                     }
                     
                 }
