@@ -1068,6 +1068,8 @@ namespace TGMsim
                                                         {
                                                             secCools[curSection - 1] = -1;
                                                         }
+                                                        if (secCools[curSection - 1] == 1)
+                                                            speedBonus += 1;
                                                     }
                                                     sectionTime.stop();
 
