@@ -1062,11 +1062,14 @@ namespace TGMsim
                                                     sectionTimes.Add(sectionTime.elapsedTime);
 
                                                     //check Regrets!
-                                                    if (ruleset.gameRules > 2)
+                                                    if (ruleset.gameRules > 2 && mode.id == 0)
                                                     {
                                                         if (sectionTime.elapsedTime > ruleset.secRegrets[curSection - 1])
                                                         {
-                                                            secCools[curSection - 1] = -1;
+                                                            if (curSection != 9)
+                                                                secCools[curSection - 1] = -1;
+                                                            else
+                                                                secCools.Add(-1);
                                                         }
                                                         if (secCools[curSection - 1] == 1)
                                                             speedBonus += 1;
@@ -1265,11 +1268,11 @@ namespace TGMsim
                                     }
 
                                     //check level for section cool
-                                    if (ruleset.gameRules > 2)
+                                    if (ruleset.gameRules > 2 && mode.id == 0)
                                     {
                                         if (level % 100 > 69)
                                         {
-                                            if (secCools.Count <= curSection)
+                                            if (secCools.Count <= curSection && curSection != 9)
                                             {
                                                 if (curSection != 0)
                                                 {

@@ -327,7 +327,7 @@ namespace TGMsim
                     sw.Write(passData);
                     sw.Write(new byte[4]);//global points
                     sw.Write(new byte[4]);//TGM3 points
-                    sw.Write(new byte[2]);//Official GM certifications (1, 2, tap, tap death, 3, 3 shirase, konoha)
+                    sw.Write(new byte[2]);//Official GM certifications (1, 2, tap, tap death, 3, 3 shirase, ACE TM, 4 world, 4 rounds, 4 konoha)
                     sw.Write(new byte[2]);//endless shirase hiscore?
                     sw.Write(new byte[8]);//current TI grade + previous seven rankings
                 }
