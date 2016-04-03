@@ -17,6 +17,13 @@ namespace TGMsim
 
         public bool gameRunning;
 
+
+        public struct vanPip
+        {
+            public long time;
+            public int x, y;
+        }
+
         Tetromino activeTet;
         public List<Tetromino> nextTet = new List<Tetromino>();
         public List<int> lastTet = new List<int>() { 6, 6, 6, 6};
@@ -31,6 +38,9 @@ namespace TGMsim
         public List<bool> GMflags = new List<bool>();
         public List<int> secTet = new List<int>();
         public List<int> secCools = new List<int>();
+        public List<vanPip> vanList = new List<vanPip>();
+        public int creditsType = 0;
+
 
         public bool isGM = false;
 
@@ -42,6 +52,7 @@ namespace TGMsim
         public GameTimer contTime = new GameTimer();
         public GameTimer startTime = new GameTimer();
         public GameTimer sectionTime = new GameTimer();
+        public GameTimer creditsPause = new GameTimer();
         public int min, sec, msec, msec10;
 
         public bool swappedHeld;
@@ -53,7 +64,7 @@ namespace TGMsim
         public int groundTimer = 0;
         public int gravCounter = 0;
         public int gravLevel = 0;
-        public int level = 1;
+        public int level = 0;
         public int grade = 0;
         public int gm2grade = 0;
         public int score = 0;
@@ -101,6 +112,7 @@ namespace TGMsim
         List<Image> tetImgs = new List<Image>();
         List<Image> tetSImgs = new List<Image>();
         Color frameColour;
+        SolidBrush textBrush = new SolidBrush(Color.White);
 
         PrivateFontCollection fonts = new PrivateFontCollection();
         Font f_Maestro;
@@ -123,6 +135,7 @@ namespace TGMsim
         System.Windows.Media.MediaPlayer s_Impact = new System.Windows.Media.MediaPlayer();
         System.Windows.Media.MediaPlayer s_Grade = new System.Windows.Media.MediaPlayer();
         System.Windows.Media.MediaPlayer s_Hold = new System.Windows.Media.MediaPlayer();
+        System.Windows.Media.MediaPlayer s_GameClear = new System.Windows.Media.MediaPlayer();
 
         Pen gridPen = new Pen(new SolidBrush(Color.White));
 
@@ -174,6 +187,7 @@ namespace TGMsim
             s_Impact.Open(new Uri(Environment.CurrentDirectory + @"/Res/Audio/SE/SEB_fall.wav"));
             s_Grade.Open(new Uri(Environment.CurrentDirectory + @"/Res/Audio/SE/SEP_levelchange.wav"));
             s_Hold.Open(new Uri(Environment.CurrentDirectory + @"/Res/Audio/SE/SEB_hold.wav"));
+            s_GameClear.Open(new Uri(Environment.CurrentDirectory + @"/Res/Audio/SE/SEP_gameclear.wav"));
 
             fonts.AddFontFile(@"Res\Maestro.ttf");
             FontFamily fontFam = fonts.Families[0];
@@ -245,6 +259,9 @@ namespace TGMsim
                 else
                     break;
             }
+
+            if ((mode.g20 == true || gravTable[gravLevel] == Math.Pow(256, ruleset.gravType + 1) * 20) && ruleset.gameRules < 3)
+                textBrush = new SolidBrush(Color.Gold);
 
             //timer.start();
             startTime.start();
@@ -431,39 +448,39 @@ namespace TGMsim
 
             //SMALL TEXT
             //levels
-            drawBuffer.DrawString(level.ToString(), f_Maestro, new SolidBrush(Color.White), 610, 530);
+            drawBuffer.DrawString(level.ToString(), f_Maestro, textBrush, 610, 530);
             if (mode.sections.Count == curSection)
-                drawBuffer.DrawString(mode.sections[curSection - 1].ToString(), f_Maestro, new SolidBrush(Color.White), 610, 570);
+                drawBuffer.DrawString(mode.sections[curSection - 1].ToString(), f_Maestro, textBrush, 610, 570);
             else
-                drawBuffer.DrawString(mode.sections[curSection].ToString(), f_Maestro, new SolidBrush(Color.White), 610, 570);
+                drawBuffer.DrawString(mode.sections[curSection].ToString(), f_Maestro, textBrush, 610, 570);
 
             if (ruleset.gameRules == 1)
             {
-                drawBuffer.DrawString(score.ToString(), f_Maestro, new SolidBrush(Color.White), 610, 400);
-                drawBuffer.DrawString("NEXT GRADE:", f_Maestro, new SolidBrush(Color.White), 600, 240);
+                drawBuffer.DrawString(score.ToString(), f_Maestro, textBrush, 610, 400);
+                drawBuffer.DrawString("NEXT GRADE:", f_Maestro, textBrush, 600, 240);
                 if (grade != ruleset.gradePointsTGM1.Count)
-                    drawBuffer.DrawString(ruleset.gradePointsTGM1[grade + 1].ToString(), f_Maestro, new SolidBrush(Color.White), 600, 260);
+                    drawBuffer.DrawString(ruleset.gradePointsTGM1[grade + 1].ToString(), f_Maestro, textBrush, 600, 260);
                 else
-                    drawBuffer.DrawString("??????", f_Maestro, new SolidBrush(Color.White), 600, 260);
+                    drawBuffer.DrawString("??????", f_Maestro, textBrush, 600, 260);
             }
 
             if (godmode)
                 drawBuffer.DrawString("GODMODE", f_Maestro, new SolidBrush(Color.Orange), 20, 680);
             if (g0)
                 drawBuffer.DrawString("0G MODE", f_Maestro, new SolidBrush(Color.Orange), 20, 700);
-            if (mode.bigmode)
-                drawBuffer.DrawString("BIG MODE", f_Maestro, new SolidBrush(Color.Orange), 20, 720);
+            //if (mode.bigmode)
+                //drawBuffer.DrawString("BIG MODE", f_Maestro, new SolidBrush(Color.Orange), 20, 720);
 
             //BIGGER TEXT
-            drawBuffer.DrawString("Points", SystemFonts.DefaultFont, new SolidBrush(Color.White), 600, 380);
+            drawBuffer.DrawString("Points", SystemFonts.DefaultFont, textBrush, 600, 380);
 
             //GRADE TEXT
             if (ruleset.showGrade)
             {
                 if (ruleset.gameRules == 1)
-                    drawBuffer.DrawString(ruleset.gradesTGM1[grade].ToString(), SystemFonts.DefaultFont, new SolidBrush(Color.White), 600, 100);
+                    drawBuffer.DrawString(ruleset.gradesTGM1[grade].ToString(), SystemFonts.DefaultFont, textBrush, 600, 100);
                 else
-                    drawBuffer.DrawString(ruleset.gradesTGM1[gm2grade].ToString(), SystemFonts.DefaultFont, new SolidBrush(Color.White), 600, 100);
+                    drawBuffer.DrawString(ruleset.gradesTGM1[gm2grade].ToString(), SystemFonts.DefaultFont, textBrush, 600, 100);
             }
 
             //Starting things
@@ -578,6 +595,23 @@ namespace TGMsim
                     msec10 = (int)(msec / 10);
 
 
+                    //vanishing logic
+                    int vpcount = 0;
+                    List<int> remCell = new List<int>();
+                    foreach (var vP in vanList)
+                    {
+                        if (vP.time + ruleset.FPS * 5 <= creditsProgress)
+                        {
+                            gameField[vP.x][vP.y] = 8;
+                            remCell.Add(vpcount);
+                        }
+                        vpcount++;
+                    }
+                    for (int i = 0; i < remCell.Count; i++ )
+                    {
+                        vanList.RemoveAt(remCell[remCell.Count - i - 1]);
+                    }
+
 
                     //check inputs and handle logic pertaining to them
                     //pad.poll();
@@ -596,7 +630,7 @@ namespace TGMsim
                     else
                         inputDelayH = -1;
 
-                    if (inCredits)
+                    if (inCredits && (ruleset.gameRules > 1 == creditsPause.elapsedTime >= 3000))
                     {
                         creditsProgress++;
                         if (pad.inputStart == 1 && ruleset.gameRules == 1)
@@ -628,6 +662,17 @@ namespace TGMsim
                                         {
                                             gameField[k][j] = gameField[k][j - 1];
                                         }
+                                        for (int c = 0; c < vanList.Count; c++ )
+                                        {
+                                            if (vanList[c].y == j)
+                                            {
+                                                var vP = new vanPip();
+                                                vP.time = vanList[c].time;
+                                                vP.x = vanList[c].x;
+                                                vP.y = vanList[c].y + 1;
+                                                vanList[c] = vP;
+                                            }
+                                        }
                                     }
                                     for (int k = 0; k < 10; k++)
                                     {
@@ -652,7 +697,7 @@ namespace TGMsim
                         //elseif timer is ARE and done, get next tetromino
                         else if (currentTimer == (int)Field.timerType.ARE)
                         {
-                            if (timerCount == 0)
+                            if (timerCount <= 0 && ((inCredits == creditsPause.elapsedTime > 3000) || ruleset.gameRules == 1))
                             {
                                 spawnPiece();
                             }
@@ -693,8 +738,7 @@ namespace TGMsim
                                 //if lock delay up, place piece.
                                 if (groundTimer == 0)
                                 {
-                                    if (level % 100 != 99 && level != (mode.endLevel - 1))
-                                        level++;
+                                    
 
                                     //GIMMICKS
 
@@ -718,6 +762,9 @@ namespace TGMsim
                                     if (checkGimmick(2))
                                         garbTimer += 1;
 
+                                    if (checkGimmick(5))
+                                        mode.bigmode = true;
+
                                     if (inCredits == true && creditsProgress >= ruleset.creditsLength)
                                     {
                                         endGame();
@@ -725,24 +772,33 @@ namespace TGMsim
 
                                     for (int i = 0; i < activeTet.bits.Count; i++)
                                     {
-                                        if (checkGimmick(1))
+                                        if (checkGimmick(1) || creditsType == 2)
                                             gameField[activeTet.bits[i].x][activeTet.bits[i].y] = 8;
                                         else if (activeTet.bone == true)
                                             gameField[activeTet.bits[i].x][activeTet.bits[i].y] = 10;
                                         else
                                             gameField[activeTet.bits[i].x][activeTet.bits[i].y] = activeTet.id;
+
+                                        if (creditsType == 1)
+                                        {
+                                            vanPip vP = new vanPip();
+                                            vP.time = creditsProgress;
+                                            vP.x = activeTet.bits[i].x;
+                                            vP.y = activeTet.bits[i].y;
+                                            vanList.Add(vP);
+                                        }
                                     }
                                     activeTet.id = 0;
                                     //check for full rows and screenclears
 
                                     int tetCount = 0;
 
-                                    for (int i = 0; i < 21; i++)
+                                    for (int i = 0; i < 22; i++)
                                     {
                                         int columnCount = 0;
                                         for (int j = 0; j < 10; j++)
                                         {
-                                            if (gameField[j][i + 1] != 0)
+                                            if (gameField[j][i] != 0)
                                             {
                                                 columnCount++;
                                                 tetCount++;
@@ -750,10 +806,23 @@ namespace TGMsim
                                         }
                                         if (columnCount == 10)
                                         {
-                                            if (!checkGimmick(4) || i < 10)
+                                            if (!checkGimmick(4) || i < 11)
                                             {
-                                                full.Add(i + 1);
+                                                full.Add(i);
                                                 tetCount -= 10;
+                                                //clear these from vanishing list
+                                                int count = 0;
+                                                List<int> remcell = new List<int>();
+                                                foreach (var vP in vanList)
+                                                {
+                                                    if (vP.y == i)
+                                                        remcell.Add(count);
+                                                    count++;
+                                                }
+                                                for (int c = 0; c < remcell.Count; c++ )
+                                                {
+                                                    vanList.RemoveAt(remcell[remcell.Count - c - 1]);
+                                                }
                                             }
                                         }
                                     }
@@ -769,6 +838,9 @@ namespace TGMsim
                                                 gameField[j][full[i]] = 0;
                                             level++;
                                         }
+                                        if (level > mode.endLevel)
+                                            level = mode.endLevel;
+
                                         //calculate combo!
 
                                         if (full.Count == 4)
@@ -787,7 +859,7 @@ namespace TGMsim
                                         if (ruleset.gameRules == 1)
                                         {
                                             combo = combo + (2 * full.Count) - 2;
-                                            if (!inCredits)
+                                            if (!inCredits && mode.gradedBy == 1)
                                             {
                                                 if (softCounter > 20)
                                                     softCounter = 20;
@@ -1301,6 +1373,9 @@ namespace TGMsim
                                             break;
                                     }
 
+                                    if ((mode.g20 == true || gravTable[gravLevel] == Math.Pow(256, ruleset.gravType + 1) * 20) && ruleset.gameRules < 3)
+                                        textBrush = new SolidBrush(Color.Gold);
+
                                     playSound(s_Contact);
 
                                     if (checkGimmick(2) && garbTimer >= 10)
@@ -1477,7 +1552,7 @@ namespace TGMsim
 
                         }
 
-
+                        
 
                         //handle ghost piece logic
                         if (activeTet.id != 0)
@@ -1508,7 +1583,7 @@ namespace TGMsim
             //get next tetromino, generate another for "next"
             if (ruleset.nextNum > 0)
             {
-                activeTet = nextTet[0];
+                activeTet = new Tetromino(nextTet[0].id, mode.bigmode);
                 if (mode.bigmode && activeTet.id == 5)
                     activeTet.bits[0].x = 7;
                 groundTimer = ruleset.baseLock;
@@ -1593,6 +1668,9 @@ namespace TGMsim
 
             gravCounter = 0;
 
+            if (level % 100 != 99 && level != (mode.endLevel - 1) && inCredits == false)
+                level++;
+
             bool blocked = false;
 
             blocked = !emptyUnderTet(activeTet);
@@ -1609,18 +1687,7 @@ namespace TGMsim
         private void endGame()
         {
             if (godmode == true && !inCredits)
-            {
-                gameField = new List<List<int>>();
-                for (int i = 0; i < 10; i++)
-                {
-                    List<int> tempList = new List<int>();
-                    for (int j = 0; j < 22; j++)
-                    {
-                        tempList.Add(0); // at least nine types; seven tetrominoes, invisible, and garbage
-                    }
-                    gameField.Add(tempList);
-                }
-            }
+                clearField();
             else
             {
                 gameRunning = false;
@@ -1671,8 +1738,27 @@ namespace TGMsim
             timer.stop();
             inCredits = true;
             stopMusic();
-            playMusic("credits");
+            if (ruleset.gameRules == 1)
+                playMusic("credits");
+            else
+            {
+                playSound(s_GameClear); //allclear
+                creditsPause.start();
+                clearField();
+            }
 
+            if (mode.id == 0)
+            {
+                if (ruleset.gameRules == 2 || ruleset.gameRules == 3) //tgm2 always has invisible
+                    creditsType = 2;
+                if (ruleset.gameRules == 4)
+                {
+                    if (grade > 27 && secCools.Sum() == 8)
+                        creditsType = 2;
+                    else
+                        creditsType = 1;
+                }
+            }
         }
 
         private void rotatePiece(Tetromino tet, int p)
@@ -3246,7 +3332,7 @@ namespace TGMsim
 
                 for (int k = 0; k < lastTet.Count; k++)
                 {
-                    if (mode.bigmode && !cheating)
+                    if (mode.easyGen && !cheating)
                     {
                         tempID = piece.Next(5) + 1;//no S or Z
 
@@ -3379,18 +3465,35 @@ namespace TGMsim
 
         private void playMusic(string song)
         {
-            try
+            if (!mode.mute)
             {
-                vorbisStream = new NAudio.Vorbis.VorbisWaveReader(@"Res\Audio\" + song + ".ogg");
-                LoopStream loop = new LoopStream(vorbisStream);
-                soundList.Init(loop);
-                soundList.Play();
+                try
+                {
+                    vorbisStream = new NAudio.Vorbis.VorbisWaveReader(@"Res\Audio\" + song + ".ogg");
+                    LoopStream loop = new LoopStream(vorbisStream);
+                    soundList.Init(loop);
+                    soundList.Play();
 
+                }
+                catch (Exception)
+                {
+                    //MessageBox.Show("The file \"" + song + ".ogg\" was not found!", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                    //throw;
+                }
             }
-            catch (Exception)
+        }
+
+        private void clearField()
+        {
+            gameField = new List<List<int>>();
+            for (int i = 0; i < 10; i++)
             {
-                //MessageBox.Show("The file \"" + song + ".ogg\" was not found!", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
-                //throw;
+                List<int> tempList = new List<int>();
+                for (int j = 0; j < 22; j++)
+                {
+                    tempList.Add(0); // at least nine types; seven tetrominoes, invisible, and garbage
+                }
+                gameField.Add(tempList);
             }
         }
 

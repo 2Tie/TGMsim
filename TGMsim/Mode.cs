@@ -10,7 +10,7 @@ namespace TGMsim
     {
         public struct Gimmick
         {
-            public int type; //fading, vanishing, garbage, bones, ice
+            public int type; //fading, vanishing, garbage, bones, ice, big
             public int startLvl;
             public int endLvl;
         }
@@ -27,6 +27,7 @@ namespace TGMsim
         public int gradedBy = 0; //points, grade points, level, bravo, time
         public int limitType = 0; //none, line, level, time, bravo
         public int limit = 0;
+        public bool mute = false;
         public List<Gimmick> gimList = new List<Gimmick>();
 
         public void setMode(int mode)
@@ -86,7 +87,12 @@ namespace TGMsim
                     gL = new Gimmick();
                     gL.type = 3;
                     gL.startLvl = 1000;
-                    gL.endLvl = 1299;
+                    gL.endLvl = 1300;
+                    gimList.Add(gL);
+                    gL = new Gimmick();
+                    gL.type = 5;
+                    gL.startLvl = 1299;
+                    gL.endLvl = 1300;
                     gimList.Add(gL);
                     gradedBy = 2;
                     shiraseGrades = true;

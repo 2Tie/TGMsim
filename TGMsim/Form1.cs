@@ -147,7 +147,10 @@ namespace TGMsim
                     else
                         m.setMode(mSel.selection);
                     if (player.name == "   ")
+                    {
                         m.bigmode = cMen.cheats[3];
+                        m.mute = cMen.cheats[4];
+                    }
                     field1 = new Field(pad1, rules, m, musicStream);
                     if (player.name == "   ")
                     {

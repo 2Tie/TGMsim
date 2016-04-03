@@ -11,7 +11,7 @@ namespace TGMsim
     {
         int selection = 0;
         int dInput = 0;
-        public List<bool> cheats = new List<bool> { false, false, false, false };
+        public List<bool> cheats = new List<bool> { false, false, false, false, false };
 
         public void logic(Controller pad) 
         {
@@ -26,12 +26,12 @@ namespace TGMsim
             }
             if (pad.inputV == -1 && dInput != -1)//go up a cheat
             {
-                selection = (selection + 1) % 4;
+                selection = (selection + 1) % 5;
                 dInput = -1;
             }
             if (pad.inputV == 1 && dInput != 1)//go down a cheat
             {
-                if (selection == 0) selection = 4;
+                if (selection == 0) selection = 5;
                 selection = (selection - 1);
                 dInput = 1;
             }
@@ -41,7 +41,7 @@ namespace TGMsim
 
         public void render(Graphics drawBuffer)
         {
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 5; i++)
             {
                 drawBuffer.DrawString(cheats[i].ToString(), SystemFonts.DefaultFont, new SolidBrush(Color.White), 300, 200 + (15 * i));
             }
@@ -49,6 +49,7 @@ namespace TGMsim
             drawBuffer.DrawString("20G", SystemFonts.DefaultFont, new SolidBrush(Color.White), 220, 215);
             drawBuffer.DrawString("0G", SystemFonts.DefaultFont, new SolidBrush(Color.White), 220, 230);
             drawBuffer.DrawString("BIG MODE", SystemFonts.DefaultFont, new SolidBrush(Color.White), 220, 245);
+            drawBuffer.DrawString("MUTE MUSIC", SystemFonts.DefaultFont, new SolidBrush(Color.White), 220, 260);
             drawBuffer.DrawString("►", SystemFonts.DefaultFont, new SolidBrush(Color.White), 294, 200 + (15 * selection));
         }
     }
