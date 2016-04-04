@@ -837,6 +837,10 @@ namespace TGMsim
                                             for (int j = 0; j < 10; j++)
                                                 gameField[j][full[i]] = 0;
                                             level++;
+                                            if (ruleset.gameRules > 3 && i > 2)
+                                                level++;
+                                            if (ruleset.gameRules > 3 && i > 3)
+                                                level++;
                                         }
                                         if (level > mode.endLevel)
                                             level = mode.endLevel;
