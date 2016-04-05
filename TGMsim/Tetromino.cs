@@ -18,6 +18,7 @@ namespace TGMsim
         public bool large = false;
         public bool bone = false;
         public bool swapped = false;
+        public bool floored = false;
 
         public List<BlockBit> bits = new List<BlockBit>(); //first four will always be the "small" version
         

@@ -711,7 +711,7 @@ namespace TGMsim
                     if (activeTet.id != 0)//else, check collision below
                     {
 
-                        bool floored = false;
+                        activeTet.floored = false;
 
                         if (activeTet.id != 0)
                         {
@@ -719,18 +719,18 @@ namespace TGMsim
                             {
                                 if (activeTet.bits[i].y + 1 >= 22)
                                 {
-                                    floored = true;
+                                    activeTet.floored = true;
                                     break;
                                 }
                                 else if (gameField[activeTet.bits[i].x][activeTet.bits[i].y + 1] != 0)
                                 {
-                                    floored = true;
+                                    activeTet.floored = true;
                                     break;
                                 }
                             }
                         }
 
-                        if (floored == true)
+                        if (activeTet.floored == true)
                         {
                             //check lock delay if grounded
                             if (currentTimer == (int)Field.timerType.LockDelay)
@@ -1424,7 +1424,7 @@ namespace TGMsim
                         }
                         else if (pad.inputV == -1 && inputDelayV == 0)
                         {
-                            if (!floored)
+                            if (!activeTet.floored)
                             {
                                 blockDrop = 1;
                                 softCounter++;
@@ -1784,76 +1784,128 @@ namespace TGMsim
                     switch (tet.rotation)
                     {
                         case 0:
-                            if (tet.bits[2].y - (1 * bigOffset) >= 0 && tet.bits[2].y + (2 * bigOffset) <= 19)
+                            bool turn = false;
+                            if (tet.bits[2].y + (2 * bigOffset) > 20 && activeTet.floored && ruleset.gameRules > 3 && tet.kicked == 0)
                             {
-                                if (gameField[tet.bits[2].x][tet.bits[2].y - (1 * bigOffset)] == 0 && gameField[tet.bits[2].x][tet.bits[2].y + (1 * bigOffset)] == 0 && gameField[tet.bits[2].x][tet.bits[2].y + (2 * bigOffset)] == 0)
+                                yOffset = 21 - (tet.bits[2].y + (2 * bigOffset));
+                                tet.kicked++;
+                                groundTimer = 0;
+                                turn = true;
+                            }
+
+                            if (tet.bits[2].y - (1 * bigOffset) >= 0 && tet.bits[2].y + (2 * bigOffset) + yOffset <= 21)
+                            {
+                                
+
+                                if (gameField[tet.bits[2].x][tet.bits[2].y - (1 * bigOffset) + yOffset] == 0 && gameField[tet.bits[2].x][tet.bits[2].y + (1 * bigOffset) + yOffset] == 0 && gameField[tet.bits[2].x][tet.bits[2].y + (2 * bigOffset) + yOffset] == 0)
                                 {
-                                    tet.bits[0].x += 2;
-                                    tet.bits[0].y += 2;
-                                    tet.bits[1].x += 1;
-                                    tet.bits[1].y += 1;
-                                    tet.bits[3].x -= 1;
-                                    tet.bits[3].y -= 1;
-
-                                    if (mode.bigmode)
-                                    {
-                                        tet.bits[0].move(1, 0);
-                                        tet.bits[1].move(1, 0);
-                                        tet.bits[2].move(1, 0);
-                                        tet.bits[3].move(1, 0);
-                                        tet.bits[4].move(4, 1);
-                                        tet.bits[5].move(3, 0);
-                                        tet.bits[6].move(2, -1);
-                                        tet.bits[7].move(1, -2);
-                                        tet.bits[8].move(4, 3);
-                                        tet.bits[9].move(5, 2);
-                                        tet.bits[10].move(-1, -2);
-                                        tet.bits[11].move(0, -3);
-                                        tet.bits[12].move(-2, 4);
-                                        tet.bits[13].move(-1, 3);
-                                        tet.bits[14].move(-3, 5);
-                                        tet.bits[15].move(-2, 4);
-                                    }
-
-                                    tet.rotation = 1;
+                                    turn = true;
                                 }
+                                else if (ruleset.gameRules > 3 && activeTet.floored) //TGM3 kicks
+                                {
+                                    //set yOffset here
+                                    if (gameField[tet.bits[2].x][tet.bits[2].y + yOffset + 1] != 0)
+                                        yOffset--;
+                                    if (gameField[tet.bits[2].x][tet.bits[2].y + yOffset + 2] != 0)
+                                        yOffset--;
+
+                                    if (gameField[tet.bits[2].x][tet.bits[2].y - (1 * bigOffset) + yOffset] == 0 && gameField[tet.bits[2].x][tet.bits[2].y + (1 * bigOffset) + yOffset] == 0 && gameField[tet.bits[2].x][tet.bits[2].y + (2 * bigOffset) + yOffset] == 0)
+                                    {
+                                        turn = true;
+                                        tet.kicked++;
+                                    }
+                                }
+                            }
+
+                            if (turn)
+                            {
+                                tet.bits[0].x += 2;
+                                tet.bits[0].y += 2 + yOffset;
+                                tet.bits[1].x += 1;
+                                tet.bits[1].y += 1 + yOffset;
+                                tet.bits[2].y += yOffset;
+                                tet.bits[3].x -= 1;
+                                tet.bits[3].y += -1 + yOffset;
+
+                                if (mode.bigmode)
+                                {
+                                    tet.bits[0].move(1, 0 + yOffset);
+                                    tet.bits[1].move(1, 0 + yOffset);
+                                    tet.bits[2].move(1, 0 + yOffset);
+                                    tet.bits[3].move(1, 0 + yOffset);
+                                    tet.bits[4].move(4, 1 + yOffset);
+                                    tet.bits[5].move(3, 0 + yOffset);
+                                    tet.bits[6].move(2, -1 + yOffset);
+                                    tet.bits[7].move(1, -2 + yOffset);
+                                    tet.bits[8].move(4, 3 + yOffset);
+                                    tet.bits[9].move(5, 2 + yOffset);
+                                    tet.bits[10].move(-1, -2 + yOffset);
+                                    tet.bits[11].move(0, -3 + yOffset);
+                                    tet.bits[12].move(-2, 4 + yOffset);
+                                    tet.bits[13].move(-1, 3 + yOffset);
+                                    tet.bits[14].move(-3, 5 + yOffset);
+                                    tet.bits[15].move(-2, 4 + yOffset);
+                                }
+
+                                tet.rotation = 1;
                             }
                             break;
                         case 1:
+                            turn = false;
                             if (tet.bits[2].x - (2 * bigOffset) >= 0 && tet.bits[2].x + (1 * bigOffset) <= 9)
                             {
                                 if (gameField[tet.bits[2].x - (2 * bigOffset)][tet.bits[2].y] == 0 && gameField[tet.bits[2].x - (1 * bigOffset)][tet.bits[2].y] == 0 && gameField[tet.bits[2].x + (1 * bigOffset)][tet.bits[2].y] == 0)
                                 {
-                                    tet.bits[0].x -= 2;
-                                    tet.bits[0].y -= 2;
-                                    tet.bits[1].x -= 1;
-                                    tet.bits[1].y -= 1;
-                                    tet.bits[3].x += 1;
-                                    tet.bits[3].y += 1;
-
-                                    if (mode.bigmode)
-                                    {
-                                        tet.bits[0].move(-1, 0);
-                                        tet.bits[1].move(-1, 0);
-                                        tet.bits[2].move(-1, 0);
-                                        tet.bits[3].move(-1, 0);
-                                        tet.bits[4].move(-4, -1);
-                                        tet.bits[5].move(-3, 0);
-                                        tet.bits[6].move(-2, 1);
-                                        tet.bits[7].move(-1, 2);
-                                        tet.bits[8].move(-4, -3);
-                                        tet.bits[9].move(-5, -2);
-                                        tet.bits[10].move(1, 2);
-                                        tet.bits[11].move(0, 3);
-                                        tet.bits[12].move(2, -4);
-                                        tet.bits[13].move(1, -3);
-                                        tet.bits[14].move(3, -5);
-                                        tet.bits[15].move(2, -4);
-                                    }
-
-                                    tet.rotation = 0;
+                                    turn = true;
+                                }
+                                else if (ruleset.gameRules > 3) //tgm3 kicks
+                                {
+                                    throw new NotImplementedException();
                                 }
                             }
+                            else if (ruleset.gameRules > 3) //tgm3 kicks
+                            {
+                                if (tet.bits[2].x - (2 * bigOffset) <= 0)
+                                    xOffset -= tet.bits[2].x - (2 * bigOffset);
+                                if (tet.bits[2].x + (1 * bigOffset) >= 9)
+                                    xOffset = 9 - (tet.bits[2].x + (1 * bigOffset));
+                                turn = true;
+                            }
+
+                            if (turn)
+                            {
+                                tet.bits[0].x += -2 + xOffset;
+                                tet.bits[0].y -= 2;
+                                tet.bits[1].x += -1 + xOffset;
+                                tet.bits[1].y -= 1;
+                                tet.bits[2].x += xOffset;
+                                tet.bits[3].x += 1 + xOffset;
+                                tet.bits[3].y += 1;
+
+                                if (mode.bigmode)
+                                {
+                                    tet.bits[0].move(-1, 0);
+                                    tet.bits[1].move(-1, 0);
+                                    tet.bits[2].move(-1, 0);
+                                    tet.bits[3].move(-1, 0);
+                                    tet.bits[4].move(-4, -1);
+                                    tet.bits[5].move(-3, 0);
+                                    tet.bits[6].move(-2, 1);
+                                    tet.bits[7].move(-1, 2);
+                                    tet.bits[8].move(-4, -3);
+                                    tet.bits[9].move(-5, -2);
+                                    tet.bits[10].move(1, 2);
+                                    tet.bits[11].move(0, 3);
+                                    tet.bits[12].move(2, -4);
+                                    tet.bits[13].move(1, -3);
+                                    tet.bits[14].move(3, -5);
+                                    tet.bits[15].move(2, -4);
+                                }
+
+                                tet.rotation = 0;
+                            }
+
+
                             break;
                     }
                     //if spaces are open, rotate and place!
@@ -1928,7 +1980,7 @@ namespace TGMsim
                                     //    yOffset = -1;
                                     //    tet.kicked = 1;
                                     //}
-
+                                    bool turn = false;
                                     for (int i = 1; i < 4; i++)
                                     {
 
@@ -1940,36 +1992,51 @@ namespace TGMsim
                                         }
                                         if (gameField[tet.bits[0].x + 1 + xOffset][tet.bits[0].y + yOffset] == 0 && gameField[tet.bits[1].x + xOffset][tet.bits[1].y + 1 + yOffset] == 0 && gameField[tet.bits[2].x - 1 + xOffset][tet.bits[2].y + 2 + yOffset + (1 * (bigOffset - 1))] == 0 && gameField[tet.bits[3].x - 1 + xOffset][tet.bits[3].y + yOffset] == 0)
                                         {
-                                            tet.bits[0].x += 1 + xOffset;
-                                            tet.bits[0].y += yOffset;
-                                            tet.bits[1].x += xOffset;
-                                            tet.bits[1].y += 1 + yOffset;
-                                            tet.bits[2].x += -1 + xOffset;
-                                            tet.bits[2].y += 2 + yOffset;
-                                            tet.bits[3].x += -1 + xOffset;
-                                            tet.bits[3].y += yOffset;
-
-                                            if (mode.bigmode)
-                                            {
-                                                tet.bits[2].move(0, 1);
-                                                tet.bits[4].move(0 + xOffset, -1);
-                                                tet.bits[5].move(-2 + xOffset, 4);
-                                                tet.bits[6].move(-2 + xOffset, 4);
-                                                tet.bits[7].move(-3 + xOffset, 5);
-                                                tet.bits[8].move(0 + xOffset, 2);
-                                                tet.bits[9].move(0 + xOffset, 2);
-                                                tet.bits[10].move(0 + xOffset, 2);
-                                                tet.bits[11].move(0 + xOffset, 2);
-                                                tet.bits[12].move(xOffset, yOffset);
-                                                tet.bits[13].move(xOffset, yOffset);
-                                                tet.bits[14].move(xOffset, yOffset);
-                                                tet.bits[15].move(xOffset, yOffset);
-                                            }
-
-                                            tet.rotation = 2;
-
+                                            turn = true;
                                             break;
                                         }
+                                    }
+                                    if (!turn && ruleset.gameRules > 3 && tet.floored == true)//kicks failed, try up one
+                                    {
+                                        xOffset = 0;
+                                        yOffset--;
+                                        if (gameField[tet.bits[0].x + 1 + xOffset][tet.bits[0].y + yOffset] == 0 && gameField[tet.bits[1].x + xOffset][tet.bits[1].y + 1 + yOffset] == 0 && gameField[tet.bits[2].x - 1 + xOffset][tet.bits[2].y + 2 + yOffset + (1 * (bigOffset - 1))] == 0 && gameField[tet.bits[3].x - 1 + xOffset][tet.bits[3].y + yOffset] == 0)
+                                        {
+                                            turn = true;
+                                            tet.kicked++;
+                                            groundTimer = 0;
+                                        }
+                                    }
+
+                                    if (turn)
+                                    {
+                                        tet.bits[0].x += 1 + xOffset;
+                                        tet.bits[0].y += yOffset;
+                                        tet.bits[1].x += xOffset;
+                                        tet.bits[1].y += 1 + yOffset;
+                                        tet.bits[2].x += -1 + xOffset;
+                                        tet.bits[2].y += 2 + yOffset;
+                                        tet.bits[3].x += -1 + xOffset;
+                                        tet.bits[3].y += yOffset;
+
+                                        if (mode.bigmode)
+                                        {
+                                            tet.bits[2].move(0, 1);
+                                            tet.bits[4].move(0 + xOffset, -1);
+                                            tet.bits[5].move(-2 + xOffset, 4);
+                                            tet.bits[6].move(-2 + xOffset, 4);
+                                            tet.bits[7].move(-3 + xOffset, 5);
+                                            tet.bits[8].move(0 + xOffset, 2);
+                                            tet.bits[9].move(0 + xOffset, 2);
+                                            tet.bits[10].move(0 + xOffset, 2);
+                                            tet.bits[11].move(0 + xOffset, 2);
+                                            tet.bits[12].move(xOffset, yOffset);
+                                            tet.bits[13].move(xOffset, yOffset);
+                                            tet.bits[14].move(xOffset, yOffset);
+                                            tet.bits[15].move(xOffset, yOffset);
+                                        }
+
+                                        tet.rotation = 2;
                                     }
                                     break;
                                 case 2:
@@ -2223,6 +2290,7 @@ namespace TGMsim
                                     }
                                     break;
                                 case 3:
+                                    bool turn = false;
                                     for (int i = 1; i < 4; i++)
                                     {
 
@@ -2234,35 +2302,51 @@ namespace TGMsim
                                         }
                                         if (gameField[tet.bits[0].x + 1 + xOffset][tet.bits[0].y + 2] == 0 && gameField[tet.bits[1].x + xOffset][tet.bits[1].y + 1] == 0 && gameField[tet.bits[2].x + -1 + xOffset][tet.bits[2].y + (1 * (bigOffset - 1))] == 0 && gameField[tet.bits[3].x + 1 + xOffset - (2 * (bigOffset - 1))][tet.bits[3].y] == 0)
                                         {
-                                            tet.bits[0].x += 1 + xOffset;
-                                            tet.bits[0].y += 2;
-                                            tet.bits[1].x += xOffset;
-                                            tet.bits[1].y += 1;
-                                            tet.bits[2].x += -1 + xOffset;
-                                            tet.bits[3].x += 1 + xOffset;
-
-                                            if (mode.bigmode)
-                                            {
-                                                tet.bits[2].move(0, 1);
-                                                tet.bits[3].move(-2, 0);
-                                                tet.bits[4].move(0 + xOffset, -1);
-                                                tet.bits[5].move(-2 + xOffset, 4);
-                                                tet.bits[6].move(-2 + xOffset, 4);
-                                                tet.bits[7].move(-3 + xOffset, 5);
-                                                tet.bits[8].move(4 + xOffset, 2);
-                                                tet.bits[9].move(4 + xOffset, 2);
-                                                tet.bits[10].move(4 + xOffset, 2);
-                                                tet.bits[11].move(4 + xOffset, 2);
-                                                tet.bits[12].move(xOffset, yOffset);
-                                                tet.bits[13].move(xOffset, yOffset);
-                                                tet.bits[14].move(xOffset, yOffset);
-                                                tet.bits[15].move(xOffset, yOffset);
-                                            }
-
-                                            tet.rotation = 2;
-
+                                            turn = true;
                                             break;
                                         }
+                                    }
+
+                                    if (!turn && ruleset.gameRules > 3 && activeTet.floored == true)
+                                    {
+                                        xOffset = 0;
+                                        yOffset--;
+                                        if (gameField[tet.bits[0].x + 1 + xOffset][tet.bits[0].y + yOffset] == 0 && gameField[tet.bits[1].x + xOffset][tet.bits[1].y + 1 + yOffset] == 0 && gameField[tet.bits[2].x - 1 + xOffset][tet.bits[2].y + 2 + yOffset + (1 * (bigOffset - 1))] == 0 && gameField[tet.bits[3].x - 1 + xOffset][tet.bits[3].y + yOffset] == 0)
+                                        {
+                                            turn = true;
+                                            tet.kicked++;
+                                            groundTimer = 0;
+                                        }
+                                    }
+
+                                    if (turn)
+                                    {
+                                        tet.bits[0].x += 1 + xOffset;
+                                        tet.bits[0].y += 2;
+                                        tet.bits[1].x += xOffset;
+                                        tet.bits[1].y += 1;
+                                        tet.bits[2].x += -1 + xOffset;
+                                        tet.bits[3].x += 1 + xOffset;
+
+                                        if (mode.bigmode)
+                                        {
+                                            tet.bits[2].move(0, 1);
+                                            tet.bits[3].move(-2, 0);
+                                            tet.bits[4].move(0 + xOffset, -1);
+                                            tet.bits[5].move(-2 + xOffset, 4);
+                                            tet.bits[6].move(-2 + xOffset, 4);
+                                            tet.bits[7].move(-3 + xOffset, 5);
+                                            tet.bits[8].move(4 + xOffset, 2);
+                                            tet.bits[9].move(4 + xOffset, 2);
+                                            tet.bits[10].move(4 + xOffset, 2);
+                                            tet.bits[11].move(4 + xOffset, 2);
+                                            tet.bits[12].move(xOffset, yOffset);
+                                            tet.bits[13].move(xOffset, yOffset);
+                                            tet.bits[14].move(xOffset, yOffset);
+                                            tet.bits[15].move(xOffset, yOffset);
+                                        }
+
+                                        tet.rotation = 2;
                                     }
                                     break;
                             }
@@ -3186,13 +3270,13 @@ namespace TGMsim
                                 {
                                     continue;
                                 }
-                                if (gameField[tet.bits[0].x - 1 + xOffset][tet.bits[0].y + (3 * (bigOffset - 1))] == 0 && gameField[tet.bits[0].x + ((xOffset + ((i % 3) - 1)) * bigOffset)][tet.bits[0].y + (3 * (bigOffset - 1))] == 0 && gameField[tet.bits[0].x + ((xOffset + ((i % 3) - 1)) * bigOffset)][tet.bits[0].y - (1 * bigOffset) + (3 * (bigOffset - 1))] == 0 && gameField[tet.bits[0].x + ((1 + xOffset + ((i % 3) - 1)) * bigOffset)][tet.bits[0].y - (1 * bigOffset) + (3 * (bigOffset - 1))] == 0)
+                                if (gameField[tet.bits[0].x - 1 + xOffset][tet.bits[0].y + (3 * (bigOffset - 1))] == 0 && gameField[tet.bits[0].x + xOffset][tet.bits[0].y + (3 * (bigOffset - 1))] == 0 && gameField[tet.bits[0].x + xOffset][tet.bits[0].y - (1 * bigOffset) + (3 * (bigOffset - 1))] == 0 && gameField[tet.bits[0].x + 1 + xOffset][tet.bits[0].y - (1 * bigOffset) + (3 * (bigOffset - 1))] == 0)
                                 {
-                                    tet.bits[2].x += 1 + xOffset + (((i % 3) - 1) * bigOffset);
+                                    tet.bits[2].x += 1 + xOffset;
                                     tet.bits[1].y += 1;
-                                    tet.bits[1].x += xOffset + (((i % 3) - 1) * bigOffset);
-                                    tet.bits[0].x += -1 + xOffset + (((i % 3) - 1) * bigOffset);
-                                    tet.bits[3].x += 2 + xOffset + (((i % 3) - 1) * bigOffset);
+                                    tet.bits[1].x += xOffset;
+                                    tet.bits[0].x += -1 + xOffset;
+                                    tet.bits[3].x += 2 + xOffset;
                                     tet.bits[3].y += 1;
 
                                     if (mode.bigmode)
@@ -3448,6 +3532,9 @@ namespace TGMsim
 
             if (g != 0 && ghost == false)
                 groundTimer = ruleset.baseLock;
+
+            if (activeTet.kicked != 0)
+                groundTimer = 0;
 
             //failsafe for now, ugh
             if (!emptyUnderTet(tet))
