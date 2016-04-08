@@ -80,6 +80,8 @@ namespace TGMsim
         public bool inCredits = false;
         int creditsProgress;
         public bool newHiscore = false;
+        public bool torikan = false;
+        public long torDef = 0;
 
         public int bravoCounter = 0;
         public int tetrises = 0;
@@ -506,11 +508,17 @@ namespace TGMsim
                 drawBuffer.DrawString("Time: " + results.time, SystemFonts.DefaultFont, new SolidBrush(Color.White), 200, 220);
                 drawBuffer.DrawString("Name: " + results.username, SystemFonts.DefaultFont, new SolidBrush(Color.White), 200, 230);
 
-                drawBuffer.DrawString("Press start to", SystemFonts.DefaultFont, new SolidBrush(Color.White), 200, 250);
-                drawBuffer.DrawString("restart the field!", SystemFonts.DefaultFont, new SolidBrush(Color.White), 200, 260);
+                if (torikan)
+                {
+                    drawBuffer.DrawString("Torikan hit!", SystemFonts.DefaultFont, new SolidBrush(Color.White), 200, 250);
+                    drawBuffer.DrawString(torDef + " behind!", SystemFonts.DefaultFont, new SolidBrush(Color.White), 200, 260);
+                }
 
-                drawBuffer.DrawString("Press B to", SystemFonts.DefaultFont, new SolidBrush(Color.White), 200, 280);
-                drawBuffer.DrawString("return to menu!", SystemFonts.DefaultFont, new SolidBrush(Color.White), 200, 290);
+                drawBuffer.DrawString("Press start to", SystemFonts.DefaultFont, new SolidBrush(Color.White), 200, 280);
+                drawBuffer.DrawString("restart the field!", SystemFonts.DefaultFont, new SolidBrush(Color.White), 200, 290);
+
+                drawBuffer.DrawString("Press B to", SystemFonts.DefaultFont, new SolidBrush(Color.White), 200, 310);
+                drawBuffer.DrawString("return to menu!", SystemFonts.DefaultFont, new SolidBrush(Color.White), 200, 320);
             }
 
 
@@ -1007,6 +1015,45 @@ namespace TGMsim
                                             {
                                                 curSection++;
                                                 secTet.Add(0);
+
+                                                //CHECK TORIKANS
+                                                if (mode.id == 1) //death
+                                                {
+                                                    if (curSection == 5 && temptime > 205000)
+                                                    {
+                                                        level = 500;
+                                                    }
+                                                }
+                                                if (ruleset.gameRules == 4)
+                                                {
+                                                    if (mode.id == 0 && curSection == 5 && temptime > 420000) //ti master
+                                                    {
+                                                        level = 500;
+                                                        torikan = true;
+                                                        torDef = temptime - 420000;
+                                                        endGame();
+                                                        return;
+                                                    }
+                                                    if (mode.id == 2) //shirase
+                                                    {
+                                                        if (curSection == 5 && temptime > 148000)
+                                                        {
+                                                            level = 500;
+                                                            torikan = true;
+                                                            torDef = temptime - 148000;
+                                                            endGame();
+                                                            return;
+                                                        }
+                                                        if (curSection == 10 && temptime > 296000)
+                                                        {
+                                                            level = 1000;
+                                                            torikan = true;
+                                                            torDef = temptime - 296000;
+                                                            endGame();
+                                                            return;
+                                                        }
+                                                    }
+                                                }
 
                                                 //MUSIC
                                                 updateMusic();
@@ -1821,27 +1868,29 @@ namespace TGMsim
 
                 results = new GameResult();
 
-
-                if (creditsProgress >= ruleset.creditsLength)//cleared credits
+                if (inCredits)
                 {
-                    results.lineC = 1;
-                    if ((ruleset.gameRules == 2 || ruleset.gameRules == 3) && isGM == true)
-                        gm2grade = 32;
-
-                    if (ruleset.gameRules == 4)
+                    if (creditsProgress >= ruleset.creditsLength)//cleared credits
                     {
-                        if (creditsType == 1)
-                            creditGrades += 50;
-                        if (creditsType == 2)
-                            creditGrades += 160;
-                    }
+                        results.lineC = 1;
+                        if ((ruleset.gameRules == 2 || ruleset.gameRules == 3) && isGM == true)
+                            gm2grade = 32;
 
-                    //check credits line clears, award orange line if applicable
-                }
-                else//topped out in credits
-                {
-                    if ((ruleset.gameRules == 2 || ruleset.gameRules == 3) && isGM == true)
-                        gm2grade = 27;
+                        if (ruleset.gameRules == 4)
+                        {
+                            if (creditsType == 1)
+                                creditGrades += 50;
+                            if (creditsType == 2)
+                                creditGrades += 160;
+                        }
+
+                        //check credits line clears, award orange line if applicable
+                    }
+                    else//topped out in credits
+                    {
+                        if ((ruleset.gameRules == 2 || ruleset.gameRules == 3) && isGM == true)
+                            gm2grade = 27;
+                    }
                 }
 
                 for (; creditGrades > 100; creditGrades -= 100 )
