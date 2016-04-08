@@ -154,11 +154,12 @@ namespace TGMsim
                     field1 = new Field(pad1, rules, m, musicStream);
                     if (player.name == "   ")
                     {
-                        field1.cheating = true;
                         field1.godmode = cMen.cheats[0];
                         if (cMen.cheats[1])
                             field1.g20 = cMen.cheats[1];
                         field1.g0 = cMen.cheats[2];
+                        if (field1.godmode || field1.g0)
+                            field1.cheating = true;
                     }
                     break;
 

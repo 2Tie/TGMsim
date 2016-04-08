@@ -88,6 +88,7 @@ namespace TGMsim
         bool recoverChecking = false;
         public int recoveries = 0;
         public int speedBonus = 0;
+        public int creditGrades = 0;
 
         public int softCounter = 0;
 
@@ -145,7 +146,7 @@ namespace TGMsim
 
         public Field(Controller ctlr, Rules rules, Mode m2, NAudio.Vorbis.VorbisWaveReader music)
         {
-            x = 275;
+            x = 320;
             y = 100;
             width = 250;
             height = 500;
@@ -481,7 +482,7 @@ namespace TGMsim
                 if (ruleset.gameRules == 1)
                     drawBuffer.DrawString(ruleset.gradesTGM1[grade].ToString(), SystemFonts.DefaultFont, textBrush, 600, 100);
                 else
-                    drawBuffer.DrawString(ruleset.gradesTGM1[gm2grade].ToString(), SystemFonts.DefaultFont, textBrush, 600, 100);
+                    drawBuffer.DrawString(ruleset.gradesTGM3[gm2grade].ToString(), SystemFonts.DefaultFont, textBrush, 600, 100);
             }
 
             //Starting things
@@ -494,7 +495,13 @@ namespace TGMsim
             //endgame stats
             if (gameRunning == false)
             {
-                drawBuffer.DrawString("Grade: " + results.grade, SystemFonts.DefaultFont, new SolidBrush(Color.White), 200, 200);
+                if (mode.id == 0)
+                {
+                    if (ruleset.gameRules == 1)
+                        drawBuffer.DrawString("Grade: " + ruleset.gradesTGM1[results.grade], SystemFonts.DefaultFont, new SolidBrush(Color.White), 200, 200);
+                    else
+                        drawBuffer.DrawString("Grade: " + ruleset.gradesTGM3[results.grade], SystemFonts.DefaultFont, new SolidBrush(Color.White), 200, 200);
+                }
                 drawBuffer.DrawString("Score: " + results.score, SystemFonts.DefaultFont, new SolidBrush(Color.White), 200, 210);
                 drawBuffer.DrawString("Time: " + results.time, SystemFonts.DefaultFont, new SolidBrush(Color.White), 200, 220);
                 drawBuffer.DrawString("Name: " + results.username, SystemFonts.DefaultFont, new SolidBrush(Color.White), 200, 230);
@@ -639,7 +646,7 @@ namespace TGMsim
                     }
 
                     gradeTime++;
-                    if (gradeTime > ruleset.decayRate[grade] && gradePoints != 0 && !comboing)
+                    if (gradeTime > ruleset.decayRate[grade] && gradePoints != 0 && !comboing && !inCredits)
                     {
                         gradeTime = 0;
                         gradePoints--;
@@ -881,22 +888,68 @@ namespace TGMsim
                                             {
                                                 if (full.Count > 1)
                                                     combo++;
-                                                if (!inCredits && mode.gradedBy == 1)
+                                                if(mode.gradedBy == 1)
                                                 {
-                                                    int newPts = (int)(Math.Ceiling(ruleset.baseGradePts[full.Count - 1][grade] * ruleset.comboTable[full.Count - 1][combo]) * Math.Ceiling((double)level / 250));
-                                                    if (level > 249 && level < 500)
-                                                        newPts = newPts * 2;
-                                                    if (level > 499 && level < 750)
-                                                        newPts = newPts * 3;
-                                                    if (level > 749 && level < 1000)
-                                                        newPts = newPts * 4;
+                                                    if (!inCredits)
+                                                    {
+                                                        int newPts = (int)(Math.Ceiling(ruleset.baseGradePts[full.Count - 1][grade] * ruleset.comboTable[full.Count - 1][combo]) * Math.Ceiling((double)level / 250));
+                                                        if (level > 249 && level < 500)
+                                                            newPts = newPts * 2;
+                                                        if (level > 499 && level < 750)
+                                                            newPts = newPts * 3;
+                                                        if (level > 749 && level < 1000)
+                                                            newPts = newPts * 4;
 
-                                                    gradePoints += newPts;
+                                                        gradePoints += newPts;
+                                                    }
+                                                    else if (ruleset.gameRules == 4)
+                                                    {
+                                                        if (creditsType == 1)
+                                                            switch (full.Count)
+                                                            {
+                                                                case 0:
+                                                                    break;
+                                                                case 1:
+                                                                    creditGrades += 4;
+                                                                    break;
+                                                                case 2:
+                                                                    creditGrades += 8;
+                                                                    break;
+                                                                case 3:
+                                                                    creditGrades += 12;
+                                                                    break;
+                                                                case 4:
+                                                                    creditGrades += 26;
+                                                                    break;
+                                                            }
+                                                        else
+                                                            switch (full.Count)
+                                                            {
+                                                                case 0:
+                                                                    break;
+                                                                case 1:
+                                                                    creditGrades += 10;
+                                                                    break;
+                                                                case 2:
+                                                                    creditGrades += 20;
+                                                                    break;
+                                                                case 3:
+                                                                    creditGrades += 30;
+                                                                    break;
+                                                                case 4:
+                                                                    creditGrades += 100;
+                                                                    break;
+                                                            }
+                                                    }
                                                 }
                                             }
                                             if (mode.id == 1)
+                                            {
                                                 if (level >= 500)
+                                                    gradeLevel = 27;
+                                                if (level >= 999)
                                                     gradeLevel = 32;
+                                            }
 
                                         }
                                         comboing = true;
@@ -933,18 +986,18 @@ namespace TGMsim
                                         }
                                         else
                                         {
-                                            if (gradePoints > 99)
+                                            if (gradePoints > 99 || (level > 749 && full.Count == 4))
                                             {
-                                                if (grade < ruleset.gradesTGM1.Count - 1)
+                                                if (grade < ruleset.gradeIntTGM2.Count - 1)
                                                 {
                                                     grade++;
                                                     gradePoints = 0;
-                                                    if (ruleset.gameRules < 4)
-                                                        if (ruleset.gradeIntTGM2[grade] != gm2grade)
-                                                        {
-                                                            gm2grade++;
+                                                    if (ruleset.gradeIntTGM2[grade] != gm2grade)
+                                                    {
+                                                        gm2grade++;
+                                                        if (ruleset.gameRules < 4)
                                                             playSound(s_Grade);
-                                                        }
+                                                    }
                                                 }
                                             }
                                         }
@@ -1310,15 +1363,82 @@ namespace TGMsim
                                                 }
                                                 else if (GMflags.Count == 10 && level == 999)
                                                 {
-                                                    if (sectionTime.elapsedTime <= 45000 && temptime <= 570000 && grade == 17)
+                                                    if (sectionTime.elapsedTime <= 45000 && temptime <= 570000 && gm2grade == 17)
                                                         GMflags.Add(true);
                                                     else
                                                         GMflags.Add(false);
-
-                                                    if (GMflags.Count(p => p == true) == 11)
-                                                    {
-                                                        grade = 18;
-                                                    }
+                                                }
+                                                break;
+                                            case 3: //add tap gm flags
+                                                if (GMflags.Count == 0 && level >= 100)
+                                                {
+                                                    if (secTet[0] > 1 && sectionTimes[0] <= 65000)
+                                                        GMflags.Add(true);
+                                                    else
+                                                        GMflags.Add(false);
+                                                }
+                                                else if (GMflags.Count == 1 && level >= 200)
+                                                {
+                                                    if (secTet[1] > 1 && sectionTimes[1] <= 65000)
+                                                        GMflags.Add(true);
+                                                    else
+                                                        GMflags.Add(false);
+                                                }
+                                                else if (GMflags.Count == 2 && level >= 300)
+                                                {
+                                                    if (secTet[2] > 1 && sectionTimes[2] <= 65000)
+                                                        GMflags.Add(true);
+                                                    else
+                                                        GMflags.Add(false);
+                                                }
+                                                else if (GMflags.Count == 3 && level >= 400)
+                                                {
+                                                    if (secTet[3] > 1 && sectionTimes[3] <= 65000)
+                                                        GMflags.Add(true);
+                                                    else
+                                                        GMflags.Add(false);
+                                                }
+                                                else if (GMflags.Count == 4 && level >= 500)
+                                                {
+                                                    if (secTet[4] > 1 && sectionTimes[4] <= 65000)
+                                                        GMflags.Add(true);
+                                                    else
+                                                        GMflags.Add(false);
+                                                }
+                                                else if (GMflags.Count == 5 && level >= 600)
+                                                {
+                                                    if (secTet[5] > 0 && sectionTimes[5] <= ((sectionTimes[0] + sectionTimes[1] + sectionTimes[2] + sectionTimes[3] + sectionTimes[4]) / 5) + 2000)
+                                                        GMflags.Add(true);
+                                                    else
+                                                        GMflags.Add(false);
+                                                }
+                                                else if (GMflags.Count == 6 && level >= 700)
+                                                {
+                                                    if (secTet[6] > 0 && sectionTimes[6] <= sectionTimes[5] + 2000)
+                                                        GMflags.Add(true);
+                                                    else
+                                                        GMflags.Add(false);
+                                                }
+                                                else if (GMflags.Count == 7 && level >= 800)
+                                                {
+                                                    if (secTet[7] > 0 && sectionTimes[7] <= sectionTimes[6] + 2000)
+                                                        GMflags.Add(true);
+                                                    else
+                                                        GMflags.Add(false);
+                                                }
+                                                else if (GMflags.Count == 8 && level >= 900)
+                                                {
+                                                    if (secTet[8] > 0 && sectionTimes[8] <= sectionTimes[7] + 2000)
+                                                        GMflags.Add(true);
+                                                    else
+                                                        GMflags.Add(false);
+                                                }
+                                                else if (GMflags.Count == 9 && level >= 999)
+                                                {
+                                                    if (temptime <= 525000 && sectionTimes[9] <= sectionTimes[8] + 2000 && gm2grade == 17)
+                                                        GMflags.Add(true);
+                                                    else
+                                                        GMflags.Add(false);
                                                 }
                                                 break;
                                         }
@@ -1698,29 +1818,61 @@ namespace TGMsim
                 gameRunning = false;
                 //in the future, the little fadeout animation goes here!
 
-                //handle TGM3 section modifyers
-                if (ruleset.gameRules >= 3)
+
+                results = new GameResult();
+
+
+                if (creditsProgress >= ruleset.creditsLength)//cleared credits
+                {
+                    results.lineC = 1;
+                    if ((ruleset.gameRules == 2 || ruleset.gameRules == 3) && isGM == true)
+                        gm2grade = 32;
+
+                    if (ruleset.gameRules == 4)
+                    {
+                        if (creditsType == 1)
+                            creditGrades += 50;
+                        if (creditsType == 2)
+                            creditGrades += 160;
+                    }
+
+                    //check credits line clears, award orange line if applicable
+                }
+                else//topped out in credits
+                {
+                    if ((ruleset.gameRules == 2 || ruleset.gameRules == 3) && isGM == true)
+                        gm2grade = 27;
+                }
+
+                for (; creditGrades > 100; creditGrades -= 100 )
+                {
+                    gm2grade++;
+                }
+
+                    //handle TGM3 section modifyers
+                if (ruleset.gameRules > 3)
                 {
                     foreach (int i in secCools)
                     {
-                        grade += i;
+                        gm2grade += i;
                     }
+
+                    if (gm2grade < 0)
+                        gm2grade = 0;
+                    if (gm2grade > 32)
+                        gm2grade = 32;
                 }
 
-                if (grade == 18)
-                {
-                    isGM = true;
-                }
+                
 
 
                 stopMusic();
-                results = new GameResult();
                 results.game = ruleset.gameRules - 1;
                 results.username = "CHEATS";
                 if (ruleset.gameRules == 1)
                     results.grade = grade;
                 else
-                    results.grade = ruleset.gradeIntTGM2[grade];
+                    results.grade = gm2grade;
                 results.score = score;
                 results.time = (int)((timer.elapsedTime * ruleset.FPS)/60);
                 results.level = level;
@@ -1754,11 +1906,23 @@ namespace TGMsim
 
             if (mode.id == 0)
             {
-                if (ruleset.gameRules == 2 || ruleset.gameRules == 3) //tgm2 always has invisible
+                isGM = true;
+                for (int i = 0; i < GMflags.Count; i++ )
+                {
+                    if (GMflags[i] == false)
+                        isGM = false;
+                }
+                if ((ruleset.gameRules == 2 && GMflags.Count(p => p == true) == 11) || (ruleset.gameRules == 3 && GMflags.Count(p => p == true) == 10))
+                {
+                    isGM = true;
+                }
+
+                if ((ruleset.gameRules == 2 && isGM) || (ruleset.gameRules == 3 && isGM)) //tgm2 always has invisible
                     creditsType = 2;
+
                 if (ruleset.gameRules == 4)
                 {
-                    if (grade > 27 && secCools.Sum() == 8)
+                    if (grade > 26 && secCools.Sum() == 8)
                         creditsType = 2;
                     else
                         creditsType = 1;
