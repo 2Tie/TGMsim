@@ -22,7 +22,7 @@ namespace TGMsim
         public bool g20 = false;
         public bool easyGen = false;
         public bool shiraseGrades = false;
-        public bool exam = false;
+        public int exam = -1;
         public int lvlBonus = 0;
         public int gradedBy = 0; //points, grade points, level, bravo, time
         public int limitType = 0; //none, line, level, time, bravo

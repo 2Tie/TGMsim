@@ -151,6 +151,9 @@ namespace TGMsim
                         m.bigmode = cMen.cheats[3];
                         m.mute = cMen.cheats[4];
                     }
+
+                    m.exam = checkExam();
+
                     field1 = new Field(pad1, rules, m, musicStream);
                     if (player.name == "   ")
                     {
@@ -305,10 +308,37 @@ namespace TGMsim
                     if (field1.gameRunning == false)
                     {
                         //test and save a hiscore ONCE
-                        if (saved == false && field1.cheating == false)
+                        if (saved == false)
                         {
                             field1.results.username = player.name;
-                            field1.newHiscore = testHiscore(field1.results);
+                            if (rules.gameRules == 4 && field1.mode.id == 0)
+                            {
+                                //add result to history
+                                for (int i = 0; i < 6; i++)
+                                {
+                                    player.TIHistory[i] = player.TIHistory[i + 1];
+                                }
+                                player.TIHistory[6] = field1.results.grade;
+
+                                //if exam, check results for promotion
+                                if (field1.mode.exam != -1)
+                                {
+                                    if (field1.results.grade >= field1.mode.exam)
+                                    {
+                                        player.TIGrade = field1.mode.exam;
+                                    }
+                                }
+
+                                //scale GM back if unqualified
+                                else if (field1.results.grade == 32 && player.TIGrade != 32)
+                                {
+                                    field1.results.grade = 31;
+                                }
+                            }
+
+                            if (!field1.cheating && field1.mode.exam == -1)
+                                field1.newHiscore = testHiscore(field1.results);
+                            player.updateUser();
                             saved = true;
                         }
 
@@ -317,6 +347,8 @@ namespace TGMsim
                     {
                         Mode m = new Mode();
                         m = field1.mode;
+                        if (rules.gameRules == 3 && m.id == 0)
+                            m.exam = checkExam();
                         field1 = new Field(pad1, rules, m, musicStream);
                     }
                     if (field1.exit == true)
@@ -403,7 +435,10 @@ namespace TGMsim
                         drawBuffer.DrawString(hiscoreTable[mSel.game][i].username, DefaultFont, new SolidBrush(Color.White), 350, 100 + 30 * i);
                         if (mSel.game == 3)
                             drawBuffer.DrawString(hiscoreTable[mSel.game][i].level.ToString(), DefaultFont, new SolidBrush(Color.White), 390, 100 + 30 * i);
-                        drawBuffer.DrawString(rules.gradesTGM1[hiscoreTable[mSel.game][i].grade], DefaultFont, new SolidBrush(Color.White), 430, 100 + 30 * i);
+                        if (mSel.game == 0)
+                            drawBuffer.DrawString(rules.gradesTGM1[hiscoreTable[mSel.game][i].grade], DefaultFont, new SolidBrush(Color.White), 430, 100 + 30 * i);
+                        else
+                            drawBuffer.DrawString(rules.gradesTGM3[hiscoreTable[mSel.game][i].grade], DefaultFont, new SolidBrush(Color.White), 430, 100 + 30 * i);
                         var temptimeVAR = hiscoreTable[mSel.game][i].time;
                         var min = (int)Math.Floor((double)temptimeVAR / 60000);
                         temptimeVAR -= min * 60000;
@@ -418,6 +453,14 @@ namespace TGMsim
                             {
                                 drawBuffer.DrawString(hiscoreTable[mSel.game][i].medals[j].ToString(), DefaultFont, new SolidBrush(Color.White), 520 + 10*j, 100 + 30 * i);
                             }
+                        }
+                        if (hiscoreTable[mSel.game][i].lineC == 1)
+                        {
+                            drawBuffer.DrawLine(new Pen(Color.LimeGreen), 340, 100 + 30 * i, 650, 100 + 30 * i);
+                        }
+                        if (hiscoreTable[mSel.game][i].lineC == 2)
+                        {
+                            drawBuffer.DrawLine(new Pen(Color.Orange), 340, 100 + 30 * i, 650, 100 + 30 * i);
                         }
                     }
 
@@ -454,6 +497,22 @@ namespace TGMsim
             this.BackgroundImage = imgBuffer;
             this.Invalidate();
 
+        }
+
+        private int checkExam()
+        {
+            List<int> cream = new List<int>(player.TIHistory);
+
+            //cream = player.TIHistory;
+            cream.Sort();
+
+            int avg = (cream[5] + cream[4] + cream[3])/3;
+
+            Random rand = new Random();
+            if (avg > player.TIGrade && rand.Next(2) == 0)
+                return avg;
+            return -1;
+            
         }
 
         private bool testHiscore(GameResult gameResult)
@@ -511,8 +570,9 @@ namespace TGMsim
                     }
                     break;
                 case 5:
+                case 6:
                     return false;
-                    break;
+                    //break;
                 default:
                     for (int i = 0; i < hiscoreTable[gameResult.game].Count; i++)
                     {

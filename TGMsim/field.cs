@@ -54,7 +54,6 @@ namespace TGMsim
         public GameTimer startTime = new GameTimer();
         public GameTimer sectionTime = new GameTimer();
         public GameTimer creditsPause = new GameTimer();
-        public int min, sec, msec, msec10;
 
         public bool swappedHeld;
 
@@ -247,7 +246,7 @@ namespace TGMsim
                     break;
             }
 
-            if (mode.exam)
+            if (mode.exam != -1)
                 frameColour = Color.Gold;
 
             speedBonus = mode.lvlBonus;
@@ -487,6 +486,9 @@ namespace TGMsim
                     drawBuffer.DrawString(ruleset.gradesTGM3[gm2grade].ToString(), SystemFonts.DefaultFont, textBrush, 600, 100);
             }
 
+            if (mode.exam != -1)
+                drawBuffer.DrawString("EXAM: " + ruleset.gradesTGM3[mode.exam].ToString(), SystemFonts.DefaultFont, textBrush, 600, 100);
+
             //Starting things
             if (starting == 2)
                 drawBuffer.DrawString("Ready", SystemFonts.DefaultFont, new SolidBrush(Color.White), 200, 200);
@@ -511,7 +513,7 @@ namespace TGMsim
                 if (torikan)
                 {
                     drawBuffer.DrawString("Torikan hit!", SystemFonts.DefaultFont, new SolidBrush(Color.White), 200, 250);
-                    drawBuffer.DrawString(torDef + " behind!", SystemFonts.DefaultFont, new SolidBrush(Color.White), 200, 260);
+                    drawBuffer.DrawString(convertTime((long)(torDef * ruleset.FPS / 60)) + " behind!", SystemFonts.DefaultFont, new SolidBrush(Color.White), 200, 260);
                 }
 
                 drawBuffer.DrawString("Press start to", SystemFonts.DefaultFont, new SolidBrush(Color.White), 200, 280);
@@ -570,7 +572,7 @@ namespace TGMsim
                 drawBuffer.DrawString("New Hiscore", SystemFonts.DefaultFont, debugBrush, 200, 700);
 
             //time
-            drawBuffer.DrawString(string.Format("{0,2:00}:{1,2:00}:{2,2:00}", min, sec, msec10), SystemFonts.DefaultFont, debugBrush, 100, 700);
+            drawBuffer.DrawString(convertTime((long)(timer.elapsedTime * ruleset.FPS / 60)), SystemFonts.DefaultFont, debugBrush, 100, 700);
 
             drawBuffer.DrawString("groundTime " + activeTet.groundTimer, SystemFonts.DefaultFont, debugBrush, 400, 700);
 #endif
@@ -603,12 +605,7 @@ namespace TGMsim
                 {
                     //timing logic
                     long temptimeVAR = (long)(timer.elapsedTime * ruleset.FPS / 60);
-                    min = (int)Math.Floor((double)temptimeVAR / 60000);
-                    temptimeVAR -= min * 60000;
-                    sec = (int)Math.Floor((double)temptimeVAR / 1000);
-                    temptimeVAR -= sec * 1000;
-                    msec = (int)temptimeVAR;
-                    msec10 = (int)(msec / 10);
+                    
 
 
                     //vanishing logic
@@ -963,7 +960,7 @@ namespace TGMsim
                                         comboing = true;
 
                                         //check GM conditions
-                                        long temptime = (long)((timer.elapsedTime * ruleset.FPS) / 60);
+                                        long temptime = timer.elapsedTime;
 
 
 
@@ -1912,9 +1909,9 @@ namespace TGMsim
                         gm2grade = 32;
                 }
 
-                
 
 
+                timer.stop();
                 stopMusic();
                 results.game = ruleset.gameRules - 1;
                 results.username = "CHEATS";
@@ -2126,7 +2123,17 @@ namespace TGMsim
             }
         }
 
-
+        private string convertTime(long numtime)
+        {
+            int min, sec, msec, msec10;
+            min = (int)Math.Floor((double)numtime / 60000);
+            numtime -= min * 60000;
+            sec = (int)Math.Floor((double)numtime / 1000);
+            numtime -= sec * 1000;
+            msec = (int)numtime;
+            msec10 = (int)(msec / 10);
+            return string.Format("{0,2:00}:{1,2:00}:{2,2:00}", min, sec, msec10);
+        }
 
         private void playSound(System.Windows.Media.MediaPlayer sound)
         {

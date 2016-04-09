@@ -52,7 +52,7 @@ namespace TGMsim
 
                             if (File.Exists("Sav/" + temp.name + ".usr"))
                             {
-                                if (readUserData())
+                                if (temp.readUserData())
                                     registering = false;
                                 else
                                 {
@@ -61,8 +61,10 @@ namespace TGMsim
                                 }
                             }
                             else
+                            {
                                 registering = true;
-                            loginErr = 0;
+                                loginErr = 0;
+                            }
 
 
                         }
@@ -96,7 +98,7 @@ namespace TGMsim
                     {
                         if (menuSelection == 5) // wait for start!!!
                         {
-                            writeUser();
+                            temp.createUser();
                             loggedin = true;
                         }
                         if (menuSelection == 4) //verify password input
@@ -193,7 +195,7 @@ namespace TGMsim
                     {
                         if (menuSelection == 5)//login
                         {
-                            readUserData();
+                            temp.readUserData();
                             loggedin = true;
                         }
                         if (menuSelection == 4)//verify
@@ -202,7 +204,7 @@ namespace TGMsim
                             {
                                 if (!startPressed)
                                 {
-                                    if (verifyPass.SequenceEqual(tempPass))//if they match
+                                    if (temp.password.SequenceEqual(tempPass))//if they match
                                     {
                                         menuSelection = 5;
                                     }
@@ -210,7 +212,6 @@ namespace TGMsim
                                     {
                                         menuSelection = 2;
                                         loginErr = 2;
-                                        verifyPass.Clear();
                                         tempPass.Clear();
                                     }
                                 }
@@ -243,8 +244,8 @@ namespace TGMsim
                         }
                         if (menuSelection == 3)//setup
                         {
-                            readPass();
-                            if (verifyPass.Count == 0)
+                            temp.readPass();
+                            if (temp.passProtected == false)
                             {
                                 menuSelection = 5;
                             }
@@ -291,7 +292,8 @@ namespace TGMsim
             if (menuSelection == 3 || menuSelection == 4)
             {
                 drawBuffer.DrawString(tempPass.Count.ToString(), SystemFonts.DefaultFont, new SolidBrush(Color.White), 380, 320);
-                drawBuffer.DrawString(verifyPass.Count.ToString(), SystemFonts.DefaultFont, new SolidBrush(Color.White), 380, 340);
+                if (registering)
+                    drawBuffer.DrawString(verifyPass.Count.ToString(), SystemFonts.DefaultFont, new SolidBrush(Color.White), 380, 340);
             }
 
             drawBuffer.DrawString("Last Input: " + lastinput.ToString(), SystemFonts.DefaultFont, new SolidBrush(Color.White), 500, 500);
@@ -303,94 +305,7 @@ namespace TGMsim
             return "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!?.#$%&'ß ".Substring(i, 1);
         }
 
-        public bool writeUser()
-        {
-            using (FileStream fsStream = new FileStream("Sav/" + temp.name + ".usr", FileMode.Create))
-            using (BinaryWriter sw = new BinaryWriter(fsStream, Encoding.UTF8))
-            {
-                sw.Write(temp.name);
-                sw.Write((byte)0x02);//version number
-                //one byte for password, the first bit if pass-protected, three bits for length (up to six) and then two bits for each digit (four possible inputs each, ABCH)
-                UInt16 passData = new UInt16();
-                if (!temp.passProtected)
-                {
-                    sw.Write(passData);
-                }
-                else
-                {
-                    passData += 0x8000;
-                    passData += (UInt16)((tempPass.Count & 0x7) << 12);//password length
-                    for (int i = 0; i < tempPass.Count; i++)
-                    {
-                        passData += (UInt16)(tempPass[i] << (10 - 2 * i));
-                    }
-                    sw.Write(passData);
-                    sw.Write(new byte[4]);//global points
-                    sw.Write(new byte[4]);//TGM3 points
-                    sw.Write(new byte[2]);//Official GM certifications (1, 2, tap, tap death, 3, 3 shirase, ACE TM, 4 world, 4 rounds, 4 konoha)
-                    sw.Write(new byte[2]);//endless shirase hiscore?
-                    sw.Write(new byte[8]);//current TI grade + previous seven rankings
-                }
-            }
-            return false;
-        }
-
-        public bool readPass()
-        {
-            //read the pass and put it into verifyPass
-            BinaryReader file = new BinaryReader(File.OpenRead("Sav/" + temp.name + ".usr"));
-            if (file.ReadString() != temp.name)//read name
-                return false;
-            if (file.ReadByte() != 0x02)//read save version, compare to current
-                return false;
-            //read and parse the password
-            UInt16 passdata = file.ReadUInt16();
-            if (passdata >> 15 == 1)//pass protected
-            {
-                if (((passdata >> 12) & 0x3) == 7)//invalid pass length
-                {
-                    return false;
-                }
-                verifyPass.Add((byte)((passdata >> 10) & 0x0003));
-                verifyPass.Add((byte)((passdata >> 8) & 0x0003));
-                verifyPass.Add((byte)((passdata >> 6) & 0x0003));
-                verifyPass.Add((byte)((passdata >> 4) & 0x0003));
-                verifyPass.Add((byte)((passdata >> 2) & 0x0003));
-                verifyPass.Add((byte)(passdata & 0x0003));
-            }
-            return true;
-        }
-
-        public bool readUserData()
-        {
-            //read the user data and pass it to the game
-            BinaryReader file = new BinaryReader(File.OpenRead("Sav/" + temp.name + ".usr"));
-            if (file.ReadString() != temp.name)//read name
-                return false;
-            if (file.ReadByte() != 0x02)//read save version, compare to current
-                return false;
-            //read and parse the password
-            UInt16 passdata = file.ReadUInt16();
-            /*if (passdata >> 15 == 1)//pass protected
-            {
-                if (((passdata >> 12) & 0x3) == 7)//invalid pass length
-                {
-                    return false;
-                }
-                verifyPass.Add((byte)((passdata >> 10) & 0x0003));
-                verifyPass.Add((byte)((passdata >> 8) & 0x0003));
-                verifyPass.Add((byte)((passdata >> 6) & 0x0003));
-                verifyPass.Add((byte)((passdata >> 4) & 0x0003));
-                verifyPass.Add((byte)((passdata >> 2) & 0x0003));
-                verifyPass.Add((byte)(passdata & 0x0003));
-            }*/
-            //global points
-            //tgm3 points
-            //GM certs
-            //shirase
-            //TI grade data
-            return true;
-        }
+        
 
         
     }
