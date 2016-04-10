@@ -139,6 +139,10 @@ namespace TGMsim
         System.Windows.Media.MediaPlayer s_Grade = new System.Windows.Media.MediaPlayer();
         System.Windows.Media.MediaPlayer s_Hold = new System.Windows.Media.MediaPlayer();
         System.Windows.Media.MediaPlayer s_GameClear = new System.Windows.Media.MediaPlayer();
+        System.Windows.Media.MediaPlayer s_Cool = new System.Windows.Media.MediaPlayer();
+        System.Windows.Media.MediaPlayer s_Tetris = new System.Windows.Media.MediaPlayer();
+        System.Windows.Media.MediaPlayer s_Combo = new System.Windows.Media.MediaPlayer();
+        System.Windows.Media.MediaPlayer s_Medal = new System.Windows.Media.MediaPlayer();
 
         Pen gridPen = new Pen(new SolidBrush(Color.White));
 
@@ -191,6 +195,10 @@ namespace TGMsim
             s_Grade.Open(new Uri(Environment.CurrentDirectory + @"/Res/Audio/SE/SEP_levelchange.wav"));
             s_Hold.Open(new Uri(Environment.CurrentDirectory + @"/Res/Audio/SE/SEB_hold.wav"));
             s_GameClear.Open(new Uri(Environment.CurrentDirectory + @"/Res/Audio/SE/SEP_gameclear.wav"));
+            s_Cool.Open(new Uri(Environment.CurrentDirectory + @"/Res/Audio/SE/SEP_cool.wav"));
+            s_Combo.Open(new Uri(Environment.CurrentDirectory + @"/Res/Audio/SE/SEP_combo.wav"));
+            s_Tetris.Open(new Uri(Environment.CurrentDirectory + @"/Res/Audio/SE/SEP_tetris.wav"));
+            s_Medal.Open(new Uri(Environment.CurrentDirectory + @"/Res/Audio/SE/SEP_platinum.wav"));
 
             fonts.AddFontFile(@"Res\Maestro.ttf");
             FontFamily fontFam = fonts.Families[0];
@@ -864,6 +872,7 @@ namespace TGMsim
                                         {
                                             tetrises++;
                                             secTet[curSection]++;
+                                            playSound(s_Tetris);
                                         }
 
                                         int bravo = 1;
@@ -892,7 +901,10 @@ namespace TGMsim
                                             if (mode.id == 0)
                                             {
                                                 if (full.Count > 1)
+                                                {
                                                     combo++;
+                                                    playSound(s_Combo);
+                                                }
                                                 if(mode.gradedBy == 1)
                                                 {
                                                     if (!inCredits)
@@ -1211,11 +1223,20 @@ namespace TGMsim
                                                     if (mode.id == 1 || mode.id == 2)
                                                         sectime = 45000;
                                                     if (sectionTime.elapsedTime < sectime - 10000 && medals[2] < 1)
+                                                    {
                                                         medals[2] = 1;
+                                                        playSound(s_Medal);
+                                                    }
                                                     if (sectionTime.elapsedTime < sectime - 5000 && medals[2] < 2)
+                                                    {
                                                         medals[2] = 2;
+                                                        playSound(s_Medal);
+                                                    }
                                                     if (sectionTime.elapsedTime < sectime && medals[2] < 3)
+                                                    {
                                                         medals[2] = 3;
+                                                        playSound(s_Medal);
+                                                    }
 
                                                     if (curSection == 3)
                                                         if ((rotations * 5) / (totalTets * 6) >= 1)
@@ -1223,6 +1244,7 @@ namespace TGMsim
                                                             medals[1] = 1;
                                                             rotations = 0;
                                                             totalTets = 0;
+                                                            playSound(s_Medal);
                                                         }
                                                     if (curSection == 7)
                                                         if ((rotations * 5) / (totalTets * 6) >= 1)
@@ -1230,6 +1252,7 @@ namespace TGMsim
                                                             medals[1] = 2;
                                                             rotations = 0;
                                                             totalTets = 0;
+                                                            playSound(s_Medal);
                                                         }
 
 
@@ -1259,11 +1282,20 @@ namespace TGMsim
                                         {
                                             //AC
                                             if (bravoCounter == 1 && medals[0] == 0)
+                                            {
                                                 medals[0] = 1;
+                                                playSound(s_Medal);
+                                            }
                                             if (bravoCounter == 2 && medals[0] == 1)
+                                            {
                                                 medals[0] = 2;
+                                                playSound(s_Medal);
+                                            }
                                             if (bravoCounter == 3 && medals[0] == 2)
+                                            {
                                                 medals[0] = 3;
+                                                playSound(s_Medal);
+                                            }
 
                                             //RO
                                             
@@ -1276,28 +1308,49 @@ namespace TGMsim
                                                 tt = 2;
                                             if (mode.bigmode == true)
                                                 tt = 10;
-                                            if (tetrises == (int)(Math.Ceiling((double)10/tt)) && medals[3] == 0)
+                                            if (tetrises == (int)(Math.Ceiling((double)10 / tt)) && medals[3] == 0)
+                                            {
                                                 medals[3] = 1;
+                                                playSound(s_Medal);
+                                            }
 
                                             //RE
                                             if (recoverChecking == true && tetCount <= 70)
                                                 recoveries++;
                                             if (recoveries == 1 && medals[4] == 0)
+                                            {
                                                 medals[4] = 1;
+                                                playSound(s_Medal);
+                                            }
                                             if (recoveries == 2 && medals[4] == 0)
+                                            {
                                                 medals[4] = 2;
+                                                playSound(s_Medal);
+                                            }
                                             if (recoveries == 4 && medals[4] == 0)
+                                            {
                                                 medals[4] = 3;
+                                                playSound(s_Medal);
+                                            }
                                             //CO
                                             int big = 1;
                                             if (mode.bigmode == true)
                                                 big = 2;
                                             if ((int)(Math.Ceiling((double)4 / big)) == combo)
+                                            {
                                                 medals[5] = 1;
+                                                playSound(s_Medal);
+                                            }
                                             if ((int)(Math.Ceiling((double)5 / big)) == combo)
+                                            {
                                                 medals[5] = 2;
+                                                playSound(s_Medal);
+                                            }
                                             if ((int)(Math.Ceiling((double)7 / big)) == combo)
+                                            {
                                                 medals[5] = 3;
+                                                playSound(s_Medal);
+                                            }
                                             
                                         }
 
@@ -1518,14 +1571,20 @@ namespace TGMsim
                                                 if (curSection != 0)
                                                 {
                                                     if ((secCools[curSection - 1] == 1 && sectionTime.elapsedTime < sectionTimes[curSection - 1] + 2000) || (secCools[curSection - 1] != 1 && sectionTime.elapsedTime < ruleset.secCools[curSection]))
+                                                    {
                                                         secCools.Add(1);
+                                                        playSound(s_Cool);
+                                                    }
                                                     else
                                                         secCools.Add(0);
                                                 }
                                                 else
                                                 {
                                                     if (sectionTime.elapsedTime < ruleset.secCools[curSection])
+                                                    {
                                                         secCools.Add(1);
+                                                        playSound(s_Cool);
+                                                    }
                                                     else
                                                         secCools.Add(0);
                                                 }
@@ -1936,6 +1995,7 @@ namespace TGMsim
                 medals[1] = 3;
                 rotations = 0;
                 totalTets = 0;
+                playSound(s_Medal);
             }
 
             timer.stop();

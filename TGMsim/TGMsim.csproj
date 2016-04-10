@@ -164,7 +164,16 @@
     <Content Include="Res\Audio\SE\SEB_mino7.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Res\Audio\SE\SEB_platinum.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Res\Audio\SE\SEB_prerotate.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Res\Audio\SE\SEP_combo.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Res\Audio\SE\SEP_cool.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Res\Audio\SE\SEP_gameclear.wav">
@@ -181,6 +190,9 @@
     <Content Include="include\NAudio.WindowsMediaFormat.dll" />
     <Content Include="include\NVorbis.dll" />
     <Content Include="Res\Audio\SE\SEP_ready.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Res\Audio\SE\SEP_tetris.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Res\GFX\s1.png">

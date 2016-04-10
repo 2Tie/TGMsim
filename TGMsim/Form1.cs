@@ -152,7 +152,8 @@ namespace TGMsim
                         m.mute = cMen.cheats[4];
                     }
 
-                    m.exam = checkExam();
+                    if (mSel.game == 3 && m.id == 0 && player.name != "   ")
+                        m.exam = checkExam();
 
                     field1 = new Field(pad1, rules, m, musicStream);
                     if (player.name == "   ")
@@ -311,7 +312,7 @@ namespace TGMsim
                         if (saved == false)
                         {
                             field1.results.username = player.name;
-                            if (rules.gameRules == 4 && field1.mode.id == 0)
+                            if (rules.gameRules == 4 && field1.mode.id == 0 && player.name != "   ")
                             {
                                 //add result to history
                                 for (int i = 0; i < 6; i++)
@@ -347,7 +348,7 @@ namespace TGMsim
                     {
                         Mode m = new Mode();
                         m = field1.mode;
-                        if (rules.gameRules == 3 && m.id == 0)
+                        if (rules.gameRules == 3 && m.id == 0 && player.name != "   ")
                             m.exam = checkExam();
                         field1 = new Field(pad1, rules, m, musicStream);
                     }
