@@ -15,7 +15,6 @@ namespace TGMsim
         public int x = 0;
         public int y = 0;
         public int kicked = 0;
-        public bool large = false;
         public bool bone = false;
         public bool swapped = false;
         public bool floored = false;
@@ -24,17 +23,9 @@ namespace TGMsim
         public List<BlockBit> bits = new List<BlockBit>(); //first four will always be the "small" version
         
 
-        public Tetromino(int i, bool big)
+        public Tetromino(int i)
         {
-            int pips = 4;
-            if (big)
-                pips = 16;
-            for (int j = 0; j < pips; j++)
-            {
-                //bits.Add(new BlockBit());
-            }
             id = i;
-            large = big;
             switch (i)
             {
                 case 1://I
@@ -42,7 +33,7 @@ namespace TGMsim
                     bits.Add(new BlockBit(4, 2));
                     bits.Add(new BlockBit(5, 2));
                     bits.Add(new BlockBit(6, 2));
-                    if (big)
+                    /*if (big)
                     {
                         bits.Add(new BlockBit(3, 3));
                         bits.Add(new BlockBit(4, 3));
@@ -56,14 +47,14 @@ namespace TGMsim
                         bits.Add(new BlockBit(8, 3));
                         bits.Add(new BlockBit(9, 2));
                         bits.Add(new BlockBit(9, 3));
-                    }
+                    }*/
                     break;
                 case 2://T
                     bits.Add(new BlockBit(3, 2));
                     bits.Add(new BlockBit(4, 2));
                     bits.Add(new BlockBit(5, 2));
                     bits.Add(new BlockBit(4, 3));
-                    if (big)
+                    /*if (big)
                     {
                         bits.Add(new BlockBit(5, 3));
                         bits.Add(new BlockBit(3, 3));
@@ -77,14 +68,14 @@ namespace TGMsim
                         bits.Add(new BlockBit(5, 4));
                         bits.Add(new BlockBit(4, 5));
                         bits.Add(new BlockBit(5, 5));
-                    }
+                    }*/
                     break;
                 case 3://L
                     bits.Add(new BlockBit(3, 2));
                     bits.Add(new BlockBit(4, 2));
                     bits.Add(new BlockBit(5, 2));
                     bits.Add(new BlockBit(3, 3));
-                    if (big)
+                    /*if (big)
                     {
                         bits.Add(new BlockBit(4, 3));
                         bits.Add(new BlockBit(5, 3));
@@ -98,14 +89,14 @@ namespace TGMsim
                         bits.Add(new BlockBit(3, 4));
                         bits.Add(new BlockBit(2, 5));
                         bits.Add(new BlockBit(3, 5));
-                    }
+                    }*/
                     break;
                 case 4://J
                     bits.Add(new BlockBit(3, 2));
                     bits.Add(new BlockBit(4, 2));
                     bits.Add(new BlockBit(5, 2));
                     bits.Add(new BlockBit(5, 3));
-                    if (big)
+                    /*if (big)
                     {
                         bits.Add(new BlockBit(4, 3));
                         bits.Add(new BlockBit(3, 3));
@@ -119,14 +110,14 @@ namespace TGMsim
                         bits.Add(new BlockBit(7, 4));
                         bits.Add(new BlockBit(6, 5));
                         bits.Add(new BlockBit(7, 5));
-                    }
+                    }*/
                     break;
                 case 5://S
                     bits.Add(new BlockBit(3, 3));
                     bits.Add(new BlockBit(4, 3));
                     bits.Add(new BlockBit(4, 2));
                     bits.Add(new BlockBit(5, 2));
-                    if (big)
+                    /*if (big)
                     {
                         bits.Add(new BlockBit(7, 2));
                         bits.Add(new BlockBit(6, 2));
@@ -140,14 +131,14 @@ namespace TGMsim
                         bits.Add(new BlockBit(5, 5));
                         bits.Add(new BlockBit(2, 5));
                         bits.Add(new BlockBit(3, 5));
-                    }
+                    }*/
                     break;
                 case 6://Z
                     bits.Add(new BlockBit(3, 2));
                     bits.Add(new BlockBit(4, 2));
                     bits.Add(new BlockBit(4, 3));
                     bits.Add(new BlockBit(5, 3));
-                    if (big)
+                    /*if (big)
                     {
                         bits.Add(new BlockBit(3, 3));
                         bits.Add(new BlockBit(2, 2));
@@ -161,14 +152,14 @@ namespace TGMsim
                         bits.Add(new BlockBit(5, 5));
                         bits.Add(new BlockBit(6, 5));
                         bits.Add(new BlockBit(7, 5));
-                    }
+                    }*/
                     break;
                 case 7://O
                     bits.Add(new BlockBit(4, 2));
                     bits.Add(new BlockBit(5, 2));
                     bits.Add(new BlockBit(5, 3));
                     bits.Add(new BlockBit(4, 3));
-                    if (big)
+                    /*if (big)
                     {
                         bits.Add(new BlockBit(6, 2));
                         bits.Add(new BlockBit(7, 2));
@@ -182,14 +173,14 @@ namespace TGMsim
                         bits.Add(new BlockBit(7, 4));
                         bits.Add(new BlockBit(6, 5));
                         bits.Add(new BlockBit(7, 5));
-                    }
+                    }*/
                     break;
             }
         }
 
         public Tetromino clone()
         {
-            Tetromino newTet = new Tetromino(id, large);
+            Tetromino newTet = new Tetromino(id);
             for (int i = 0; i < bits.Count; i++ )
             {
                 int x, y;

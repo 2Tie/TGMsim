@@ -15,7 +15,7 @@ namespace TGMsim
 
         }
 
-        public virtual void rotate(Tetromino tet, int p, List<List<int>> gameField, int rule)
+        public virtual void rotate(Tetromino tet, int p, List<List<int>> gameField, int rule, bool large)
         {
 
         }
