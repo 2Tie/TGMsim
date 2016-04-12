@@ -52,13 +52,15 @@ namespace TGMsim
                             testTet.rotation = 1;
 
                             if (rule > 3)
+                                
                                 for (int i = 0; i < 2; i++)
                                 {
                                     if (!checkUnder(testTet, p, gameField, large))
                                     {
                                         if (!tet.floored)
                                             return tet;
-                                        testTet.move(0, -1);
+                                        testTet.move(0, -1 * bigOffset);
+                                        testTet.kicked++;
                                     }
                                 }
                             if (!checkUnder(testTet, p, gameField, large)) //will the rotation work?
@@ -146,7 +148,10 @@ namespace TGMsim
                                         }
                                     }
                                     if (!checkUnder(testTet, p, gameField, large) && rule > 3) //upkick
+                                    {
                                         testTet.move(1, -1 * bigOffset);
+                                        testTet.kicked++;
+                                    }
                                     if (!checkUnder(testTet, p, gameField, large)) //will the rotation work?
                                         return tet;
 
@@ -299,7 +304,10 @@ namespace TGMsim
                                         }
                                     }
                                     if (!checkUnder(testTet, p, gameField, large) && rule > 3) //upkick
+                                    {
                                         testTet.move(1, -1 * bigOffset);
+                                        testTet.kicked++;
+                                    }
                                     if (!checkUnder(testTet, p, gameField, large)) //will the rotation work?
                                         return tet;
 
@@ -853,6 +861,8 @@ namespace TGMsim
                 //check OoB
                 if (tetY > 21)
                     return false;
+                if (tetY < 0)
+                    continue;
 
                 if (tetX > 9)
                     return false;

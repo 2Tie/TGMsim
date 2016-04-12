@@ -359,6 +359,26 @@ namespace TGMsim
             if (mode.bigmode)
                 big = 1;
 
+            //draw the ghost piece
+            if (level < mode.sections[0] && ghostPiece != null && activeTet.id == ghostPiece.id)
+            {
+                int lowY = 22;
+                for (int i = 0; i < activeTet.bits.Count; i++)
+                {
+                    if (ghostPiece.bits[i].y < lowY)
+                        lowY = ghostPiece.bits[i].y;
+                }
+
+                for (int i = 0; i < activeTet.bits.Count; i++)
+                {
+                    if (ghostPiece.bits[i].y * (2 / big) - (lowY * ((2 / big) - 1)) > 1)
+                    {
+                        drawBuffer.DrawImage(tetImgs[ghostPiece.id], x + 25 * (ghostPiece.bits[i].x * (2 / big) - (4 % (6 - big))), y - 25 + 25 * (ghostPiece.bits[i].y * (2 / big) - (lowY * ((2 / big) - 1))), 25 * (2 / big), 25 * (2 / big));
+                        drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(130, Color.Black)), x + 25 * (ghostPiece.bits[i].x * (2 / big) - (4 % (6 - big))), y - 25 + 25 * (ghostPiece.bits[i].y * (2 / big) - (lowY * ((2 / big) - 1))), 25 * (2 / big), 25 * (2 / big));
+                    }
+                }
+            }
+
             //draw the current piece
             if (activeTet.id != 0)
             {
@@ -414,32 +434,6 @@ namespace TGMsim
                             drawBuffer.DrawImageUnscaled(tetSImgs[9], x - 75 + 16 * heldPiece.bits[i].x, y - 50 + 16 * heldPiece.bits[i].y);
                         else
                             drawBuffer.DrawImageUnscaled(tetSImgs[heldPiece.id], x - 75 + 16 * heldPiece.bits[i].x, y - 50 + 16 * heldPiece.bits[i].y);
-                }
-            }
-
-            //draw the ghost piece
-            if (level < mode.sections[0] && ghostPiece != null && activeTet.id == ghostPiece.id)
-            {
-                int lowY = 22;
-                for (int i = 0; i < activeTet.bits.Count; i++)
-                {
-                    if (ghostPiece.bits[i].y < lowY)
-                        lowY = ghostPiece.bits[i].y;
-                }
-
-                for (int i = 0; i < activeTet.bits.Count; i++)
-                {
-                    bool breakout = false;
-                    for (int j = 0; j < activeTet.bits.Count; j++)
-                    {
-                        if (activeTet.bits[j].x == ghostPiece.bits[i].x && activeTet.bits[j].y == ghostPiece.bits[i].y)
-                            breakout = true;
-                    }
-                    if (!breakout)
-                    {
-                        drawBuffer.DrawImage(tetImgs[ghostPiece.id], x + 25 * (ghostPiece.bits[i].x * (2 / big) - (4 % (6 - big))), y - 25 + 25 * (ghostPiece.bits[i].y * (2 / big) - (lowY * ((2 / big) - 1))), 25 * (2 / big), 25 * (2 / big));
-                        drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(130, Color.Black)), x + 25 * (ghostPiece.bits[i].x * (2 / big) - (4 % (6 - big))), y - 25 + 25 * (ghostPiece.bits[i].y * (2 / big) - (lowY * ((2 / big) - 1))), 25 * (2 / big), 25 * (2 / big));
-                    }
                 }
             }
 
@@ -766,6 +760,8 @@ namespace TGMsim
                             }
                             for (int i = 0; i < activeTet.bits.Count; i++)
                             {
+                                if ((activeTet.bits[i].y * (2 / big) - (lowY * ((2 / big) - 1))) + (big % 2) < 0)
+                                    continue;
                                 if ((activeTet.bits[i].y * (2 / big) - (lowY * ((2 / big) - 1))) + (big % 2) + 1 >= 22)
                                 {
                                     activeTet.floored = true;
@@ -836,6 +832,8 @@ namespace TGMsim
                                         {
                                             for (int k = 0; k < (big % 2) + 1; k++)
                                             {
+                                                if ((activeTet.bits[i].y * (2 / big) - (lowY * ((2 / big) - 1))) + k < 0)
+                                                    continue;
                                                 if (checkGimmick(1) || creditsType == 2)
                                                     gameField[(activeTet.bits[i].x * (2 / big) - (4 % (6 - big))) + j][(activeTet.bits[i].y * (2 / big) - (lowY * ((2 / big) - 1))) + k] = 8;
                                                 else if (activeTet.bone == true)
@@ -1763,6 +1761,8 @@ namespace TGMsim
                             //check to the right of each bit
                             for (int i = 0; i < activeTet.bits.Count; i++)
                             {
+                                if ((activeTet.bits[i].y * (2 / big) - (lowY * ((2 / big) - 1))) < 0)
+                                    continue;
                                 if (activeTet.bits[i].x * (2 / big) - (4 % (6 - big)) + (big % 2) + 1 > 9)
                                 {
                                     safe = false;
@@ -1805,6 +1805,8 @@ namespace TGMsim
                             //check to the left of each bit
                             for (int i = 0; i < activeTet.bits.Count; i++)
                             {
+                                if ((activeTet.bits[i].y * (2 / big) - (lowY * ((2 / big) - 1))) < 0)
+                                    continue;
                                 if (activeTet.bits[i].x * (2 / big) - (4 % (6 - big)) - 1 < 0)
                                 {
                                     safe = false;
@@ -2245,6 +2247,8 @@ namespace TGMsim
 
                 for (int p = 0; p < tet.bits.Count; p++)
                 {
+                    if (tet.bits[p].y * (2 / big) - (lowY * ((2 / big) - 1)) < 0)
+                        continue;
                     if (gameField[tet.bits[p].x * (2 / big) - (4 % (6 - big))][(tet.bits[p].y * (2 / big) - (lowY * ((2 / big) - 1))) + g + (big % 2)] != 0)
                     {
                         g = g - 1;
