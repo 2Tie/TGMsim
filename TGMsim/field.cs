@@ -896,22 +896,28 @@ namespace TGMsim
 
                                     if (full.Count > 0)  //if full rows, clear the rows, start the line clear timer, give points
                                     {
+                                        int bigFull = full.Count;
+                                        if (mode.bigmode)
+                                            bigFull = bigFull / 2;
                                         for (int i = 0; i < full.Count; i++)
                                         {
                                             for (int j = 0; j < 10; j++)
                                                 gameField[j][full[i]] = 0;
+                                        }
+                                        for (int i = 0; i < bigFull; i++)
+                                        {
                                             level++;
                                             if (ruleset.gameRules > 3 && i > 2)
                                                 level++;
                                             if (ruleset.gameRules > 3 && i > 3)
                                                 level++;
                                         }
-                                        if (level > mode.endLevel)
+                                        if (level > mode.endLevel && mode.endLevel != 0)
                                             level = mode.endLevel;
 
                                         //calculate combo!
 
-                                        if (full.Count == 4)
+                                        if (bigFull == 4)
                                         {
                                             tetrises++;
                                             secTet[curSection]++;
@@ -927,12 +933,12 @@ namespace TGMsim
                                         //give points
                                         if (ruleset.gameRules == 1)
                                         {
-                                            combo = combo + (2 * full.Count) - 2;
+                                            combo = combo + (2 * bigFull) - 2;
                                             if (!inCredits && mode.gradedBy == 1)
                                             {
                                                 if (softCounter > 20)
                                                     softCounter = 20;
-                                                int newscore = ((int)Math.Ceiling((double)(level + full.Count) / 4) + softCounter) * full.Count * ((full.Count * 2) - 1) * bravo;
+                                                int newscore = ((int)Math.Ceiling((double)(level + bigFull) / 4) + softCounter) * bigFull * ((bigFull * 2) - 1) * bravo;
                                                 if (comboing)
                                                     newscore *= combo;
 
@@ -943,7 +949,7 @@ namespace TGMsim
                                         {
                                             if (mode.id == 0)
                                             {
-                                                if (full.Count > 1)
+                                                if (bigFull > 1)
                                                 {
                                                     combo++;
                                                     playSound(s_Combo);
@@ -952,7 +958,7 @@ namespace TGMsim
                                                 {
                                                     if (!inCredits)
                                                     {
-                                                        int newPts = (int)(Math.Ceiling(ruleset.baseGradePts[full.Count - 1][grade] * ruleset.comboTable[full.Count - 1][combo]) * Math.Ceiling((double)level / 250));
+                                                        int newPts = (int)(Math.Ceiling(ruleset.baseGradePts[bigFull - 1][grade] * ruleset.comboTable[bigFull - 1][combo]) * Math.Ceiling((double)level / 250));
                                                         if (level > 249 && level < 500)
                                                             newPts = newPts * 2;
                                                         if (level > 499 && level < 750)
@@ -965,7 +971,7 @@ namespace TGMsim
                                                     else if (ruleset.gameRules == 4)
                                                     {
                                                         if (creditsType == 1)
-                                                            switch (full.Count)
+                                                            switch (bigFull)
                                                             {
                                                                 case 0:
                                                                     break;
@@ -983,7 +989,7 @@ namespace TGMsim
                                                                     break;
                                                             }
                                                         else
-                                                            switch (full.Count)
+                                                            switch (bigFull)
                                                             {
                                                                 case 0:
                                                                     break;
@@ -1046,7 +1052,7 @@ namespace TGMsim
                                         }
                                         else
                                         {
-                                            if (gradePoints > 99 || (level > 749 && full.Count == 4))
+                                            if (gradePoints > 99 || (level > 749 && bigFull == 4))
                                             {
                                                 if (grade < ruleset.gradeIntTGM2.Count - 1)
                                                 {
@@ -2111,7 +2117,7 @@ namespace TGMsim
         {
             
             rotations++;
-            RSYS.rotate(tet, p, gameField, ruleset.gameRules, mode.bigmode == true);
+            activeTet = RSYS.rotate(tet, p, gameField, ruleset.gameRules, mode.bigmode == true);
         }
 
         public Tetromino generatePiece()
@@ -2205,7 +2211,12 @@ namespace TGMsim
             }
             for (int i = 0; i < tet.bits.Count; i++)
             {
-                if (gameField[tet.bits[i].x * (2 / big) - (4 % (6 - big))][tet.bits[i].y * (2 / big) - (lowY * ((2 / big) - 1))] != 0)
+                if (gameField[tet.bits[i].x * (2 / big) - (4 % (6 - big))][(tet.bits[i].y * (2 / big) - (lowY * ((2 / big) - 1)))] != 0)
+                {
+                    status = false;
+                    break;
+                }
+                if (gameField[tet.bits[i].x * (2 / big) - (4 % (6 - big))][(tet.bits[i].y * (2 / big) - (lowY * ((2 / big) - 1))) + (big%2)] != 0)
                 {
                     status = false;
                     break;

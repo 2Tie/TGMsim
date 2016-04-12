@@ -33,148 +33,51 @@ namespace TGMsim
                     bits.Add(new BlockBit(4, 2));
                     bits.Add(new BlockBit(5, 2));
                     bits.Add(new BlockBit(6, 2));
-                    /*if (big)
-                    {
-                        bits.Add(new BlockBit(3, 3));
-                        bits.Add(new BlockBit(4, 3));
-                        bits.Add(new BlockBit(5, 3));
-                        bits.Add(new BlockBit(6, 3));
-                        bits.Add(new BlockBit(2, 2));
-                        bits.Add(new BlockBit(2, 3));
-                        bits.Add(new BlockBit(7, 2));
-                        bits.Add(new BlockBit(7, 3));
-                        bits.Add(new BlockBit(8, 2));
-                        bits.Add(new BlockBit(8, 3));
-                        bits.Add(new BlockBit(9, 2));
-                        bits.Add(new BlockBit(9, 3));
-                    }*/
                     break;
                 case 2://T
                     bits.Add(new BlockBit(3, 2));
                     bits.Add(new BlockBit(4, 2));
                     bits.Add(new BlockBit(5, 2));
                     bits.Add(new BlockBit(4, 3));
-                    /*if (big)
-                    {
-                        bits.Add(new BlockBit(5, 3));
-                        bits.Add(new BlockBit(3, 3));
-                        bits.Add(new BlockBit(2, 2));
-                        bits.Add(new BlockBit(2, 3));
-                        bits.Add(new BlockBit(6, 2));
-                        bits.Add(new BlockBit(7, 2));
-                        bits.Add(new BlockBit(6, 3));
-                        bits.Add(new BlockBit(7, 3));
-                        bits.Add(new BlockBit(4, 4));
-                        bits.Add(new BlockBit(5, 4));
-                        bits.Add(new BlockBit(4, 5));
-                        bits.Add(new BlockBit(5, 5));
-                    }*/
                     break;
                 case 3://L
                     bits.Add(new BlockBit(3, 2));
                     bits.Add(new BlockBit(4, 2));
                     bits.Add(new BlockBit(5, 2));
                     bits.Add(new BlockBit(3, 3));
-                    /*if (big)
-                    {
-                        bits.Add(new BlockBit(4, 3));
-                        bits.Add(new BlockBit(5, 3));
-                        bits.Add(new BlockBit(2, 2));
-                        bits.Add(new BlockBit(2, 3));
-                        bits.Add(new BlockBit(6, 2));
-                        bits.Add(new BlockBit(6, 3));
-                        bits.Add(new BlockBit(7, 2));
-                        bits.Add(new BlockBit(7, 3));
-                        bits.Add(new BlockBit(2, 4));
-                        bits.Add(new BlockBit(3, 4));
-                        bits.Add(new BlockBit(2, 5));
-                        bits.Add(new BlockBit(3, 5));
-                    }*/
                     break;
                 case 4://J
                     bits.Add(new BlockBit(3, 2));
                     bits.Add(new BlockBit(4, 2));
                     bits.Add(new BlockBit(5, 2));
                     bits.Add(new BlockBit(5, 3));
-                    /*if (big)
-                    {
-                        bits.Add(new BlockBit(4, 3));
-                        bits.Add(new BlockBit(3, 3));
-                        bits.Add(new BlockBit(2, 2));
-                        bits.Add(new BlockBit(2, 3));
-                        bits.Add(new BlockBit(6, 2));
-                        bits.Add(new BlockBit(6, 3));
-                        bits.Add(new BlockBit(7, 2));
-                        bits.Add(new BlockBit(7, 3));
-                        bits.Add(new BlockBit(6, 4));
-                        bits.Add(new BlockBit(7, 4));
-                        bits.Add(new BlockBit(6, 5));
-                        bits.Add(new BlockBit(7, 5));
-                    }*/
                     break;
                 case 5://S
                     bits.Add(new BlockBit(3, 3));
                     bits.Add(new BlockBit(4, 3));
                     bits.Add(new BlockBit(4, 2));
                     bits.Add(new BlockBit(5, 2));
-                    /*if (big)
-                    {
-                        bits.Add(new BlockBit(7, 2));
-                        bits.Add(new BlockBit(6, 2));
-                        bits.Add(new BlockBit(6, 3));
-                        bits.Add(new BlockBit(5, 3));
-                        bits.Add(new BlockBit(4, 4));
-                        bits.Add(new BlockBit(5, 4));
-                        bits.Add(new BlockBit(2, 4));
-                        bits.Add(new BlockBit(3, 4));
-                        bits.Add(new BlockBit(4, 5));
-                        bits.Add(new BlockBit(5, 5));
-                        bits.Add(new BlockBit(2, 5));
-                        bits.Add(new BlockBit(3, 5));
-                    }*/
                     break;
                 case 6://Z
                     bits.Add(new BlockBit(3, 2));
                     bits.Add(new BlockBit(4, 2));
                     bits.Add(new BlockBit(4, 3));
                     bits.Add(new BlockBit(5, 3));
-                    /*if (big)
-                    {
-                        bits.Add(new BlockBit(3, 3));
-                        bits.Add(new BlockBit(2, 2));
-                        bits.Add(new BlockBit(2, 3));
-                        bits.Add(new BlockBit(5, 2));
-                        bits.Add(new BlockBit(4, 4));
-                        bits.Add(new BlockBit(5, 4));
-                        bits.Add(new BlockBit(6, 4));
-                        bits.Add(new BlockBit(7, 4));
-                        bits.Add(new BlockBit(4, 5));
-                        bits.Add(new BlockBit(5, 5));
-                        bits.Add(new BlockBit(6, 5));
-                        bits.Add(new BlockBit(7, 5));
-                    }*/
                     break;
                 case 7://O
                     bits.Add(new BlockBit(4, 2));
                     bits.Add(new BlockBit(5, 2));
                     bits.Add(new BlockBit(5, 3));
                     bits.Add(new BlockBit(4, 3));
-                    /*if (big)
-                    {
-                        bits.Add(new BlockBit(6, 2));
-                        bits.Add(new BlockBit(7, 2));
-                        bits.Add(new BlockBit(6, 3));
-                        bits.Add(new BlockBit(7, 3));
-                        bits.Add(new BlockBit(4, 4));
-                        bits.Add(new BlockBit(4, 5));
-                        bits.Add(new BlockBit(5, 4));
-                        bits.Add(new BlockBit(5, 5));
-                        bits.Add(new BlockBit(6, 4));
-                        bits.Add(new BlockBit(7, 4));
-                        bits.Add(new BlockBit(6, 5));
-                        bits.Add(new BlockBit(7, 5));
-                    }*/
                     break;
+            }
+        }
+
+        public void move(int x, int y)
+        {
+            for(int i = 0; i < 4; i++)
+            {
+                bits[i].move(x, y);
             }
         }
 
@@ -197,6 +100,12 @@ namespace TGMsim
                     newTet.bone = true;
                 if (!this.bone)
                     newTet.bone = false;
+
+                int gt;
+                for (gt = 0; gt < groundTimer; gt++)
+                {
+                }
+                newTet.groundTimer = gt;
             }
             return newTet;
         }

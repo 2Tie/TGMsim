@@ -264,6 +264,8 @@ namespace TGMsim
                             m.bigmode = true;
                             m.easyGen = true;
 
+                            m.mute = cMen.cheats[4];
+
                             saved = false;
                             menuState = 4;
                             stopMusic();
@@ -339,7 +341,8 @@ namespace TGMsim
 
                             if (!field1.cheating && field1.mode.exam == -1)
                                 field1.newHiscore = testHiscore(field1.results);
-                            player.updateUser();
+                            if (player.name != "   ")
+                                player.updateUser();
                             saved = true;
                         }
 
