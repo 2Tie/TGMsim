@@ -147,7 +147,7 @@ namespace TGMsim
         Pen gridPen = new Pen(new SolidBrush(Color.White));
 
         Controller pad;
-        int inputDelayH = 0, inputDelayV = 0;
+        int inputDelayH = 0, inputDelayDir = 0;
 
         public Field(Controller ctlr, Rules rules, Mode m2, NAudio.Vorbis.VorbisWaveReader music)
         {
@@ -662,11 +662,13 @@ namespace TGMsim
                         {
                             inputDelayH--;
                         }
-                        if (inputDelayH == -1)
+                        if (inputDelayH == -1 || inputDelayDir != pad.inputH)
                             inputDelayH = ruleset.baseDAS;
                     }
                     else
                         inputDelayH = -1;
+
+                    inputDelayDir = pad.inputH;
 
                     if (inCredits && (ruleset.gameRules > 1 == creditsPause.elapsedTime >= 3000))
                     {
@@ -1308,7 +1310,7 @@ namespace TGMsim
                                                     sectionTimes.Add(sectionTime.elapsedTime);
 
                                                     //check Regrets!
-                                                    if (ruleset.gameRules > 2 && mode.id == 0)
+                                                    if (ruleset.gameRules == 4 && mode.id == 0)
                                                     {
                                                         if (sectionTime.elapsedTime > ruleset.secRegrets[curSection - 1])
                                                         {
@@ -1611,7 +1613,7 @@ namespace TGMsim
                                     }
 
                                     //check level for section cool
-                                    if (ruleset.gameRules > 2 && mode.id == 0)
+                                    if (ruleset.gameRules == 4 && mode.id == 0)
                                     {
                                         if (level % 100 > 69)
                                         {
@@ -1695,7 +1697,7 @@ namespace TGMsim
                             blockDrop = 19;
                             gravCounter = 0;
                         }
-                        else if (pad.inputV == -1 && inputDelayV == 0)
+                        else if (pad.inputV == -1)
                         {
                             if (!activeTet.floored)
                             {
@@ -2032,7 +2034,7 @@ namespace TGMsim
                 }
 
                     //handle TGM3 section modifyers
-                if (ruleset.gameRules > 3)
+                if (ruleset.gameRules == 4)
                 {
                     foreach (int i in secCools)
                     {
