@@ -16,7 +16,7 @@ namespace TGMsim
         public List<byte> password = new List<byte>();
         public bool passProtected = false;
         public int TIGrade = 0;
-        public List<int> TIHistory = new List<int>(6);
+        public List<int> TIHistory = new List<int>{0,0,0,0,0,0,0};
         public List<bool> certs = new List<bool>(10); //Official GM certifications (1, 2, tap, tap death, 3, 3 shirase, ACE TM, 4 world, 4 rounds, 4 konoha)
 
         public bool createUser()
