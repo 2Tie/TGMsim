@@ -55,7 +55,7 @@ namespace TGMsim
                                 
                                 for (int i = 0; i < 2; i++)
                                 {
-                                    if (!checkUnder(testTet, p, gameField, large))
+                                    if (!checkUnder(testTet, gameField, large))
                                     {
                                         if (!tet.floored)
                                             return tet;
@@ -63,7 +63,7 @@ namespace TGMsim
                                         testTet.kicked++;
                                     }
                                 }
-                            if (!checkUnder(testTet, p, gameField, large)) //will the rotation work?
+                            if (!checkUnder(testTet, gameField, large)) //will the rotation work?
                                 return tet;
 
                             return testTet;
@@ -81,7 +81,7 @@ namespace TGMsim
                             if (rule > 3)
                                 for (int i = 0; i < 3; i++)
                                 {
-                                    if (!checkUnder(testTet, p, gameField, large))
+                                    if (!checkUnder(testTet, gameField, large))
                                     {
                                         if (i != 2)
                                             testTet.move(1, 0);
@@ -89,7 +89,7 @@ namespace TGMsim
                                             testTet.move(-3, 0);
                                     }
                                 }
-                            if (!checkUnder(testTet, p, gameField, large)) //will the rotation work?
+                            if (!checkUnder(testTet, gameField, large)) //will the rotation work?
                                 return tet;
 
                             return testTet;
@@ -102,6 +102,10 @@ namespace TGMsim
                             switch (tet.rotation)
                             {
                                 case 0:
+                                    //SPECIAL RESTRICTIONS
+                                    if (!testRestrict(tet, p, gameField, large))
+                                        return tet;
+
                                     yOffset = 1 - bigOffset;
 
                                     testTet.bits[0].move(1, 1 + yOffset);
@@ -113,7 +117,7 @@ namespace TGMsim
 
                                     for (int i = 1; i < 3; i++)
                                     {
-                                        if (!checkUnder(testTet, p, gameField, large))
+                                        if (!checkUnder(testTet, gameField, large))
                                         {
                                             if (i != 2)
                                                 testTet.move(1, 0);
@@ -121,7 +125,7 @@ namespace TGMsim
                                                 testTet.move(-2, 0);
                                         }
                                     }
-                                    if (!checkUnder(testTet, p, gameField, large)) //will the rotation work?
+                                    if (!checkUnder(testTet, gameField, large)) //will the rotation work?
                                         return tet;
 
                                     return testTet;
@@ -139,7 +143,7 @@ namespace TGMsim
 
                                     for (int i = 1; i < 3; i++)
                                     {
-                                        if (!checkUnder(testTet, p, gameField, large))
+                                        if (!checkUnder(testTet, gameField, large))
                                         {
                                             if (i != 2)
                                                 testTet.move(1, 0);
@@ -147,17 +151,21 @@ namespace TGMsim
                                                 testTet.move(-2, 0);
                                         }
                                     }
-                                    if (!checkUnder(testTet, p, gameField, large) && rule > 3) //upkick
+                                    if (!checkUnder(testTet, gameField, large) && rule > 3) //upkick
                                     {
                                         testTet.move(1, -1 * bigOffset);
                                         testTet.kicked++;
                                     }
-                                    if (!checkUnder(testTet, p, gameField, large)) //will the rotation work?
+                                    if (!checkUnder(testTet, gameField, large)) //will the rotation work?
                                         return tet;
 
                                     return testTet;
 
                                 case 2:
+                                    //SPECIAL RESTRICTIONS
+                                    if (!testRestrict(tet, p, gameField, large))
+                                        return tet;
+
                                     yOffset = 1 - bigOffset;
 
                                     testTet.bits[0].move(-1, -2 + yOffset);
@@ -169,7 +177,7 @@ namespace TGMsim
 
                                     for (int i = 1; i < 3; i++)
                                     {
-                                        if (!checkUnder(testTet, p, gameField, large))
+                                        if (!checkUnder(testTet, gameField, large))
                                         {
                                             if (i != 2)
                                                 testTet.move(1, 0);
@@ -177,7 +185,7 @@ namespace TGMsim
                                                 testTet.move(-2, 0);
                                         }
                                     }
-                                    if (!checkUnder(testTet, p, gameField, large)) //will the rotation work?
+                                    if (!checkUnder(testTet, gameField, large)) //will the rotation work?
                                         return tet;
 
                                     return testTet;
@@ -194,7 +202,7 @@ namespace TGMsim
 
                                     for (int i = 1; i < 3; i++)
                                     {
-                                        if (!checkUnder(testTet, p, gameField, large))
+                                        if (!checkUnder(testTet, gameField, large))
                                         {
                                             if (i != 2)
                                                 testTet.move(1, 0);
@@ -202,7 +210,7 @@ namespace TGMsim
                                                 testTet.move(-2, 0);
                                         }
                                     }
-                                    if (!checkUnder(testTet, p, gameField, large)) //will the rotation work?
+                                    if (!checkUnder(testTet, gameField, large)) //will the rotation work?
                                         return tet;
 
                                     return testTet;
@@ -212,6 +220,10 @@ namespace TGMsim
                             switch (tet.rotation)
                             {
                                 case 0:
+                                    //SPECIAL RESTRICTIONS
+                                    if (!testRestrict(tet, p, gameField, large))
+                                        return tet;
+
                                     yOffset = 1 - bigOffset;
 
                                     testTet.bits[0].move(1, -1 + yOffset);
@@ -222,7 +234,7 @@ namespace TGMsim
 
                                     for (int i = 1; i < 3; i++)
                                     {
-                                        if (!checkUnder(testTet, p, gameField, large))
+                                        if (!checkUnder(testTet, gameField, large))
                                         {
                                             if (i != 2)
                                                 testTet.move(1, 0);
@@ -230,7 +242,7 @@ namespace TGMsim
                                                 testTet.move(-2, 0);
                                         }
                                     }
-                                    if (!checkUnder(testTet, p, gameField, large)) //will the rotation work?
+                                    if (!checkUnder(testTet, gameField, large)) //will the rotation work?
                                         return tet;
 
                                     return testTet;
@@ -246,7 +258,7 @@ namespace TGMsim
 
                                     for (int i = 1; i < 3; i++)
                                     {
-                                        if (!checkUnder(testTet, p, gameField, large))
+                                        if (!checkUnder(testTet, gameField, large))
                                         {
                                             if (i != 2)
                                                 testTet.move(1, 0);
@@ -254,12 +266,16 @@ namespace TGMsim
                                                 testTet.move(-2, 0);
                                         }
                                     }
-                                    if (!checkUnder(testTet, p, gameField, large)) //will the rotation work?
+                                    if (!checkUnder(testTet, gameField, large)) //will the rotation work?
                                         return tet;
 
                                     return testTet;
 
                                 case 2:
+                                    //SPECIAL RESTRICTIONS
+                                    if (!testRestrict(tet, p, gameField, large))
+                                        return tet;
+
                                     yOffset = 1 - bigOffset;
 
                                     testTet.bits[0].move(-1, 0 + yOffset);
@@ -270,7 +286,7 @@ namespace TGMsim
 
                                     for (int i = 1; i < 3; i++)
                                     {
-                                        if (!checkUnder(testTet, p, gameField, large))
+                                        if (!checkUnder(testTet, gameField, large))
                                         {
                                             if (i != 2)
                                                 testTet.move(1, 0);
@@ -278,7 +294,7 @@ namespace TGMsim
                                                 testTet.move(-2, 0);
                                         }
                                     }
-                                    if (!checkUnder(testTet, p, gameField, large)) //will the rotation work?
+                                    if (!checkUnder(testTet, gameField, large)) //will the rotation work?
                                         return tet;
 
                                     return testTet;
@@ -295,7 +311,7 @@ namespace TGMsim
 
                                     for (int i = 1; i < 3; i++)
                                     {
-                                        if (!checkUnder(testTet, p, gameField, large))
+                                        if (!checkUnder(testTet, gameField, large))
                                         {
                                             if (i != 2)
                                                 testTet.move(1, 0);
@@ -303,12 +319,12 @@ namespace TGMsim
                                                 testTet.move(-2, 0);
                                         }
                                     }
-                                    if (!checkUnder(testTet, p, gameField, large) && rule > 3) //upkick
+                                    if (!checkUnder(testTet, gameField, large) && rule > 3) //upkick
                                     {
                                         testTet.move(1, -1 * bigOffset);
                                         testTet.kicked++;
                                     }
-                                    if (!checkUnder(testTet, p, gameField, large)) //will the rotation work?
+                                    if (!checkUnder(testTet, gameField, large)) //will the rotation work?
                                         return tet;
 
                                     return testTet;
@@ -324,6 +340,9 @@ namespace TGMsim
                             {
                                 case 0:
                                     //SPECIAL RESTRICTIONS
+                                    if (!testRestrict(tet, p, gameField, large))
+                                        return tet;
+
                                     yOffset = 1 - bigOffset;
 
                                     testTet.bits[0].move(1, 1 + yOffset);
@@ -334,7 +353,7 @@ namespace TGMsim
 
                                     for (int i = 1; i < 3; i++)
                                     {
-                                        if (!checkUnder(testTet, p, gameField, large))
+                                        if (!checkUnder(testTet, gameField, large))
                                         {
                                             if (i != 2)
                                                 testTet.move(1, 0);
@@ -342,7 +361,7 @@ namespace TGMsim
                                                 testTet.move(-2, 0);
                                         }
                                     }
-                                    if (!checkUnder(testTet, p, gameField, large)) //will the rotation work?
+                                    if (!checkUnder(testTet, gameField, large)) //will the rotation work?
                                         return tet;
 
                                     return testTet;
@@ -358,7 +377,7 @@ namespace TGMsim
 
                                     for (int i = 1; i < 3; i++)
                                     {
-                                        if (!checkUnder(testTet, p, gameField, large))
+                                        if (!checkUnder(testTet, gameField, large))
                                         {
                                             if (i != 2)
                                                 testTet.move(1, 0);
@@ -366,13 +385,16 @@ namespace TGMsim
                                                 testTet.move(-2, 0);
                                         }
                                     }
-                                    if (!checkUnder(testTet, p, gameField, large)) //will the rotation work?
+                                    if (!checkUnder(testTet, gameField, large)) //will the rotation work?
                                         return tet;
 
                                     return testTet;
 
                                 case 2:
                                     //SPECIAL RESTRICTIONS
+                                    if (!testRestrict(tet, p, gameField, large))
+                                        return tet;
+
                                     yOffset = 1 - bigOffset;
 
                                     testTet.bits[0].move(-1, -2 + yOffset);
@@ -383,7 +405,7 @@ namespace TGMsim
 
                                     for (int i = 1; i < 3; i++)
                                     {
-                                        if (!checkUnder(testTet, p, gameField, large))
+                                        if (!checkUnder(testTet, gameField, large))
                                         {
                                             if (i != 2)
                                                 testTet.move(1, 0);
@@ -391,7 +413,7 @@ namespace TGMsim
                                                 testTet.move(-2, 0);
                                         }
                                     }
-                                    if (!checkUnder(testTet, p, gameField, large)) //will the rotation work?
+                                    if (!checkUnder(testTet, gameField, large)) //will the rotation work?
                                         return tet;
 
                                     return testTet;
@@ -407,7 +429,7 @@ namespace TGMsim
 
                                     for (int i = 1; i < 3; i++)
                                     {
-                                        if (!checkUnder(testTet, p, gameField, large))
+                                        if (!checkUnder(testTet, gameField, large))
                                         {
                                             if (i != 2)
                                                 testTet.move(1, 0);
@@ -415,7 +437,7 @@ namespace TGMsim
                                                 testTet.move(-2, 0);
                                         }
                                     }
-                                    if (!checkUnder(testTet, p, gameField, large)) //will the rotation work?
+                                    if (!checkUnder(testTet, gameField, large)) //will the rotation work?
                                         return tet;
 
                                     return testTet;
@@ -427,6 +449,9 @@ namespace TGMsim
                             {
                                 case 0:
                                     //SPECIAL RESTRICTIONS
+                                    if (!testRestrict(tet, p, gameField, large))
+                                        return tet;
+
                                     yOffset = 1 - bigOffset;
 
                                     testTet.bits[0].move(1, -1 + yOffset);
@@ -437,7 +462,7 @@ namespace TGMsim
 
                                     for (int i = 1; i < 3; i++)
                                     {
-                                        if (!checkUnder(testTet, p, gameField, large))
+                                        if (!checkUnder(testTet, gameField, large))
                                         {
                                             if (i != 2)
                                                 testTet.move(1, 0);
@@ -445,7 +470,7 @@ namespace TGMsim
                                                 testTet.move(-2, 0);
                                         }
                                     }
-                                    if (!checkUnder(testTet, p, gameField, large)) //will the rotation work?
+                                    if (!checkUnder(testTet, gameField, large)) //will the rotation work?
                                         return tet;
 
                                     return testTet;
@@ -461,7 +486,7 @@ namespace TGMsim
 
                                     for (int i = 1; i < 3; i++)
                                     {
-                                        if (!checkUnder(testTet, p, gameField, large))
+                                        if (!checkUnder(testTet, gameField, large))
                                         {
                                             if (i != 2)
                                                 testTet.move(1, 0);
@@ -469,13 +494,16 @@ namespace TGMsim
                                                 testTet.move(-2, 0);
                                         }
                                     }
-                                    if (!checkUnder(testTet, p, gameField, large)) //will the rotation work?
+                                    if (!checkUnder(testTet, gameField, large)) //will the rotation work?
                                         return tet;
 
                                     return testTet;
 
                                 case 2:
                                     //SPECIAL RESTRICTIONS
+                                    if (!testRestrict(tet, p, gameField, large))
+                                        return tet;
+
                                     yOffset = 1 - bigOffset;
 
                                     testTet.bits[0].move(-1, 0 + yOffset);
@@ -486,7 +514,7 @@ namespace TGMsim
 
                                     for (int i = 1; i < 3; i++)
                                     {
-                                        if (!checkUnder(testTet, p, gameField, large))
+                                        if (!checkUnder(testTet, gameField, large))
                                         {
                                             if (i != 2)
                                                 testTet.move(1, 0);
@@ -494,7 +522,7 @@ namespace TGMsim
                                                 testTet.move(-2, 0);
                                         }
                                     }
-                                    if (!checkUnder(testTet, p, gameField, large)) //will the rotation work?
+                                    if (!checkUnder(testTet, gameField, large)) //will the rotation work?
                                         return tet;
 
                                     return testTet;
@@ -509,7 +537,7 @@ namespace TGMsim
 
                                     for (int i = 1; i < 3; i++)
                                     {
-                                        if (!checkUnder(testTet, p, gameField, large))
+                                        if (!checkUnder(testTet, gameField, large))
                                         {
                                             if (i != 2)
                                                 testTet.move(1, 0);
@@ -517,7 +545,7 @@ namespace TGMsim
                                                 testTet.move(-2, 0);
                                         }
                                     }
-                                    if (!checkUnder(testTet, p, gameField, large)) //will the rotation work?
+                                    if (!checkUnder(testTet, gameField, large)) //will the rotation work?
                                         return tet;
 
                                     return testTet;
@@ -533,6 +561,9 @@ namespace TGMsim
                             {
                                 case 0:
                                     //SPECIAL RESTRICTIONS
+                                    if (!testRestrict(tet, p, gameField, large))
+                                        return tet;
+
                                     yOffset = 1 - bigOffset;
 
                                     testTet.bits[0].move(1, 1 + yOffset);
@@ -543,7 +574,7 @@ namespace TGMsim
 
                                     for (int i = 1; i < 3; i++)
                                     {
-                                        if (!checkUnder(testTet, p, gameField, large))
+                                        if (!checkUnder(testTet, gameField, large))
                                         {
                                             if (i != 2)
                                                 testTet.move(1, 0);
@@ -551,7 +582,7 @@ namespace TGMsim
                                                 testTet.move(-2, 0);
                                         }
                                     }
-                                    if (!checkUnder(testTet, p, gameField, large)) //will the rotation work?
+                                    if (!checkUnder(testTet, gameField, large)) //will the rotation work?
                                         return tet;
 
                                     return testTet;
@@ -567,7 +598,7 @@ namespace TGMsim
 
                                     for (int i = 1; i < 3; i++)
                                     {
-                                        if (!checkUnder(testTet, p, gameField, large))
+                                        if (!checkUnder(testTet, gameField, large))
                                         {
                                             if (i != 2)
                                                 testTet.move(1, 0);
@@ -575,13 +606,16 @@ namespace TGMsim
                                                 testTet.move(-2, 0);
                                         }
                                     }
-                                    if (!checkUnder(testTet, p, gameField, large)) //will the rotation work?
+                                    if (!checkUnder(testTet, gameField, large)) //will the rotation work?
                                         return tet;
 
                                     return testTet;
 
                                 case 2:
                                     //SPECIAL RESTRICTIONS
+                                    if (!testRestrict(tet, p, gameField, large))
+                                        return tet;
+
                                     yOffset = 1 - bigOffset;
 
                                     testTet.bits[0].move(-1, -2 + yOffset);
@@ -592,7 +626,7 @@ namespace TGMsim
 
                                     for (int i = 1; i < 3; i++)
                                     {
-                                        if (!checkUnder(testTet, p, gameField, large))
+                                        if (!checkUnder(testTet, gameField, large))
                                         {
                                             if (i != 2)
                                                 testTet.move(1, 0);
@@ -600,7 +634,7 @@ namespace TGMsim
                                                 testTet.move(-2, 0);
                                         }
                                     }
-                                    if (!checkUnder(testTet, p, gameField, large)) //will the rotation work?
+                                    if (!checkUnder(testTet, gameField, large)) //will the rotation work?
                                         return tet;
 
                                     return testTet;
@@ -616,7 +650,7 @@ namespace TGMsim
 
                                     for (int i = 1; i < 3; i++)
                                     {
-                                        if (!checkUnder(testTet, p, gameField, large))
+                                        if (!checkUnder(testTet, gameField, large))
                                         {
                                             if (i != 2)
                                                 testTet.move(1, 0);
@@ -624,7 +658,7 @@ namespace TGMsim
                                                 testTet.move(-2, 0);
                                         }
                                     }
-                                    if (!checkUnder(testTet, p, gameField, large)) //will the rotation work?
+                                    if (!checkUnder(testTet, gameField, large)) //will the rotation work?
                                         return tet;
 
                                     return testTet;
@@ -635,6 +669,9 @@ namespace TGMsim
                             {
                                 case 0:
                                     //SPECIAL RESTRICTIONS
+                                    if (!testRestrict(tet, p, gameField, large))
+                                        return tet;
+
                                     yOffset = 1 - bigOffset;
 
                                     testTet.bits[0].move(1, -1 + yOffset);
@@ -645,7 +682,7 @@ namespace TGMsim
 
                                     for (int i = 1; i < 3; i++)
                                     {
-                                        if (!checkUnder(testTet, p, gameField, large))
+                                        if (!checkUnder(testTet, gameField, large))
                                         {
                                             if (i != 2)
                                                 testTet.move(1, 0);
@@ -653,7 +690,7 @@ namespace TGMsim
                                                 testTet.move(-2, 0);
                                         }
                                     }
-                                    if (!checkUnder(testTet, p, gameField, large)) //will the rotation work?
+                                    if (!checkUnder(testTet, gameField, large)) //will the rotation work?
                                         return tet;
 
                                     return testTet;
@@ -668,7 +705,7 @@ namespace TGMsim
 
                                     for (int i = 1; i < 3; i++)
                                     {
-                                        if (!checkUnder(testTet, p, gameField, large))
+                                        if (!checkUnder(testTet, gameField, large))
                                         {
                                             if (i != 2)
                                                 testTet.move(1, 0);
@@ -676,12 +713,15 @@ namespace TGMsim
                                                 testTet.move(-2, 0);
                                         }
                                     }
-                                    if (!checkUnder(testTet, p, gameField, large)) //will the rotation work?
+                                    if (!checkUnder(testTet, gameField, large)) //will the rotation work?
                                         return tet;
 
                                     return testTet;
                                 case 2:
                                     //SPECIAL RESTRICTIONS
+                                    if (!testRestrict(tet, p, gameField, large))
+                                        return tet;
+
                                     yOffset = 1 - bigOffset;
 
                                     testTet.bits[0].move(-1, 0 + yOffset);
@@ -692,7 +732,7 @@ namespace TGMsim
 
                                     for (int i = 1; i < 3; i++)
                                     {
-                                        if (!checkUnder(testTet, p, gameField, large))
+                                        if (!checkUnder(testTet, gameField, large))
                                         {
                                             if (i != 2)
                                                 testTet.move(1, 0);
@@ -700,7 +740,7 @@ namespace TGMsim
                                                 testTet.move(-2, 0);
                                         }
                                     }
-                                    if (!checkUnder(testTet, p, gameField, large)) //will the rotation work?
+                                    if (!checkUnder(testTet, gameField, large)) //will the rotation work?
                                         return tet;
 
                                     return testTet;
@@ -715,7 +755,7 @@ namespace TGMsim
 
                                     for (int i = 1; i < 3; i++)
                                     {
-                                        if (!checkUnder(testTet, p, gameField, large))
+                                        if (!checkUnder(testTet, gameField, large))
                                         {
                                             if (i != 2)
                                                 testTet.move(1, 0);
@@ -723,7 +763,7 @@ namespace TGMsim
                                                 testTet.move(-2, 0);
                                         }
                                     }
-                                    if (!checkUnder(testTet, p, gameField, large)) //will the rotation work?
+                                    if (!checkUnder(testTet, gameField, large)) //will the rotation work?
                                         return tet;
 
                                     return testTet;
@@ -745,7 +785,7 @@ namespace TGMsim
 
                             for (int i = 1; i < 3; i++)
                             {
-                                if (!checkUnder(testTet, p, gameField, large))
+                                if (!checkUnder(testTet, gameField, large))
                                 {
                                     if (i != 2)
                                         testTet.move(1, 0);
@@ -753,7 +793,7 @@ namespace TGMsim
                                         testTet.move(-2, 0);
                                 }
                             }
-                            if (!checkUnder(testTet, p, gameField, large)) //will the rotation work?
+                            if (!checkUnder(testTet, gameField, large)) //will the rotation work?
                                 return tet;
 
                             return testTet;
@@ -768,7 +808,7 @@ namespace TGMsim
 
                             for (int i = 1; i < 3; i++)
                             {
-                                if (!checkUnder(testTet, p, gameField, large))
+                                if (!checkUnder(testTet, gameField, large))
                                 {
                                     if (i != 2)
                                         testTet.move(1, 0);
@@ -776,7 +816,7 @@ namespace TGMsim
                                         testTet.move(-2, 0);
                                 }
                             }
-                            if (!checkUnder(testTet, p, gameField, large)) //will the rotation work?
+                            if (!checkUnder(testTet, gameField, large)) //will the rotation work?
                                 return tet;
 
                             return testTet;
@@ -796,7 +836,7 @@ namespace TGMsim
 
                             for (int i = 1; i < 3; i++)
                             {
-                                if (!checkUnder(testTet, p, gameField, large))
+                                if (!checkUnder(testTet, gameField, large))
                                 {
                                     if (i != 2)
                                         testTet.move(1, 0);
@@ -804,7 +844,7 @@ namespace TGMsim
                                         testTet.move(-2, 0);
                                 }
                             }
-                            if (!checkUnder(testTet, p, gameField, large)) //will the rotation work?
+                            if (!checkUnder(testTet, gameField, large)) //will the rotation work?
                                 return tet;
 
                             return testTet;
@@ -819,7 +859,7 @@ namespace TGMsim
 
                             for (int i = 1; i < 3; i++)
                             {
-                                if (!checkUnder(testTet, p, gameField, large))
+                                if (!checkUnder(testTet, gameField, large))
                                 {
                                     if (i != 2)
                                         testTet.move(1, 0);
@@ -827,7 +867,7 @@ namespace TGMsim
                                         testTet.move(-2, 0);
                                 }
                             }
-                            if (!checkUnder(testTet, p, gameField, large)) //will the rotation work?
+                            if (!checkUnder(testTet, gameField, large)) //will the rotation work?
                                 return tet;
 
                             return testTet;
@@ -839,10 +879,8 @@ namespace TGMsim
             return tet;
         }
 
-        public override bool checkUnder(Tetromino tet, int p, List<List<int>> gameField, bool large)
+        private bool testRestrict(Tetromino tet, int p, List<List<int>> gameField, bool large)
         {
-            bool empty = true;
-
             int lowY = 22;
             int big = 2;
             if (large)
@@ -853,38 +891,38 @@ namespace TGMsim
                     lowY = tet.bits[q].y;
             }
 
+
+            //universal center-testing
+            if (gameField[tet.bits[1].x * (2 / big) - (4 % (6 - big))][(tet.bits[1].y * (2 / big) - (lowY * ((2 / big) - 1))) - ((1 + tet.rotation / 2) * (2 / big))] != 0)
+                return false;
+
             for (int i = 0; i < 4; i++)
             {
                 int tetX, tetY;
                 tetX = tet.bits[i].x * (2 / big) - (4 % (6 - big));
                 tetY = tet.bits[i].y * (2 / big) - (lowY * ((2 / big) - 1));
-                //check OoB
-                if (tetY > 21)
-                    return false;
-                if (tetY < 0)
-                    continue;
 
-                if (tetX > 9)
-                    return false;
-                if (tetX < 0)
-                    return false;
+                
 
 
-                //test the cells
-                if (gameField[tetX][tetY] != 0)
-                    empty = false;
-                if (large)
+
+                switch(tet.id)
                 {
-                    if (gameField[tetX + 1][tetY] != 0)
-                        empty = false;
-                    if (gameField[tetX][tetY + 1] != 0)
-                        empty = false;
-                    if (gameField[tetX + 1][tetY + 1] != 0)
-                        empty = false;
+                    case 3:
+                    case 4:
+                        //test other center
+                        if (i == 1)
+                            if (gameField[tetX][tetY + (1 * (((tet.rotation + 2) % 4) - 1)) * (2/big)] != 0)
+                            {
+                                if (gameField[tetX + (((tet.id - 3) * 2) - 1)][tetY - ((tet.rotation / 2) + 1)] != 0)
+                                    return true;
+                                return false;
+                            }
+                        continue;
                 }
             }
-
-            return empty;
+            return true;
         }
+        
     }
 }
