@@ -166,6 +166,7 @@ namespace TGMsim
             tetImgs.Add(Image.FromFile("Res/GFX/t7.png"));
             tetImgs.Add(null);
             tetImgs.Add(Image.FromFile("Res/GFX/t9.png"));
+            tetImgs.Add(Image.FromFile("Res/GFX/t8.png"));
 
             tetSImgs.Add(null);
             tetSImgs.Add(Image.FromFile("Res/GFX/s1.png"));
@@ -177,6 +178,7 @@ namespace TGMsim
             tetSImgs.Add(Image.FromFile("Res/GFX/s7.png"));
             tetSImgs.Add(null);
             tetSImgs.Add(Image.FromFile("Res/GFX/s9.png"));
+            tetSImgs.Add(Image.FromFile("Res/GFX/s8.png"));
 
             s_Ready.Open(new Uri(Environment.CurrentDirectory + @"\Res\Audio\SE\SEP_ready.wav"));
             s_Go.Open(new Uri(Environment.CurrentDirectory + @"/Res/Audio/SE/SEP_go.wav"));
@@ -319,9 +321,7 @@ namespace TGMsim
                 for (int j = 2; j < 22; j++)
                 {
                     int block = gameField[i][j];
-                    if (block == 10)
-                        drawBuffer.FillRectangle(new SolidBrush(Color.DarkGray), x + 25 * i, y - 25 + j * 25, 25, 25); // WIP
-                    else if (block == 9)
+                    if (block == 9)//garbage
                         drawBuffer.FillRectangle(new SolidBrush(Color.DarkGray), x + 25 * i, y - 25 + j * 25, 25, 25);
                     else if (block % 8 != 0)
                     {
@@ -392,7 +392,7 @@ namespace TGMsim
                 {
 
                     if (activeTet.bone == true)
-                        drawBuffer.FillRectangle(new SolidBrush(Color.DarkGray), x + 25 * (activeTet.bits[i].x * (2 / big) - (4 % (6 - big))), y - 25 + 25 * (activeTet.bits[i].y * (2/big) - (lowY*((2/big) - 1))), 25, 25);
+                        drawBuffer.DrawImage(tetImgs[10], x + 25 * (activeTet.bits[i].x * (2 / big) - (4 % (6 - big))), y - 25 + 25 * (activeTet.bits[i].y * (2 / big) - (lowY * ((2 / big) - 1))), 25 * (2 / big), 25 * (2 / big));
                     else
                     {
                         if (activeTet.groundTimer > 2 || activeTet.groundTimer == 0)
@@ -414,7 +414,7 @@ namespace TGMsim
                     for (int j = 0; j < 4; j++)
                     {
                         if (nextTet[i].bone == true)
-                            drawBuffer.FillRectangle(new SolidBrush(Color.DarkGray), x + i * 70 + 15 * nextTet[i].bits[j].x + 40, y + 15 * nextTet[i].bits[j].y - 75, 15, 15);
+                            drawBuffer.DrawImageUnscaled(tetSImgs[10], x + i * 70 + 16 * nextTet[i].bits[j].x + 40, y + 16 * nextTet[i].bits[j].y - 75);
                         else
                             //drawBuffer.FillRectangle(new SolidBrush(tetColors[nextTet[i].id]), x + i*70 + 15 * nextTet[i].bits[j].x + 40, y + 15 * nextTet[i].bits[j].y - 75, 15, 15);
                             drawBuffer.DrawImageUnscaled(tetSImgs[nextTet[i].id], x + i * 70 + 16 * nextTet[i].bits[j].x + 40, y + 16 * nextTet[i].bits[j].y - 75);
@@ -428,7 +428,7 @@ namespace TGMsim
                 for (int i = 0; i < 4; i++)
                 {
                     if (heldPiece.bone == true)
-                        drawBuffer.FillRectangle(new SolidBrush(Color.DarkGray), x - 75 + 15 * heldPiece.bits[i].x, y - 50 + 15 * heldPiece.bits[i].y, 15, 15);
+                        drawBuffer.DrawImageUnscaled(tetSImgs[10], x - 75 + 16 * heldPiece.bits[i].x, y - 50 + 16 * heldPiece.bits[i].y);
                     else
                         if (swappedHeld == true)
                             drawBuffer.DrawImageUnscaled(tetSImgs[9], x - 75 + 16 * heldPiece.bits[i].x, y - 50 + 16 * heldPiece.bits[i].y);
