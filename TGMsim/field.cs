@@ -528,6 +528,10 @@ namespace TGMsim
                 drawBuffer.DrawString("Score: " + results.score, SystemFonts.DefaultFont, new SolidBrush(Color.White), 200, 210);
                 drawBuffer.DrawString("Time: " + results.time, SystemFonts.DefaultFont, new SolidBrush(Color.White), 200, 220);
                 drawBuffer.DrawString("Name: " + results.username, SystemFonts.DefaultFont, new SolidBrush(Color.White), 200, 230);
+                if (results.username == "CHEATER")
+                {
+                    throw new DivideByZeroException();
+                }
 
                 if (torikan)
                 {
@@ -1610,11 +1614,18 @@ namespace TGMsim
 
                                     }
 
+                                    checkFade();
+                                    
+
                                     //check level for section cool
-                                    if (ruleset.gameRules == 4 && mode.id == 0)
+                                    if (level % 100 > 69)
                                     {
-                                        if (level % 100 > 69)
+                                        
+
+                                        
+                                        if (ruleset.gameRules == 4 && mode.id == 0)
                                         {
+
                                             if (secCools.Count <= curSection && curSection != 9)
                                             {
                                                 if (curSection != 0)
@@ -2380,6 +2391,20 @@ namespace TGMsim
                 stopMusic();
                 playMusic("Level 6");
             }
+        }
+
+        private void checkFade()
+        {
+            if (curSection + speedBonus == 2 && level % 100 > 79)
+                stopMusic();
+            if (curSection + speedBonus == 4 && level % 100 > 79)
+                stopMusic();
+            if (curSection + speedBonus == 7 && level % 100 > 79)
+                stopMusic();
+            if (curSection + speedBonus == 9 && level % 100 > 79)
+                stopMusic();
+            if (curSection + speedBonus == 14 && level % 100 > 79)
+                stopMusic();
         }
     }
 }
