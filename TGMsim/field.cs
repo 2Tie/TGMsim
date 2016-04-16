@@ -195,7 +195,7 @@ namespace TGMsim
             s_Clear.Open(new Uri(Environment.CurrentDirectory + @"/Res/Audio/SE/SEB_disappear.wav"));
             s_Impact.Open(new Uri(Environment.CurrentDirectory + @"/Res/Audio/SE/SEB_fall.wav"));
             s_Grade.Open(new Uri(Environment.CurrentDirectory + @"/Res/Audio/SE/SEP_levelchange.wav"));
-            s_Hold.Open(new Uri(Environment.CurrentDirectory + @"/Res/Audio/SE/SEB_hold.wav"));
+            s_Hold.Open(new Uri(Environment.CurrentDirectory + @"/Res/Audio/SE/SEB_prehold.wav"));
             s_GameClear.Open(new Uri(Environment.CurrentDirectory + @"/Res/Audio/SE/SEP_gameclear.wav"));
             s_Cool.Open(new Uri(Environment.CurrentDirectory + @"/Res/Audio/SE/SEP_cool.wav"));
             s_Combo.Open(new Uri(Environment.CurrentDirectory + @"/Res/Audio/SE/SEP_combo.wav"));
@@ -737,6 +737,7 @@ namespace TGMsim
                         {
                             if (timerCount <= 0 && ((inCredits == creditsPause.elapsedTime > 3000) || ruleset.gameRules == 1))
                             {
+                                swappedHeld = false;
                                 spawnPiece();
                             }
                             else
@@ -956,7 +957,6 @@ namespace TGMsim
                                                 if (bigFull > 1)
                                                 {
                                                     combo++;
-                                                    playSound(s_Combo);
                                                 }
                                                 if(mode.gradedBy == 1)
                                                 {
@@ -1011,6 +1011,9 @@ namespace TGMsim
                                                                     break;
                                                             }
                                                     }
+
+                                                    if (comboing)
+                                                        playSound(s_Combo);
                                                 }
                                             }
                                             if (mode.id == 1)
@@ -1728,24 +1731,9 @@ namespace TGMsim
 
                         if (pad.inputHold == 1 && ruleset.hold == true && swappedHeld == false)
                         {
-                            Tetromino tempTet;
-                            if (heldPiece != null)
-                            {
-                                tempTet = new Tetromino(heldPiece.id);
-                                heldPiece = new Tetromino(activeTet.id);
-                                activeTet = tempTet;
-                                activeTet.groundTimer = ruleset.baseLock;
-                            }
-                            else
-                            {
-                                heldPiece = new Tetromino(activeTet.id);
-                                spawnPiece();
-                                currentTimer = (int)Field.timerType.ARE;
-                                timerCount = ruleset.baseARE;
-                            }
-                            swappedHeld = true;
-                            s_Hold.Play();
+                            hold();
                         }
+                        
                         int rot;
                         if (ruleset.gameRules < 6)
                             rot = (pad.inputRot1 | pad.inputRot3) - pad.inputRot2;
@@ -1912,40 +1900,14 @@ namespace TGMsim
                     nextTet[i] = nextTet[i + 1];
                 }
                 nextTet[nextTet.Count - 1] = generatePiece();
-                if (starting == 0)
+                if (pad.inputPressedHold)
+                {
+                    hold();
+                    playSound(s_Hold);
+                }
+                else if (starting == 0)
                 {
                     switch (nextTet[nextTet.Count - 1].id)
-                    {
-                        case 1:
-                            playSound(s_Tet1);
-                            break;
-                        case 2:
-                            playSound(s_Tet2);
-                            break;
-                        case 3:
-                            playSound(s_Tet3);
-                            break;
-                        case 4:
-                            playSound(s_Tet4);
-                            break;
-                        case 5:
-                            playSound(s_Tet5);
-                            break;
-                        case 6:
-                            playSound(s_Tet6);
-                            break;
-                        case 7:
-                            playSound(s_Tet7);
-                            break;
-                    }
-                }
-            }
-            else
-            {
-                activeTet = generatePiece();
-                if (starting == 0)
-                {
-                    switch (activeTet.id)
                     {
                         case 1:
                             playSound(s_Tet1);
@@ -2000,8 +1962,27 @@ namespace TGMsim
                 endGame();
             }
             softCounter = 0;
+        }
 
-            swappedHeld = false;
+        private void hold()
+        {
+            
+                Tetromino tempTet;
+                if (heldPiece != null)
+                {
+                    tempTet = new Tetromino(heldPiece.id);
+                    heldPiece = new Tetromino(activeTet.id);
+                    activeTet = tempTet;
+                    activeTet.groundTimer = ruleset.baseLock;
+                }
+                else
+                {
+                    heldPiece = new Tetromino(activeTet.id);
+                    spawnPiece();
+                    currentTimer = (int)Field.timerType.ARE;
+                    timerCount = ruleset.baseARE;
+                }
+                swappedHeld = true;
         }
 
         private void endGame()
