@@ -54,6 +54,7 @@ namespace TGMsim
         public GameTimer startTime = new GameTimer();
         public GameTimer sectionTime = new GameTimer();
         public GameTimer creditsPause = new GameTimer();
+        public GameTimer coolTime = new GameTimer();
 
         public bool swappedHeld;
 
@@ -140,6 +141,8 @@ namespace TGMsim
         System.Windows.Media.MediaPlayer s_Hold = new System.Windows.Media.MediaPlayer();
         System.Windows.Media.MediaPlayer s_GameClear = new System.Windows.Media.MediaPlayer();
         System.Windows.Media.MediaPlayer s_Cool = new System.Windows.Media.MediaPlayer();
+        System.Windows.Media.MediaPlayer s_Regret = new System.Windows.Media.MediaPlayer();
+        System.Windows.Media.MediaPlayer s_Section = new System.Windows.Media.MediaPlayer();
         System.Windows.Media.MediaPlayer s_Tetris = new System.Windows.Media.MediaPlayer();
         System.Windows.Media.MediaPlayer s_Combo = new System.Windows.Media.MediaPlayer();
         System.Windows.Media.MediaPlayer s_Medal = new System.Windows.Media.MediaPlayer();
@@ -198,6 +201,8 @@ namespace TGMsim
             s_Hold.Open(new Uri(Environment.CurrentDirectory + @"/Res/Audio/SE/SEB_prehold.wav"));
             s_GameClear.Open(new Uri(Environment.CurrentDirectory + @"/Res/Audio/SE/SEP_gameclear.wav"));
             s_Cool.Open(new Uri(Environment.CurrentDirectory + @"/Res/Audio/SE/SEP_cool.wav"));
+            s_Regret.Open(new Uri(Environment.CurrentDirectory + @"/Res/Audio/SE/SEI_vs_select.wav"));
+            s_Section.Open(new Uri(Environment.CurrentDirectory + @"/Res/Audio/SE/SEP_lankup.wav"));
             s_Combo.Open(new Uri(Environment.CurrentDirectory + @"/Res/Audio/SE/SEP_combo.wav"));
             s_Tetris.Open(new Uri(Environment.CurrentDirectory + @"/Res/Audio/SE/SEP_tetris.wav"));
             s_Medal.Open(new Uri(Environment.CurrentDirectory + @"/Res/Audio/SE/SEP_platinum.wav"));
@@ -496,6 +501,17 @@ namespace TGMsim
             //BIGGER TEXT
             drawBuffer.DrawString("Points", SystemFonts.DefaultFont, textBrush, 600, 380);
 
+            string cTex = "REGRET!";
+            if (ruleset.gameRules == 4 && coolTime.elapsedTime > 0)
+            {
+                if (level % 100 >= 70)//cool
+                {
+                    cTex = "COOL!";
+                }
+                drawBuffer.DrawString(cTex, SystemFonts.DefaultFont, textBrush, 420, 700);
+            }
+
+
             //GRADE TEXT
             if (ruleset.showGrade)
             {
@@ -526,7 +542,7 @@ namespace TGMsim
                         drawBuffer.DrawString("Grade: " + ruleset.gradesTGM3[results.grade], SystemFonts.DefaultFont, new SolidBrush(Color.White), 200, 200);
                 }
                 drawBuffer.DrawString("Score: " + results.score, SystemFonts.DefaultFont, new SolidBrush(Color.White), 200, 210);
-                drawBuffer.DrawString("Time: " + results.time, SystemFonts.DefaultFont, new SolidBrush(Color.White), 200, 220);
+                drawBuffer.DrawString("Time: " + convertTime(results.time), SystemFonts.DefaultFont, new SolidBrush(Color.White), 200, 220);
                 drawBuffer.DrawString("Name: " + results.username, SystemFonts.DefaultFont, new SolidBrush(Color.White), 200, 230);
                 if (results.username == "CHEATER")
                 {
@@ -629,6 +645,11 @@ namespace TGMsim
                     //timing logic
                     long temptimeVAR = (long)(timer.elapsedTime * ruleset.FPS / 60);
                     
+                    if (coolTime.elapsedTime > 3000)
+                    {
+                        coolTime.stop();
+                        coolTime.reset();
+                    }
 
 
                     //vanishing logic
@@ -1081,6 +1102,9 @@ namespace TGMsim
                                                 curSection++;
                                                 secTet.Add(0);
 
+                                                if (ruleset.gameRules > 3)
+                                                    playSound(s_Section);
+
                                                 //CHECK TORIKANS
                                                 if (mode.id == 1) //death
                                                 {
@@ -1213,10 +1237,10 @@ namespace TGMsim
                                                         case 1:
                                                         case 0:
                                                             ruleset.baseARE = ruleset.delayTableDeath[0][curSection];
-                                                            ruleset.baseARELine = ruleset.delayTableDeath[0][curSection];
-                                                            ruleset.baseDAS = ruleset.delayTableDeath[0][curSection];
-                                                            ruleset.baseLock = ruleset.delayTableDeath[0][curSection];
-                                                            ruleset.baseLineClear = ruleset.delayTableDeath[0][curSection];
+                                                            ruleset.baseARELine = ruleset.delayTableDeath[1][curSection];
+                                                            ruleset.baseDAS = ruleset.delayTableDeath[2][curSection];
+                                                            ruleset.baseLock = ruleset.delayTableDeath[3][curSection];
+                                                            ruleset.baseLineClear = ruleset.delayTableDeath[4][curSection];
                                                             break;
                                                     }
                                                 }
@@ -1323,6 +1347,9 @@ namespace TGMsim
                                                                 secCools[curSection - 1] = -1;
                                                             else
                                                                 secCools.Add(-1);
+
+                                                            playSound(s_Regret);
+                                                            coolTime.start();
                                                         }
                                                         if (secCools[curSection - 1] == 1)
                                                             speedBonus += 1;
@@ -1637,6 +1664,7 @@ namespace TGMsim
                                                     {
                                                         secCools.Add(1);
                                                         playSound(s_Cool);
+                                                        coolTime.start();
                                                     }
                                                     else
                                                         secCools.Add(0);
@@ -1647,6 +1675,7 @@ namespace TGMsim
                                                     {
                                                         secCools.Add(1);
                                                         playSound(s_Cool);
+                                                        coolTime.start();
                                                     }
                                                     else
                                                         secCools.Add(0);

@@ -35,5 +35,10 @@ namespace TGMsim
         {
             stopwatch.Stop();
         }
+
+        public void reset()
+        {
+            stopwatch.Reset();
+        }
     }
 }
