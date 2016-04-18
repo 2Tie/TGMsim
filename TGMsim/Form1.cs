@@ -144,11 +144,14 @@ namespace TGMsim
                     stopMusic();
                     if (mSel.game == 3 && mSel.selection == 1)
                         m.setMode(2);
+                    else if (mSel.game == 5 && mSel.selection == 2)
+                        m.setMode(6);
                     else
                         m.setMode(mSel.selection);
                     if (player.name == "   ")
                     {
-                        m.bigmode = cMen.cheats[3];
+                        if (m.id != 6)
+                            m.bigmode = cMen.cheats[3];
                         m.mute = cMen.cheats[4];
                     }
 
@@ -254,23 +257,7 @@ namespace TGMsim
                             changeMenu(4);
                         else if (gSel.menuSelection == 5 && mSel.selection == 2) //konoha
                         {
-                            rules.setGame(6);
-                            Mode m = new Mode();
-                            m.setMode(0);
-                            m.endLevel = 0;
-                            m.gradedBy = 3;
-                            m.limitType = 3;
-                            m.limit = 180000;//three minutes
-                            m.bigmode = true;
-                            m.easyGen = true;
-
-                            m.mute = cMen.cheats[4];
-
-                            saved = false;
-                            menuState = 4;
-                            stopMusic();
-                            field1 = new Field(pad1, rules, m, musicStream);
-                            break;
+                            changeMenu(4);
                         }
                         else
                         {

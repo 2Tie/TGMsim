@@ -33,7 +33,7 @@ namespace TGMsim
         public void setMode(int mode)
         {
             id = mode;
-            switch(mode)//Master, Death, shirase, sprint, garbage clear, rounds
+            switch(mode)//Master, Death, shirase, sprint, garbage clear, rounds, konoha
             {
                 case 0:
                     gradedBy = 1;
@@ -106,6 +106,15 @@ namespace TGMsim
                     limitType = 4;
                     limit = 1;
                     sections.Add(999);
+                    break;
+                case 6:
+                    endLevel = 0;
+                    gradedBy = 3;
+                    limitType = 3;
+                    limit = 180000;//three minutes
+                    sections.Add(999);
+                    bigmode = true;
+                    easyGen = true;
                     break;
             }
         }
