@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -29,11 +31,12 @@ namespace TGMsim
 
         public void poll() 
         {
-            if (true) //todo: ignore background inputs optionally
+            //reset inputs
+            inputH = inputV = inputStart = inputRot1 = inputRot2 = inputRot3 = inputHold = 0;
+
+            if (ApplicationIsActivated()) //todo: ignore background inputs optionally
             {
                 //handle inputs
-                //reset inputs
-                inputH = inputV = inputStart = inputRot1 = inputRot2 = inputRot3 = inputHold = 0;
 
                 //up or down = w or s
                 if (Keyboard.IsKeyDown(keyUp))
@@ -109,5 +112,28 @@ namespace TGMsim
                 }
             }
         }
+
+        public static bool ApplicationIsActivated()
+        {
+            var activatedHandle = GetForegroundWindow();
+            if (activatedHandle == IntPtr.Zero)
+            {
+                return false;       // No window is currently activated
+            }
+
+            var procId = Process.GetCurrentProcess().Id;
+            int activeProcId;
+            GetWindowThreadProcessId(activatedHandle, out activeProcId);
+
+            return activeProcId == procId;
+        }
+
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        private static extern IntPtr GetForegroundWindow();
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        private static extern int GetWindowThreadProcessId(IntPtr handle, out int processId);
+    
     }
 }

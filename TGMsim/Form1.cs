@@ -10,6 +10,8 @@ using System.Windows.Forms;
 using System.Windows.Input;
 using System.IO;
 using System.Drawing.Text;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace TGMsim
 {
@@ -28,6 +30,7 @@ namespace TGMsim
         Graphics graphics, drawBuffer;
 
         Profile player;
+        Preferences prefs;
 
         PrivateFontCollection fonts = new PrivateFontCollection();
         Font f_Maestro;
@@ -68,6 +71,9 @@ namespace TGMsim
             hiscoreTable.Add(new List<GameResult>());
 
             cMen = new CheatMenu();
+            prefs = new Preferences(player, pad1);
+
+            readPrefs();
 
             graphics = this.CreateGraphics();
             drawBuffer = Graphics.FromImage(imgBuffer);
@@ -83,6 +89,7 @@ namespace TGMsim
             while (this.Created)
             {
                 startTime = timer.elapsedTime;
+
                 gameLogic();
                 gameRender();
 
@@ -144,10 +151,15 @@ namespace TGMsim
                     stopMusic();
                     if (mSel.game == 3 && mSel.selection == 1)
                         m.setMode(2);
+                    else if (mSel.game == 5 && mSel.selection == 1)
+                        m.setMode(5);
                     else if (mSel.game == 5 && mSel.selection == 2)
                         m.setMode(6);
                     else
                         m.setMode(mSel.selection);
+
+                    m.mute = prefs.muted;
+
                     if (player.name == "   ")
                     {
                         if (m.id != 6)
@@ -179,6 +191,7 @@ namespace TGMsim
 
                 case 8:
                     menuState = 8;
+                    readPrefs();
                     stopMusic();
                     playMusic("Settings");
                     break;
@@ -193,6 +206,7 @@ namespace TGMsim
         void gameLogic()
         {
             pad1.poll();
+
             //deal with game logic
             switch (menuState)
             {
@@ -255,7 +269,7 @@ namespace TGMsim
                         //TODO: change rules based on what mode is selected
                         if (gSel.menuSelection < 5)
                             changeMenu(4);
-                        else if (gSel.menuSelection == 5 && mSel.selection == 2) //konoha
+                        else if (gSel.menuSelection == 5 && mSel.selection != 0) //konoha
                         {
                             changeMenu(4);
                         }
@@ -340,6 +354,7 @@ namespace TGMsim
                         m = field1.mode;
                         if (rules.gameRules == 3 && m.id == 0 && player.name != "   ")
                             m.exam = checkExam();
+                        saved = false;
                         field1 = new Field(pad1, rules, m, musicStream);
                     }
                     if (field1.exit == true)
@@ -349,13 +364,18 @@ namespace TGMsim
                     if (pad1.inputPressedRot2)
                         changeMenu(3);
                     break;
-                case 7:
+                case 7://custom game
                     if (pad1.inputPressedRot2)
                         changeMenu(2);
                     break;
                 case 8://settings
-                    if (pad1.inputPressedRot2)
+                    if (pad1.inputRot2 == 1 && prefs.menuState == 0)
+                    {
+                        pad1 = prefs.nPad;
+                        savePrefs();
                         changeMenu(2);
+                    }
+                    prefs.logic();
                     break;
                 case 9://cheats
                     if (pad1.inputStart == 1)
@@ -458,6 +478,7 @@ namespace TGMsim
                         break;
                 case 8:
                     drawBuffer.DrawString("preferences", DefaultFont, new SolidBrush(Color.White), 100, 20);
+                    prefs.render(drawBuffer);
                     break;
                 case 9:
                     drawBuffer.DrawString("cheats", DefaultFont, new SolidBrush(Color.White), 100, 20);
@@ -854,6 +875,38 @@ namespace TGMsim
             }
             return true;
         }
+
+        private void savePrefs()
+        {
+            using (FileStream fsStream = new FileStream("Sav/prefs.dat", FileMode.Create))
+            using (BinaryWriter sw = new BinaryWriter(fsStream, Encoding.UTF8))
+            {
+                sw.Write(prefs.muted);
+                sw.Write((int)prefs.nPad.keyUp);
+                sw.Write((int)prefs.nPad.keyDown);
+                sw.Write((int)prefs.nPad.keyLeft);
+                sw.Write((int)prefs.nPad.keyRight);
+                sw.Write((int)prefs.nPad.keyRot1);
+                sw.Write((int)prefs.nPad.keyRot2);
+                sw.Write((int)prefs.nPad.keyRot3);
+                sw.Write((int)prefs.nPad.keyHold);
+            }
+        }
+
+        private void readPrefs()
+        {
+            BinaryReader prf = new BinaryReader(File.OpenRead("Sav/prefs.dat"));
+            prefs.muted = prf.ReadBoolean();
+            prefs.nPad.keyUp = (Key)prf.ReadInt32();
+            prefs.nPad.keyDown = (Key)prf.ReadInt32();
+            prefs.nPad.keyLeft = (Key)prf.ReadInt32();
+            prefs.nPad.keyRight = (Key)prf.ReadInt32();
+            prefs.nPad.keyRot1 = (Key)prf.ReadInt32();
+            prefs.nPad.keyRot2 = (Key)prf.ReadInt32();
+            prefs.nPad.keyRot3 = (Key)prf.ReadInt32();
+            prefs.nPad.keyHold = (Key)prf.ReadInt32();
+        }
+
         private void playMusic(string song)
         {
             try

@@ -65,7 +65,7 @@ namespace TGMsim
                     gradedBy = 2;
                     break;
                 case 2:
-                    endLevel = 1299;
+                    endLevel = 1300;
                     sections.Add(100);
                     sections.Add(200);
                     sections.Add(300);
@@ -91,8 +91,8 @@ namespace TGMsim
                     gimList.Add(gL);
                     gL = new Gimmick();
                     gL.type = 5;
-                    gL.startLvl = 1299;
-                    gL.endLvl = 1300;
+                    gL.startLvl = 1300;
+                    gL.endLvl = 1301;
                     gimList.Add(gL);
                     gradedBy = 2;
                     shiraseGrades = true;
@@ -107,14 +107,56 @@ namespace TGMsim
                     limit = 1;
                     sections.Add(999);
                     break;
+                case 5:
+                    gradedBy = 2;
+                    lvlBonus = 5;
+                    endLevel = 1200;
+
+                    gL = new Gimmick();
+                    gL.type = 4;
+                    gL.startLvl = 300;
+                    gL.endLvl = 400;
+                    gimList.Add(gL);
+                    gL = new Gimmick();
+                    gL.type = 4;
+                    gL.startLvl = 500;
+                    gL.endLvl = 600;
+                    gimList.Add(gL);
+                    gL = new Gimmick();
+                    gL.type = 4;
+                    gL.startLvl = 700;
+                    gL.endLvl = 800;
+                    gimList.Add(gL);
+                    gL = new Gimmick();
+                    gL.type = 4;
+                    gL.startLvl = 900;
+                    gL.endLvl = 1000;
+                    gimList.Add(gL);
+                    gL = new Gimmick();
+                    gL.type = 4;
+                    gL.startLvl = 1100;
+                    gL.endLvl = 1200;
+                    gimList.Add(gL);
+                    break;
                 case 6:
                     endLevel = 0;
                     gradedBy = 3;
                     limitType = 3;
                     limit = 180000;//three minutes
-                    sections.Add(999);
                     bigmode = true;
                     easyGen = true;
+                    sections.Add(100);
+                    sections.Add(200);
+                    sections.Add(300);
+                    sections.Add(400);
+                    sections.Add(500);
+                    sections.Add(600);
+                    sections.Add(700);
+                    sections.Add(800);
+                    sections.Add(900);
+                    sections.Add(1000);
+                    sections.Add(1100);
+                    sections.Add(1200);
                     break;
             }
         }
