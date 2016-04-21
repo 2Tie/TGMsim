@@ -63,6 +63,7 @@ namespace TGMsim
             if (file.ReadByte() != 0x03)//read save version, compare to current
                 return 2; //incorrect save
             //read and parse the password
+            password.Clear();
             UInt16 passdata = file.ReadUInt16();
             if (passdata >> 15 == 1)//pass protected
             {

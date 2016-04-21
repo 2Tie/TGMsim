@@ -244,11 +244,7 @@ namespace TGMsim
 
             switch (mode.id)
             {
-                case 0:
-                    frameColour = Color.LightGray;
-                    break;
                 case 1:
-                    frameColour = Color.DarkRed;
                     ruleset.baseARE = ruleset.delayTableDeath[0][0];
                     ruleset.baseARELine = ruleset.delayTableDeath[1][0];
                     ruleset.baseDAS = ruleset.delayTableDeath[2][0];
@@ -257,20 +253,15 @@ namespace TGMsim
                     break;
                 case 2:
                 case 5:
-                    frameColour = Color.DarkBlue;
                     ruleset.baseARE = ruleset.delayTableShirase[0][0];
                     ruleset.baseARELine = ruleset.delayTableShirase[1][0];
                     ruleset.baseDAS = ruleset.delayTableShirase[2][0];
                     ruleset.baseLock = ruleset.delayTableShirase[3][0];
                     ruleset.baseLineClear = ruleset.delayTableShirase[4][0];
                     break;
-                case 3:
-                    frameColour = Color.DarkGreen;
-                    break;
-                case 6:
-                    frameColour = Color.PaleVioletRed;
-                    break;
             }
+
+            frameColour = mode.border;
 
             if (mode.exam != -1)
                 frameColour = Color.Gold;

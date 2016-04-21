@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -29,6 +30,8 @@ namespace TGMsim
         public int limit = 0;
         public bool mute = false;
         public List<Gimmick> gimList = new List<Gimmick>();
+
+        public Color border = Color.LightGray;
 
         public void setMode(int mode)
         {
@@ -63,6 +66,7 @@ namespace TGMsim
                     sections.Add(999);
                     lvlBonus = 5;
                     gradedBy = 2;
+                    border = Color.DarkRed;
                     break;
                 case 2:
                     endLevel = 1300;
@@ -96,10 +100,12 @@ namespace TGMsim
                     gimList.Add(gL);
                     gradedBy = 2;
                     shiraseGrades = true;
+                    border = Color.DarkBlue;
                     break;
                 case 3:
                     gradedBy = 4;
                     limitType = 1;
+                    border = Color.DarkGreen;
                     break;
                 case 4:
                     gradedBy = 4;
@@ -137,6 +143,7 @@ namespace TGMsim
                     gL.startLvl = 1100;
                     gL.endLvl = 1200;
                     gimList.Add(gL);
+                    border = Color.DarkRed;
                     break;
                 case 6:
                     endLevel = 0;
@@ -157,6 +164,7 @@ namespace TGMsim
                     sections.Add(1000);
                     sections.Add(1100);
                     sections.Add(1200);
+                    border = Color.PaleVioletRed;
                     break;
             }
         }
