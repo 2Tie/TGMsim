@@ -117,14 +117,14 @@ namespace TGMsim
         {
             
             //placeholder until i get arts or something
-            drawBuffer.DrawString("TGM", SystemFonts.DefaultFont, new SolidBrush(Color.White), 300, 300);
-            drawBuffer.DrawString("TGM2", SystemFonts.DefaultFont, new SolidBrush(Color.White), 500, 200);
-            drawBuffer.DrawString("TAP", SystemFonts.DefaultFont, new SolidBrush(Color.White), 500, 300);
-            drawBuffer.DrawString("TGM3", SystemFonts.DefaultFont, new SolidBrush(Color.White), 700, 300);
-            drawBuffer.DrawString("ACE", SystemFonts.DefaultFont, new SolidBrush(Color.White), 700, 400);
-            drawBuffer.DrawString("TGM4", SystemFonts.DefaultFont, new SolidBrush(Color.White), 900, 300);
-            drawBuffer.DrawString("Bonus", SystemFonts.DefaultFont, new SolidBrush(Color.White), 400, 600);
-            drawBuffer.DrawString("Preferences", SystemFonts.DefaultFont, new SolidBrush(Color.White), 800, 600);
+            drawBuffer.DrawString("TGM", SystemFonts.DefaultFont, new SolidBrush(Color.White), 100, 200);
+            drawBuffer.DrawString("TGM2", SystemFonts.DefaultFont, new SolidBrush(Color.White), 300, 100);
+            drawBuffer.DrawString("TAP", SystemFonts.DefaultFont, new SolidBrush(Color.White), 300, 200);
+            drawBuffer.DrawString("TGM3", SystemFonts.DefaultFont, new SolidBrush(Color.White), 500, 200);
+            drawBuffer.DrawString("ACE", SystemFonts.DefaultFont, new SolidBrush(Color.White), 500, 300);
+            drawBuffer.DrawString("TGM4", SystemFonts.DefaultFont, new SolidBrush(Color.White), 700, 200);
+            drawBuffer.DrawString("Bonus", SystemFonts.DefaultFont, new SolidBrush(Color.White), 200, 500);
+            drawBuffer.DrawString("Preferences", SystemFonts.DefaultFont, new SolidBrush(Color.White), 600, 500);
 
             if (!prompt)
             {
@@ -135,18 +135,18 @@ namespace TGMsim
                     vhelper = 100;
 
                 if (menuSelection < 6)
-                    drawBuffer.DrawString("↑", SystemFonts.DefaultFont, new SolidBrush(Color.White), 308 + ((int)Math.Ceiling((double)menuSelection / 2) * 200), 315 + vhelper);
+                    drawBuffer.DrawString("↑", SystemFonts.DefaultFont, new SolidBrush(Color.White), 108 + ((int)Math.Ceiling((double)menuSelection / 2) * 200), 215 + vhelper);
                 else
-                    drawBuffer.DrawString("↑", SystemFonts.DefaultFont, new SolidBrush(Color.White), 408 + ((menuSelection - 6) * 400), 615);
+                    drawBuffer.DrawString("↑", SystemFonts.DefaultFont, new SolidBrush(Color.White), 208 + ((menuSelection - 6) * 400), 515);
             }
             else
             {
-                drawBuffer.DrawRectangle(new Pen(new SolidBrush(Color.FromArgb(140, Color.Black))), 0, 0, 1280, 780); //dim the BG
-                drawBuffer.DrawString("Are you sure you want to log out?", SystemFonts.DefaultFont, new SolidBrush(Color.White), 520, 300);
-                drawBuffer.DrawString("No...", SystemFonts.DefaultFont, new SolidBrush(Color.White), 500, 320);
-                drawBuffer.DrawString("Yes!", SystemFonts.DefaultFont, new SolidBrush(Color.White), 700, 320);
+                drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(140, Color.Black)), 0, 0, 800, 600); //dim the BG
+                drawBuffer.DrawString("Are you sure you want to log out?", SystemFonts.DefaultFont, new SolidBrush(Color.White), 320, 200);
+                drawBuffer.DrawString("No...", SystemFonts.DefaultFont, new SolidBrush(Color.White), 300, 220);
+                drawBuffer.DrawString("Yes!", SystemFonts.DefaultFont, new SolidBrush(Color.White), 500, 220);
 
-                drawBuffer.DrawString(">", SystemFonts.DefaultFont, new SolidBrush(Color.White), 480 + (200 * menuSelection), 320);
+                drawBuffer.DrawString(">", SystemFonts.DefaultFont, new SolidBrush(Color.White), 290 + (200 * menuSelection), 220);
             }
         }
     }

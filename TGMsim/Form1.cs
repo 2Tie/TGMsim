@@ -56,7 +56,7 @@ namespace TGMsim
             this.DoubleBuffered = true;
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
 
-            this.ClientSize = new Size(1280, 780);
+            this.ClientSize = new Size(800, 600);//Size(1280, 780);
 
             interval = (long)TimeSpan.FromSeconds(1.0 / FPS).TotalMilliseconds;
             fonts.AddFontFile(@"Res\Maestro.ttf");
@@ -420,36 +420,36 @@ namespace TGMsim
             switch (menuState)
             {
                 case 0:
-                    drawBuffer.DrawString("TGM sim title screen thingy", DefaultFont, new SolidBrush(Color.White), 500, 300);
-                    drawBuffer.DrawString("PRESS START", f_Maestro, new SolidBrush(Color.White), 550, 400);
+                    drawBuffer.DrawString("TGM sim title screen thingy", DefaultFont, new SolidBrush(Color.White), 325, 250);
+                    drawBuffer.DrawString("PRESS START", f_Maestro, new SolidBrush(Color.White), 350, 300);
                     break;
                 case 1:
-                    drawBuffer.DrawString("login", DefaultFont, new SolidBrush(Color.White), 100, 20);
+                    drawBuffer.DrawString("login", DefaultFont, new SolidBrush(Color.White), 5, 5);
                     login.render(drawBuffer);
                     break;
                 case 2:
-                    drawBuffer.DrawString("game select", DefaultFont, new SolidBrush(Color.White), 100, 20);
+                    drawBuffer.DrawString("game select", DefaultFont, new SolidBrush(Color.White), 5, 5);
                     gSel.render(drawBuffer);
                     break;
                 case 3:
-                    drawBuffer.DrawString("mode select", DefaultFont, new SolidBrush(Color.White), 100, 20);
+                    drawBuffer.DrawString("mode select", DefaultFont, new SolidBrush(Color.White), 5, 5);
                     mSel.render(drawBuffer);
                     break;
                 case 4:
                     field1.draw(drawBuffer);
                     break;
                 case 6:
-                    drawBuffer.DrawString("hiscores", DefaultFont, new SolidBrush(Color.White), 100, 20);
+                    drawBuffer.DrawString("hiscores", DefaultFont, new SolidBrush(Color.White), 5, 5);
 
                     for (int i = 0; i < 6; i++ )
                     {
-                        drawBuffer.DrawString(hiscoreTable[mSel.game][i].username, DefaultFont, new SolidBrush(Color.White), 350, 100 + 30 * i);
+                        drawBuffer.DrawString(hiscoreTable[mSel.game][i].username, DefaultFont, new SolidBrush(Color.White), 250, 100 + 30 * i);
                         if (mSel.game == 3)
-                            drawBuffer.DrawString(hiscoreTable[mSel.game][i].level.ToString(), DefaultFont, new SolidBrush(Color.White), 390, 100 + 30 * i);
+                            drawBuffer.DrawString(hiscoreTable[mSel.game][i].level.ToString(), DefaultFont, new SolidBrush(Color.White), 290, 100 + 30 * i);
                         if (mSel.game == 0)
-                            drawBuffer.DrawString(rules.gradesTGM1[hiscoreTable[mSel.game][i].grade], DefaultFont, new SolidBrush(Color.White), 430, 100 + 30 * i);
+                            drawBuffer.DrawString(rules.gradesTGM1[hiscoreTable[mSel.game][i].grade], DefaultFont, new SolidBrush(Color.White), 330, 100 + 30 * i);
                         else
-                            drawBuffer.DrawString(rules.gradesTGM3[hiscoreTable[mSel.game][i].grade], DefaultFont, new SolidBrush(Color.White), 430, 100 + 30 * i);
+                            drawBuffer.DrawString(rules.gradesTGM3[hiscoreTable[mSel.game][i].grade], DefaultFont, new SolidBrush(Color.White), 330, 100 + 30 * i);
                         var temptimeVAR = hiscoreTable[mSel.game][i].time;
                         var min = (int)Math.Floor((double)temptimeVAR / 60000);
                         temptimeVAR -= min * 60000;
@@ -457,36 +457,36 @@ namespace TGMsim
                         temptimeVAR -= sec * 1000;
                         var msec = (int)temptimeVAR;
                         var msec10 = (int)(msec / 10);
-                        drawBuffer.DrawString(string.Format("{0,2:00}:{1,2:00}:{2,2:00}", min, sec, msec10), DefaultFont, new SolidBrush(Color.White), 460, 100 + 30 * i);
+                        drawBuffer.DrawString(string.Format("{0,2:00}:{1,2:00}:{2,2:00}", min, sec, msec10), DefaultFont, new SolidBrush(Color.White), 360, 100 + 30 * i);
                         if (mSel.game != 0)
                         {
                             for (int j = 0; j < 6; j++)
                             {
-                                drawBuffer.DrawString(hiscoreTable[mSel.game][i].medals[j].ToString(), DefaultFont, new SolidBrush(Color.White), 520 + 10*j, 100 + 30 * i);
+                                drawBuffer.DrawString(hiscoreTable[mSel.game][i].medals[j].ToString(), DefaultFont, new SolidBrush(Color.White), 420 + 10*j, 100 + 30 * i);
                             }
                         }
                         if (hiscoreTable[mSel.game][i].lineC == 1)
                         {
-                            drawBuffer.DrawLine(new Pen(Color.LimeGreen), 340, 100 + 30 * i, 650, 100 + 30 * i);
+                            drawBuffer.DrawLine(new Pen(Color.LimeGreen), 240, 100 + 30 * i, 550, 100 + 30 * i);
                         }
                         if (hiscoreTable[mSel.game][i].lineC == 2)
                         {
-                            drawBuffer.DrawLine(new Pen(Color.Orange), 340, 100 + 30 * i, 650, 100 + 30 * i);
+                            drawBuffer.DrawLine(new Pen(Color.Orange), 240, 100 + 30 * i, 550, 100 + 30 * i);
                         }
                     }
 
                         break;
                 case 8:
-                    drawBuffer.DrawString("preferences", DefaultFont, new SolidBrush(Color.White), 100, 20);
+                    drawBuffer.DrawString("preferences", DefaultFont, new SolidBrush(Color.White), 5, 5);
                     prefs.render(drawBuffer);
                     break;
                 case 9:
-                    drawBuffer.DrawString("cheats", DefaultFont, new SolidBrush(Color.White), 100, 20);
+                    drawBuffer.DrawString("cheats", DefaultFont, new SolidBrush(Color.White), 5, 5);
                     cMen.render(drawBuffer);
                     break;
             }
             if (menuState > 1)
-                drawBuffer.DrawString(player.name, f_Maestro, new SolidBrush(Color.White), 1000, 20);
+                drawBuffer.DrawString(player.name, f_Maestro, new SolidBrush(Color.White), 765, 5);
 
 #if DEBUG
             SolidBrush debugBrush = new SolidBrush(Color.White);
@@ -905,6 +905,7 @@ namespace TGMsim
             prefs.nPad.keyRot2 = (Key)prf.ReadInt32();
             prefs.nPad.keyRot3 = (Key)prf.ReadInt32();
             prefs.nPad.keyHold = (Key)prf.ReadInt32();
+            prf.Close();
         }
 
         private void playMusic(string song)

@@ -159,8 +159,8 @@ namespace TGMsim
 
         public Field(Controller ctlr, Rules rules, Mode m2, NAudio.Vorbis.VorbisWaveReader music)
         {
-            x = 320;
-            y = 100;
+            x = 200;
+            y = 50;
             width = 250;
             height = 500;
 
@@ -524,35 +524,35 @@ namespace TGMsim
                     gravMeter = Color.Orange;
                     break;
 
-            }
+            }//////ADJUST AFTER HERE
 
             if (ruleset.gameRules < 6) //grav meter
             {
-                drawBuffer.FillRectangle(new SolidBrush(gravColor), 600, 550, 60, 8);
-                drawBuffer.FillRectangle(new SolidBrush(gravMeter), 600, 550, (int)Math.Round(((double)gravTable[gravLevel] * 60) / ((Math.Pow(256, ruleset.gravType + 1) * 20))), 8);
+                drawBuffer.FillRectangle(new SolidBrush(gravColor), x + 280, 550, 60, 8);
+                drawBuffer.FillRectangle(new SolidBrush(gravMeter), x + 280, 550, (int)Math.Round(((double)gravTable[gravLevel] * 60) / ((Math.Pow(256, ruleset.gravType + 1) * 20))), 8);
                 if (mode.g20 == true || gravTable[gravLevel] == Math.Pow(256, ruleset.gravType + 1) * 20)
-                    drawBuffer.FillRectangle(new SolidBrush(Color.Red), 600, 550, 60, 8);
+                    drawBuffer.FillRectangle(new SolidBrush(Color.Red), x + 280, 550, 60, 8);
             }
 
             //SMALL TEXT
             //levels
-            drawBuffer.DrawString(level.ToString(), f_Maestro, textBrush, 610, 530);
+            drawBuffer.DrawString(level.ToString(), f_Maestro, textBrush, x + 290, 530);
             if (ruleset.gameRules < 6)
             {
                 if (mode.sections.Count == curSection)
-                    drawBuffer.DrawString(mode.sections[curSection - 1].ToString(), f_Maestro, textBrush, 610, 570);
+                    drawBuffer.DrawString(mode.sections[curSection - 1].ToString(), f_Maestro, textBrush, x + 290, 570);
                 else
-                    drawBuffer.DrawString(mode.sections[curSection].ToString(), f_Maestro, textBrush, 610, 570);
+                    drawBuffer.DrawString(mode.sections[curSection].ToString(), f_Maestro, textBrush, x + 290, 570);
             }
 
             if (ruleset.gameRules == 1)
             {
-                drawBuffer.DrawString(score.ToString(), f_Maestro, textBrush, 610, 300);
-                drawBuffer.DrawString("NEXT GRADE:", f_Maestro, textBrush, 600, 140);
+                drawBuffer.DrawString(score.ToString(), f_Maestro, textBrush, x + 290, 300);
+                drawBuffer.DrawString("NEXT GRADE:", f_Maestro, textBrush, x + 280, 140);
                 if (grade != ruleset.gradePointsTGM1.Count)
-                    drawBuffer.DrawString(ruleset.gradePointsTGM1[grade + 1].ToString(), f_Maestro, textBrush, 600, 160);
+                    drawBuffer.DrawString(ruleset.gradePointsTGM1[grade + 1].ToString(), f_Maestro, textBrush, x + 280, 160);
                 else
-                    drawBuffer.DrawString("??????", f_Maestro, textBrush, 600, 160);
+                    drawBuffer.DrawString("??????", f_Maestro, textBrush, x + 280, 160);
             }
 
             if (godmode)
@@ -564,7 +564,7 @@ namespace TGMsim
 
             //BIGGER TEXT
             if (ruleset.gameRules == 1)
-                drawBuffer.DrawString("Points", SystemFonts.DefaultFont, textBrush, 600, 280);
+                drawBuffer.DrawString("Points", SystemFonts.DefaultFont, textBrush, x + 280, 280);
 
             string cTex = "REGRET!";
             if (ruleset.gameRules == 4 && coolTime.elapsedTime > 0)
@@ -573,31 +573,31 @@ namespace TGMsim
                 {
                     cTex = "COOL!";
                 }
-                drawBuffer.DrawString(cTex, SystemFonts.DefaultFont, textBrush, 420, 700);
+                drawBuffer.DrawString(cTex, SystemFonts.DefaultFont, textBrush, x + 300, 350);
             }
 
             if (bravoTime.elapsedTime > 0)
-                drawBuffer.DrawString("BRAVO! X" + bravoCounter, SystemFonts.DefaultFont, textBrush, 610, 400);
+                drawBuffer.DrawString("BRAVO! X" + bravoCounter, SystemFonts.DefaultFont, textBrush, x + 280, 400);
 
             if (ruleset.gameRules == 6)
-                drawBuffer.DrawString("LEVEL:", f_Maestro, textBrush, 610, 500);
+                drawBuffer.DrawString("LEVEL:", f_Maestro, textBrush, x + 290, 500);
 
             if (mode.limitType == 3)//time limit?
-                drawBuffer.DrawString(convertTime((long)((mode.limit - timer.elapsedTime) * ruleset.FPS / 60)), SystemFonts.DefaultFont, textBrush, 610, 600);
+                drawBuffer.DrawString(convertTime((long)((mode.limit - timer.elapsedTime) * ruleset.FPS / 60)), SystemFonts.DefaultFont, textBrush, x + 290, 600);
             else
-                drawBuffer.DrawString(convertTime((long)(timer.elapsedTime * ruleset.FPS / 60)), SystemFonts.DefaultFont, textBrush, 610, 600);
+                drawBuffer.DrawString(convertTime((long)(timer.elapsedTime * ruleset.FPS / 60)), SystemFonts.DefaultFont, textBrush, x + 290, 600);
 
             //GRADE TEXT
             if (ruleset.showGrade)
             {
                 if (ruleset.gameRules == 1)
-                    drawBuffer.DrawString(ruleset.gradesTGM1[grade].ToString(), SystemFonts.DefaultFont, textBrush, 600, 100);
+                    drawBuffer.DrawString(ruleset.gradesTGM1[grade].ToString(), SystemFonts.DefaultFont, textBrush, x + 280, 100);
                 else
-                    drawBuffer.DrawString(ruleset.gradesTGM3[gm2grade].ToString(), SystemFonts.DefaultFont, textBrush, 600, 100);
+                    drawBuffer.DrawString(ruleset.gradesTGM3[gm2grade].ToString(), SystemFonts.DefaultFont, textBrush, x + 280, 100);
             }
 
             if (mode.exam != -1)
-                drawBuffer.DrawString("EXAM: " + ruleset.gradesTGM3[mode.exam].ToString(), SystemFonts.DefaultFont, textBrush, 600, 100);
+                drawBuffer.DrawString("EXAM: " + ruleset.gradesTGM3[mode.exam].ToString(), SystemFonts.DefaultFont, textBrush, x + 280, 100);
 
 
             //DRAW MEDALS
@@ -605,7 +605,7 @@ namespace TGMsim
                 for (int i = 0; i < 6; i++)
                 {
                     if (medals[i] != 0)
-                        drawBuffer.DrawImage(medalImg, new Rectangle(600 + (i % 3) * 20, 210 + (30 * (int)(Math.Floor((double)i / 3))), 25, 15), i * 26, (medals[i] - 1) * 16, 25, 15, GraphicsUnit.Pixel);
+                        drawBuffer.DrawImage(medalImg, new Rectangle(x + 280 + (i % 3) * 20, 210 + (30 * (int)(Math.Floor((double)i / 3))), 25, 15), i * 26, (medals[i] - 1) * 16, 25, 15, GraphicsUnit.Pixel);
                 }
 
             //fadeout
@@ -618,9 +618,9 @@ namespace TGMsim
 
             //Starting things
             if (starting == 2)
-                drawBuffer.DrawString("Ready", SystemFonts.DefaultFont, new SolidBrush(Color.White), 400, 200);
+                drawBuffer.DrawString("Ready", SystemFonts.DefaultFont, new SolidBrush(Color.White), 200, 200);
             if (starting == 3)
-                drawBuffer.DrawString("Go", SystemFonts.DefaultFont, new SolidBrush(Color.White), 400, 200);
+                drawBuffer.DrawString("Go", SystemFonts.DefaultFont, new SolidBrush(Color.White), 200, 200);
 
 
             //endgame stats
@@ -629,13 +629,13 @@ namespace TGMsim
                 if (mode.id == 0)
                 {
                     if (ruleset.gameRules == 1)
-                        drawBuffer.DrawString("Grade: " + ruleset.gradesTGM1[results.grade], SystemFonts.DefaultFont, new SolidBrush(Color.White), 400, 200);
+                        drawBuffer.DrawString("Grade: " + ruleset.gradesTGM1[results.grade], SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 200);
                     else
-                        drawBuffer.DrawString("Grade: " + ruleset.gradesTGM3[results.grade], SystemFonts.DefaultFont, new SolidBrush(Color.White), 400, 200);
+                        drawBuffer.DrawString("Grade: " + ruleset.gradesTGM3[results.grade], SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 200);
                 }
-                drawBuffer.DrawString("Score: " + results.score, SystemFonts.DefaultFont, new SolidBrush(Color.White), 400, 210);
-                drawBuffer.DrawString("Time: " + convertTime((long)(timer.elapsedTime * ruleset.FPS / 60)), SystemFonts.DefaultFont, new SolidBrush(Color.White), 400, 220);
-                drawBuffer.DrawString("Name: " + results.username, SystemFonts.DefaultFont, new SolidBrush(Color.White), 400, 230);
+                drawBuffer.DrawString("Score: " + results.score, SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 210);
+                drawBuffer.DrawString("Time: " + convertTime((long)(timer.elapsedTime * ruleset.FPS / 60)), SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 220);
+                drawBuffer.DrawString("Name: " + results.username, SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 230);
                 if (results.username == "CHEATER")
                 {
                     throw new DivideByZeroException();
@@ -643,15 +643,15 @@ namespace TGMsim
 
                 if (torikan)
                 {
-                    drawBuffer.DrawString("Torikan hit!", SystemFonts.DefaultFont, new SolidBrush(Color.White), 400, 250);
-                    drawBuffer.DrawString(convertTime((long)(torDef * ruleset.FPS / 60)) + " behind!", SystemFonts.DefaultFont, new SolidBrush(Color.White), 400, 260);
+                    drawBuffer.DrawString("Torikan hit!", SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 250);
+                    drawBuffer.DrawString(convertTime((long)(torDef * ruleset.FPS / 60)) + " behind!", SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 260);
                 }
 
-                drawBuffer.DrawString("Press start to", SystemFonts.DefaultFont, new SolidBrush(Color.White), 400, 280);
-                drawBuffer.DrawString("restart the field!", SystemFonts.DefaultFont, new SolidBrush(Color.White), 400, 290);
+                drawBuffer.DrawString("Press start to", SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 280);
+                drawBuffer.DrawString("restart the field!", SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 290);
 
-                drawBuffer.DrawString("Press B to", SystemFonts.DefaultFont, new SolidBrush(Color.White), 400, 310);
-                drawBuffer.DrawString("return to menu!", SystemFonts.DefaultFont, new SolidBrush(Color.White), 400, 320);
+                drawBuffer.DrawString("Press B to", SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 310);
+                drawBuffer.DrawString("return to menu!", SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 320);
             }
 
 

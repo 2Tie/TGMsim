@@ -51,36 +51,34 @@ namespace TGMsim
         public void render(Graphics drawBuffer)
         {
             if (game < 4)
-                drawBuffer.DrawString("Master", SystemFonts.DefaultFont, new SolidBrush(Color.White), 400, 400);
+                drawBuffer.DrawString("Master", SystemFonts.DefaultFont, new SolidBrush(Color.White), 300, 300);
             if (game == 4)
-                drawBuffer.DrawString("Roads", SystemFonts.DefaultFont, new SolidBrush(Color.White), 400, 400);
+                drawBuffer.DrawString("Roads", SystemFonts.DefaultFont, new SolidBrush(Color.White), 300, 300);
             if (game == 5)
-                drawBuffer.DrawString("World", SystemFonts.DefaultFont, new SolidBrush(Color.White), 400, 400);
+                drawBuffer.DrawString("World", SystemFonts.DefaultFont, new SolidBrush(Color.White), 300, 300);
             if (game == 6)
-                drawBuffer.DrawString("Custom", SystemFonts.DefaultFont, new SolidBrush(Color.White), 400, 400);
-            drawBuffer.DrawString("→", SystemFonts.DefaultFont, new SolidBrush(Color.White), 385, 400 + 12*selection);
+                drawBuffer.DrawString("Custom", SystemFonts.DefaultFont, new SolidBrush(Color.White), 300, 300);
+            drawBuffer.DrawString("→", SystemFonts.DefaultFont, new SolidBrush(Color.White), 285, 300 + 12*selection);
             switch(game)
             {
                 case 2://tap
-                    drawBuffer.DrawString("Death", SystemFonts.DefaultFont, new SolidBrush(Color.White), 400, 412);
+                    drawBuffer.DrawString("Death", SystemFonts.DefaultFont, new SolidBrush(Color.White), 300, 312);
                     break;
                 case 3://tgm3
-                    drawBuffer.DrawString("Shirase", SystemFonts.DefaultFont, new SolidBrush(Color.White), 400, 412);
+                    drawBuffer.DrawString("Shirase", SystemFonts.DefaultFont, new SolidBrush(Color.White), 300, 312);
                     break;
                 case 4://ACE
-                    drawBuffer.DrawString("Promotion Exam", SystemFonts.DefaultFont, new SolidBrush(Color.White), 400, 412);
+                    drawBuffer.DrawString("Promotion Exam", SystemFonts.DefaultFont, new SolidBrush(Color.White), 300, 312);
                     break;
                 case 5://TGM4
-                    drawBuffer.DrawString("Rounds", SystemFonts.DefaultFont, new SolidBrush(Color.White), 400, 412);
-                    drawBuffer.DrawString("Konoha", SystemFonts.DefaultFont, new SolidBrush(Color.White), 400, 424);
+                    drawBuffer.DrawString("Rounds", SystemFonts.DefaultFont, new SolidBrush(Color.White), 300, 312);
+                    drawBuffer.DrawString("Konoha", SystemFonts.DefaultFont, new SolidBrush(Color.White), 300, 324);
                     break;
                 case 6://bonus
-                    drawBuffer.DrawString("~Eternal Shirase~", SystemFonts.DefaultFont, new SolidBrush(Color.White), 400, 412);
-                    drawBuffer.DrawString("Garbage Clearer", SystemFonts.DefaultFont, new SolidBrush(Color.White), 400, 424);
+                    drawBuffer.DrawString("~Eternal Shirase~", SystemFonts.DefaultFont, new SolidBrush(Color.White), 300, 312);
+                    drawBuffer.DrawString("Garbage Clearer", SystemFonts.DefaultFont, new SolidBrush(Color.White), 300, 324);
                     break;
             }
-            drawBuffer.DrawString(game.ToString(), SystemFonts.DefaultFont, new SolidBrush(Color.White), 200, 700);
-            drawBuffer.DrawString(selection.ToString(), SystemFonts.DefaultFont, new SolidBrush(Color.White), 200, 700);
         }
     }
 }

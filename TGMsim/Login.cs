@@ -267,24 +267,24 @@ namespace TGMsim
             if (menuSelection == 3 || menuSelection == 4)
             {
                 if (tempPass.Count == 0)
-                drawBuffer.DrawString("Press Start to confirm inputs!", SystemFonts.DefaultFont, new SolidBrush(Color.White), 350, 360);
+                drawBuffer.DrawString("Press Start to confirm inputs!", SystemFonts.DefaultFont, new SolidBrush(Color.White), 300, 260);
                 
                 for(int i = 0; i < tempPass.Count; i++)
-                    drawBuffer.DrawString("*", SystemFonts.DefaultFont, new SolidBrush(Color.White), 400 + 10*i, 320);
+                    drawBuffer.DrawString("*", SystemFonts.DefaultFont, new SolidBrush(Color.White), 350 + 10*i, 220);
 
                 for (int i = 0; i < verifyPass.Count; i++)
-                    drawBuffer.DrawString("*", SystemFonts.DefaultFont, new SolidBrush(Color.White), 400 + 10 * i, 340);
+                    drawBuffer.DrawString("*", SystemFonts.DefaultFont, new SolidBrush(Color.White), 350 + 10 * i, 240);
             }
 
             if (loginErr == 1)
-                drawBuffer.DrawString("There was an error reading the profile specified. Try again or delete the file.", SystemFonts.DefaultFont, new SolidBrush(Color.White), 200, 200);
+                drawBuffer.DrawString("There was an error reading the profile specified. Try again or delete the file.", SystemFonts.DefaultFont, new SolidBrush(Color.White), 150, 100);
             if (loginErr == 2)
-                drawBuffer.DrawString("The password doesn't match. Please try again.", SystemFonts.DefaultFont, new SolidBrush(Color.White), 200, 200);
-            drawBuffer.DrawString(getLetter(username[0]), SystemFonts.DefaultFont, new SolidBrush(Color.White), 400, 300);
+                drawBuffer.DrawString("The password doesn't match. Please try again.", SystemFonts.DefaultFont, new SolidBrush(Color.White), 150, 100);
+            drawBuffer.DrawString(getLetter(username[0]), SystemFonts.DefaultFont, new SolidBrush(Color.White), 350, 200);
             if (menuSelection > 0)
-            drawBuffer.DrawString(getLetter(username[1]), SystemFonts.DefaultFont, new SolidBrush(Color.White), 409, 300);
+            drawBuffer.DrawString(getLetter(username[1]), SystemFonts.DefaultFont, new SolidBrush(Color.White), 359, 200);
             if (menuSelection > 1)
-            drawBuffer.DrawString(getLetter(username[2]), SystemFonts.DefaultFont, new SolidBrush(Color.White), 418, 300);
+            drawBuffer.DrawString(getLetter(username[2]), SystemFonts.DefaultFont, new SolidBrush(Color.White), 368, 200);
             //if (menuSelection < 3)
             //    drawBuffer.DrawString("↑", SystemFonts.DefaultFont, new SolidBrush(Color.White), 398 + (9*menuSelection), 315);
 
