@@ -528,21 +528,21 @@ namespace TGMsim
 
             if (ruleset.gameRules < 6) //grav meter
             {
-                drawBuffer.FillRectangle(new SolidBrush(gravColor), x + 280, 550, 60, 8);
-                drawBuffer.FillRectangle(new SolidBrush(gravMeter), x + 280, 550, (int)Math.Round(((double)gravTable[gravLevel] * 60) / ((Math.Pow(256, ruleset.gravType + 1) * 20))), 8);
+                drawBuffer.FillRectangle(new SolidBrush(gravColor), x + 280, 525, 60, 8);
+                drawBuffer.FillRectangle(new SolidBrush(gravMeter), x + 280, 525, (int)Math.Round(((double)gravTable[gravLevel] * 60) / ((Math.Pow(256, ruleset.gravType + 1) * 20))), 8);
                 if (mode.g20 == true || gravTable[gravLevel] == Math.Pow(256, ruleset.gravType + 1) * 20)
-                    drawBuffer.FillRectangle(new SolidBrush(Color.Red), x + 280, 550, 60, 8);
+                    drawBuffer.FillRectangle(new SolidBrush(Color.Red), x + 280, 525, 60, 8);
             }
 
             //SMALL TEXT
             //levels
-            drawBuffer.DrawString(level.ToString(), f_Maestro, textBrush, x + 290, 530);
+            drawBuffer.DrawString(level.ToString(), f_Maestro, textBrush, x + 290, 505);
             if (ruleset.gameRules < 6)
             {
                 if (mode.sections.Count == curSection)
-                    drawBuffer.DrawString(mode.sections[curSection - 1].ToString(), f_Maestro, textBrush, x + 290, 570);
+                    drawBuffer.DrawString(mode.sections[curSection - 1].ToString(), f_Maestro, textBrush, x + 290, 545);
                 else
-                    drawBuffer.DrawString(mode.sections[curSection].ToString(), f_Maestro, textBrush, x + 290, 570);
+                    drawBuffer.DrawString(mode.sections[curSection].ToString(), f_Maestro, textBrush, x + 290, 545);
             }
 
             if (ruleset.gameRules == 1)
@@ -580,7 +580,7 @@ namespace TGMsim
                 drawBuffer.DrawString("BRAVO! X" + bravoCounter, SystemFonts.DefaultFont, textBrush, x + 280, 400);
 
             if (ruleset.gameRules == 6)
-                drawBuffer.DrawString("LEVEL:", f_Maestro, textBrush, x + 290, 500);
+                drawBuffer.DrawString("LEVEL:", f_Maestro, textBrush, x + 290, 485);
 
             if (mode.limitType == 3)//time limit?
                 drawBuffer.DrawString(convertTime((long)((mode.limit - timer.elapsedTime) * ruleset.FPS / 60)), SystemFonts.DefaultFont, textBrush, x + 290, 600);
@@ -2430,7 +2430,7 @@ namespace TGMsim
 
                 for (int k = 0; k < lastTet.Count; k++)
                 {
-                    if (mode.easyGen && !cheating)
+                    if (mode.easyGen || starting != 0)
                     {
                         tempID = piece.Next(5) + 1;//no S or Z
 
