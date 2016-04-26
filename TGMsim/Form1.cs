@@ -155,6 +155,8 @@ namespace TGMsim
                         m.setMode(5);
                     else if (mSel.game == 5 && mSel.selection == 2)
                         m.setMode(6);
+                    else if (mSel.game == 6 && mSel.selection == 3)
+                        m.setMode(7);
                     else
                         m.setMode(mSel.selection);
 
@@ -297,7 +299,8 @@ namespace TGMsim
                                     stopMusic();
                                     field1 = new Field(pad1, rules, m, musicStream);
                                     break;
-                                case 3://40 sprint
+                                case 3://20g practice
+                                    changeMenu(4);
                                     break;
                             }
                         }

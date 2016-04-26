@@ -37,10 +37,10 @@ namespace TGMsim
                     break;
                 case 5:
                 case 6:
-                    if (selection == 3)
+                    if (selection == 4)
                         selection = 0;
                     if (selection == -1)
-                        selection = 2;
+                        selection = 3;
                     break;
                 default:
                     if (selection == 1)
@@ -77,6 +77,7 @@ namespace TGMsim
                 case 6://bonus
                     drawBuffer.DrawString("~Eternal Shirase~", SystemFonts.DefaultFont, new SolidBrush(Color.White), 300, 312);
                     drawBuffer.DrawString("Garbage Clearer", SystemFonts.DefaultFont, new SolidBrush(Color.White), 300, 324);
+                    drawBuffer.DrawString("20G Practice", SystemFonts.DefaultFont, new SolidBrush(Color.White), 300, 336);
                     break;
             }
         }

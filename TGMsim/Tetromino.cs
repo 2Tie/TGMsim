@@ -101,11 +101,8 @@ namespace TGMsim
                 if (!this.bone)
                     newTet.bone = false;
 
-                int gt;
-                for (gt = 0; gt < groundTimer; gt++)
-                {
-                }
-                newTet.groundTimer = gt;
+                
+                newTet.groundTimer = groundTimer;
             }
             return newTet;
         }

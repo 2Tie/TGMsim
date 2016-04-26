@@ -36,7 +36,7 @@ namespace TGMsim
         public void setMode(int mode)
         {
             id = mode;
-            switch(mode)//Master, Death, shirase, sprint, garbage clear, rounds, konoha
+            switch(mode)//Master, Death, shirase, sprint, garbage clear, rounds, konoha, grav training
             {
                 case 0:
                     gradedBy = 1;
@@ -165,6 +165,11 @@ namespace TGMsim
                     sections.Add(1100);
                     sections.Add(1200);
                     border = Color.PaleVioletRed;
+                    break;
+                case 7:
+                    endLevel = 999;
+                    lvlBonus = 5;
+                    sections.Add(999);
                     break;
             }
         }

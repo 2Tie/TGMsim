@@ -76,34 +76,34 @@ namespace TGMsim
                 baseGradePts[3].Add(30);
             }
 
-            delayTableTGM2.Add(new List<int> {25, 25, 25, 16, 12, 12});//ARE
+            delayTableTGM2.Add(new List<int> {27, 27, 27, 18, 14, 14});//ARE
             delayTableTGM2.Add(new List<int> {16,10,10,10,10,8});//DAS
             delayTableTGM2.Add(new List<int> {30,30,30,30,30,17});//LOCK
             delayTableTGM2.Add(new List<int> {40,25,16,12,6,6,6});//LINE CLEAR
 
-            delayTableTAP.Add(new List<int> { 25, 25, 25, 16, 12, 12 });
-            delayTableTAP.Add(new List<int> { 25, 25, 16, 12, 6, 6 });//line ARE
-            delayTableTAP.Add(new List<int> { 14, 8, 8, 8, 8, 6 });
-            delayTableTAP.Add(new List<int> { 30, 30, 30, 30, 30, 17 });
-            delayTableTAP.Add(new List<int> { 40, 25, 16, 12, 6, 6 });
+            delayTableTAP.Add(new List<int> { 27, 27, 27, 18, 14, 14 });//ARE
+            delayTableTAP.Add(new List<int> { 27, 27, 18, 14, 8, 8 });//line ARE
+            delayTableTAP.Add(new List<int> { 14, 8, 8, 8, 8, 6 });//DAS
+            delayTableTAP.Add(new List<int> { 30, 30, 30, 30, 30, 17 });//LOCK
+            delayTableTAP.Add(new List<int> { 40, 25, 16, 12, 6, 6 });//LINE CLEAR
 
             //death
-            delayTableDeath.Add(new List<int> { 16, 12, 12, 6, 5, 4 });
-            delayTableDeath.Add(new List<int> { 12, 6, 6, 6, 5, 4 });
+            delayTableDeath.Add(new List<int> { 18, 14, 14, 8, 7, 6 });
+            delayTableDeath.Add(new List<int> { 14, 8, 8, 8, 7, 6 });
             delayTableDeath.Add(new List<int> { 10, 10, 9, 8, 6, 6 });
             delayTableDeath.Add(new List<int> { 30, 26, 22, 18, 15, 15 });
             delayTableDeath.Add(new List<int> { 12, 6, 6, 6, 5, 4 });
 
             //tgm3
-            delayTableTGM3.Add(new List<int> { 25, 25, 25, 16, 12, 12, 6, 5, 4 });
-            delayTableTGM3.Add(new List<int> { 25, 25, 16, 12, 6, 6, 6, 5, 4 });
+            delayTableTGM3.Add(new List<int> { 27, 27, 27, 18, 14, 14, 8, 7, 6 });
+            delayTableTGM3.Add(new List<int> { 27, 27, 18, 14, 8, 8, 8, 7, 6 });
             delayTableTGM3.Add(new List<int> { 14, 8, 8, 8, 8, 6, 6, 6, 6 });
             delayTableTGM3.Add(new List<int> { 30, 30, 30, 30, 30, 17, 17, 15, 15 });
             delayTableTGM3.Add(new List<int> { 40, 25, 16, 12, 6, 6, 6, 6, 6 });
 
             //shirase
-            delayTableShirase.Add(new List<int> { 10, 10, 10, 4, 4, 4, 4, 4, 4 });
-            delayTableShirase.Add(new List<int> { 6, 5, 4, 4, 3, 3, 3, 3, 4 });
+            delayTableShirase.Add(new List<int> { 12, 12, 12, 6, 6, 6, 6, 6, 6 });
+            delayTableShirase.Add(new List<int> { 8, 7, 6, 6, 5, 5, 5, 5, 6 });
             delayTableShirase.Add(new List<int> { 8, 6, 6, 6, 4, 4, 4, 4, 4 });
             delayTableShirase.Add(new List<int> { 18, 18, 17, 15, 13, 12, 10, 8, 15 });
             delayTableShirase.Add(new List<int> { 6, 5, 4, 4, 3, 3, 3, 3, 6 });

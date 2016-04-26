@@ -23,6 +23,11 @@ namespace TGMsim
             public long time;
             public int x, y;
         }
+        public struct flashPip
+        {
+            public int time;
+            public int x, y;
+        }
 
         Tetromino activeTet;
         public List<Tetromino> nextTet = new List<Tetromino>();
@@ -40,6 +45,7 @@ namespace TGMsim
         public List<int> secTet = new List<int>();
         public List<int> secCools = new List<int>();
         public List<vanPip> vanList = new List<vanPip>();
+        public List<flashPip> flashList = new List<flashPip>();
         public int creditsType = 0;
         int fadeout = 0;
 
@@ -120,6 +126,7 @@ namespace TGMsim
         List<Image> tetImgs = new List<Image>();
         List<Image> tetSImgs = new List<Image>();
         Image medalImg;
+        Image gradeImg;
         Color frameColour;
         SolidBrush textBrush = new SolidBrush(Color.White);
 
@@ -189,6 +196,7 @@ namespace TGMsim
             tetSImgs.Add(Image.FromFile("Res/GFX/s8.png"));
 
             medalImg = Image.FromFile("Res/GFX/medals.png");
+            gradeImg = Image.FromFile("Res/GFX/grades.png");
 
             s_Ready.Open(new Uri(Environment.CurrentDirectory + @"\Res\Audio\SE\SEP_ready.wav"));
             s_Go.Open(new Uri(Environment.CurrentDirectory + @"/Res/Audio/SE/SEP_go.wav"));
@@ -253,11 +261,19 @@ namespace TGMsim
                     break;
                 case 2:
                 case 5:
+                case 6:
                     ruleset.baseARE = ruleset.delayTableShirase[0][0];
                     ruleset.baseARELine = ruleset.delayTableShirase[1][0];
                     ruleset.baseDAS = ruleset.delayTableShirase[2][0];
                     ruleset.baseLock = ruleset.delayTableShirase[3][0];
                     ruleset.baseLineClear = ruleset.delayTableShirase[4][0];
+                    break;
+                case 7:
+                    ruleset.baseARE = ruleset.delayTableDeath[0][0];
+                    ruleset.baseARELine = ruleset.delayTableDeath[1][0];
+                    ruleset.baseDAS = ruleset.delayTableDeath[2][0];
+                    ruleset.baseLock = -1;
+                    ruleset.baseLineClear = ruleset.delayTableDeath[4][0];
                     break;
             }
 
@@ -280,7 +296,7 @@ namespace TGMsim
                     break;
             }
 
-            if ((mode.g20 == true || gravTable[gravLevel] == Math.Pow(256, ruleset.gravType + 1) * 20) && ruleset.gameRules < 3)
+            if ((mode.g20 == true || gravTable[gravLevel] == Math.Pow(256, ruleset.gravType + 1) * 20) && ruleset.gameRules < 4)
                 textBrush = new SolidBrush(Color.Gold);
 
             //timer.start();
@@ -327,32 +343,43 @@ namespace TGMsim
             {
                 for (int j = 2; j < 22; j++)
                 {
-                    int block = gameField[i][j];
-                    if (block == 9)//garbage
-                        drawBuffer.DrawImageUnscaled(tetImgs[block], x + 25 * i, y - 25 + j * 25, 25, 25);
-                    else if (block % 8 != 0)
+                    bool flashing = false;
+                    for (int k = 0; k < flashList.Count; k++)
                     {
-                        drawBuffer.DrawImageUnscaled(tetImgs[block], x + 25 * i, y - 25 + j * 25, 25, 25);
-                        drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(130, Color.Black)), x + 25 * i, y - 25 + j * 25, 25, 25);
+                        if (i == flashList[k].x && j == flashList[k].y)
+                            flashing = true;
                     }
+                    if (flashing)
+                        drawBuffer.DrawImageUnscaled(tetImgs[9], x + 25 * i, y - 25 + j * 25, 25, 25);
+                    else
+                    {
 
-                    //outline
-                    if (block % 8 != 0 && block != 10)
-                    {
-                        if (i > 0)
-                            if (gameField[i - 1][j] == 0)//left
-                                drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.White)), x + 25 * i, y - 25 + j * 25, 3, 25);
-                        if (i < 9)
-                            if (gameField[i + 1][j] == 0)//right
-                                drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.White)), x + 25 * i + 22, y - 25 + j * 25, 3, 25);
-                        if (j > 0)
-                            if (gameField[i][j - 1] == 0)//down
-                                drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.White)), x + 25 * i, y - 25 + j * 25, 25, 3);
-                        if (j < 21)
-                            if (gameField[i][j + 1] == 0)//up
-                                drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.White)), x + 25 * i, y - 25 + j * 25 + 22, 25, 3);
+                        int block = gameField[i][j];
+                        if (block == 9)//garbage
+                            drawBuffer.DrawImageUnscaled(tetImgs[block], x + 25 * i, y - 25 + j * 25, 25, 25);
+                        else if (block % 8 != 0)
+                        {
+                            drawBuffer.DrawImageUnscaled(tetImgs[block], x + 25 * i, y - 25 + j * 25, 25, 25);
+                            drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(130, Color.Black)), x + 25 * i, y - 25 + j * 25, 25, 25);
+                        }
+
+                        //outline
+                        if (block % 8 != 0 && block != 10)
+                        {
+                            if (i > 0)
+                                if (gameField[i - 1][j] == 0)//left
+                                    drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.White)), x + 25 * i, y - 25 + j * 25, 3, 25);
+                            if (i < 9)
+                                if (gameField[i + 1][j] == 0)//right
+                                    drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.White)), x + 25 * i + 22, y - 25 + j * 25, 3, 25);
+                            if (j > 0)
+                                if (gameField[i][j - 1] == 0)//down
+                                    drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.White)), x + 25 * i, y - 25 + j * 25, 25, 3);
+                            if (j < 21)
+                                if (gameField[i][j + 1] == 0)//up
+                                    drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.White)), x + 25 * i, y - 25 + j * 25 + 22, 25, 3);
+                        }
                     }
-                    
                 }
             }
 
@@ -402,13 +429,13 @@ namespace TGMsim
                         drawBuffer.DrawImage(tetImgs[10], x + 25 * (activeTet.bits[i].x * (2 / big) - (4 % (6 - big))), y - 25 + 25 * (activeTet.bits[i].y * (2 / big) - (lowY * ((2 / big) - 1))), 25 * (2 / big), 25 * (2 / big));
                     else
                     {
-                        if (activeTet.groundTimer > 2 || activeTet.groundTimer == 0)
+                        if (activeTet.groundTimer > 0)
                         {
                             drawBuffer.DrawImage(tetImgs[activeTet.id], x + 25 * (activeTet.bits[i].x * (2 / big) - (4 % (6 - big))), y - 25 + 25 * (activeTet.bits[i].y * (2 / big) - (lowY * ((2 / big) - 1))), 25 * (2 / big), 25 * (2 / big));
                             drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb((ruleset.baseLock - activeTet.groundTimer) * 130 / ruleset.baseLock, Color.Black)), x + 25 * (activeTet.bits[i].x * (2 / big) - (4 % (6 - big))), y - 25 + 25 * (activeTet.bits[i].y * (2 / big) - (lowY * ((2 / big) - 1))), 25 * (2 / big), 25 * (2 / big));
                         }
-                        else
-                            drawBuffer.DrawImage(tetImgs[9], x + 25 * (activeTet.bits[i].x * (2 / big) - (4 % (6 - big))), y - 25 + 25 * (activeTet.bits[i].y * (2 / big) - (lowY * ((2 / big) - 1))), 25 * (2 / big), 25 * (2 / big));
+                        //else
+                            //drawBuffer.DrawImage(tetImgs[9], x + 25 * (activeTet.bits[i].x * (2 / big) - (4 % (6 - big))), y - 25 + 25 * (activeTet.bits[i].y * (2 / big) - (lowY * ((2 / big) - 1))), 25 * (2 / big), 25 * (2 / big));
                     }
                 }
 
@@ -591,9 +618,11 @@ namespace TGMsim
             if (ruleset.showGrade)
             {
                 if (ruleset.gameRules == 1)
-                    drawBuffer.DrawString(ruleset.gradesTGM1[grade].ToString(), SystemFonts.DefaultFont, textBrush, x + 280, 100);
+                    drawBuffer.DrawString(ruleset.gradesTGM1[grade], SystemFonts.DefaultFont, textBrush, x + 280, 100);
                 else
-                    drawBuffer.DrawString(ruleset.gradesTGM3[gm2grade].ToString(), SystemFonts.DefaultFont, textBrush, x + 280, 100);
+                    drawBuffer.DrawString(ruleset.gradesTGM3[gm2grade], SystemFonts.DefaultFont, textBrush, x + 280, 100);
+
+                drawGrade(drawBuffer);
             }
 
             if (mode.exam != -1)
@@ -769,9 +798,28 @@ namespace TGMsim
                         vanList.RemoveAt(remCell[remCell.Count - i - 1]);
                     }
 
+                    List<int> remFlash = new List<int>();
+                    vpcount = 0;
+                    foreach (var fP in flashList)
+                    {
+                        if (fP.time == 0)
+                            remFlash.Add(vpcount);
+                        vpcount++;
+                    }
+                    for (int i = 0; i < remFlash.Count; i++)
+                    {
+                        flashList.RemoveAt(remFlash[remFlash.Count - i - 1]);
+                    }
 
-                    //check inputs and handle logic pertaining to them
-                    //pad.poll();
+                    for (int i = 0; i < flashList.Count; i++ )
+                    {
+                        var fP = flashList[i];
+                        fP.time -= 1;
+                        flashList[i] = fP;
+                    }
+
+
+                        //check inputs and handle logic pertaining to them
 
                     if (ruleset.gameRules == 6 && pad.inputPressedRot3 == true)
                         inputDelayH = 0;
@@ -830,6 +878,17 @@ namespace TGMsim
                                                 vP.x = vanList[c].x;
                                                 vP.y = vanList[c].y + 1;
                                                 vanList[c] = vP;
+                                            }
+                                        }
+                                        for (int d = 0; d < flashList.Count; d++)//update flash list, juuust in case of an instant lineclear
+                                        {
+                                            if (flashList[d].y == j)
+                                            {
+                                                var vP = new flashPip();
+                                                vP.time = flashList[d].time;
+                                                vP.x = flashList[d].x;
+                                                vP.y = flashList[d].y + 1;
+                                                flashList[d] = vP;
                                             }
                                         }
                                     }
@@ -932,7 +991,7 @@ namespace TGMsim
                                             lowY = activeTet.bits[i].y;
                                     }
 
-                                    for (int i = 0; i < activeTet.bits.Count; i++)
+                                    for (int i = 0; i < activeTet.bits.Count; i++) //SET THE PIECES
                                     {
                                         int big = 2;
                                         if (mode.bigmode)
@@ -959,6 +1018,12 @@ namespace TGMsim
                                                     vP.y = (activeTet.bits[i].y * (2 / big) - (lowY * ((2 / big) - 1))) + k;
                                                     vanList.Add(vP);
                                                 }
+
+                                                flashPip fP = new flashPip();
+                                                fP.time = 2;
+                                                fP.x = (activeTet.bits[i].x * (2 / big) - (4 % (6 - big))) + j;
+                                                fP.y = (activeTet.bits[i].y * (2 / big) - (lowY * ((2 / big) - 1))) + k;
+                                                flashList.Add(fP);
                                             }
                                         }
                                     }
@@ -996,6 +1061,18 @@ namespace TGMsim
                                                 for (int c = 0; c < remcell.Count; c++ )
                                                 {
                                                     vanList.RemoveAt(remcell[remcell.Count - c - 1]);
+                                                }
+
+                                                remcell = new List<int>();
+                                                foreach (var vP in flashList)
+                                                {
+                                                    if (vP.y == i)
+                                                        remcell.Add(count);
+                                                    count++;
+                                                }
+                                                for (int c = 0; c < remcell.Count; c++)
+                                                {
+                                                    flashList.RemoveAt(remcell[remcell.Count - c - 1]);
                                                 }
                                             }
                                         }
@@ -1343,7 +1420,7 @@ namespace TGMsim
                                                         }
                                                     }
                                                 }
-                                                if (mode.id == 1)//death
+                                                if (mode.id == 1 || mode.id == 7)//death
                                                 {
                                                     switch (curSection)
                                                     {
@@ -1355,6 +1432,7 @@ namespace TGMsim
                                                             ruleset.baseARE = ruleset.delayTableDeath[0][ruleset.delayTableDeath.Count - 1];
                                                             ruleset.baseARELine = ruleset.delayTableDeath[1][ruleset.delayTableDeath.Count - 1];
                                                             ruleset.baseDAS = ruleset.delayTableDeath[2][ruleset.delayTableDeath.Count - 1];
+                                                            if (mode.id != 7)
                                                             ruleset.baseLock = ruleset.delayTableDeath[3][ruleset.delayTableDeath.Count - 1];
                                                             ruleset.baseLineClear = ruleset.delayTableDeath[4][ruleset.delayTableDeath.Count - 1];
                                                             break;
@@ -1366,6 +1444,7 @@ namespace TGMsim
                                                             ruleset.baseARE = ruleset.delayTableDeath[0][curSection];
                                                             ruleset.baseARELine = ruleset.delayTableDeath[1][curSection];
                                                             ruleset.baseDAS = ruleset.delayTableDeath[2][curSection];
+                                                            if (mode.id != 7)
                                                             ruleset.baseLock = ruleset.delayTableDeath[3][curSection];
                                                             ruleset.baseLineClear = ruleset.delayTableDeath[4][curSection];
                                                             break;
@@ -1392,14 +1471,14 @@ namespace TGMsim
                                                             ruleset.baseARE = ruleset.delayTableShirase[0][5];
                                                             ruleset.baseARELine = ruleset.delayTableShirase[0][5];
                                                             ruleset.baseDAS = ruleset.delayTableShirase[0][5];
-                                                            ruleset.baseLock = ruleset.delayTableShirase[0][5];
+                                                                ruleset.baseLock = ruleset.delayTableShirase[0][5];
                                                             ruleset.baseLineClear = ruleset.delayTableShirase[0][5];
                                                             break;
                                                         case 5:
                                                             ruleset.baseARE = ruleset.delayTableShirase[0][4];
                                                             ruleset.baseARELine = ruleset.delayTableShirase[0][4];
                                                             ruleset.baseDAS = ruleset.delayTableShirase[0][4];
-                                                            ruleset.baseLock = ruleset.delayTableShirase[0][4];
+                                                                ruleset.baseLock = ruleset.delayTableShirase[0][4];
                                                             ruleset.baseLineClear = ruleset.delayTableShirase[0][4];
                                                             break;
                                                         case 4:
@@ -1407,7 +1486,7 @@ namespace TGMsim
                                                             ruleset.baseARE = ruleset.delayTableShirase[0][3];
                                                             ruleset.baseARELine = ruleset.delayTableShirase[0][3];
                                                             ruleset.baseDAS = ruleset.delayTableShirase[0][3];
-                                                            ruleset.baseLock = ruleset.delayTableShirase[0][3];
+                                                                ruleset.baseLock = ruleset.delayTableShirase[0][3];
                                                             ruleset.baseLineClear = ruleset.delayTableShirase[0][3];
                                                             break;
                                                         case 2:
@@ -1416,7 +1495,7 @@ namespace TGMsim
                                                             ruleset.baseARE = ruleset.delayTableShirase[0][curSection];
                                                             ruleset.baseARELine = ruleset.delayTableShirase[0][curSection];
                                                             ruleset.baseDAS = ruleset.delayTableShirase[0][curSection];
-                                                            ruleset.baseLock = ruleset.delayTableShirase[0][curSection];
+                                                                ruleset.baseLock = ruleset.delayTableShirase[0][curSection];
                                                             ruleset.baseLineClear = ruleset.delayTableShirase[0][curSection];
                                                             break;
                                                     }
@@ -1802,6 +1881,18 @@ namespace TGMsim
                                                         {
                                                             vanList.RemoveAt(remcell[remcell.Count - c - 1]);
                                                         }
+
+                                                        remcell = new List<int>();
+                                                        foreach (var vP in flashList)
+                                                        {
+                                                            if (vP.y == i)
+                                                                remcell.Add(count);
+                                                            count++;
+                                                        }
+                                                        for (int c = 0; c < remcell.Count; c++)
+                                                        {
+                                                            flashList.RemoveAt(remcell[remcell.Count - c - 1]);
+                                                        }
                                                     }
                                                 }
                                             }
@@ -1911,7 +2002,7 @@ namespace TGMsim
                                             break;
                                     }
 
-                                    if ((mode.g20 == true || gravTable[gravLevel] == Math.Pow(256, ruleset.gravType + 1) * 20) && ruleset.gameRules < 3)
+                                    if ((mode.g20 == true || gravTable[gravLevel] == Math.Pow(256, ruleset.gravType + 1) * 20) && ruleset.gameRules < 4)
                                         textBrush = new SolidBrush(Color.Gold);
 
                                     playSound(s_Contact);
@@ -2633,6 +2724,29 @@ namespace TGMsim
                     tempList.Add(0); // at least nine types; seven tetrominoes, invisible, and garbage
                 }
                 gameField.Add(tempList);
+            }
+        }
+
+        private void drawGrade(Graphics drawBuffer)
+        {
+            string gd;
+            int gold = 0;
+            if (textBrush.Color == Color.Gold)
+                gold = 78;
+
+            if (ruleset.gameRules == 1) //TGM1 grades
+            {
+                gd = ruleset.gradesTGM1[grade];
+                
+            }
+            else//everything else
+            {
+                gd = ruleset.gradesTGM3[gm2grade];
+            }
+            for (int i = 0; i < gd.Length; i++)
+            {
+                int dex = "0123456789SmMVOKTG".IndexOf(gd.Substring(i, 1));
+                drawBuffer.DrawImage(gradeImg, new Rectangle(x + 280 + i * 26, 100, 25, 25), new Rectangle(1 + (dex % 6) * 26, 1 + (int)Math.Floor((double)dex / 6) * 26 + gold, 25, 25), GraphicsUnit.Pixel);
             }
         }
 
