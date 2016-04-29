@@ -171,7 +171,7 @@ namespace TGMsim
                     break;
                 case 4: //TI and ACE
                 case 5:
-                    FPS = 59.94;
+                    FPS = 60.00;
                     nextNum = 3;
                     hold = true;
                     hardDrop = 1;
@@ -189,7 +189,7 @@ namespace TGMsim
                     showGrade = false;
                     break;
                 case 6: //4
-                    FPS = 59.94;
+                    FPS = 60.00;
                     nextNum = 4;
                     hold = true;
                     hardDrop = 1;

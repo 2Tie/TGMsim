@@ -261,7 +261,6 @@ namespace TGMsim
                     break;
                 case 2:
                 case 5:
-                case 6:
                     ruleset.baseARE = ruleset.delayTableShirase[0][0];
                     ruleset.baseARELine = ruleset.delayTableShirase[1][0];
                     ruleset.baseDAS = ruleset.delayTableShirase[2][0];
@@ -610,9 +609,9 @@ namespace TGMsim
                 drawBuffer.DrawString("LEVEL:", f_Maestro, textBrush, x + 290, 485);
 
             if (mode.limitType == 3)//time limit?
-                drawBuffer.DrawString(convertTime((long)((mode.limit - timer.elapsedTime) * ruleset.FPS / 60)), SystemFonts.DefaultFont, textBrush, x + 290, 600);
+                drawBuffer.DrawString(convertTime((long)((mode.limit - timer.elapsedTime) * ruleset.FPS / 60)), SystemFonts.DefaultFont, textBrush, x + 290, 570);
             else
-                drawBuffer.DrawString(convertTime((long)(timer.elapsedTime * ruleset.FPS / 60)), SystemFonts.DefaultFont, textBrush, x + 290, 600);
+                drawBuffer.DrawString(convertTime((long)(timer.elapsedTime * ruleset.FPS / 60)), SystemFonts.DefaultFont, textBrush, x + 290, 570);
 
             //GRADE TEXT
             if (ruleset.showGrade)
@@ -1503,7 +1502,7 @@ namespace TGMsim
                                                 
 
                                                 //MEDALS
-                                                if (ruleset.gameRules != 1)
+                                                if (ruleset.gameRules != 1 && mode.id != 6)
                                                 {
                                                     int sectime = 60000;
                                                     if (mode.id == 1 || mode.id == 2)
