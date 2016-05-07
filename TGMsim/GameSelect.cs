@@ -13,9 +13,13 @@ namespace TGMsim
         public bool prompt = false;
         int hInput = 0;
         int vInput = 0;
+        Rectangle curBox, destBox;
+
+
         public GameSelect()
         {
-
+            destBox = new Rectangle(0, 0, 200, 400);
+            curBox = destBox;
         }
         public void logic(Controller pad)
         {
@@ -112,6 +116,27 @@ namespace TGMsim
 
             hInput = pad.inputH;
             vInput = pad.inputV;
+
+
+            //box logic
+            int bhite = 400;
+            if (menuSelection == 1 || menuSelection == 4 || menuSelection > 5)
+                bhite = 200;
+            int bwith = 200;
+            if (menuSelection > 5)
+                bwith = 400;
+            int bX = 200 * menuSelection;
+            if (menuSelection > 1)
+                bX -= 200;
+            if (menuSelection > 3)
+                bX -= 200;
+            destBox = new Rectangle(bX, 0, 200, bhite);
+            curBox.X += (destBox.X - curBox.X) / 2;
+            curBox.Y += (destBox.Y - curBox.Y) / 2;
+            curBox.Width += (destBox.Width - curBox.Width) / 2;
+            curBox.Height += (destBox.Height - curBox.Height) / 2;
+
+
         }
         public void render(Graphics drawBuffer)
         {
@@ -125,6 +150,11 @@ namespace TGMsim
             drawBuffer.DrawString("TGM4", SystemFonts.DefaultFont, new SolidBrush(Color.White), 700, 200);
             drawBuffer.DrawString("Bonus", SystemFonts.DefaultFont, new SolidBrush(Color.White), 200, 500);
             drawBuffer.DrawString("Preferences", SystemFonts.DefaultFont, new SolidBrush(Color.White), 600, 500);
+
+
+            //selection box
+            drawBuffer.DrawRectangle(new Pen(new SolidBrush(Color.White)), curBox);
+
 
             if (!prompt)
             {

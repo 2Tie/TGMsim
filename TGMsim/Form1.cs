@@ -78,7 +78,7 @@ namespace TGMsim
             graphics = this.CreateGraphics();
             drawBuffer = Graphics.FromImage(imgBuffer);
 
-            playMusic("Title");
+            playMusic("Hello Again");
             
         }
 
@@ -110,14 +110,12 @@ namespace TGMsim
                 case 1:
                     menuState = 1;
                     login = new Login();
-                    stopMusic();
-                    playMusic("Login");
                     break;
                 case 2:
-                    if (menuState != 3)
+                    if (menuState > 3)
                     {
                         stopMusic();
-                        playMusic("Menu");
+                        playMusic("Hello Again");
                     }
                     menuState = 2;
                     FPS = 60.00;
@@ -194,8 +192,6 @@ namespace TGMsim
                 case 8:
                     menuState = 8;
                     readPrefs();
-                    stopMusic();
-                    playMusic("Settings");
                     break;
                 case 9:
                     menuState = 9;
