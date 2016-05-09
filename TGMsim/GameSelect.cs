@@ -86,7 +86,7 @@ namespace TGMsim
                         break;
                     case 2:
                         if (pad.inputV == -1)
-                            menuSelection = 2;
+                            menuSelection = 6;
                         else
                             menuSelection = 1;
                         break;
@@ -119,9 +119,13 @@ namespace TGMsim
 
 
             //box logic
-            int bhite = 400;
-            if (menuSelection == 1 || menuSelection == 4 || menuSelection > 5)
-                bhite = 200;
+            int bhite = 450;
+            if (menuSelection == 1 || menuSelection == 4)
+                bhite = 150;
+            if (menuSelection == 2 || menuSelection == 3)
+                bhite = 300;
+            if (menuSelection > 5)
+                bhite = 149;
             int bwith = 200;
             if (menuSelection > 5)
                 bwith = 400;
@@ -130,7 +134,16 @@ namespace TGMsim
                 bX -= 200;
             if (menuSelection > 3)
                 bX -= 200;
-            destBox = new Rectangle(bX, 0, 200, bhite);
+            if (menuSelection > 5)
+                bX = (menuSelection - 6) * 400;
+            int bY = 0;
+            if (menuSelection == 2)
+                bY = 150;
+            if (menuSelection == 4)
+                bY = 300;
+            if (menuSelection > 5)
+                bY = 450;
+            destBox = new Rectangle(bX, bY, bwith, bhite);
             curBox.X += (destBox.X - curBox.X) / 2;
             curBox.Y += (destBox.Y - curBox.Y) / 2;
             curBox.Width += (destBox.Width - curBox.Width) / 2;
