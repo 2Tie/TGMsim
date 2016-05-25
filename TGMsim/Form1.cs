@@ -49,6 +49,11 @@ namespace TGMsim
         NAudio.Vorbis.VorbisWaveReader musicStream;
         NAudio.Wave.WaveOutEvent songPlayer = new NAudio.Wave.WaveOutEvent();
 
+        int buffS;
+        System.Windows.Media.MediaPlayer s_Start = new System.Windows.Media.MediaPlayer();
+        System.Windows.Media.MediaPlayer s_Login = new System.Windows.Media.MediaPlayer();
+        System.Windows.Media.MediaPlayer s_GSel = new System.Windows.Media.MediaPlayer();
+
         public Form1()
         {
             InitializeComponent();
@@ -77,6 +82,12 @@ namespace TGMsim
 
             graphics = this.CreateGraphics();
             drawBuffer = Graphics.FromImage(imgBuffer);
+
+
+            addSound(s_Start, "/Res/Audio/SE/SEI_class.wav");
+            addSound(s_Login, "/Res/Audio/SE/SEI_data_ok.wav");
+            addSound(s_GSel, "/Res/Audio/SE/SEI_mode_ok.wav");
+            
 
             playMusic("Hello Again");
             
@@ -112,16 +123,18 @@ namespace TGMsim
                     login = new Login();
                     break;
                 case 2:
-                    if (menuState > 3)
+                    if (menuState > 3 && menuState != 8)
                     {
                         stopMusic();
                         playMusic("Hello Again");
                     }
                     menuState = 2;
                     FPS = 60.00;
-                    gSel = new GameSelect();
+                    if (gSel == null)
+                        gSel = new GameSelect();
                     break;
                 case 3:
+                    pSound(s_GSel);
                     menuState = 3;
                     if (gSel.menuSelection != 4)
                     loadHiscores(gSel.menuSelection + 1);
@@ -220,14 +233,13 @@ namespace TGMsim
                     {
                         if (gSel.prompt)
                         {
-                            if (gSel.menuSelection == 1)
+                            if (gSel.pSel == 1)
                             {
                                 cMen = new CheatMenu();
                                 changeMenu(1);
                             }
                             else
                             {
-                                gSel.menuSelection = 0;
                                 gSel.prompt = false;
                             }
                         }
@@ -250,11 +262,11 @@ namespace TGMsim
                     {
                         if (pad1.inputRot2 == 1)
                         {
-                            gSel.menuSelection = 0;
                             if (gSel.prompt)
                                 gSel.prompt = false;
                             else
                             {
+                                gSel.pSel = 0;
                                 gSel.prompt = true;
                             }
                         }
@@ -393,6 +405,7 @@ namespace TGMsim
             {
                 pad1.inputStart = 0;
                 player = login.temp;
+                pSound(s_Login);
                 if (player.name == "   ")
                     changeMenu(9);
                 else
@@ -406,6 +419,7 @@ namespace TGMsim
             if (pad1.inputStart == 1)
             {
                 pad1.inputStart = 0;
+                pSound(s_Start);
                 changeMenu(1);
             }
         }
@@ -928,6 +942,33 @@ namespace TGMsim
         {
             songPlayer.Stop();
             songPlayer.Dispose();
+        }
+
+        private void addSound(System.Windows.Media.MediaPlayer plr, string uri)
+        {
+            plr.MediaOpened += sndOpen;
+
+            plr.IsMuted = true;
+            buffS++;
+            plr.Open(new Uri(Environment.CurrentDirectory + uri));
+        }
+
+        private void sndOpen(object Sender, EventArgs e)
+        {
+            System.Windows.Media.MediaPlayer obj = Sender as System.Windows.Media.MediaPlayer;
+            if (obj != null)
+            {
+                //obj.IsMuted = false;
+                buffS--;
+            }
+        }
+
+
+        void pSound(System.Windows.Media.MediaPlayer snd)
+        {
+            snd.IsMuted = false;
+            snd.Position = new TimeSpan(0);
+            snd.Play();
         }
     }
 }

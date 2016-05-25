@@ -10,16 +10,22 @@ namespace TGMsim
     class GameSelect
     {
         public int menuSelection = 0;
+        private int prevSel = 0;
+        public int pSel = 0;
         public bool prompt = false;
         int hInput = 0;
         int vInput = 0;
         Rectangle curBox, destBox;
+
+        System.Windows.Media.MediaPlayer s_Select = new System.Windows.Media.MediaPlayer();
 
 
         public GameSelect()
         {
             destBox = new Rectangle(0, 0, 200, 400);
             curBox = destBox;
+
+            addSound(s_Select, "/Res/Audio/SE/SEI_roll.wav");
         }
         public void logic(Controller pad)
         {
@@ -66,57 +72,65 @@ namespace TGMsim
                 else
                 {
                     if (pad.inputH == 1)
-                        menuSelection = 1;
+                        pSel = 1;
                     if (pad.inputH == -1)
-                        menuSelection = 0;
+                        pSel = 0;
                 }
             }
             if (pad.inputV != vInput && pad.inputV != 0)
             {
-                switch (menuSelection)
+                if (!prompt)
                 {
-                    case 0:
-                        menuSelection = 6;
-                        break;
-                    case 1:
-                        if (pad.inputV == 1)
+                    switch (menuSelection)
+                    {
+                        case 0:
                             menuSelection = 6;
-                        else
-                            menuSelection = 2;
-                        break;
-                    case 2:
-                        if (pad.inputV == -1)
-                            menuSelection = 6;
-                        else
-                            menuSelection = 1;
-                        break;
-                    case 3:
-                        if (pad.inputV == 1)
+                            break;
+                        case 1:
+                            if (pad.inputV == 1)
+                                menuSelection = 6;
+                            else
+                                menuSelection = 2;
+                            break;
+                        case 2:
+                            if (pad.inputV == -1)
+                                menuSelection = 6;
+                            else
+                                menuSelection = 1;
+                            break;
+                        case 3:
+                            if (pad.inputV == 1)
+                                menuSelection = 7;
+                            else
+                                menuSelection = 4;
+                            break;
+                        case 4:
+                            if (pad.inputV == 1)
+                                menuSelection = 3;
+                            else
+                                menuSelection = 7;
+                            break;
+                        case 5:
                             menuSelection = 7;
-                        else
-                            menuSelection = 4;
-                        break;
-                    case 4:
-                        if (pad.inputV == 1)
-                            menuSelection = 3;
-                        else
-                            menuSelection = 7;
-                        break;
-                    case 5:
-                        menuSelection = 7;
-                        break;
-                    case 6:
-                        menuSelection = 0;
-                        break;
-                    case 7:
-                        menuSelection = 5;
-                        break;
+                            break;
+                        case 6:
+                            menuSelection = 0;
+                            break;
+                        case 7:
+                            menuSelection = 5;
+                            break;
+                    }
                 }
             }
 
             hInput = pad.inputH;
             vInput = pad.inputV;
 
+            if (menuSelection != prevSel)
+            {
+                pSound(s_Select);
+                prevSel = menuSelection;
+            }
 
             //box logic
             int bhite = 450;
@@ -189,8 +203,21 @@ namespace TGMsim
                 drawBuffer.DrawString("No...", SystemFonts.DefaultFont, new SolidBrush(Color.White), 300, 220);
                 drawBuffer.DrawString("Yes!", SystemFonts.DefaultFont, new SolidBrush(Color.White), 500, 220);
 
-                drawBuffer.DrawString(">", SystemFonts.DefaultFont, new SolidBrush(Color.White), 290 + (200 * menuSelection), 220);
+                drawBuffer.DrawString(">", SystemFonts.DefaultFont, new SolidBrush(Color.White), 290 + (200 * pSel), 220);
             }
+        }
+
+        private void addSound(System.Windows.Media.MediaPlayer plr, string uri)
+        {
+            plr.IsMuted = true;
+            plr.Open(new Uri(Environment.CurrentDirectory + uri));
+        }
+
+        void pSound(System.Windows.Media.MediaPlayer snd)
+        {
+            snd.IsMuted = false;
+            snd.Position = new TimeSpan(0);
+            snd.Play();
         }
     }
 }
