@@ -25,9 +25,6 @@ namespace TGMsim
                 bigOffset = 2;
 
             int lowY = 22;
-            int big = 2;
-            if (large)
-                big = 1;
             for (int q = 0; q < tet.bits.Count; q++)
             {
                 if (tet.bits[q].y < lowY)
@@ -52,7 +49,7 @@ namespace TGMsim
                             testTet.rotation = 1;
 
                             if (rule > 3)
-                                
+                            {
                                 for (int i = 0; i < 2; i++)
                                 {
                                     if (!checkUnder(testTet, gameField, large))
@@ -63,6 +60,7 @@ namespace TGMsim
                                         testTet.kicked++;
                                     }
                                 }
+                            }
                             if (!checkUnder(testTet, gameField, large)) //will the rotation work?
                                 return tet;
 
@@ -79,6 +77,7 @@ namespace TGMsim
                             testTet.rotation = 0;
 
                             if (rule > 3)
+                            {
                                 for (int i = 0; i < 3; i++)
                                 {
                                     if (!checkUnder(testTet, gameField, large))
@@ -89,9 +88,11 @@ namespace TGMsim
                                             testTet.move(-3, 0);
                                     }
                                 }
+                            }
                             if (!checkUnder(testTet, gameField, large)) //will the rotation work?
                                 return tet;
-
+                            
+                            if (testTet.kicked > 0 && rule > 3) testTet.groundTimer = 1;
                             return testTet;
                     }
                     break;
@@ -128,6 +129,7 @@ namespace TGMsim
                                     if (!checkUnder(testTet, gameField, large)) //will the rotation work?
                                         return tet;
 
+                                    if (testTet.kicked > 0 && rule > 3) testTet.groundTimer = 1;
                                     return testTet;
 
                                 case 1:
@@ -188,6 +190,7 @@ namespace TGMsim
                                     if (!checkUnder(testTet, gameField, large)) //will the rotation work?
                                         return tet;
 
+                                    if (testTet.kicked > 0 && rule > 3) testTet.groundTimer = 1;
                                     return testTet;
 
                                 case 3:

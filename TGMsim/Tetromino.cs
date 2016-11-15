@@ -101,7 +101,7 @@ namespace TGMsim
                 if (!this.bone)
                     newTet.bone = false;
 
-                
+                newTet.kicked = kicked;
                 newTet.groundTimer = groundTimer;
             }
             return newTet;

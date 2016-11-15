@@ -1314,6 +1314,10 @@ namespace TGMsim
                                                     if (curSection == 5 && temptime > 205000)
                                                     {
                                                         level = 500;
+                                                        torikan = true;
+                                                        torDef = temptime - 205000;
+                                                        endGame();
+                                                        return;
                                                     }
                                                 }
                                                 if (ruleset.gameRules == 4)
@@ -2050,7 +2054,7 @@ namespace TGMsim
                         {
                             if (!activeTet.floored)
                             {
-                                blockDrop = 1;
+                                blockDrop++;
                                 softCounter++;
                             }
                             else if (!safelock || !(ruleset.gameRules > 3 || mode.id == 1 || (ruleset.gameRules == 2 && level > 899) || (ruleset.gameRules == 3 && level > 899)))
@@ -2082,7 +2086,11 @@ namespace TGMsim
                             rot = pad.inputRot1 - pad.inputRot2;
 
                         if (rot != 0)
+                        {
+                            //if (activeTet.kicked != 0)
+                                //activeTet.groundTimer = 1;
                             rotatePiece(activeTet, rot);
+                        }
 
                         if (!justSpawned)
                         {
@@ -2257,7 +2265,7 @@ namespace TGMsim
                     nextTet[i] = nextTet[i + 1];
                 }
                 nextTet[nextTet.Count - 1] = generatePiece();
-                if (pad.inputPressedHold && swappedHeld == 0)
+                if (pad.inputPressedHold && ruleset.hold == true && swappedHeld == 0)
                 {
                     hold();
                     playSound(s_Hold);
@@ -2347,7 +2355,7 @@ namespace TGMsim
 
         private void endGame()
         {
-            if (godmode == true && !inCredits)
+            if (godmode == true && !inCredits && !torikan)
                 clearField();
             else
             {
@@ -2658,11 +2666,11 @@ namespace TGMsim
                 tet.bits[p].y += g;
             }
 
-            if (g != 0 && ghost == false)
+            if (g != 0 && ghost == false && activeTet.kicked == 0)
                 activeTet.groundTimer = ruleset.baseLock;
 
-            if (activeTet.kicked != 0)
-                activeTet.groundTimer = 0;
+            //if (activeTet.kicked != 0)
+                //activeTet.groundTimer = 0;
 
             //failsafe for now, ugh
             if (!emptyUnderTet(tet))
