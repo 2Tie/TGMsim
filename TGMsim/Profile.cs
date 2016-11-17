@@ -28,10 +28,10 @@ namespace TGMsim
                 sw.Write((byte)0x03);//version number
                 //one byte for password, the first bit if pass-protected, three bits for length (up to six) and then two bits for each digit (four possible inputs each, ABCH)
                 UInt16 passData = new UInt16();
-                if (!passProtected)
-                {
+                //if (!passProtected)
+                //{
                     sw.Write(passData);
-                }
+                /*}
                 else
                 {
                     passData += 0x8000;
@@ -42,7 +42,7 @@ namespace TGMsim
                     }
                     sw.Write(passData);
                     
-                }
+                }*/
                 sw.Write(new byte[4]);//global points
                 sw.Write(new byte[4]);//TGM3 points
                 sw.Write(new byte[2]);//Official GM certifications (1, 2, tap, tap death, 3, 3 shirase, ACE TM, 4 world, 4 rounds, 4 konoha)
@@ -65,7 +65,7 @@ namespace TGMsim
             //read and parse the password
             password.Clear();
             UInt16 passdata = file.ReadUInt16();
-            if (passdata >> 15 == 1)//pass protected
+            /*if (passdata >> 15 == 1)//pass protected
             {
                 if (((passdata >> 12) & 0x3) == 7)//invalid pass length
                 {
@@ -79,7 +79,7 @@ namespace TGMsim
                 password.Add((byte)((passdata >> 2) & 0x0003));
                 password.Add((byte)(passdata & 0x0003));
             }
-            else
+            else*/
                 passProtected = false;
             return 0;
         }

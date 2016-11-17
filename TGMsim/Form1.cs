@@ -76,6 +76,7 @@ namespace TGMsim
             hiscoreTable.Add(new List<GameResult>());
 
             cMen = new CheatMenu();
+            player = new Profile();
             prefs = new Preferences(player, pad1);
 
             readPrefs();
@@ -398,18 +399,25 @@ namespace TGMsim
 
         private void loginLogic()
         {
-
-            login.logic(pad1);
-
-            if (login.loggedin)
+            if (player.name == "   ")
             {
-                pad1.inputStart = 0;
-                player = login.temp;
-                pSound(s_Login);
-                if (player.name == "   ")
-                    changeMenu(9);
-                else
-                    changeMenu(2);
+
+                login.logic(pad1);
+
+                if (login.loggedin)
+                {
+                    pad1.inputStart = 0;
+                    player = login.temp;
+                    pSound(s_Login);
+                    savePrefs();
+                    if (player.name == "   ")
+                        changeMenu(9);
+                    else
+                        changeMenu(2);
+                }
+            } else {
+                player.readUserData();
+                changeMenu(2);
             }
         }
 
@@ -903,6 +911,7 @@ namespace TGMsim
                 sw.Write((int)prefs.nPad.keyRot2);
                 sw.Write((int)prefs.nPad.keyRot3);
                 sw.Write((int)prefs.nPad.keyHold);
+                sw.Write(player.name);
             }
         }
 
@@ -918,6 +927,7 @@ namespace TGMsim
             prefs.nPad.keyRot2 = (Key)prf.ReadInt32();
             prefs.nPad.keyRot3 = (Key)prf.ReadInt32();
             prefs.nPad.keyHold = (Key)prf.ReadInt32();
+            player.name = prf.ReadString();
             prf.Close();
         }
 

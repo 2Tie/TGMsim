@@ -1508,9 +1508,9 @@ namespace TGMsim
                                                 //MEDALS
                                                 if (ruleset.gameRules != 1 && mode.id != 6)
                                                 {
-                                                    int sectime = 60000;
+                                                    int sectime = 90000;
                                                     if (mode.id == 1 || mode.id == 2)
-                                                        sectime = 45000;
+                                                        sectime = 42000;
                                                     if (sectionTime.elapsedTime < sectime - 10000 && medals[2] < 1)
                                                     {
                                                         medals[2] = 1;
