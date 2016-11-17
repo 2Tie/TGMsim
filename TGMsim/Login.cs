@@ -14,11 +14,9 @@ namespace TGMsim
         List<int> username = new List<int>{0, 0, 0};
         List<byte> tempPass = new List<byte>();
         List<byte> verifyPass = new List<byte>();
-        bool registering;
         int menuSelection;
         public bool loggedin = false;
         int delaytimer = 10;
-        bool startPressed = false;
         int loginErr;
 
 
@@ -41,257 +39,80 @@ namespace TGMsim
 
         public void logic(Controller pad1)
         {
-            if (delaytimer == 0)
+            if ((pad1.inputRot1 | pad1.inputRot3) == 1 && menuSelection < 3)
             {
-                if (menuSelection < 3)
+                pSound(s_Accept);
+                menuSelection += 1;
+                delaytimer = 10;
+                if (menuSelection == 3) //then check if it's a registered nick, else register it!
                 {
-                    if ((pad1.inputRot1 | pad1.inputRot3) == 1)
+                    temp.name = getLetter(username[0]) + getLetter(username[1]) + getLetter(username[2]);
+
+                    if (temp.name == "   ")
                     {
-                        pSound(s_Accept);
-                        menuSelection += 1;
-                        delaytimer = 10;
-                        if (menuSelection == 3) //then check if it's a registered nick, else register it!
+                        //skip user creation
+                        loggedin = true;
+                        loginErr = 0;
+                        pad1.inputPressedRot1 = false;
+                        pad1.inputPressedRot2 = false;
+                        pad1.inputPressedRot3 = false;
+                    }
+
+                    if (File.Exists("Sav/" + temp.name + ".usr"))
+                    {
+                        if (temp.readUserData())
+                            menuSelection = 3;
+                        else
                         {
-                            temp.name = getLetter(username[0]) + getLetter(username[1]) + getLetter(username[2]);
-
-                            if (temp.name == "   ")
-                            {
-                                //skip user creation
-                                loggedin = true;
-                                pad1.inputPressedRot1 = false;
-                                pad1.inputPressedRot2 = false;
-                                pad1.inputPressedRot3 = false;
-                            }
-
-                            if (File.Exists("Sav/" + temp.name + ".usr"))
-                            {
-                                if (temp.readUserData())
-                                    registering = false;
-                                else
-                                {
-                                    menuSelection = 0;
-                                    loginErr = 1;
-                                }
-                            }
-                            else
-                            {
-                                registering = true;
-                                loginErr = 0;
-                            }
-
-
+                            menuSelection = 0;
+                            loginErr = 1;
                         }
-                        else username[menuSelection] = username[menuSelection - 1];
                     }
-                    else if (pad1.inputRot2 == 1 && menuSelection != 0)
+                    else
                     {
-                        menuSelection -= 1;
-                        delaytimer = 10;
+                        temp.createUser();
+                        loginErr = 0;
+                        menuSelection = 3;
                     }
 
-                    if (pad1.inputH == 1)
-                    {
-                        username[menuSelection] = (username[menuSelection] + 1) % 46; //increase the currently selected letter
-                        delaytimer = 10;
-                        pSound(s_Roll);
-                    }
-                    else if (pad1.inputH == -1)
-                    {
 
-                        username[menuSelection] = (username[menuSelection] - 1) % 46;//decrease the currently selected letter
-                        if (username[menuSelection] == -1)
-                        {
-                            username[menuSelection] = 45;
-                        }
-                        delaytimer = 10;
-                        pSound(s_Roll);
-                    }
                 }
-                else //password stuff
+                else username[menuSelection] = username[menuSelection - 1];
+            }
+            else if (pad1.inputRot2 == 1 && menuSelection != 0)
+            {
+                menuSelection -= 1;
+                delaytimer = 10;
+            }
+
+            if(menuSelection == 3 && pad1.inputStart == 1)
+            {
+                loggedin = true;
+            }
+
+            if (delaytimer == 0 && menuSelection < 3)
+            {
+                if (pad1.inputH == 1)
                 {
-                    if (registering) //input and verify new pass
-                    {
-                        if (menuSelection == 5) // wait for start!!!
-                        {
-                            temp.createUser();
-                            loggedin = true;
-                        }
-                        if (menuSelection == 4) //verify password input
-                        {
-                            if (pad1.inputStart == 1)
-                            {
-                                if (!startPressed)
-                                {
-                                    if (verifyPass.SequenceEqual(tempPass))//if they match
-                                    {
-                                        temp.password = tempPass;
-                                        menuSelection = 5;
-                                    }
-                                    else//if they don't
-                                    {
-                                        tempPass.Clear();
-                                        verifyPass.Clear();
-                                        loginErr = 2;
-                                        menuSelection = 2;
-                                    }
-                                }
-                                startPressed = true;
-                            }
-                            else if (verifyPass.Count < 6)
-                            {
-                                bool snd = false;
-                                //read input, then add to the list
-                                startPressed = false;
-                                //wait until input's released or a new one is added
+                    username[menuSelection] = (username[menuSelection] + 1) % 46; //increase the currently selected letter
+                    delaytimer = 10;
+                    pSound(s_Roll);
+                }
+                else if (pad1.inputH == -1)
+                {
 
-                                if (pad1.inputRot1 == 1)
-                                {
-                                    verifyPass.Add((byte)0x0);
-                                    snd = true;
-                                }
-                                if (pad1.inputRot2 == 1)
-                                {
-                                    verifyPass.Add((byte)0x1);
-                                    snd = true;
-                                }
-                                if (pad1.inputRot3 == 1)
-                                {
-                                    verifyPass.Add((byte)0x2);
-                                    snd = true;
-                                }
-                                if (pad1.inputHold == 1)
-                                {
-                                    verifyPass.Add((byte)0x3);
-                                    snd = true;
-                                }
-                                if (snd)
-                                    pSound(s_Pass);
-                            }
-                        }
-                        if (menuSelection == 3) //start password input
-                        {
-                            if (pad1.inputStart == 1)
-                            {
-                                if (!startPressed)
-                                {
-                                    startPressed = true;
-                                    if (tempPass.Count == 0)
-                                    {
-                                        temp.passProtected = false;
-                                        menuSelection = 5;
-                                    }
-                                    else
-                                    {
-                                        temp.passProtected = true;
-                                        menuSelection = 4;
-                                    }
-                                }
-                            }
-                            else if (tempPass.Count < 6)
-                            {
-                                bool snd = false;
-                                //read input, then add to the list
-                                startPressed = false;
-                                //wait until input's released or a new one is added
-                                if (pad1.inputRot1 == 1)
-                                {
-                                    tempPass.Add((byte)0x0);
-                                    snd = true;
-                                }
-                                if (pad1.inputRot2 == 1)
-                                {
-                                    tempPass.Add((byte)0x1);
-                                    snd = true;
-                                }
-                                if (pad1.inputRot3 == 1)
-                                {
-                                    tempPass.Add((byte)0x2);
-                                    snd = true;
-                                }
-                                if (pad1.inputHold == 1)
-                                {
-                                    tempPass.Add((byte)0x3);
-                                    snd = true;
-                                }
-                                if (snd)
-                                    pSound(s_Pass);
-                            }
-                        }
-                    }
-                    else //verify the pass and compare it
+                    username[menuSelection] = (username[menuSelection] - 1) % 46;//decrease the currently selected letter
+                    if (username[menuSelection] == -1)
                     {
-                        if (menuSelection == 5)//login
-                        {
-                            temp.readUserData();
-                            loggedin = true;
-                        }
-                        if (menuSelection == 4)//verify
-                        {
-                            if (pad1.inputStart == 1)
-                            {
-                                if (!startPressed)
-                                {
-                                    if (temp.password.SequenceEqual(tempPass))//if they match
-                                    {
-                                        menuSelection = 5;
-                                    }
-                                    else//if they don't
-                                    {
-                                        menuSelection = 2;
-                                        loginErr = 2;
-                                        tempPass.Clear();
-                                    }
-                                }
-                                startPressed = true;
-                            }
-                            else if (tempPass.Count < 6)
-                            {
-                                bool snd = false;
-                                //read input, then add to the list
-                                startPressed = false;
-                                //wait until input's released or a new one is added
-
-                                if (pad1.inputRot1 == 1)
-                                {
-                                    tempPass.Add((byte)0x0);
-                                    snd = true;
-                                }
-                                if (pad1.inputRot2 == 1)
-                                {
-                                    tempPass.Add((byte)0x1);
-                                    snd = true;
-                                }
-                                if (pad1.inputRot3 == 1)
-                                {
-                                    tempPass.Add((byte)0x2);
-                                    snd = true;
-                                }
-                                if (pad1.inputHold == 1)
-                                {
-                                    tempPass.Add((byte)0x3);
-                                    snd = true;
-                                }
-                                if (snd)
-                                    pSound(s_Pass);
-                            }
-                        }
-                        if (menuSelection == 3)//setup
-                        {
-                            temp.readPass();
-                            if (temp.passProtected == false)
-                            {
-                                menuSelection = 5;
-                            }
-                            else
-                                menuSelection = 4;
-                        }
+                        username[menuSelection] = 45;
                     }
+                    delaytimer = 10;
+                    pSound(s_Roll);
                 }
             }
+            else if (pad1.inputH == 0)
+                delaytimer = 0;
             else
-                if (pad1.inputH == 0)
-                    delaytimer = 0;
-                else
                 delaytimer -= 1;
 
             //line logic
@@ -300,12 +121,6 @@ namespace TGMsim
                 lineDes.X = 400 + menuSelection * 9;
                 lineDes.Y = 215;
             }
-            if (menuSelection == 3 || menuSelection == 4)
-            {
-                lineDes.X = 370 + 15 * tempPass.Count;
-                lineDes.Y = 235;
-            }
-
 
             linePos.X += (lineDes.X - linePos.X) / 2;
             linePos.Y += (lineDes.Y - linePos.Y) / 2;
@@ -316,20 +131,7 @@ namespace TGMsim
 
         public void render(Graphics drawBuffer)
         {
-            if (menuSelection == 3 || menuSelection == 4)
-            {
-                if (tempPass.Count == 0)
-                drawBuffer.DrawString("Press Start to confirm inputs!", SystemFonts.DefaultFont, new SolidBrush(Color.White), 300, 260);
-
-                drawBuffer.DrawString("Password: ", SystemFonts.DefaultFont, new SolidBrush(Color.White), 300, 220);
-                for(int i = 0; i < tempPass.Count; i++)
-                    //drawBuffer.DrawString("*", SystemFonts.DefaultFont, new SolidBrush(Color.White), 350 + 10*i, 220);
-                    drawBuffer.FillEllipse(new SolidBrush(Color.LawnGreen), 370 + 15 * i, 220, 13, 13);
-
-                for (int i = 0; i < verifyPass.Count; i++)
-                    drawBuffer.DrawString("*", SystemFonts.DefaultFont, new SolidBrush(Color.White), 350 + 10 * i, 240);
-            }
-            if (tempPass.Count < 6)
+            if (menuSelection < 3)
                 drawBuffer.DrawLine(new Pen(new SolidBrush(Color.Blue)), linePos, lineEnd);
             else
                 drawBuffer.DrawString("Press Start!", SystemFonts.DefaultFont, new SolidBrush(Color.White), 300, 260);
@@ -344,19 +146,6 @@ namespace TGMsim
             drawBuffer.DrawString(getLetter(username[1]), SystemFonts.DefaultFont, new SolidBrush(Color.White), 409, 200);
             if (menuSelection > 1)
             drawBuffer.DrawString(getLetter(username[2]), SystemFonts.DefaultFont, new SolidBrush(Color.White), 418, 200);
-            //if (menuSelection < 3)
-            //    drawBuffer.DrawString("↑", SystemFonts.DefaultFont, new SolidBrush(Color.White), 398 + (9*menuSelection), 315);
-
-#if DEBUG
-            if (menuSelection == 3 || menuSelection == 4)
-            {
-                drawBuffer.DrawString(tempPass.Count.ToString(), SystemFonts.DefaultFont, new SolidBrush(Color.White), 380, 320);
-                if (registering)
-                    drawBuffer.DrawString(verifyPass.Count.ToString(), SystemFonts.DefaultFont, new SolidBrush(Color.White), 380, 340);
-            }
-
-            drawBuffer.DrawString("Last Input: " + lastinput.ToString(), SystemFonts.DefaultFont, new SolidBrush(Color.White), 500, 500);
-#endif
         }
 
         string getLetter(int i)

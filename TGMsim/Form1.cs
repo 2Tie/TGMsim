@@ -237,6 +237,8 @@ namespace TGMsim
                             if (gSel.pSel == 1)
                             {
                                 cMen = new CheatMenu();
+                                player.name = "   ";
+                                gSel.prompt = false;
                                 changeMenu(1);
                             }
                             else
