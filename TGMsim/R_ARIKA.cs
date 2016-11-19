@@ -877,7 +877,7 @@ namespace TGMsim
                     }
                     break;
                 case 7: //O has one. do nothing.
-                    break;
+                    return testTet;
             }
             return tet;
         }

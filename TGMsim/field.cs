@@ -431,7 +431,7 @@ namespace TGMsim
                         if (activeTet.groundTimer > 0)
                         {
                             drawBuffer.DrawImage(tetImgs[activeTet.id], x + 25 * (activeTet.bits[i].x * (2 / big) - (4 % (6 - big))), y - 25 + 25 * (activeTet.bits[i].y * (2 / big) - (lowY * ((2 / big) - 1))), 25 * (2 / big), 25 * (2 / big));
-                            drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb((ruleset.baseLock - activeTet.groundTimer) * 130 / ruleset.baseLock, Color.Black)), x + 25 * (activeTet.bits[i].x * (2 / big) - (4 % (6 - big))), y - 25 + 25 * (activeTet.bits[i].y * (2 / big) - (lowY * ((2 / big) - 1))), 25 * (2 / big), 25 * (2 / big));
+                            drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb((ruleset.baseLock - activeTet.groundTimer) * 127 / ruleset.baseLock, Color.Black)), x + 25 * (activeTet.bits[i].x * (2 / big) - (4 % (6 - big))), y - 25 + 25 * (activeTet.bits[i].y * (2 / big) - (lowY * ((2 / big) - 1))), 25 * (2 / big), 25 * (2 / big));
                         }
                         //else
                             //drawBuffer.DrawImage(tetImgs[9], x + 25 * (activeTet.bits[i].x * (2 / big) - (4 % (6 - big))), y - 25 + 25 * (activeTet.bits[i].y * (2 / big) - (lowY * ((2 / big) - 1))), 25 * (2 / big), 25 * (2 / big));
@@ -2304,12 +2304,12 @@ namespace TGMsim
                 intRot += 1;
             if (pad.inputPressedRot2)
                 intRot -= 1;
-            if (intRot != 0 && activeTet.id != 7 && pad.inputRot1 + pad.inputRot2 == 0)
+            if (intRot != 0 && pad.inputRot1 + pad.inputRot2 == 0)
             {
                 if (ruleset.gameRules == 6 || pad.inputRot3 == 0)
                 {
-                    rotatePiece(activeTet, intRot);
-                    playSound(s_PreRot);
+                    if(rotatePiece(activeTet, intRot))
+                        playSound(s_PreRot);
                 }
             }
 
@@ -2507,11 +2507,15 @@ namespace TGMsim
             }
         }
 
-        private void rotatePiece(Tetromino tet, int p)
+        private bool rotatePiece(Tetromino tet, int p)
         {
-            
+            bool success = true;
             rotations++;
-            activeTet = RSYS.rotate(tet, p, gameField, ruleset.gameRules, mode.bigmode == true);
+            Tetromino tmptet = RSYS.rotate(tet, p, gameField, ruleset.gameRules, mode.bigmode == true);
+            if (activeTet == tmptet)
+                success = false;
+            activeTet = tmptet;
+            return success;
         }
 
         public Tetromino generatePiece()
@@ -2765,50 +2769,107 @@ namespace TGMsim
 
         private void updateMusic()
         {
-            if (curSection + speedBonus == 0)
+            int section = curSection + speedBonus;
+
+            if(mode.id == 0)
             {
-                stopMusic();
-                playMusic("Level 1");
+                if (section == 0)
+                {
+                    stopMusic();
+                    playMusic("Level 1");
+                }
+                if (section == 5)
+                {
+                    stopMusic();
+                    playMusic("Level 2");
+                }
+                if(ruleset.gameRules == 2 || ruleset.gameRules == 3)
+                {
+                    if (section == 7)
+                    {
+                        stopMusic();
+                        playMusic("Level 3");
+                    }
+                    if (section == 9)
+                    {
+                        stopMusic();
+                        playMusic("Level 4");
+                    }
+                }
+                if (ruleset.gameRules == 4)
+                {
+                    if (section == 8)
+                    {
+                        stopMusic();
+                        playMusic("Level 3");
+                    }
+                }
             }
-            if (curSection + speedBonus == 3)
+
+            if (mode.id == 1)//death
             {
-                stopMusic();
-                playMusic("Level 2");
+                if (curSection == 0)
+                {
+                    stopMusic();
+                    playMusic("Level 2");
+                }
+                if (curSection == 3)
+                {
+                    stopMusic();
+                    playMusic("Level 3");
+                }
+                if (curSection == 5)
+                {
+                    stopMusic();
+                    playMusic("Level 4");
+                }
             }
-            if (curSection + speedBonus == 5)
+            if (mode.id == 2)//shirase
             {
-                stopMusic();
-                playMusic("Level 3");
-            }
-            if (curSection + speedBonus == 8)
-            {
-                stopMusic();
-                playMusic("Level 4");
-            }
-            if (curSection + speedBonus == 10)
-            {
-                stopMusic();
-                playMusic("Level 5");
-            }
-            if (curSection + speedBonus == 15)
-            {
-                stopMusic();
-                playMusic("Level 6");
+                if (curSection == 0)
+                {
+                    stopMusic();
+                    playMusic("Level 3");
+                }
+                if (curSection == 5)
+                {
+                    stopMusic();
+                    playMusic("Level 4");
+                }
+                if (curSection == 7)
+                {
+                    stopMusic();
+                    playMusic("Level 5");
+                }
+                if (curSection == 10)
+                {
+                    stopMusic();
+                    playMusic("Level 6");
+                }
             }
         }
 
         private void checkFade()
         {
-            if (curSection + speedBonus == 2 && level % 100 > 79)
-                stopMusic();
-            if (curSection + speedBonus == 4 && level % 100 > 79)
-                stopMusic();
-            if (curSection + speedBonus == 7 && level % 100 > 79)
-                stopMusic();
-            if (curSection + speedBonus == 9 && level % 100 > 79)
-                stopMusic();
-            if (curSection + speedBonus == 14 && level % 100 > 79)
-                stopMusic();
+            int section = curSection + speedBonus;
+            if(mode.id == 0)//master
+            {
+                if (section == 4 && level % 100 > 84) stopMusic();
+                if ((ruleset.gameRules == 2 || ruleset.gameRules == 3) && section == 6 && level % 100 > 84) stopMusic();
+                if ((ruleset.gameRules == 2 || ruleset.gameRules == 3) && section == 8 && level % 100 > 84) stopMusic();
+                if (ruleset.gameRules == 4 && section == 7 && level % 100 > 84) stopMusic();
+            }
+            if(mode.id == 1)//death
+            {
+                if (curSection == 2 && level % 100 > 84) stopMusic();
+                if (curSection == 4 && level % 100 > 84) stopMusic();
+            }
+            if (mode.id == 3)//shirase
+            {
+                if (curSection == 4 && level % 100 > 84) stopMusic();
+                if (curSection == 6 && level % 100 > 84) stopMusic();
+                if (curSection == 9 && level % 100 > 84) stopMusic();
+            }
         }
     }
 }
