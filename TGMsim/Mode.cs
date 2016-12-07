@@ -67,6 +67,7 @@ namespace TGMsim
                     lvlBonus = 5;
                     gradedBy = 2;
                     border = Color.DarkRed;
+                    g20 = true;
                     break;
                 case 2:
                     endLevel = 1300;
@@ -101,6 +102,7 @@ namespace TGMsim
                     gradedBy = 2;
                     shiraseGrades = true;
                     border = Color.DarkBlue;
+                    g20 = true;
                     break;
                 case 3:
                     gradedBy = 4;
@@ -117,6 +119,7 @@ namespace TGMsim
                     gradedBy = 2;
                     lvlBonus = 5;
                     endLevel = 1200;
+                    g20 = true;
 
                     gL = new Gimmick();
                     gL.type = 4;
@@ -167,9 +170,11 @@ namespace TGMsim
                     border = Color.PaleVioletRed;
                     break;
                 case 7:
-                    endLevel = 999;
-                    lvlBonus = 5;
-                    sections.Add(999);
+                    endLevel = 200;
+                    g20 = true;
+                    gradedBy = 4;
+                    
+                    sections.Add(200);
                     break;
             }
         }

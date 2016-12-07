@@ -23,7 +23,7 @@ namespace TGMsim
         public int gravType = 0; //b256, b65536
         public int baseGrav = 4;
 
-        public int creditsLength = 2968;
+        public int creditsLength = 2968;//3238??
 
         public int fieldW = 10;
         public int fieldH = 20;
@@ -47,6 +47,7 @@ namespace TGMsim
         public List<List<int>> delayTableDeath = new List<List<int>>();
         public List<List<int>> delayTableTGM3 = new List<List<int>>();
         public List<List<int>> delayTableShirase = new List<List<int>>();
+        public List<List<int>> delayTablePractice = new List<List<int>>();
 
         public List<int> gradePointsTGM1 = new List<int> { 0, 400, 800, 1400, 2000, 3500, 5500, 8000, 12000, 16000, 22000, 30000, 40000, 52000, 66000, 82000, 100000, 120000};
 
@@ -108,6 +109,13 @@ namespace TGMsim
             delayTableShirase.Add(new List<int> { 18, 18, 17, 15, 13, 12, 10, 8, 15 });
             delayTableShirase.Add(new List<int> { 6, 5, 4, 4, 3, 3, 3, 3, 6 });
 
+            //20G practice (Easy credits)
+            delayTablePractice.Add(new List<int> { 27 });
+            delayTablePractice.Add(new List<int> { 27 });
+            delayTablePractice.Add(new List<int> { 14 });
+            delayTablePractice.Add(new List<int> { 30 });
+            delayTablePractice.Add(new List<int> { 40 });
+
         }
 
         public void setGame(int game)
@@ -167,6 +175,7 @@ namespace TGMsim
                     genAttps = 6;
                     fieldW = 10;
                     fieldH = 20;
+                    creditsLength = 3238;
                     showGrade = true;
                     break;
                 case 4: //TI and ACE

@@ -21,7 +21,7 @@ namespace TGMsim
             keyRot1 = Key.I;
             keyRot2 = Key.O;
             keyRot3 = Key.P;
-            keyHold = Key.K;
+            keyHold = Key.Space;
             keyUp = Key.W;
             keyDown = Key.S;
             keyLeft = Key.A;

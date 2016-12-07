@@ -366,7 +366,7 @@ namespace TGMsim
                     {
                         Mode m = new Mode();
                         m = field1.mode;
-                        if (rules.gameRules == 3 && m.id == 0 && player.name != "   ")
+                        if (rules.gameRules == 4 && m.id == 0 && player.name != "   ")
                             m.exam = checkExam();
                         saved = false;
                         field1 = new Field(pad1, rules, m, musicStream);
