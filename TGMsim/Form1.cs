@@ -85,12 +85,12 @@ namespace TGMsim
             drawBuffer = Graphics.FromImage(imgBuffer);
 
 
-            addSound(s_Start, "/Res/Audio/SE/SEI_class.wav");
-            addSound(s_Login, "/Res/Audio/SE/SEI_data_ok.wav");
-            addSound(s_GSel, "/Res/Audio/SE/SEI_mode_ok.wav");
-            
+            Audio.addSound(s_Start, "/Res/Audio/SE/SEI_class.wav");
+            Audio.addSound(s_Login, "/Res/Audio/SE/SEI_data_ok.wav");
+            Audio.addSound(s_GSel, "/Res/Audio/SE/SEI_mode_ok.wav");
 
-            playMusic("Hello Again");
+
+            Audio.playMusic("Hello Again");
             
         }
 
@@ -126,8 +126,8 @@ namespace TGMsim
                 case 2:
                     if (menuState > 3 && menuState != 8)
                     {
-                        stopMusic();
-                        playMusic("Hello Again");
+                        Audio.stopMusic();
+                        Audio.playMusic("Hello Again");
                     }
                     menuState = 2;
                     FPS = 60.00;
@@ -135,7 +135,7 @@ namespace TGMsim
                         gSel = new GameSelect();
                     break;
                 case 3:
-                    pSound(s_GSel);
+                    Audio.playSound(s_GSel);
                     menuState = 3;
                     if (gSel.menuSelection != 4)
                     loadHiscores(gSel.menuSelection + 1);
@@ -160,7 +160,7 @@ namespace TGMsim
                             break;
                     }
                     Mode m = new Mode();
-                    stopMusic();
+                    Audio.stopMusic();
                     if (mSel.game == 3 && mSel.selection == 1)
                         m.setMode(2);
                     else if (mSel.game == 5 && mSel.selection == 1)
@@ -199,8 +199,8 @@ namespace TGMsim
                 case 6: //hiscores
                     menuState = 6;
                     //loadHiscores(mSel.game + 1);
-                    stopMusic();
-                    playMusic("Hiscores");
+                    Audio.stopMusic();
+                    Audio.playMusic("Hiscores");
                     break;
 
                 case 8:
@@ -307,7 +307,7 @@ namespace TGMsim
 
                                     saved = false;
                                     menuState = 4;
-                                    stopMusic();
+                                    Audio.stopMusic();
                                     field1 = new Field(pad1, rules, m, musicStream);
                                     break;
                                 case 3://20g practice
@@ -410,7 +410,7 @@ namespace TGMsim
                 {
                     pad1.inputStart = 0;
                     player = login.temp;
-                    pSound(s_Login);
+                    Audio.playSound(s_Login);
                     savePrefs();
                     if (player.name == "   ")
                         changeMenu(9);
@@ -429,7 +429,7 @@ namespace TGMsim
             if (pad1.inputStart == 1)
             {
                 pad1.inputStart = 0;
-                pSound(s_Start);
+                Audio.playSound(s_Start);
                 changeMenu(1);
             }
         }
@@ -913,6 +913,7 @@ namespace TGMsim
                 sw.Write((int)prefs.nPad.keyRot2);
                 sw.Write((int)prefs.nPad.keyRot3);
                 sw.Write((int)prefs.nPad.keyHold);
+                sw.Write((int)prefs.nPad.keyStart);
                 sw.Write(player.name);
             }
         }
@@ -929,58 +930,9 @@ namespace TGMsim
             prefs.nPad.keyRot2 = (Key)prf.ReadInt32();
             prefs.nPad.keyRot3 = (Key)prf.ReadInt32();
             prefs.nPad.keyHold = (Key)prf.ReadInt32();
+            prefs.nPad.keyStart = (Key)prf.ReadInt32();
             player.name = prf.ReadString();
             prf.Close();
-        }
-
-        private void playMusic(string song)
-        {
-            try
-            {
-                musicStream = new NAudio.Vorbis.VorbisWaveReader(@"Res\Audio\" + song + ".ogg");
-                LoopStream loop = new LoopStream(musicStream);
-                songPlayer.Init(loop);
-                songPlayer.Play();
-
-            }
-            catch (Exception)
-            {
-                //MessageBox.Show("The file \"" + song + ".ogg\" was not found!", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
-                //throw;
-            }
-        }
-
-        private void stopMusic()
-        {
-            songPlayer.Stop();
-            songPlayer.Dispose();
-        }
-
-        private void addSound(System.Windows.Media.MediaPlayer plr, string uri)
-        {
-            plr.MediaOpened += sndOpen;
-
-            plr.IsMuted = true;
-            buffS++;
-            plr.Open(new Uri(Environment.CurrentDirectory + uri));
-        }
-
-        private void sndOpen(object Sender, EventArgs e)
-        {
-            System.Windows.Media.MediaPlayer obj = Sender as System.Windows.Media.MediaPlayer;
-            if (obj != null)
-            {
-                //obj.IsMuted = false;
-                buffS--;
-            }
-        }
-
-
-        void pSound(System.Windows.Media.MediaPlayer snd)
-        {
-            snd.IsMuted = false;
-            snd.Position = new TimeSpan(0);
-            snd.Play();
         }
     }
 }

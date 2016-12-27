@@ -15,13 +15,16 @@ namespace TGMsim
 
         }
 
-        public virtual Tetromino rotate(Tetromino tet, int p, List<List<int>> gameField, int rule, bool large)
+        public virtual Tetromino rotate(Tetromino tet, int p, List<List<int>> gameField, int rule, bool large, bool spawn)
         {
             return new Tetromino(0);
         }
 
-        public bool checkUnder(Tetromino tet, List<List<int>> gameField, bool large)
+        public bool checkUnder(Tetromino tet, List<List<int>> gameField, bool large, bool spawn)
         {
+            if (spawn)
+                return true;
+
             bool empty = true;
 
             int lowY = 22;

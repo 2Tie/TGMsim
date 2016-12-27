@@ -19,7 +19,7 @@ namespace TGMsim
         public ModeSelect(int g)
         {
             game = g;
-            addSound(s_Roll, "/Res/Audio/SE/SEI_name_select.wav");
+            Audio.addSound(s_Roll, "/Res/Audio/SE/SEI_name_select.wav");
         }
         public void logic(Controller pad)
         {
@@ -54,7 +54,7 @@ namespace TGMsim
 
             if (prevSel != selection)
             {
-                pSound(s_Roll);
+                Audio.playSound(s_Roll);
                 prevSel = selection;
             }
         }
@@ -90,19 +90,6 @@ namespace TGMsim
                     drawBuffer.DrawString("20G Practice", SystemFonts.DefaultFont, new SolidBrush(Color.White), 300, 336);
                     break;
             }
-        }
-
-        private void addSound(System.Windows.Media.MediaPlayer plr, string uri)
-        {
-            plr.IsMuted = true;
-            plr.Open(new Uri(Environment.CurrentDirectory + uri));
-        }
-
-        void pSound(System.Windows.Media.MediaPlayer snd)
-        {
-            snd.IsMuted = false;
-            snd.Position = new TimeSpan(0);
-            snd.Play();
         }
     }
 }

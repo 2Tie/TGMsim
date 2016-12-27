@@ -47,16 +47,16 @@ namespace TGMsim
             if (menuState == 0)
             {
                 if (selection >= 0)
-                    selection = selection % 2;
+                    selection = selection % 3;
                 else
-                    selection = 1;
+                    selection = 2;
             }
             if (menuState == 1)
             {
                 if (selection >= 0)
-                    selection = selection % 9;
+                    selection = selection % 10;
                 else
-                    selection = 8;
+                    selection = 9;
             }
 
 
@@ -66,7 +66,7 @@ namespace TGMsim
                 {
                     if (selection == 0)
                         muted = !muted;
-                    if (selection == 1)
+                    if (selection == 2)
                     {
                         menuState = 1;
                         selection = 0;
@@ -75,7 +75,7 @@ namespace TGMsim
                 }
                 if (menuState == 1)
                 {
-                    if (selection == 8)
+                    if (selection == 9)
                     {
                         menuState = 0;
                         selection = 1;
@@ -96,8 +96,9 @@ namespace TGMsim
         {
             if (menuState == 0)
             {
-                drawBuffer.DrawString("Mute: " + muted.ToString(), SystemFonts.DefaultFont, new SolidBrush(Color.White), 100, 100);
-                drawBuffer.DrawString("Rebind keys", SystemFonts.DefaultFont, new SolidBrush(Color.White), 100, 120);
+                drawBuffer.DrawString("Music Volume: " + , SystemFonts.DefaultFont, new SolidBrush(Color.White), 100, 100);
+                drawBuffer.DrawString("SFX Volume: " + muted.ToString(), SystemFonts.DefaultFont, new SolidBrush(Color.White), 100, 120);
+                drawBuffer.DrawString("Rebind keys", SystemFonts.DefaultFont, new SolidBrush(Color.White), 100, 140);
             }
             if (menuState == 1)
             {
@@ -109,7 +110,8 @@ namespace TGMsim
                 drawBuffer.DrawString("ROTATE CW: " + nPad.keyRot2.ToString(), SystemFonts.DefaultFont, new SolidBrush(Color.White), 100, 200);
                 drawBuffer.DrawString("ROTATE CCW 2/SPEED: " + nPad.keyRot3.ToString(), SystemFonts.DefaultFont, new SolidBrush(Color.White), 100, 220);
                 drawBuffer.DrawString("HOLD: " + nPad.keyHold.ToString(), SystemFonts.DefaultFont, new SolidBrush(Color.White), 100, 240);
-                drawBuffer.DrawString("Back", SystemFonts.DefaultFont, new SolidBrush(Color.White), 100, 260);
+                drawBuffer.DrawString("START: " + nPad.keyStart.ToString(), SystemFonts.DefaultFont, new SolidBrush(Color.White), 100, 260);
+                drawBuffer.DrawString("Back", SystemFonts.DefaultFont, new SolidBrush(Color.White), 100, 280);
             }
 
             drawBuffer.DrawString(">", SystemFonts.DefaultFont, new SolidBrush(Color.White), 92, 100 + (20*selection));
@@ -121,10 +123,10 @@ namespace TGMsim
 
         public void assignKey()
         {
-            for (int i = 44; i < 70; i++)
+            for (int i = 1; i < 70; i++)
                 if (Keyboard.IsKeyDown((Key)i) && Keyboard.IsKeyToggled((Key)i) && Keyboard.IsKeyDown((Key)i))
                 {
-                    if ((Key)i != nPad.keyUp && (Key)i != nPad.keyDown && (Key)i != nPad.keyLeft && (Key)i != nPad.keyRight && (Key)i != nPad.keyRot1 && (Key)i != nPad.keyRot2 && (Key)i != nPad.keyRot3 && (Key)i != nPad.keyHold)
+                    if ((Key)i != nPad.keyUp && (Key)i != nPad.keyDown && (Key)i != nPad.keyLeft && (Key)i != nPad.keyRight && (Key)i != nPad.keyRot1 && (Key)i != nPad.keyRot2 && (Key)i != nPad.keyRot3 && (Key)i != nPad.keyHold && (Key)i != nPad.keyStart)
                     switch(selection)
                     {
                         case 0://up
@@ -151,7 +153,10 @@ namespace TGMsim
                         case 7://hold
                             nPad.keyHold = (Key)i;
                             break;
-                    }
+                        case 8://start
+                            nPad.keyStart = (Key)i;
+                            break;
+                        }
                     nPad.poll();
                     dInput = nPad.inputV;
                     inputting = false;

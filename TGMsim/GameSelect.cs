@@ -25,7 +25,7 @@ namespace TGMsim
             destBox = new Rectangle(0, 0, 200, 400);
             curBox = destBox;
 
-            addSound(s_Select, "/Res/Audio/SE/SEI_roll.wav");
+            Audio.addSound(s_Select, "/Res/Audio/SE/SEI_roll.wav");
         }
         public void logic(Controller pad)
         {
@@ -128,7 +128,7 @@ namespace TGMsim
 
             if (menuSelection != prevSel)
             {
-                pSound(s_Select);
+                Audio.playSound(s_Select);
                 prevSel = menuSelection;
             }
 
@@ -205,19 +205,6 @@ namespace TGMsim
 
                 drawBuffer.DrawString(">", SystemFonts.DefaultFont, new SolidBrush(Color.White), 290 + (200 * pSel), 220);
             }
-        }
-
-        private void addSound(System.Windows.Media.MediaPlayer plr, string uri)
-        {
-            plr.IsMuted = true;
-            plr.Open(new Uri(Environment.CurrentDirectory + uri));
-        }
-
-        void pSound(System.Windows.Media.MediaPlayer snd)
-        {
-            snd.IsMuted = false;
-            snd.Position = new TimeSpan(0);
-            snd.Play();
         }
     }
 }
