@@ -64,8 +64,6 @@ namespace TGMsim
             {
                 if (menuState == 0)
                 {
-                    if (selection == 0)
-                        muted = !muted;
                     if (selection == 2)
                     {
                         menuState = 1;
@@ -85,6 +83,18 @@ namespace TGMsim
                 }
             }
 
+            if(nPad.inputH != 0 && menuState == 0)
+            {
+                if (selection == 0)
+                {
+                    Audio.musVol += ((float)nPad.inputH / 10);
+                }
+                if (selection == 1)
+                {
+                    Audio.sfxVol += ((float)nPad.inputH / 10);
+                }
+            }
+
             if (nPad.inputRot2 == 1 && menuState == 1)
             {
                 menuState = 0;
@@ -96,8 +106,8 @@ namespace TGMsim
         {
             if (menuState == 0)
             {
-                drawBuffer.DrawString("Music Volume: " + , SystemFonts.DefaultFont, new SolidBrush(Color.White), 100, 100);
-                drawBuffer.DrawString("SFX Volume: " + muted.ToString(), SystemFonts.DefaultFont, new SolidBrush(Color.White), 100, 120);
+                drawBuffer.DrawString("Music Volume: " + Audio.musVol, SystemFonts.DefaultFont, new SolidBrush(Color.White), 100, 100);
+                drawBuffer.DrawString("SFX Volume: " + Audio.sfxVol, SystemFonts.DefaultFont, new SolidBrush(Color.White), 100, 120);
                 drawBuffer.DrawString("Rebind keys", SystemFonts.DefaultFont, new SolidBrush(Color.White), 100, 140);
             }
             if (menuState == 1)

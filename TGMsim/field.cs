@@ -63,6 +63,7 @@ namespace TGMsim
         public GameTimer creditsPause = new GameTimer();
         public GameTimer coolTime = new GameTimer();
         public GameTimer bravoTime = new GameTimer();
+        public long masterTime = 0;
 
         public int swappedHeld;
         bool justSpawned;
@@ -710,7 +711,7 @@ namespace TGMsim
                         drawBuffer.DrawString("Grade: " + ruleset.gradesTGM3[results.grade], SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 200);
                 }
                 drawBuffer.DrawString("Score: " + results.score, SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 210);
-                drawBuffer.DrawString("Time: " + convertTime((long)(timer.elapsedTime * ruleset.FPS / 60)), SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 220);
+                drawBuffer.DrawString("Time: " + convertTime(results.time), SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 220);
                 drawBuffer.DrawString("Name: " + results.username, SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 230);
                 if (results.username == "CHEATER")
                 {
@@ -1346,6 +1347,7 @@ namespace TGMsim
                                                     {
                                                         grade++;
                                                         Audio.playSound(s_Grade);
+                                                        masterTime = timer.elapsedTime;
                                                     }
                                                     else
                                                         checking = false;
@@ -2550,7 +2552,10 @@ namespace TGMsim
                 else
                     results.grade = gm2grade;
                 results.score = score;
-                results.time = (int)((timer.elapsedTime * ruleset.FPS)/60);
+                if (ruleset.gameRules == 1)
+                    results.time = (long)((masterTime * ruleset.FPS) / 60);
+                else
+                    results.time = (long)((timer.elapsedTime * ruleset.FPS)/60);
                 results.level = level;
                 results.medals = medals;
                 contTime.start();

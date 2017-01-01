@@ -11,8 +11,8 @@ namespace TGMsim
         static NAudio.Wave.WaveOutEvent songPlayer = new NAudio.Wave.WaveOutEvent();
         static NAudio.Vorbis.VorbisWaveReader musicStream;
 
-        static float musVol = 0.5f;
-        static float sfxVol = 0.5f;
+        static public float musVol = 0.3f;
+        static public float sfxVol = 0.3f;
 
         static public void addSound(System.Windows.Media.MediaPlayer plr, string uri)
         {

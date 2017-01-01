@@ -905,15 +905,17 @@ namespace TGMsim
             using (BinaryWriter sw = new BinaryWriter(fsStream, Encoding.UTF8))
             {
                 sw.Write(prefs.muted);
-                sw.Write((int)prefs.nPad.keyUp);
-                sw.Write((int)prefs.nPad.keyDown);
-                sw.Write((int)prefs.nPad.keyLeft);
-                sw.Write((int)prefs.nPad.keyRight);
-                sw.Write((int)prefs.nPad.keyRot1);
-                sw.Write((int)prefs.nPad.keyRot2);
-                sw.Write((int)prefs.nPad.keyRot3);
-                sw.Write((int)prefs.nPad.keyHold);
-                sw.Write((int)prefs.nPad.keyStart);
+                sw.Write((char)prefs.nPad.keyUp);
+                sw.Write((char)prefs.nPad.keyDown);
+                sw.Write((char)prefs.nPad.keyLeft);
+                sw.Write((char)prefs.nPad.keyRight);
+                sw.Write((char)prefs.nPad.keyRot1);
+                sw.Write((char)prefs.nPad.keyRot2);
+                sw.Write((char)prefs.nPad.keyRot3);
+                sw.Write((char)prefs.nPad.keyHold);
+                sw.Write((char)prefs.nPad.keyStart);
+                int temp = ((int)Math.Floor(Audio.musVol * 10) << 4) + (int)Math.Floor(Audio.sfxVol * 10);
+                sw.Write((char)temp);
                 sw.Write(player.name);
             }
         }
@@ -922,15 +924,18 @@ namespace TGMsim
         {
             BinaryReader prf = new BinaryReader(File.OpenRead("Sav/prefs.dat"));
             prefs.muted = prf.ReadBoolean();
-            prefs.nPad.keyUp = (Key)prf.ReadInt32();
-            prefs.nPad.keyDown = (Key)prf.ReadInt32();
-            prefs.nPad.keyLeft = (Key)prf.ReadInt32();
-            prefs.nPad.keyRight = (Key)prf.ReadInt32();
-            prefs.nPad.keyRot1 = (Key)prf.ReadInt32();
-            prefs.nPad.keyRot2 = (Key)prf.ReadInt32();
-            prefs.nPad.keyRot3 = (Key)prf.ReadInt32();
-            prefs.nPad.keyHold = (Key)prf.ReadInt32();
-            prefs.nPad.keyStart = (Key)prf.ReadInt32();
+            prefs.nPad.keyUp = (Key)prf.ReadByte();
+            prefs.nPad.keyDown = (Key)prf.ReadByte();
+            prefs.nPad.keyLeft = (Key)prf.ReadByte();
+            prefs.nPad.keyRight = (Key)prf.ReadByte();
+            prefs.nPad.keyRot1 = (Key)prf.ReadByte();
+            prefs.nPad.keyRot2 = (Key)prf.ReadByte();
+            prefs.nPad.keyRot3 = (Key)prf.ReadByte();
+            prefs.nPad.keyHold = (Key)prf.ReadByte();
+            prefs.nPad.keyStart = (Key)prf.ReadByte();
+            byte temp = prf.ReadByte();
+            Audio.musVol = (float)((temp >> 4) & 0x0F)/10;
+            Audio.sfxVol = (float)(temp & 0x0F) / 10;
             player.name = prf.ReadString();
             prf.Close();
         }
