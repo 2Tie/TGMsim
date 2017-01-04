@@ -15,6 +15,8 @@ namespace TGMsim
 
         public int inputH, inputV, inputStart, inputRot1, inputRot2, inputRot3, inputHold;
         public bool inputPressedRot1 = false, inputPressedRot2 = false, inputPressedRot3 = false, inputPressedHold = false;
+        List<short> inputHistory = new List<short> {0,0,0,0,0,0}; //up, down, left, right, rot1, rot2, rot3, hold, start, 7 bits for frame length (unused for lag, used for replays).
+        public int lag = 0;
 
         public Controller()
         {
@@ -34,30 +36,66 @@ namespace TGMsim
             //reset inputs
             inputH = inputV = inputStart = inputRot1 = inputRot2 = inputRot3 = inputHold = 0;
 
-            if (ApplicationIsActivated()) //todo: ignore background inputs optionally
+            if (ApplicationIsActivated())
             {
-                //handle inputs
+                //log inputs
 
                 //up or down = w or s
                 if (Keyboard.IsKeyDown(keyUp))
-                    inputV += 1;
+                    inputHistory[lag] += -32768;
 
                 if (Keyboard.IsKeyDown(keyDown))
-                    inputV -= 1;
+                    inputHistory[lag] += 0x4000;
 
                 //left or right = a or d
                 if (Keyboard.IsKeyDown(keyLeft))
-                    inputH -= 1;
+                    inputHistory[lag] += 0x2000;
 
                 if (Keyboard.IsKeyDown(keyRight))
-                    inputH += 1;
+                    inputHistory[lag] += 0x1000;
 
                 //start = enter
                 if (Keyboard.IsKeyDown(keyStart))
-                    inputStart = 1;
+                    inputHistory[lag] += 0x0800;
 
                 //rot1 = o or [
                 if (Keyboard.IsKeyDown(keyRot1))
+                    inputHistory[lag] += 0x0400;
+
+                if (Keyboard.IsKeyDown(keyRot3))
+                    inputHistory[lag] += 0x0100;
+
+                //rot2 = p
+                if (Keyboard.IsKeyDown(keyRot2))
+                    inputHistory[lag] += 0x0200;
+
+                //hold = Space
+                if (Keyboard.IsKeyDown(keyHold))
+                    inputHistory[lag] += 0x0080;
+
+
+                //map history to inputs
+
+                //up or down = w or s
+                if ((inputHistory[0] & -32768) != 0)
+                    inputV += 1;
+
+                if ((inputHistory[0] & 0x4000) != 0)
+                    inputV -= 1;
+
+                //left or right = a or d
+                if ((inputHistory[0] & 0x2000) != 0)
+                    inputH -= 1;
+
+                if ((inputHistory[0] & 0x1000) != 0)
+                    inputH += 1;
+
+                //start = enter
+                if ((inputHistory[0] & 0x0800) != 0)
+                    inputStart = 1;
+
+                //rot1 = o or [
+                if ((inputHistory[0] & 0x0400) != 0)
                 {
                     if (!inputPressedRot1)
                     {
@@ -70,7 +108,7 @@ namespace TGMsim
                     inputPressedRot1 = false;
                 }
 
-                if (Keyboard.IsKeyDown(keyRot3))
+                if ((inputHistory[0] & 0x0100) != 0)
                 {
                     if (!inputPressedRot3)
                     {
@@ -84,7 +122,7 @@ namespace TGMsim
                 }
 
                 //rot2 = p
-                if (Keyboard.IsKeyDown(keyRot2))
+                if ((inputHistory[0] & 0x0200) != 0)
                 {
                     if (!inputPressedRot2)
                     {
@@ -97,8 +135,8 @@ namespace TGMsim
                     inputPressedRot2 = false;
                 }
 
-                //hold = K
-                if (Keyboard.IsKeyDown(keyHold))
+                //hold = Space
+                if ((inputHistory[0] & 0x0080) != 0)
                 {
                     if (!inputPressedHold)
                     {
@@ -110,7 +148,19 @@ namespace TGMsim
                 {
                     inputPressedHold = false;
                 }
+
+                //SHIFT HISTORY
+                for(int i = 0; i < 5; i++)
+                {
+                    inputHistory[i] = inputHistory[i + 1];
+                }
+                inputHistory[5] = 0;
             }
+        }
+
+        public void setLag(int l)
+        {
+            lag = l;
         }
 
         public static bool ApplicationIsActivated()

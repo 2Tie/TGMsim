@@ -17,6 +17,6 @@ namespace TGMsim
         public string username;
         public List<int> medals;
         public int lineC;
-
+        public bool delay;
     }
 }

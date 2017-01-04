@@ -12,7 +12,7 @@ namespace TGMsim
     {
 
         bool inputting = false;
-        public bool muted = false;
+        public bool delay = true;
         public Controller nPad = new Controller();
         public int menuState = 0;//main, input change
         int selection = 0;

@@ -2558,6 +2558,7 @@ namespace TGMsim
                     results.time = (long)((timer.elapsedTime * ruleset.FPS)/60);
                 results.level = level;
                 results.medals = medals;
+                results.delay = pad.lag != 0;
                 contTime.start();
             }
         }

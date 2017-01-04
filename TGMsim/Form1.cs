@@ -131,6 +131,7 @@ namespace TGMsim
                     }
                     menuState = 2;
                     FPS = 60.00;
+                    pad1.setLag(0);
                     if (gSel == null)
                         gSel = new GameSelect();
                     break;
@@ -148,6 +149,7 @@ namespace TGMsim
                     {
                         case 0:
                             FPS = 59.84;
+                            if (prefs.delay == true) pad1.setLag(2);
                             break;
                         case 1:
                         case 2:
@@ -157,6 +159,7 @@ namespace TGMsim
                         case 4:
                         case 5:
                             FPS = 60.00;
+                            if (prefs.delay == true) pad1.setLag(4);
                             break;
                     }
                     Mode m = new Mode();
@@ -172,7 +175,7 @@ namespace TGMsim
                     else
                         m.setMode(mSel.selection);
 
-                    m.mute = prefs.muted;
+                    //m.mute = prefs.muted; //TODO: input lag
 
                     if (player.name == "   ")
                     {
@@ -354,7 +357,7 @@ namespace TGMsim
                                 }
                             }
 
-                            if (!field1.cheating && field1.mode.exam == -1)
+                            if (!field1.cheating && field1.mode.exam == -1) //TODO: check if this is a replay as well
                                 field1.newHiscore = testHiscore(field1.results);
                             if (player.name != "   ")
                                 player.updateUser();
@@ -904,7 +907,7 @@ namespace TGMsim
             using (FileStream fsStream = new FileStream("Sav/prefs.dat", FileMode.Create))
             using (BinaryWriter sw = new BinaryWriter(fsStream, Encoding.UTF8))
             {
-                sw.Write(prefs.muted);
+                sw.Write(prefs.delay);
                 sw.Write((char)prefs.nPad.keyUp);
                 sw.Write((char)prefs.nPad.keyDown);
                 sw.Write((char)prefs.nPad.keyLeft);
@@ -923,7 +926,7 @@ namespace TGMsim
         private void readPrefs()
         {
             BinaryReader prf = new BinaryReader(File.OpenRead("Sav/prefs.dat"));
-            prefs.muted = prf.ReadBoolean();
+            prefs.delay = prf.ReadBoolean();
             prefs.nPad.keyUp = (Key)prf.ReadByte();
             prefs.nPad.keyDown = (Key)prf.ReadByte();
             prefs.nPad.keyLeft = (Key)prf.ReadByte();
