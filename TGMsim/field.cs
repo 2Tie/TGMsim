@@ -119,6 +119,7 @@ namespace TGMsim
         public bool bigmode = false;
         public bool g20 = false;
         public bool g0 = false;
+        public bool w4 = false;
 
         public List<int> activeGim = new List<int>();
         public int gimIndex = 0;
@@ -355,6 +356,9 @@ namespace TGMsim
                 gameField.Add(tempList);
             }
 
+            if (w4)
+                w4ify();
+
 
             if (mode.id == 4)
                 randomize();
@@ -383,6 +387,9 @@ namespace TGMsim
 
             //draw the field
             drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(120, Color.Black)), x, y + 25, width, height);
+
+            //draw the info bg
+            drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(120, Color.Black)), x + 275, y + 20, 100, height + 10);
 
             //draw the pieces
             for (int i = 0; i < 10; i++)
@@ -601,24 +608,24 @@ namespace TGMsim
 
             if (ruleset.gameRules < 6) //grav meter
             {
-                drawBuffer.FillRectangle(new SolidBrush(gravColor), x + 280, 525, 60, 8);
-                drawBuffer.FillRectangle(new SolidBrush(gravMeter), x + 280, 525, (int)Math.Round(((double)gravTable[gravLevel] * 60) / ((Math.Pow(256, ruleset.gravType + 1) * 20))), 8);
+                drawBuffer.FillRectangle(new SolidBrush(gravColor), x + 280, 505, 60, 8);
+                drawBuffer.FillRectangle(new SolidBrush(gravMeter), x + 280, 505, (int)Math.Round(((double)gravTable[gravLevel] * 60) / ((Math.Pow(256, ruleset.gravType + 1) * 20))), 8);
                 if (mode.g20 == true || gravTable[gravLevel] == Math.Pow(256, ruleset.gravType + 1) * 20)
-                    drawBuffer.FillRectangle(new SolidBrush(Color.Red), x + 280, 525, 60, 8);
+                    drawBuffer.FillRectangle(new SolidBrush(Color.Red), x + 280, 505, 60, 8);
             }
 
             //SMALL TEXT
             //levels
-            drawBuffer.DrawString(level.ToString(), f_Maestro, textBrush, x + 290, 505);
+            drawBuffer.DrawString(level.ToString(), f_Maestro, textBrush, x + 290, 485);
             if (ruleset.gameRules < 6)
             {
                 if (mode.sections.Count == curSection)
-                    drawBuffer.DrawString(mode.sections[curSection - 1].ToString(), f_Maestro, textBrush, x + 290, 545);
+                    drawBuffer.DrawString(mode.sections[curSection - 1].ToString(), f_Maestro, textBrush, x + 290, 525);
                 else
-                    drawBuffer.DrawString(mode.sections[curSection].ToString(), f_Maestro, textBrush, x + 290, 545);
+                    drawBuffer.DrawString(mode.sections[curSection].ToString(), f_Maestro, textBrush, x + 290, 525);
             }
 
-            drawBuffer.DrawString(score.ToString(), f_Maestro, textBrush, x + 290, 300);
+            drawBuffer.DrawString(score.ToString(), f_Maestro, textBrush, x + 290, 280);
             if (ruleset.gameRules == 1 && mode.id == 0)
             {
                 drawBuffer.DrawString("NEXT GRADE:", f_Maestro, textBrush, x + 280, 140);
@@ -637,7 +644,7 @@ namespace TGMsim
 
             //BIGGER TEXT
             //if (ruleset.gameRules == 1 && mode.id == 0 )
-                drawBuffer.DrawString("Points", SystemFonts.DefaultFont, textBrush, x + 280, 280);
+                drawBuffer.DrawString("POINTS:", f_Maestro, textBrush, x + 280, 260);
 
             //drawBuffer.DrawString(gradePoints.ToString(), SystemFonts.DefaultFont, textBrush, 20, 280);
 
@@ -655,26 +662,26 @@ namespace TGMsim
                 drawBuffer.DrawString("BRAVO! X" + bravoCounter, SystemFonts.DefaultFont, textBrush, x + 280, 400);
 
             if (ruleset.gameRules == 6)
-                drawBuffer.DrawString("LEVEL:", f_Maestro, textBrush, x + 290, 485);
+                drawBuffer.DrawString("LEVEL:", f_Maestro, textBrush, x + 280, 465);
 
             if (mode.limitType == 3)//time limit?
-                drawBuffer.DrawString(convertTime((long)((mode.limit - timer.elapsedTime) * ruleset.FPS / 60)), SystemFonts.DefaultFont, textBrush, x + 290, 570);
+                drawBuffer.DrawString(convertTime((long)((mode.limit - timer.elapsedTime) * ruleset.FPS / 60)), SystemFonts.DefaultFont, textBrush, x + 290, 550);
             else
-                drawBuffer.DrawString(convertTime((long)(timer.elapsedTime * ruleset.FPS / 60)), SystemFonts.DefaultFont, textBrush, x + 290, 570);
+                drawBuffer.DrawString(convertTime((long)(timer.elapsedTime * ruleset.FPS / 60)), SystemFonts.DefaultFont, textBrush, x + 290, 550);
 
             //GRADE TEXT
-            if (ruleset.showGrade || (mode.id==1 && gm2grade == 27))
+            if (ruleset.showGrade)
             {
-                if (ruleset.gameRules == 1)
+                /*if (ruleset.gameRules == 1)
                     drawBuffer.DrawString(ruleset.gradesTGM1[grade], SystemFonts.DefaultFont, textBrush, x + 280, 100);
                 else
-                    drawBuffer.DrawString(ruleset.gradesTGM3[gm2grade], SystemFonts.DefaultFont, textBrush, x + 280, 100);
+                    drawBuffer.DrawString(ruleset.gradesTGM3[gm2grade], SystemFonts.DefaultFont, textBrush, x + 280, 100);*/
 
                 drawGrade(drawBuffer);
             }
 
             if (mode.exam != -1)
-                drawBuffer.DrawString("EXAM: " + ruleset.gradesTGM3[mode.exam].ToString(), SystemFonts.DefaultFont, textBrush, x + 280, 100);
+                drawBuffer.DrawString("EXAM: " + ruleset.gradesTGM3[mode.exam].ToString(), f_Maestro, textBrush, x + 280, 100);
 
 
             //DRAW MEDALS
@@ -682,7 +689,7 @@ namespace TGMsim
                 for (int i = 0; i < 6; i++)
                 {
                     if (medals[i] != 0)
-                        drawBuffer.DrawImage(medalImg, new Rectangle(x + 280 + (i % 3) * 20, 210 + (30 * (int)(Math.Floor((double)i / 3))), 25, 15), i * 26, (medals[i] - 1) * 16, 25, 15, GraphicsUnit.Pixel);
+                        drawBuffer.DrawImage(medalImg, new Rectangle(x + 280 + (i % 3) * 20, 190 + (30 * (int)(Math.Floor((double)i / 3))), 25, 15), i * 26, (medals[i] - 1) * 16, 25, 15, GraphicsUnit.Pixel);
                 }
 
             //fadeout
@@ -2666,6 +2673,8 @@ namespace TGMsim
             lastTet[lastTet.Count - 1] = tempTet.id;
             if (checkGimmick(3))
                 tempTet.bone = true;
+            if (w4)
+                w4ify();
             return tempTet;
         }
 
@@ -2821,6 +2830,39 @@ namespace TGMsim
             }
         }
 
+        private void w4ify()
+        {
+            List<List<int>> newField = new List<List<int>>();
+            for (int i = 0; i < 3; i++)
+            {
+                List<int> tempList = new List<int>();
+                for (int j = 0; j < 22; j++)
+                {
+                    tempList.Add(9); // at least nine types; seven tetrominoes, invisible, and garbage
+                }
+                newField.Add(tempList);
+            }
+            for (int i = 0; i < 4; i++)
+            {
+                List<int> tempList = new List<int>();
+                for (int j = 0; j < 22; j++)
+                {
+                    tempList.Add(gameField[i+3][j]); // at least nine types; seven tetrominoes, invisible, and garbage
+                }
+                newField.Add(tempList);
+            }
+            for (int i = 0; i < 3; i++)
+            {
+                List<int> tempList = new List<int>();
+                for (int j = 0; j < 22; j++)
+                {
+                    tempList.Add(9); // at least nine types; seven tetrominoes, invisible, and garbage
+                }
+                newField.Add(tempList);
+            }
+            gameField = newField;
+        }
+
         private void drawGrade(Graphics drawBuffer)
         {
             string gd;
@@ -2840,7 +2882,7 @@ namespace TGMsim
             for (int i = 0; i < gd.Length; i++)
             {
                 int dex = "0123456789SmMVOKTG".IndexOf(gd.Substring(i, 1));
-                drawBuffer.DrawImage(gradeImg, new Rectangle(x + 280 + i * 26, 100, 25, 25), new Rectangle(1 + (dex % 6) * 26, 1 + (int)Math.Floor((double)dex / 6) * 26 + gold, 25, 25), GraphicsUnit.Pixel);
+                drawBuffer.DrawImage(gradeImg, new Rectangle(x + 280 + i * 26, 70, 25, 25), new Rectangle(1 + (dex % 6) * 26, 1 + (int)Math.Floor((double)dex / 6) * 26 + gold, 25, 25), GraphicsUnit.Pixel);
             }
         }
 

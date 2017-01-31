@@ -162,41 +162,7 @@ namespace TGMsim
                             if (prefs.delay == true) pad1.setLag(4);
                             break;
                     }
-                    Mode m = new Mode();
-                    Audio.stopMusic();
-                    if (mSel.game == 3 && mSel.selection == 1)
-                        m.setMode(2);
-                    else if (mSel.game == 5 && mSel.selection == 1)
-                        m.setMode(5);
-                    else if (mSel.game == 5 && mSel.selection == 2)
-                        m.setMode(6);
-                    else if (mSel.game == 6 && mSel.selection == 3)
-                        m.setMode(7);
-                    else
-                        m.setMode(mSel.selection);
-
-                    //m.mute = prefs.muted; //TODO: input lag
-
-                    if (player.name == "   ")
-                    {
-                        if (m.id != 6)
-                            m.bigmode = cMen.cheats[3];
-                        m.mute = cMen.cheats[4];
-                    }
-
-                    if (mSel.game == 3 && m.id == 0 && player.name != "   ")
-                        m.exam = checkExam();
-
-                    field1 = new Field(pad1, rules, m, musicStream);
-                    if (player.name == "   ")
-                    {
-                        field1.godmode = cMen.cheats[0];
-                        if (cMen.cheats[1])
-                            field1.g20 = cMen.cheats[1];
-                        field1.g0 = cMen.cheats[2];
-                        if (field1.godmode || field1.g0)
-                            field1.cheating = true;
-                    }
+                    setupGame();
                     break;
 
                 case 6: //hiscores
@@ -367,12 +333,7 @@ namespace TGMsim
                     }
                     if (field1.cont == true)
                     {
-                        Mode m = new Mode();
-                        m = field1.mode;
-                        if (rules.gameRules == 4 && m.id == 0 && player.name != "   ")
-                            m.exam = checkExam();
-                        saved = false;
-                        field1 = new Field(pad1, rules, m, musicStream);
+                        setupGame();
                     }
                     if (field1.exit == true)
                         changeMenu(2);
@@ -551,6 +512,47 @@ namespace TGMsim
                 return avg;
             return -1;
             
+        }
+
+        private void setupGame()
+        {
+            Mode m = new Mode();
+            Audio.stopMusic();
+            if (mSel.game == 3 && mSel.selection == 1)
+                m.setMode(2);
+            else if (mSel.game == 5 && mSel.selection == 1)
+                m.setMode(5);
+            else if (mSel.game == 5 && mSel.selection == 2)
+                m.setMode(6);
+            else if (mSel.game == 6 && mSel.selection == 3)
+                m.setMode(7);
+            else
+                m.setMode(mSel.selection);
+
+            //m.mute = prefs.muted; //TODO: input lag
+
+            if (player.name == "   ")
+            {
+                if (m.id != 6)
+                    m.bigmode = cMen.cheats[3];
+                m.mute = cMen.cheats[4];
+            }
+
+            if (mSel.game == 3 && m.id == 0 && player.name != "   ")
+                m.exam = checkExam();
+
+            field1 = new Field(pad1, rules, m, musicStream);
+            if (player.name == "   ")
+            {
+                field1.godmode = cMen.cheats[0];
+                if (cMen.cheats[1])
+                    field1.g20 = cMen.cheats[1];
+                field1.g0 = cMen.cheats[2];
+                if (field1.godmode || field1.g0)
+                    field1.cheating = true;
+                if (cMen.cheats[5])
+                    field1.w4 = true;
+            }
         }
 
         private bool testHiscore(GameResult gameResult)
