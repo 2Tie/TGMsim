@@ -47,9 +47,9 @@ namespace TGMsim
             if (menuState == 0)
             {
                 if (selection >= 0)
-                    selection = selection % 3;
+                    selection = selection % 4;
                 else
-                    selection = 2;
+                    selection = 3;
             }
             if (menuState == 1)
             {
@@ -87,12 +87,18 @@ namespace TGMsim
             {
                 if (selection == 0)
                 {
-                    Audio.musVol += ((float)nPad.inputH / 10);
+                    Audio.musVol += ((float)(nPad.inputH * 0.1));
+                    if (Audio.musVol > 1) Audio.musVol = 1;
+                    if (Audio.musVol < 0) Audio.musVol = 0;
                 }
                 if (selection == 1)
                 {
-                    Audio.sfxVol += ((float)nPad.inputH / 10);
+                    Audio.sfxVol += ((float)(nPad.inputH * 0.1));
+                    if (Audio.sfxVol > 1) Audio.sfxVol = 1;
+                    if (Audio.sfxVol < 0) Audio.sfxVol = 0;
                 }
+                if (selection == 2)
+                    delay = !delay;
             }
 
             if (nPad.inputRot2 == 1 && menuState == 1)
@@ -108,7 +114,8 @@ namespace TGMsim
             {
                 drawBuffer.DrawString("Music Volume: " + Audio.musVol, SystemFonts.DefaultFont, new SolidBrush(Color.White), 100, 100);
                 drawBuffer.DrawString("SFX Volume: " + Audio.sfxVol, SystemFonts.DefaultFont, new SolidBrush(Color.White), 100, 120);
-                drawBuffer.DrawString("Rebind keys", SystemFonts.DefaultFont, new SolidBrush(Color.White), 100, 140);
+                drawBuffer.DrawString("Emulate Input Lag: " + delay, SystemFonts.DefaultFont, new SolidBrush(Color.White), 100, 140);
+                drawBuffer.DrawString("Rebind keys", SystemFonts.DefaultFont, new SolidBrush(Color.White), 100, 160);
             }
             if (menuState == 1)
             {

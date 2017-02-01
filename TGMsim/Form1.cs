@@ -168,8 +168,8 @@ namespace TGMsim
                 case 6: //hiscores
                     menuState = 6;
                     //loadHiscores(mSel.game + 1);
-                    Audio.stopMusic();
-                    Audio.playMusic("Hiscores");
+                    //Audio.stopMusic();
+                    //Audio.playMusic("Hiscores");
                     break;
 
                 case 8:
@@ -553,6 +553,7 @@ namespace TGMsim
                 if (cMen.cheats[5])
                     field1.w4 = true;
             }
+            saved = false;
         }
 
         private bool testHiscore(GameResult gameResult)

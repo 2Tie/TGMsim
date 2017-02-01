@@ -625,7 +625,7 @@ namespace TGMsim
                     drawBuffer.DrawString(mode.sections[curSection].ToString(), f_Maestro, textBrush, x + 290, 525);
             }
 
-            drawBuffer.DrawString(score.ToString(), f_Maestro, textBrush, x + 290, 280);
+            drawBuffer.DrawString(score.ToString(), f_Maestro, textBrush, x + 280, 280);
             if (ruleset.gameRules == 1 && mode.id == 0)
             {
                 drawBuffer.DrawString("NEXT GRADE:", f_Maestro, textBrush, x + 280, 140);
@@ -663,7 +663,7 @@ namespace TGMsim
 
             if (ruleset.gameRules == 6)
                 drawBuffer.DrawString("LEVEL:", f_Maestro, textBrush, x + 280, 465);
-
+            
             if (mode.limitType == 3)//time limit?
                 drawBuffer.DrawString(convertTime((long)((mode.limit - timer.elapsedTime) * ruleset.FPS / 60)), SystemFonts.DefaultFont, textBrush, x + 290, 550);
             else
