@@ -121,7 +121,7 @@ namespace TGMsim
         public bool g0 = false;
         public bool w4 = false;
 
-        public List<int> activeGim = new List<int>();
+        public List<Mode.Gimmick> activeGim = new List<Mode.Gimmick>();
         public int gimIndex = 0;
         int garbTimer = 0;
 
@@ -1160,6 +1160,8 @@ namespace TGMsim
                                             for (int i = 0; i < bigFull; i++)//1234 for tgm1 - tap, 1246 in tgm3, 1236 in tgm4
                                             {
                                                 level++;
+                                                if(checkGimmick(2))
+                                                    garbTimer--; //line clears decrement the garbTimer
                                                 if (ruleset.gameRules == 4 && i > 2)
                                                     level++;
                                                 if (ruleset.gameRules > 3 && i > 3)
@@ -1930,7 +1932,7 @@ namespace TGMsim
                                             if (mode.gimList.Count > gimIndex)
                                                 if (mode.gimList[gimIndex].startLvl <= level)
                                                 {
-                                                    activeGim.Add(mode.gimList[gimIndex].type);
+                                                    activeGim.Add(mode.gimList[gimIndex]);
                                                     gimIndex++;
                                                 }
                                             for (int i = 0; i < activeGim.Count; i++)
@@ -2102,7 +2104,7 @@ namespace TGMsim
 
                                     Audio.playSound(s_Contact);
 
-                                    if (checkGimmick(2) && garbTimer >= 10)
+                                    if (checkGimmick(2) && garbTimer >= getActiveGimmickParameter(2))
                                     {
                                         raiseGarbage(1);
                                         garbTimer = 0;
@@ -2682,10 +2684,22 @@ namespace TGMsim
         {
             for (int i = 0; i < activeGim.Count; i++)
             {
-                if (activeGim[i] == gim)
+                if (activeGim[i].type == gim)
                     return true;
             }
             return false;
+        }
+
+        private int getActiveGimmickParameter(int gim)
+        {
+            for(int i = 0; i < activeGim.Count; i++)
+            {
+                if (activeGim[i].type == gim)
+                {
+                    return activeGim[i].parameter;
+                }
+            }
+            return -1;
         }
 
         private void raiseGarbage(int num)
