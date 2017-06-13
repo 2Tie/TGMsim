@@ -1972,13 +1972,21 @@ namespace TGMsim
                             blockDrop++;
                         }
 
-                        if (pad.inputV == -1 && !activeTet.floored && (gravTable[gravLevel] <= Math.Pow(256, ruleset.gravType + 1) || gravCounter >= Math.Pow(256, ruleset.gravType + 1)))
+                        if (!activeTet.floored)
                         {
-                            blockDrop = blockDrop + 1;
+                            if (pad.inputV == -1 && (gravTable[gravLevel] <= Math.Pow(256, ruleset.gravType + 1)))
+                            {
+                                blockDrop += 1;
+                            }
+                            else
+                                gravCounter += gravTable[gravLevel]; //add our current gravity strength
                         }
 
-                        gravCounter += gravTable[gravLevel]; //add our current gravity strength
-
+                        if (gravCounter >= Math.Pow(256, ruleset.gravType + 1))
+                        {
+                            blockDrop += 1;
+                            gravCounter = 0;
+                        }
 
                         if (g20 || (gravTable[gravLevel] == Math.Pow(256, ruleset.gravType + 1) * 20))
                         {
@@ -1988,10 +1996,7 @@ namespace TGMsim
 
                         if (blockDrop > 0)// && currentTimer != (int)Field.timerType.LockDelay)
                         {
-                            gravCounter = 0;
                             tetGrav(activeTet, blockDrop, false, son);
-
-
                         }
 
                         
