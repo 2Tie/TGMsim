@@ -32,7 +32,7 @@ namespace TGMsim
         Tetromino activeTet;
         public List<Tetromino> nextTet = new List<Tetromino>();
         public List<int> lastTet = new List<int>() { 6, 6, 6, 6};
-        public Rotation RSYS = new R_ARIKA();
+        public Rotation RSYS = new R_ARS1();
 
         public List<List<int>> gameField = new List<List<int>>();
 
@@ -108,8 +108,9 @@ namespace TGMsim
         public int sonicCounter = 0;
         public int tetLife = 0;
 
-        Rules ruleset;
-        public Mode mode;
+        //Rules ruleset;
+        //public Mode mode;
+        public GameRules ruleset;
         int curSection;
 
         public GameResult results;
@@ -170,7 +171,7 @@ namespace TGMsim
         Controller pad;
         int inputDelayH = 0, inputDelayDir = 0;
 
-        public Field(Controller ctlr, Rules rules, Mode m2, NAudio.Vorbis.VorbisWaveReader music)
+        public Field(Controller ctlr, GameRules rules, NAudio.Vorbis.VorbisWaveReader music)
         {
             x = 200;
             y = 50;
@@ -246,12 +247,14 @@ namespace TGMsim
 
             pad = ctlr;
             ruleset = rules;
-            mode = m2;
             vorbisStream = music;
+
+            if (ruleset.rotation == 0) RSYS = new R_ARS1();
+            if (ruleset.rotation == 1) RSYS = new R_ARS3();
 
             Random random = new Random();
 
-            activeTet = new Tetromino(0); //first piece cannot be S, Z, or O
+            activeTet = new Tetromino(0, ruleset.bigmode); //first piece cannot be S, Z, or O
 
             if (nextTet.Count == 0 && ruleset.nextNum > 0) //generate nextTet
             {
@@ -261,70 +264,23 @@ namespace TGMsim
                 }
             }
 
-            g20 = mode.g20;
+            g20 = ruleset.g20;
 
-            gravTable = ruleset.gravTableTGM1;
-            if (ruleset.gameRules >= 4)
-                gravTable = ruleset.gravTableTGM3;
+            gravTable = ruleset.gravTable;
 
 
-            switch (mode.id)
-            {
-                case 0:
-                    if(ruleset.gameRules == 2)//skip tgm because those never change
-                    {
-                        ruleset.baseARE = ruleset.delayTableTGM2[0][0];
-                        ruleset.baseDAS = ruleset.delayTableTGM2[1][0];
-                        ruleset.baseLock = ruleset.delayTableTGM2[2][0];
-                        ruleset.baseLineClear = ruleset.delayTableTGM2[3][0];
-                    }
-                    if (ruleset.gameRules == 3)
-                    {
-                        ruleset.baseARE = ruleset.delayTableTAP[0][0];
-                        ruleset.baseARELine = ruleset.delayTableTAP[1][0];
-                        ruleset.baseDAS = ruleset.delayTableTAP[2][0];
-                        ruleset.baseLock = ruleset.delayTableTAP[3][0];
-                        ruleset.baseLineClear = ruleset.delayTableTAP[4][0];
-                    }
-                    if (ruleset.gameRules == 4)
-                    {
-                        ruleset.baseARE = ruleset.delayTableTGM3[0][0];
-                        ruleset.baseARELine = ruleset.delayTableTGM3[1][0];
-                        ruleset.baseDAS = ruleset.delayTableTGM3[2][0];
-                        ruleset.baseLock = ruleset.delayTableTGM3[3][0];
-                        ruleset.baseLineClear = ruleset.delayTableTGM3[4][0];
-                    }
-                    break;
-                case 1:
-                    ruleset.baseARE = ruleset.delayTableDeath[0][0];
-                    ruleset.baseARELine = ruleset.delayTableDeath[1][0];
-                    ruleset.baseDAS = ruleset.delayTableDeath[2][0];
-                    ruleset.baseLock = ruleset.delayTableDeath[3][0];
-                    ruleset.baseLineClear = ruleset.delayTableDeath[4][0];
-                    break;
-                case 2:
-                case 5:
-                    ruleset.baseARE = ruleset.delayTableShirase[0][0];
-                    ruleset.baseARELine = ruleset.delayTableShirase[1][0];
-                    ruleset.baseDAS = ruleset.delayTableShirase[2][0];
-                    ruleset.baseLock = ruleset.delayTableShirase[3][0];
-                    ruleset.baseLineClear = ruleset.delayTableShirase[4][0];
-                    break;
-                case 7:
-                    ruleset.baseARE = ruleset.delayTablePractice[0][0];
-                    ruleset.baseARELine = ruleset.delayTablePractice[1][0];
-                    ruleset.baseDAS = ruleset.delayTablePractice[2][0];
-                    ruleset.baseLock = ruleset.delayTablePractice[3][0];
-                    ruleset.baseLineClear = ruleset.delayTablePractice[4][0];
-                    break;
-            }
+            ruleset.baseARE = ruleset.delayTable[0][0];
+            ruleset.baseARELine = ruleset.delayTable[1][0];
+            ruleset.baseDAS = ruleset.delayTable[2][0];
+            ruleset.baseLock = ruleset.delayTable[3][0];
+            ruleset.baseLineClear = ruleset.delayTable[4][0];
 
-            frameColour = mode.border;
+            frameColour = ruleset.border;
 
-            if (mode.exam != -1)
+            if (ruleset.exam != -1)
                 frameColour = Color.Gold;
 
-            speedBonus = mode.lvlBonus;
+            speedBonus = ruleset.lvlBonus;
 
             gameRunning = true;
             starting = 1;
@@ -332,13 +288,13 @@ namespace TGMsim
             
             while (gravLevel < gravTable.Count - 1) //update gravity
             {
-                if (level + (speedBonus * 100) >= ruleset.gravLevelsTGM1[gravLevel + 1])
+                if (level + (speedBonus * 100) >= ruleset.gravLevels[gravLevel + 1])
                     gravLevel++;
                 else
                     break;
             }
 
-            if ((mode.g20 == true || gravTable[gravLevel] == Math.Pow(256, ruleset.gravType + 1) * 20) && ruleset.gameRules < 4)
+            if ((ruleset.g20 == true || gravTable[gravLevel] == Math.Pow(256, ruleset.gravType + 1) * 20) && ruleset.gameRules < 4)
                 textBrush = new SolidBrush(Color.Gold);
 
             //timer.start();
@@ -346,10 +302,10 @@ namespace TGMsim
             sectionTime.start();
             secTet.Add(0);
 
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < ruleset.fieldW; i++)
             {
                 List<int> tempList = new List<int>();
-                for (int j = 0; j < 22; j++)
+                for (int j = 0; j < ruleset.fieldH; j++)
                 {
                     tempList.Add(0); // at least nine types; seven tetrominoes, invisible, and garbage
                 }
@@ -360,7 +316,7 @@ namespace TGMsim
                 w4ify();
 
 
-            if (mode.id == 4)
+            if (ruleset.id == 4)
                 randomize();
 
             updateMusic();
@@ -403,7 +359,9 @@ namespace TGMsim
                             flashing = true;
                     }
                     if (flashing)
+                    {
                         drawBuffer.DrawImageUnscaled(tetImgs[9], x + 25 * i, y - 25 + j * 25, 25, 25);
+                    }
                     else
                     {
 
@@ -442,26 +400,20 @@ namespace TGMsim
             drawBuffer.FillRectangle(new SolidBrush(frameColour), x - 5, y - 5 + 25, 5, height + 10);
             drawBuffer.FillRectangle(new SolidBrush(frameColour), x + width, y - 5 + 25, 5, height + 10);
 
-            int big = 2;
-            if (mode.bigmode)
-                big = 1;
+            int big = 1;
+            if (activeTet.big)
+                big = 2;
 
             //draw the ghost piece
             if (level < 100 && ghostPiece != null && activeTet.id == ghostPiece.id)
             {
-                int lowY = 22;
-                for (int i = 0; i < activeTet.bits.Count; i++)
-                {
-                    if (ghostPiece.bits[i].y < lowY)
-                        lowY = ghostPiece.bits[i].y;
-                }
 
                 for (int i = 0; i < activeTet.bits.Count; i++)
                 {
-                    if (ghostPiece.bits[i].y * (2 / big) - (lowY * ((2 / big) - 1)) > 1)
+                    if (ghostPiece.bits[i].y > 1)
                     {
-                        drawBuffer.DrawImage(tetImgs[ghostPiece.id], x + 25 * (ghostPiece.bits[i].x * (2 / big) - (4 % (6 - big))), y - 25 + 25 * (ghostPiece.bits[i].y * (2 / big) - (lowY * ((2 / big) - 1))), 25 * (2 / big), 25 * (2 / big));
-                        drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(130, Color.Black)), x + 25 * (ghostPiece.bits[i].x * (2 / big) - (4 % (6 - big))), y - 25 + 25 * (ghostPiece.bits[i].y * (2 / big) - (lowY * ((2 / big) - 1))), 25 * (2 / big), 25 * (2 / big));
+                        drawBuffer.DrawImage(tetImgs[ghostPiece.id], x + 25 * ghostPiece.bits[i].x, y - 25 + 25 * ghostPiece.bits[i].y, 25 * big, 25 * big);
+                        drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(130, Color.Black)), x + 25 * ghostPiece.bits[i].x, y - 25 + 25 * ghostPiece.bits[i].y, 25 * big, 25 * big);
                     }
                 }
             }
@@ -469,23 +421,17 @@ namespace TGMsim
             //draw the current piece
             if (activeTet.id != 0)
             {
-                int lowY = 22;
-                for (int i = 0; i < activeTet.bits.Count; i++)
-                {
-                    if (activeTet.bits[i].y < lowY)
-                        lowY = activeTet.bits[i].y;
-                }
                 for (int i = 0; i < activeTet.bits.Count; i++)
                 {
 
                     if (activeTet.bone == true)
-                        drawBuffer.DrawImage(tetImgs[10], x + 25 * (activeTet.bits[i].x * (2 / big) - (4 % (6 - big))), y - 25 + 25 * (activeTet.bits[i].y * (2 / big) - (lowY * ((2 / big) - 1))), 25 * (2 / big), 25 * (2 / big));
+                        drawBuffer.DrawImage(tetImgs[10], x + 25 * activeTet.bits[i].x, y - 25 + 25 * activeTet.bits[i].y, 25 * big, 25 * big);
                     else
                     {
                         if (activeTet.groundTimer > 0)
                         {
-                            drawBuffer.DrawImage(tetImgs[activeTet.id], x + 25 * (activeTet.bits[i].x * (2 / big) - (4 % (6 - big))), y - 25 + 25 * (activeTet.bits[i].y * (2 / big) - (lowY * ((2 / big) - 1))), 25 * (2 / big), 25 * (2 / big));
-                            drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb((ruleset.baseLock - activeTet.groundTimer) * 127 / ruleset.baseLock, Color.Black)), x + 25 * (activeTet.bits[i].x * (2 / big) - (4 % (6 - big))), y - 25 + 25 * (activeTet.bits[i].y * (2 / big) - (lowY * ((2 / big) - 1))), 25 * (2 / big), 25 * (2 / big));
+                            drawBuffer.DrawImage(tetImgs[activeTet.id], x + 25 * activeTet.bits[i].x, y - 25 + 25 * activeTet.bits[i].y, 25 * big, 25 * big);
+                            drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb((ruleset.baseLock - activeTet.groundTimer) * 127 / ruleset.baseLock, Color.Black)), x + 25 * activeTet.bits[i].x, y - 25 + 25 * activeTet.bits[i].y, 25 * big, 25 * big);
                         }
                         //else
                             //drawBuffer.DrawImage(tetImgs[9], x + 25 * (activeTet.bits[i].x * (2 / big) - (4 % (6 - big))), y - 25 + 25 * (activeTet.bits[i].y * (2 / big) - (lowY * ((2 / big) - 1))), 25 * (2 / big), 25 * (2 / big));
@@ -504,7 +450,7 @@ namespace TGMsim
 
                         }
                         if (line)
-                            drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(200, Color.Yellow)), x + 25 * (activeTet.bits[i].x * (2 / big) - (4 % (6 - big))), y - 25 + 25 * (activeTet.bits[i].y * (2 / big) - (lowY * ((2 / big) - 1))), 3, 25 * (2/big));
+                            drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(200, Color.Yellow)), x + 25 * activeTet.bits[i].x, y - 25 + 25 * activeTet.bits[i].y, 3, 25 * big);
 
                         line = true;
                         for (int j = 1; j < 4; j++)//for each other piece, up
@@ -514,7 +460,7 @@ namespace TGMsim
 
                         }
                         if (line)
-                            drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(200, Color.Yellow)), x + 25 * (activeTet.bits[i].x * (2 / big) - (4 % (6 - big))), y - 25 + 25 * (activeTet.bits[i].y * (2 / big) - (lowY * ((2 / big) - 1))), 25 * (2/big), 3);
+                            drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(200, Color.Yellow)), x + 25 * activeTet.bits[i].x, y - 25 + 25 * activeTet.bits[i].y, 25 * big, 3);
 
                         line = true;
                         for (int j = 1; j < 4; j++)//for each other piece, right
@@ -524,7 +470,7 @@ namespace TGMsim
 
                         }
                         if (line)
-                            drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(200, Color.Yellow)), x + 25 * (activeTet.bits[i].x * (2 / big) - (4 % (6 - big))) + 22 + 25 * (big % 2), y - 25 + 25 * (activeTet.bits[i].y * (2 / big) - (lowY * ((2 / big) - 1))), 3, 25 * (2 / big));
+                            drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(200, Color.Yellow)), x + 25 * activeTet.bits[i].x + 22 + 25 * (big-1), y - 25 + 25 * activeTet.bits[i].y, 3, 25 * big);
 
                         line = true;
                         for (int j = 1; j < 4; j++)//for each other piece, down
@@ -534,7 +480,7 @@ namespace TGMsim
 
                         }
                         if (line)
-                            drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(200, Color.Yellow)), x + 25 * (activeTet.bits[i].x * (2 / big) - (4 % (6 - big))), y - 25 + 25 * (activeTet.bits[i].y * (2 / big) - (lowY * ((2 / big) - 1))) + 22 + 25*(big%2), 25 * (2/big), 3);
+                            drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(200, Color.Yellow)), x + 25 * activeTet.bits[i].x, y - 25 + 25 * activeTet.bits[i].y + 22 + 25 * (big-1), 25 * big, 3);
                     }
                 }
             }
@@ -610,7 +556,7 @@ namespace TGMsim
             {
                 drawBuffer.FillRectangle(new SolidBrush(gravColor), x + 280, 505, 60, 8);
                 drawBuffer.FillRectangle(new SolidBrush(gravMeter), x + 280, 505, (int)Math.Round(((double)gravTable[gravLevel] * 60) / ((Math.Pow(256, ruleset.gravType + 1) * 20))), 8);
-                if (mode.g20 == true || gravTable[gravLevel] == Math.Pow(256, ruleset.gravType + 1) * 20)
+                if (ruleset.g20 == true || gravTable[gravLevel] == Math.Pow(256, ruleset.gravType + 1) * 20)
                     drawBuffer.FillRectangle(new SolidBrush(Color.Red), x + 280, 505, 60, 8);
             }
 
@@ -619,14 +565,14 @@ namespace TGMsim
             drawBuffer.DrawString(level.ToString(), f_Maestro, textBrush, x + 290, 485);
             if (ruleset.gameRules < 6)
             {
-                if (mode.sections.Count == curSection)
-                    drawBuffer.DrawString(mode.sections[curSection - 1].ToString(), f_Maestro, textBrush, x + 290, 525);
+                if (ruleset.sections.Count == curSection)
+                    drawBuffer.DrawString(ruleset.sections[curSection - 1].ToString(), f_Maestro, textBrush, x + 290, 525);
                 else
-                    drawBuffer.DrawString(mode.sections[curSection].ToString(), f_Maestro, textBrush, x + 290, 525);
+                    drawBuffer.DrawString(ruleset.sections[curSection].ToString(), f_Maestro, textBrush, x + 290, 525);
             }
 
             drawBuffer.DrawString(score.ToString(), f_Maestro, textBrush, x + 280, 280);
-            if (ruleset.gameRules == 1 && mode.id == 0)
+            if (ruleset.gameRules == 1 && ruleset.id == 0)
             {
                 drawBuffer.DrawString("NEXT GRADE:", f_Maestro, textBrush, x + 280, 140);
                 if (grade != ruleset.gradePointsTGM1.Count)
@@ -664,24 +610,19 @@ namespace TGMsim
             if (ruleset.gameRules == 6)
                 drawBuffer.DrawString("LEVEL:", f_Maestro, textBrush, x + 280, 465);
             
-            if (mode.limitType == 3)//time limit?
-                drawBuffer.DrawString(convertTime((long)((mode.limit - timer.elapsedTime) * ruleset.FPS / 60)), SystemFonts.DefaultFont, textBrush, x + 290, 550);
+            if (ruleset.limitType == 3)//time limit?
+                drawBuffer.DrawString(convertTime((long)((ruleset.limit - timer.elapsedTime) * ruleset.FPS / 60)), SystemFonts.DefaultFont, textBrush, x + 290, 550);
             else
                 drawBuffer.DrawString(convertTime((long)(timer.elapsedTime * ruleset.FPS / 60)), SystemFonts.DefaultFont, textBrush, x + 290, 550);
 
             //GRADE TEXT
             if (ruleset.showGrade)
             {
-                /*if (ruleset.gameRules == 1)
-                    drawBuffer.DrawString(ruleset.gradesTGM1[grade], SystemFonts.DefaultFont, textBrush, x + 280, 100);
-                else
-                    drawBuffer.DrawString(ruleset.gradesTGM3[gm2grade], SystemFonts.DefaultFont, textBrush, x + 280, 100);*/
-
                 drawGrade(drawBuffer);
             }
 
-            if (mode.exam != -1)
-                drawBuffer.DrawString("EXAM: " + ruleset.gradesTGM3[mode.exam].ToString(), f_Maestro, textBrush, x + 280, 100);
+            if (ruleset.exam != -1)
+                drawBuffer.DrawString("EXAM: " + ruleset.grades[ruleset.exam].ToString(), f_Maestro, textBrush, x + 280, 100);
 
 
             //DRAW MEDALS
@@ -710,12 +651,9 @@ namespace TGMsim
             //endgame stats
             if (gameRunning == false && fadeout == 92)
             {
-                if (mode.id == 0)
+                if (ruleset.id == 0)
                 {
-                    if (ruleset.gameRules == 1)
-                        drawBuffer.DrawString("Grade: " + ruleset.gradesTGM1[results.grade], SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 200);
-                    else
-                        drawBuffer.DrawString("Grade: " + ruleset.gradesTGM3[results.grade], SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 200);
+                    drawBuffer.DrawString("Grade: " + ruleset.grades[results.grade], SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 200);
                 }
                 drawBuffer.DrawString("Score: " + results.score, SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 210);
                 drawBuffer.DrawString("Time: " + convertTime(results.time), SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 220);
@@ -737,60 +675,7 @@ namespace TGMsim
                 drawBuffer.DrawString("Press B to", SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 310);
                 drawBuffer.DrawString("return to menu!", SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 320);
             }
-
-
-#if DEBUG
-
-            //draw the playfieldgrid
-            //for (int i = 1; i < 11; i++)
-                //drawBuffer.DrawLine(gridPen, x + 25 * i, y + 25, x + 25 * i, y + height + 25);
-            //for (int i = 1; i < 22; i++)
-                //drawBuffer.DrawLine(gridPen, x, y + 25 * i, x + width, y + 25 * i);
-
-            SolidBrush debugBrush = new SolidBrush(Color.White);
-
-            //tech stats
-            drawBuffer.DrawString("Grav Level: " + gravTable[gravLevel].ToString() + " Bonus: " + speedBonus, SystemFonts.DefaultFont, debugBrush, 20, 760);
-            if (!inCredits)
-                drawBuffer.DrawString("Current Level: " + level, SystemFonts.DefaultFont, debugBrush, 200, 760);
-            else
-            {
-                drawBuffer.DrawString("Credits", SystemFonts.DefaultFont, debugBrush, 200, 760);
-                drawBuffer.DrawString("Credits Timer: " + creditsProgress.ToString(), SystemFonts.DefaultFont, debugBrush, 200, 750);
-            }
-
-            //game stats
-            if (ruleset.gameRules == 1)
-                drawBuffer.DrawString("Score: " + score, SystemFonts.DefaultFont, debugBrush, 90, 740);
-            else
-                drawBuffer.DrawString("gradeScore: " + gradePoints, SystemFonts.DefaultFont, debugBrush, 90, 740);
-            drawBuffer.DrawString("Combo: " + combo, SystemFonts.DefaultFont, debugBrush, 90, 750);
-            if (isGM)
-                drawBuffer.DrawString("Grade: GM", SystemFonts.DefaultFont, debugBrush, 90, 730);
-            else
-                drawBuffer.DrawString("Grade: " + grade + "GM2: " + gm2grade, SystemFonts.DefaultFont, debugBrush, 90, 730);
-
-            for (int i = 0; i < GMflags.Count; i++)
-            {
-                drawBuffer.DrawString("-*".Substring(Convert.ToInt32(GMflags[i]), 1), SystemFonts.DefaultFont, debugBrush, 200 + i * 8, 730);
-            }
-
-            if (ruleset.gameRules == 1)
-                drawBuffer.DrawString("Bravos: " + bravoCounter, SystemFonts.DefaultFont, debugBrush, 200, 740);
-            else
-            {
-                drawBuffer.DrawString(medals[0] + " " + medals[1] + " " + medals[2] + " " + medals[3] + " " + medals[4] + " " + medals[5], SystemFonts.DefaultFont, debugBrush, 200, 740);
-                drawBuffer.DrawString(totalTets.ToString(), SystemFonts.DefaultFont, debugBrush, 400, 740);
-            }
-
-            if (newHiscore)
-                drawBuffer.DrawString("New Hiscore", SystemFonts.DefaultFont, debugBrush, 200, 700);
-
-            //time
-            drawBuffer.DrawString(convertTime((long)(timer.elapsedTime * ruleset.FPS / 60)), SystemFonts.DefaultFont, debugBrush, 100, 700);
-
-            drawBuffer.DrawString("groundTime " + activeTet.groundTimer, SystemFonts.DefaultFont, debugBrush, 400, 700);
-#endif
+            
         }
 
         public void logic()
@@ -833,7 +718,7 @@ namespace TGMsim
                         bravoTime.reset();
                     }
                     justSpawned = false;
-                    if (mode.limit - timer.elapsedTime <= 0 && mode.limitType == 3)
+                    if (ruleset.limit - timer.elapsedTime <= 0 && ruleset.limitType == 3)
                         endGame();
 
                     //vanishing logic
@@ -998,25 +883,19 @@ namespace TGMsim
 
                         if (activeTet.id != 0)
                         {
-                            int lowY = 22;
-                            int big = 2;
-                            if (mode.bigmode)
+                            int big = 0;
+                            if (ruleset.bigmode)
                                 big = 1;
                             for (int i = 0; i < activeTet.bits.Count; i++)
                             {
-                                if (activeTet.bits[i].y < lowY)
-                                    lowY = activeTet.bits[i].y;
-                            }
-                            for (int i = 0; i < activeTet.bits.Count; i++)
-                            {
-                                if ((activeTet.bits[i].y * (2 / big) - (lowY * ((2 / big) - 1))) + (big % 2) < 0)
+                                if (activeTet.bits[i].y  < 0)
                                     continue;
-                                if ((activeTet.bits[i].y * (2 / big) - (lowY * ((2 / big) - 1))) + (big % 2) + 1 >= 22)
+                                if (activeTet.bits[i].y + big + 1 >= 22)
                                 {
                                     activeTet.floored = true;
                                     break;
                                 }
-                                else if (gameField[activeTet.bits[i].x * (2 / big) - (4 % (6 - big))][(activeTet.bits[i].y * (2 / big) - (lowY * ((2 / big) - 1))) + (big % 2) + 1] != 0)
+                                else if (gameField[activeTet.bits[i].x][activeTet.bits[i].y + big + 1] != 0)
                                 {
                                     activeTet.floored = true;
                                     break;
@@ -1058,35 +937,35 @@ namespace TGMsim
                                     for (int i = 0; i < activeTet.bits.Count; i++) //SET THE PIECES
                                     {
                                         int big = 2;
-                                        if (mode.bigmode)
+                                        if (ruleset.bigmode)
                                             big = 1;
 
                                         for (int j = 0; j < (big % 2) + 1; j++ )
                                         {
                                             for (int k = 0; k < (big % 2) + 1; k++)
                                             {
-                                                if ((activeTet.bits[i].y * (2 / big) - (lowY * ((2 / big) - 1))) + k < 0)
+                                                if (activeTet.bits[i].y + k < 0)
                                                     continue;
                                                 if (checkGimmick(1) || creditsType == 2)
-                                                    gameField[(activeTet.bits[i].x * (2 / big) - (4 % (6 - big))) + j][(activeTet.bits[i].y * (2 / big) - (lowY * ((2 / big) - 1))) + k] = 8;
+                                                    gameField[activeTet.bits[i].x  + j][activeTet.bits[i].y + k] = 8;
                                                 else if (activeTet.bone == true)
-                                                    gameField[(activeTet.bits[i].x * (2 / big) - (4 % (6 - big))) + j][(activeTet.bits[i].y * (2 / big) - (lowY * ((2 / big) - 1))) + k] = 10;
+                                                    gameField[activeTet.bits[i].x + j][activeTet.bits[i].y + k] = 10;
                                                 else
-                                                    gameField[(activeTet.bits[i].x * (2 / big) - (4 % (6 - big))) + j][(activeTet.bits[i].y * (2 / big) - (lowY * ((2 / big) - 1))) + k] = activeTet.id;
+                                                    gameField[activeTet.bits[i].x + j][activeTet.bits[i].y + k] = activeTet.id;
 
                                                 if (creditsType == 1)
                                                 {
                                                     vanPip vP = new vanPip();
                                                     vP.time = creditsProgress;
-                                                    vP.x = (activeTet.bits[i].x * (2 / big) - (4 % (6 - big))) + j;
-                                                    vP.y = (activeTet.bits[i].y * (2 / big) - (lowY * ((2 / big) - 1))) + k;
+                                                    vP.x = activeTet.bits[i].x + j;
+                                                    vP.y = activeTet.bits[i].y + k;
                                                     vanList.Add(vP);
                                                 }
 
                                                 flashPip fP = new flashPip();
                                                 fP.time = 2;
-                                                fP.x = (activeTet.bits[i].x * (2 / big) - (4 % (6 - big))) + j;
-                                                fP.y = (activeTet.bits[i].y * (2 / big) - (lowY * ((2 / big) - 1))) + k;
+                                                fP.x = activeTet.bits[i].x  + j;
+                                                fP.y = activeTet.bits[i].y  + k;
                                                 flashList.Add(fP);
                                             }
                                         }
@@ -1149,14 +1028,14 @@ namespace TGMsim
                                     {
                                         int bigFull = full.Count;
                                         int oldLvl = level;
-                                        if (mode.bigmode)
+                                        if (ruleset.bigmode)
                                             bigFull = bigFull / 2;
                                         for (int i = 0; i < full.Count; i++)
                                         {
                                             for (int j = 0; j < 10; j++)
                                                 gameField[j][full[i]] = 0;
                                         }
-                                        if (mode.id != 6)
+                                        if (ruleset.id != 6)
                                             for (int i = 0; i < bigFull; i++)//1234 for tgm1 - tap, 1246 in tgm3, 1236 in tgm4
                                             {
                                                 level++;
@@ -1175,10 +1054,12 @@ namespace TGMsim
                                                 level += 4;
                                         }
 
-                                        if (level > mode.endLevel && mode.endLevel != 0)
-                                            level = mode.endLevel;
+                                        if (level > ruleset.endLevel && ruleset.endLevel != 0)
+                                            level = ruleset.endLevel;
 
-                                        
+                                        //garbage!
+                                        garbTimer -= bigFull;
+                                        if (garbTimer < 0) garbTimer = 0;
 
                                         //calculate combo!
 
@@ -1199,7 +1080,7 @@ namespace TGMsim
                                         //give points
                                         
                                             combo = combo + (2 * bigFull) - 2;
-                                        if (!inCredits && mode.gradedBy == 1)
+                                        if (!inCredits && ruleset.gradedBy == 1)
                                         {
                                             int newscore = 0;
                                             int sped = ruleset.baseLock - tetLife;
@@ -1220,13 +1101,13 @@ namespace TGMsim
 
                                         if (ruleset.gameRules != 1)
                                         {
-                                            if (mode.id == 0)
+                                            if (ruleset.id == 0)
                                             {
                                                 if (bigFull > 1)
                                                 {
                                                     gradeCombo++;
                                                 }
-                                                if (mode.gradedBy == 1)
+                                                if (ruleset.gradedBy == 1)
                                                 {
                                                     if (!inCredits)
                                                     {
@@ -1293,7 +1174,7 @@ namespace TGMsim
                                                         Audio.playSound(s_Combo);
                                                 }
                                             }
-                                            if (mode.id == 1)
+                                            if (ruleset.id == 1)
                                             {
                                                 if (level >= 500)
                                                     gradeLevel = 27;
@@ -1308,33 +1189,33 @@ namespace TGMsim
                                         long temptime = timer.elapsedTime;
 
 
-                                        if (mode.id == 6)
+                                        if (ruleset.id == 6)
                                         {
                                             if (level < 1000)
                                             {
-                                                mode.limit += 1000 * (int)(Math.Floor((double)bigFull / 3));
+                                                ruleset.limit += 1000 * (int)(Math.Floor((double)bigFull / 3));
                                             }
                                             if (bravo == 4)
                                             {
                                                 if (level < 1000)
                                                 {
                                                     if (bigFull == 1)
-                                                        mode.limit += 1000 * 5;
+                                                        ruleset.limit += 1000 * 5;
                                                     if (bigFull == 1)
-                                                        mode.limit += 1000 * 8;
+                                                        ruleset.limit += 1000 * 8;
                                                     if (bigFull == 1)
-                                                        mode.limit += 1000 * 10;
+                                                        ruleset.limit += 1000 * 10;
                                                     if (bigFull == 1)
-                                                        mode.limit += 1000 * 15;
+                                                        ruleset.limit += 1000 * 15;
                                                 }
                                                 else
                                                 {
                                                     if (bigFull == 1)
-                                                        mode.limit += 1000 * 1;
+                                                        ruleset.limit += 1000 * 1;
                                                     if (bigFull == 1)
-                                                        mode.limit += 1000 * 2;
+                                                        ruleset.limit += 1000 * 2;
                                                     if (bigFull == 1)
-                                                        mode.limit += 1000 * 3;
+                                                        ruleset.limit += 1000 * 3;
                                                 }
                                             }
                                         }
@@ -1382,8 +1263,8 @@ namespace TGMsim
                                             }
                                         }
 
-                                        if (mode.sections.Count != curSection)
-                                            if (level >= mode.sections[curSection])
+                                        if (ruleset.sections.Count != curSection)
+                                            if (level >= ruleset.sections[curSection])
                                             {
                                                 curSection++;
                                                 secTet.Add(0);
@@ -1392,7 +1273,7 @@ namespace TGMsim
                                                     Audio.playSound(s_Section);
 
                                                 //CHECK TORIKANS
-                                                if (mode.id == 1) //death
+                                                if (ruleset.id == 1) //death
                                                 {
                                                     if (curSection == 5 && temptime > 205000)
                                                     {
@@ -1405,7 +1286,7 @@ namespace TGMsim
                                                 }
                                                 if (ruleset.gameRules == 4)
                                                 {
-                                                    if (mode.id == 0 && curSection == 5 && temptime > 420000 && mode.exam == -1) //ti master
+                                                    if (ruleset.id == 0 && curSection == 5 && temptime > 420000 && ruleset.exam == -1) //ti master
                                                     {
                                                         level = 500;
                                                         torikan = true;
@@ -1413,7 +1294,7 @@ namespace TGMsim
                                                         endGame();
                                                         return;
                                                     }
-                                                    if (mode.id == 2) //shirase
+                                                    if (ruleset.id == 2) //shirase
                                                     {
                                                         if (curSection == 5 && temptime > 148000)
                                                         {
@@ -1438,169 +1319,23 @@ namespace TGMsim
                                                 updateMusic();
 
                                                 //DELAYS
-                                                if (mode.id == 0 || mode.id == 3)//Master
+                                                int num = curSection + speedBonus - 4;
+                                                if (num > 0 && num < ruleset.delayTable[0].Count)
                                                 {
-                                                    if (ruleset.gameRules == 2)
-                                                    {
-                                                        switch (curSection + speedBonus)
-                                                        {
-                                                            case 9:
-                                                            case 8:
-                                                            case 7:
-                                                            case 6:
-                                                            case 5:
-                                                                ruleset.baseARE = ruleset.delayTableTGM2[0][curSection - 4 + speedBonus];
-                                                                ruleset.baseDAS = ruleset.delayTableTGM2[1][curSection - 4 + speedBonus];
-                                                                ruleset.baseLock = ruleset.delayTableTGM2[2][curSection - 4 + speedBonus];
-                                                                ruleset.baseLineClear = ruleset.delayTableTGM2[3][curSection - 4 + speedBonus];
-                                                                break;
-                                                            default:
-                                                                break;
-                                                        }
-                                                    }
-                                                    if (ruleset.gameRules == 3)
-                                                    {
-                                                        switch (curSection + speedBonus)
-                                                        {
-                                                            case 9:
-                                                            case 8:
-                                                            case 7:
-                                                            case 6:
-                                                            case 5:
-                                                                ruleset.baseARE = ruleset.delayTableTAP[0][curSection - 4 + speedBonus];
-                                                                ruleset.baseARELine = ruleset.delayTableTAP[1][curSection - 4 + speedBonus];
-                                                                ruleset.baseDAS = ruleset.delayTableTAP[2][curSection - 4 + speedBonus];
-                                                                ruleset.baseLock = ruleset.delayTableTAP[3][curSection - 4 + speedBonus];
-                                                                ruleset.baseLineClear = ruleset.delayTableTAP[4][curSection - 4 + speedBonus];
-                                                                break;
-                                                            default:
-                                                                break;
-                                                        }
-                                                    }
-
-                                                    if (ruleset.gameRules >= 4)
-                                                    {
-                                                        switch (curSection + speedBonus)
-                                                        {
-                                                            case 17:
-                                                            case 16:
-                                                            case 15:
-                                                            case 14:
-                                                            case 13:
-                                                            case 12:
-                                                            case 11:
-                                                            case 10:
-                                                            case 9:
-                                                            case 8:
-                                                            case 7:
-                                                            case 6:
-                                                            case 5:
-                                                                ruleset.baseARE = ruleset.delayTableTGM3[0][curSection - 4 + speedBonus];
-                                                                ruleset.baseARELine = ruleset.delayTableTGM3[1][curSection - 4 + speedBonus];
-                                                                ruleset.baseDAS = ruleset.delayTableTGM3[2][curSection - 4 + speedBonus];
-                                                                ruleset.baseLock = ruleset.delayTableTGM3[3][curSection - 4 + speedBonus];
-                                                                ruleset.baseLineClear = ruleset.delayTableTGM3[4][curSection - 4 + speedBonus];
-                                                                break;
-                                                            default:
-                                                                break;
-                                                        }
-                                                    }
+                                                    ruleset.baseARE = ruleset.delayTable[0][num];
+                                                    ruleset.baseARELine = ruleset.delayTable[1][num];
+                                                    ruleset.baseDAS = ruleset.delayTable[2][num];
+                                                    ruleset.baseLock = ruleset.delayTable[3][num];
+                                                    ruleset.baseLineClear = ruleset.delayTable[4][num];
                                                 }
-                                                if (mode.id == 1)//death
-                                                {
-                                                    switch (curSection)
-                                                    {
-                                                        case 9:
-                                                        case 8:
-                                                        case 7:
-                                                        case 6:
-                                                        case 5:
-                                                            ruleset.baseARE = ruleset.delayTableDeath[0][ruleset.delayTableDeath.Count - 1];
-                                                            ruleset.baseARELine = ruleset.delayTableDeath[1][ruleset.delayTableDeath.Count - 1];
-                                                            ruleset.baseDAS = ruleset.delayTableDeath[2][ruleset.delayTableDeath.Count - 1];
-                                                            if (mode.id != 7)
-                                                            ruleset.baseLock = ruleset.delayTableDeath[3][ruleset.delayTableDeath.Count - 1];
-                                                            ruleset.baseLineClear = ruleset.delayTableDeath[4][ruleset.delayTableDeath.Count - 1];
-                                                            break;
-                                                        case 4:
-                                                        case 3:
-                                                        case 2:
-                                                        case 1:
-                                                        case 0:
-                                                            ruleset.baseARE = ruleset.delayTableDeath[0][curSection];
-                                                            ruleset.baseARELine = ruleset.delayTableDeath[1][curSection];
-                                                            ruleset.baseDAS = ruleset.delayTableDeath[2][curSection];
-                                                            if (mode.id != 7)
-                                                            ruleset.baseLock = ruleset.delayTableDeath[3][curSection];
-                                                            ruleset.baseLineClear = ruleset.delayTableDeath[4][curSection];
-                                                            break;
-                                                    }
-                                                }
-                                                if (mode.id == 2 || mode.id == 5) //shirase
-                                                {
-                                                    switch (curSection)
-                                                    {
-                                                        case 13:
-                                                        case 12:
-                                                        case 11:
-                                                            ruleset.baseARE = ruleset.delayTableShirase[0][curSection - 5];
-                                                            ruleset.baseARELine = ruleset.delayTableShirase[1][curSection - 5];
-                                                            ruleset.baseDAS = ruleset.delayTableShirase[2][curSection - 5];
-                                                            ruleset.baseLock = ruleset.delayTableShirase[3][curSection - 5];
-                                                            ruleset.baseLineClear = ruleset.delayTableShirase[4][curSection - 5];
-                                                            break;
-                                                        case 10:
-                                                        case 9:
-                                                        case 8:
-                                                        case 7:
-                                                        case 6:
-                                                            ruleset.baseARE = ruleset.delayTableShirase[0][5];
-                                                            ruleset.baseARELine = ruleset.delayTableShirase[1][5];
-                                                            ruleset.baseDAS = ruleset.delayTableShirase[2][5];
-                                                                ruleset.baseLock = ruleset.delayTableShirase[3][5];
-                                                            ruleset.baseLineClear = ruleset.delayTableShirase[4][5];
-                                                            break;
-                                                        case 5:
-                                                            ruleset.baseARE = ruleset.delayTableShirase[0][4];
-                                                            ruleset.baseARELine = ruleset.delayTableShirase[1][4];
-                                                            ruleset.baseDAS = ruleset.delayTableShirase[2][4];
-                                                                ruleset.baseLock = ruleset.delayTableShirase[3][4];
-                                                            ruleset.baseLineClear = ruleset.delayTableShirase[4][4];
-                                                            break;
-                                                        case 4:
-                                                        case 3:
-                                                            ruleset.baseARE = ruleset.delayTableShirase[0][3];
-                                                            ruleset.baseARELine = ruleset.delayTableShirase[1][3];
-                                                            ruleset.baseDAS = ruleset.delayTableShirase[2][3];
-                                                                ruleset.baseLock = ruleset.delayTableShirase[3][3];
-                                                            ruleset.baseLineClear = ruleset.delayTableShirase[4][3];
-                                                            break;
-                                                        case 2:
-                                                        case 1:
-                                                        case 0:
-                                                            ruleset.baseARE = ruleset.delayTableShirase[0][curSection];
-                                                            ruleset.baseARELine = ruleset.delayTableShirase[1][curSection];
-                                                            ruleset.baseDAS = ruleset.delayTableShirase[2][curSection];
-                                                                ruleset.baseLock = ruleset.delayTableShirase[3][curSection];
-                                                            ruleset.baseLineClear = ruleset.delayTableShirase[4][curSection];
-                                                            break;
-                                                    }
-                                                }
-                                                if(mode.id == 7)//20g practce
-                                                {
-                                                    ruleset.baseARE = ruleset.delayTablePractice[0][0];
-                                                    ruleset.baseARELine = ruleset.delayTablePractice[1][0];
-                                                    ruleset.baseDAS = ruleset.delayTablePractice[2][0];
-                                                    ruleset.baseLock = ruleset.delayTablePractice[3][0];
-                                                    ruleset.baseLineClear = ruleset.delayTablePractice[4][0];
-                                                }
+                                                
                                                 
 
                                                 //MEDALS
-                                                if (ruleset.gameRules != 1 && mode.id != 6)
+                                                if (ruleset.gameRules != 1 && ruleset.id != 6)
                                                 {
                                                     int sectime = 90000;
-                                                    if (mode.id == 1 || mode.id == 2)
+                                                    if (ruleset.id == 1 || ruleset.id == 2)
                                                         sectime = 42000;
                                                     if (sectionTime.elapsedTime < sectime - 10000 && medals[2] < 1)
                                                     {
@@ -1639,7 +1374,7 @@ namespace TGMsim
                                                     sectionTimes.Add(sectionTime.elapsedTime);
 
                                                     //check Regrets!
-                                                    if (ruleset.gameRules == 4 && mode.id == 0)
+                                                    if (ruleset.gameRules == 4 && ruleset.id == 0)
                                                     {
                                                         if (sectionTime.elapsedTime > ruleset.secRegrets[curSection - 1])
                                                         {
@@ -1687,9 +1422,9 @@ namespace TGMsim
 
                                             //SK
                                             int tt = 1;
-                                            if (mode.id == 1 || mode.id == 2)
+                                            if (ruleset.id == 1 || ruleset.id == 2)
                                                 tt = 2;
-                                            if (mode.bigmode == true)
+                                            if (ruleset.bigmode == true)
                                                 tt = 10;
                                             if (tetrises == (int)(Math.Ceiling((double)10 / tt)) && medals[3] == 0)
                                             {
@@ -1717,7 +1452,7 @@ namespace TGMsim
                                             }
                                             //CO
                                             int big = 1;
-                                            if (mode.bigmode == true)
+                                            if (ruleset.bigmode == true)
                                                 big = 2;
                                             if ((int)(Math.Ceiling((double)4 / big)) == gradeCombo)
                                             {
@@ -1756,7 +1491,7 @@ namespace TGMsim
                                                     else
                                                         GMflags.Add(false);
                                                 }
-                                                else if (GMflags.Count == 2 && level >= mode.endLevel)
+                                                else if (GMflags.Count == 2 && level >= ruleset.endLevel)
                                                 {
                                                     level = 999;
                                                     if (score >= 126000 && temptime <= 810000)
@@ -1925,19 +1660,19 @@ namespace TGMsim
 
                                         //update gimmicks
                                         bool thaw = false;
-                                        if (mode.gimList.Count > 0)
+                                        if (ruleset.gimList.Count > 0)
                                         {
-                                            if (mode.gimList.Count > gimIndex)
-                                                if (mode.gimList[gimIndex].startLvl <= level)
+                                            if (ruleset.gimList.Count > gimIndex)
+                                                if (ruleset.gimList[gimIndex].startLvl <= level)
                                                 {
-                                                    activeGim.Add(mode.gimList[gimIndex].type);
+                                                    activeGim.Add(ruleset.gimList[gimIndex].type);
                                                     gimIndex++;
                                                 }
                                             for (int i = 0; i < activeGim.Count; i++)
                                             {
-                                                if (mode.gimList[gimIndex - activeGim.Count + i].endLvl <= level)
+                                                if (ruleset.gimList[gimIndex - activeGim.Count + i].endLvl <= level)
                                                 {
-                                                    if (mode.gimList[gimIndex - activeGim.Count + i].type == 4)
+                                                    if (ruleset.gimList[gimIndex - activeGim.Count + i].type == 4)
                                                         thaw = true;
                                                     activeGim.RemoveAt(i);
 
@@ -1946,7 +1681,7 @@ namespace TGMsim
                                         }
 
                                         if (checkGimmick(5))
-                                            mode.bigmode = true;
+                                            ruleset.bigmode = true;
 
                                         //thaw ice
                                         if (thaw)
@@ -2026,7 +1761,7 @@ namespace TGMsim
 
 
                                         //check finish condition
-                                        if (mode.endLevel != 0 && level >= mode.endLevel && inCredits == false)
+                                        if (ruleset.endLevel != 0 && level >= ruleset.endLevel && inCredits == false)
                                         {
                                             triggerCredits();
                                         }
@@ -2057,7 +1792,7 @@ namespace TGMsim
                                         
 
                                         
-                                        if (ruleset.gameRules == 4 && mode.id == 0)
+                                        if (ruleset.gameRules == 4 && ruleset.id == 0)
                                         {
 
                                             if (secCools.Count <= curSection && curSection != 9)
@@ -2091,18 +1826,18 @@ namespace TGMsim
 
                                     while (gravLevel < gravTable.Count - 1)
                                     {
-                                        if (level + (speedBonus * 100) >= ruleset.gravLevelsTGM1[gravLevel + 1])
+                                        if (level + (speedBonus * 100) >= ruleset.gravLevels[gravLevel + 1])
                                             gravLevel++;
                                         else
                                             break;
                                     }
 
-                                    if ((mode.g20 == true || gravTable[gravLevel] == Math.Pow(256, ruleset.gravType + 1) * 20) && ruleset.gameRules < 4)
+                                    if ((ruleset.g20 == true || gravTable[gravLevel] == Math.Pow(256, ruleset.gravType + 1) * 20) && ruleset.gameRules < 4)
                                         textBrush = new SolidBrush(Color.Gold);
 
                                     Audio.playSound(s_Contact);
 
-                                    if (checkGimmick(2) && garbTimer >= 10)
+                                    if (checkGimmick(2) && garbTimer >= ruleset.garbAmt)
                                     {
                                         raiseGarbage(1);
                                         garbTimer = 0;
@@ -2151,7 +1886,7 @@ namespace TGMsim
                                 //blockDrop++;
                                 softCounter++;
                             }
-                            else if (!safelock || !(ruleset.gameRules > 3 || mode.id == 1 || (ruleset.gameRules == 2 && level > 899) || (ruleset.gameRules == 3 && level > 899)))
+                            else if (!safelock || !(ruleset.gameRules > 3 || ruleset.id == 1 || (ruleset.gameRules == 2 && level > 899) || (ruleset.gameRules == 3 && level > 899)))
                             {
                                 if(activeTet.floored)
                                     gravCounter = 0;
@@ -2189,93 +1924,41 @@ namespace TGMsim
 
                         if (!justSpawned)
                         {
+                            int big = 0;
+                            if (activeTet.big)
+                                big = 1;
+                            if (pad.inputH != 0 && (inputDelayH < 1 || inputDelayH == ruleset.baseDAS))
+                            {
+                                bool safe = true;
 
-                            if (pad.inputH == 1 && (inputDelayH < 1 || inputDelayH == ruleset.baseDAS))
-                            {
-                                bool safe = true;
-                                int lowY = 22;
-                                int big = 2;
-                                if (mode.bigmode)
-                                    big = 1;
+                                //check to the input direction of each bit
                                 for (int i = 0; i < activeTet.bits.Count; i++)
                                 {
-                                    if (lowY > activeTet.bits[i].y)
-                                        lowY = activeTet.bits[i].y;
-                                }
-                                //check to the right of each bit
-                                for (int i = 0; i < activeTet.bits.Count; i++)
-                                {
-                                    if ((activeTet.bits[i].y * (2 / big) - (lowY * ((2 / big) - 1))) < 0)
+                                    if (activeTet.bits[i].y < 0)
                                         continue;
-                                    if (activeTet.bits[i].x * (2 / big) - (4 % (6 - big)) + (big % 2) + 1 > 9)
+                                    if (Math.Abs(activeTet.bits[i].x + ((big + 1) * ((pad.inputH + 1) / 2)) - 5) > 5 - ((ruleset.bigMove * big) + 1 - big))
                                     {
                                         safe = false;
                                         break;
                                     }
-                                    if (gameField[activeTet.bits[i].x * (2 / big) - (4 % (6 - big)) + (big % 2) + 1][activeTet.bits[i].y * (2 / big) - (lowY * ((2 / big) - 1))] != 0)
+                                    if (gameField[activeTet.bits[i].x + (big * ((pad.inputH + 1) / 2)) + (pad.inputH* ((ruleset.bigMove * big) + 1 - big))][activeTet.bits[i].y] != 0)
                                     {
                                         safe = false;
                                         break;
                                     }
-                                    if (mode.bigmode == true && activeTet.bits[i].y * (2 / big) - (lowY * ((2 / big) - 1)) + 1 < 22)
+                                    if (activeTet.big == true)
                                     {
-                                        if (gameField[activeTet.bits[i].x * (2 / big) - (4 % (6 - big)) + (big % 2) + 1][activeTet.bits[i].y * (2 / big) - (lowY * ((2 / big) - 1)) + 1] != 0)
+                                        if (gameField[activeTet.bits[i].x + (big * ((pad.inputH + 1) / 2)) + (pad.inputH* ((ruleset.bigMove * big) + 1 - big))][activeTet.bits[i].y + 1] != 0)
                                         {
                                             safe = false;
                                             break;
                                         }
                                     }
                                 }
-                                if (safe) //if it's fine, move them all right one
+                                if (safe) //if it's fine, move them all by one
                                 {
-                                    for (int i = 0; i < activeTet.bits.Count; i++)
-                                    {
-                                        activeTet.bits[i].x += 1;
-                                    }
-                                }
-                            }
-                            else if (pad.inputH == -1 && (inputDelayH < 1 || inputDelayH == ruleset.baseDAS))
-                            {
-                                bool safe = true;
-                                int lowY = 22;
-                                int big = 2;
-                                if (mode.bigmode)
-                                    big = 1;
-                                for (int i = 0; i < activeTet.bits.Count; i++)
-                                {
-                                    if (lowY > activeTet.bits[i].y)
-                                        lowY = activeTet.bits[i].y;
-                                }
-                                //check to the left of each bit
-                                for (int i = 0; i < activeTet.bits.Count; i++)
-                                {
-                                    if ((activeTet.bits[i].y * (2 / big) - (lowY * ((2 / big) - 1))) < 0)
-                                        continue;
-                                    if (activeTet.bits[i].x * (2 / big) - (4 % (6 - big)) - 1 < 0)
-                                    {
-                                        safe = false;
-                                        break;
-                                    }
-                                    if (gameField[activeTet.bits[i].x * (2 / big) - (4 % (6 - big)) - 1][activeTet.bits[i].y * (2 / big) - (lowY * ((2 / big) - 1))] != 0)
-                                    {
-                                        safe = false;
-                                        break;
-                                    }
-                                    if (mode.bigmode == true && activeTet.bits[i].y * (2 / big) - (lowY * ((2 / big) - 1)) + 1 < 22)
-                                    {
-                                        if (gameField[activeTet.bits[i].x * (2 / big) - (4 % (6 - big)) - 1][activeTet.bits[i].y * (2 / big) - (lowY * ((2 / big) - 1)) + 1] != 0)
-                                        {
-                                            safe = false;
-                                            break;
-                                        }
-                                    }
-                                }
-                                if (safe) //if it's fine, move them all right one
-                                {
-                                    for (int i = 0; i < activeTet.bits.Count; i++)
-                                    {
-                                        activeTet.bits[i].x -= 1;
-                                    }
+                                    activeTet.move(pad.inputH*((ruleset.bigMove*big)+1-big), 0);
+                                    if (ruleset.lockType == 1) activeTet.groundTimer = ruleset.baseLock;
                                 }
                             }
                         }
@@ -2362,7 +2045,7 @@ namespace TGMsim
             //get next tetromino, generate another for "next"
             if (ruleset.nextNum > 0)
             {
-                activeTet = new Tetromino(nextTet[0].id);
+                activeTet = new Tetromino(nextTet[0].id, ruleset.bigmode);
                 //if (mode.bigmode && activeTet.id == 5)
                     //activeTet.bits[0].x = 7;
                 activeTet.groundTimer = ruleset.baseLock;
@@ -2421,7 +2104,7 @@ namespace TGMsim
 
             gravCounter = 0;
 
-            if (level % 100 != 99 && level != (mode.endLevel - 1) && inCredits == false)
+            if (level % 100 != 99 && level != (ruleset.endLevel - 1) && inCredits == false)
                 level++;
 
             bool blocked = false;
@@ -2446,15 +2129,15 @@ namespace TGMsim
                 if (heldPiece != null)
                 {
                     swappedHeld = 2;
-                    tempTet = new Tetromino(heldPiece.id);
-                    heldPiece = new Tetromino(activeTet.id);
+                    tempTet = new Tetromino(heldPiece.id, ruleset.bigmode);
+                    heldPiece = new Tetromino(activeTet.id, false);
                     activeTet = tempTet;
                     activeTet.groundTimer = ruleset.baseLock;
                 }
                 else
                 {
                     swappedHeld = 1;
-                    heldPiece = new Tetromino(activeTet.id);
+                    heldPiece = new Tetromino(activeTet.id, false);
                     spawnPiece();
                     currentTimer = (int)Field.timerType.ARE;
                     timerCount = ruleset.baseARE;
@@ -2468,7 +2151,6 @@ namespace TGMsim
             else
             {
                 gameRunning = false;
-                //in the future, the little fadeout animation goes here!
 
                 int lowY = 22;
                 for (int i = 0; i < activeTet.bits.Count; i++)
@@ -2480,21 +2162,21 @@ namespace TGMsim
                 for (int i = 0; i < activeTet.bits.Count; i++)
                 {
                     int big = 2;
-                    if (mode.bigmode)
+                    if (activeTet.big)
                         big = 1;
 
                     for (int j = 0; j < (big % 2) + 1; j++)
                     {
                         for (int k = 0; k < (big % 2) + 1; k++)
                         {
-                            if ((activeTet.bits[i].y * (2 / big) - (lowY * ((2 / big) - 1))) + k < 0)
+                            if (activeTet.bits[i].y + k < 0)
                                 continue;
                             if (checkGimmick(1) || creditsType == 2)
-                                gameField[(activeTet.bits[i].x * (2 / big) - (4 % (6 - big))) + j][(activeTet.bits[i].y * (2 / big) - (lowY * ((2 / big) - 1))) + k] = 8;
+                                gameField[activeTet.bits[i].x + j][activeTet.bits[i].y + k] = 8;
                             else if (activeTet.bone == true)
-                                gameField[(activeTet.bits[i].x * (2 / big) - (4 % (6 - big))) + j][(activeTet.bits[i].y * (2 / big) - (lowY * ((2 / big) - 1))) + k] = 10;
+                                gameField[activeTet.bits[i].x + j][activeTet.bits[i].y + k] = 10;
                             else
-                                gameField[(activeTet.bits[i].x * (2 / big) - (4 % (6 - big))) + j][(activeTet.bits[i].y * (2 / big) - (lowY * ((2 / big) - 1))) + k] = activeTet.id;
+                                gameField[activeTet.bits[i].x + j][activeTet.bits[i].y + k] = activeTet.id;
 
                         }
                     }
@@ -2592,7 +2274,7 @@ namespace TGMsim
                 clearField();
             }
 
-            if (mode.id == 0)
+            if (ruleset.id == 0)
             {
                 isGM = true;
                 for (int i = 0; i < GMflags.Count; i++ )
@@ -2622,7 +2304,7 @@ namespace TGMsim
         {
             bool success = true;
             rotations++;
-            Tetromino tmptet = RSYS.rotate(tet, p, gameField, ruleset.gameRules, mode.bigmode == true, spawn);
+            Tetromino tmptet = RSYS.rotate(tet, p, gameField, ruleset.gameRules, ruleset.bigmode, spawn);
             if (activeTet == tmptet)
                 success = false;
             activeTet = tmptet;
@@ -2643,7 +2325,7 @@ namespace TGMsim
 
                 for (int k = 0; k < lastTet.Count; k++)
                 {
-                    if (mode.easyGen || starting != 0)
+                    if (ruleset.easyGen || starting != 0)
                     {
                         tempID = piece.Next(5) + 1;//no S or Z
 
@@ -2669,7 +2351,7 @@ namespace TGMsim
                 lastTet[j] = lastTet[j + 1];
             }
 
-            Tetromino tempTet = new Tetromino(tempID);
+            Tetromino tempTet = new Tetromino(tempID, false);//force non-big here so they're not stretched out in the queue
             lastTet[lastTet.Count - 1] = tempTet.id;
             if (checkGimmick(3))
                 tempTet.bone = true;
@@ -2711,28 +2393,37 @@ namespace TGMsim
         public bool emptyUnderTet(Tetromino tet)
         {
             bool status = true;
-            int lowY = 22;
-            int big = 2;
-            if (mode.bigmode)
-                big = 1;
-            for (int p = 0; p < tet.bits.Count; p++)
-            {
-                if (tet.bits[p].y < lowY)
-                    lowY = tet.bits[p].y;
-            }
             for (int i = 0; i < tet.bits.Count; i++)
             {
-                if ((tet.bits[i].y * (2 / big) - (lowY * ((2 / big) - 1))) < 0)
+                if (tet.bits[i].y < 0)
                     continue;
-                if (gameField[tet.bits[i].x * (2 / big) - (4 % (6 - big))][(tet.bits[i].y * (2 / big) - (lowY * ((2 / big) - 1)))] != 0)
+                if (gameField[tet.bits[i].x][tet.bits[i].y] != 0)
                 {
                     status = false;
                     break;
                 }
-                if (gameField[tet.bits[i].x * (2 / big) - (4 % (6 - big))][(tet.bits[i].y * (2 / big) - (lowY * ((2 / big) - 1))) + (big%2)] != 0)
+                if(tet.big)
                 {
-                    status = false;
-                    break;
+                    if (tet.bits[i].y + 1 > 21)
+                    {
+                        status = false;
+                        break;
+                    }
+                    if (gameField[tet.bits[i].x+1][tet.bits[i].y] != 0)
+                    {
+                        status = false;
+                        break;
+                    }
+                    if (gameField[tet.bits[i].x][tet.bits[i].y+1] != 0)
+                    {
+                        status = false;
+                        break;
+                    }
+                    if (gameField[tet.bits[i].x+1][tet.bits[i].y+1] != 0)
+                    {
+                        status = false;
+                        break;
+                    }
                 }
             }
 
@@ -2744,21 +2435,12 @@ namespace TGMsim
             for (g = 0; g < i; g++)
             {
                 bool breakout = false;
-                int lowY = 22;
-                int big = 2;
-                if (mode.bigmode)
-                    big = 1;
-                for (int p = 0; p < tet.bits.Count; p++)
-                {
-                    if (tet.bits[p].y < lowY)
-                        lowY = tet.bits[p].y;
-                }
 
                 for (int p = 0; p < tet.bits.Count; p++)
                 {
-                    if (tet.bits[p].y * (2 / big) - (lowY * ((2 / big) - 1)) < 0)
+                    if (tet.bits[p].y < 0)
                         continue;
-                    if (gameField[tet.bits[p].x * (2 / big) - (4 % (6 - big))][(tet.bits[p].y * (2 / big) - (lowY * ((2 / big) - 1))) + g + (big % 2)] != 0)
+                    if (gameField[tet.bits[p].x][tet.bits[p].y + g] != 0)
                     {
                         g = g - 1;
                         breakout = true;
@@ -2767,7 +2449,7 @@ namespace TGMsim
                 }
                 for (int p = 0; p < tet.bits.Count; p++)
                 {
-                    if ((tet.bits[p].y * (2 / big) - (lowY * ((2 / big) - 1))) + g + (big % 2) == 21)
+                    if (tet.bits[p].y + g == 21)
                     {
                         breakout = true;
                         break;
@@ -2777,13 +2459,9 @@ namespace TGMsim
                 if (breakout)
                     break;
             }
-            for (int p = 0; p < tet.bits.Count; p++)
-            {
+            tet.move(0, g);
 
-                tet.bits[p].y += g;
-            }
-
-            if (g != 0 && ghost == false && activeTet.kicked == 0)
+            if (g != 0 && ghost == false && activeTet.kicked == 0 && ruleset.lockType == 0)
                 activeTet.groundTimer = ruleset.baseLock;
 
             if (i == 19 && g20 == false && g > sonicCounter && sonic)
@@ -2795,10 +2473,7 @@ namespace TGMsim
             //failsafe for now, ugh
             if (!emptyUnderTet(tet))
             {
-                for (int p = 0; p < tet.bits.Count; p++)
-                {
-                    tet.bits[p].y--;
-                }
+                tet.move(0, -1);
             }
         }
 
@@ -2870,15 +2545,11 @@ namespace TGMsim
             if (textBrush.Color == Color.Gold)
                 gold = 78;
 
-            if (ruleset.gameRules == 1) //TGM1 grades
-            {
-                gd = ruleset.gradesTGM1[grade];
-                
-            }
-            else//everything else
-            {
-                gd = ruleset.gradesTGM3[gm2grade];
-            }
+            if (ruleset.gameRules == 1)
+                gd = ruleset.grades[grade];
+            else
+                gd = ruleset.grades[gm2grade];
+
             for (int i = 0; i < gd.Length; i++)
             {
                 int dex = "0123456789SmMVOKTG".IndexOf(gd.Substring(i, 1));
@@ -2897,7 +2568,7 @@ namespace TGMsim
             }
             int section = curSection + cools;
 
-            if(mode.id == 0)
+            if(ruleset.id == 0)
             {
                 if (section == 0)
                 {
@@ -2932,7 +2603,7 @@ namespace TGMsim
                 }
             }
 
-            if (mode.id == 1)//death
+            else if (ruleset.id == 1)//death
             {
                 if (curSection == 0)
                 {
@@ -2950,7 +2621,7 @@ namespace TGMsim
                     Audio.playMusic("Level 4");
                 }
             }
-            if (mode.id == 2)//shirase
+            else if (ruleset.id == 2)//shirase
             {
                 if (curSection == 0)
                 {
@@ -2978,24 +2649,32 @@ namespace TGMsim
                     Audio.playMusic("Shirase");
                 }
             }
+            else
+            {
+                if(curSection == 0)
+                {
+                    Audio.stopMusic();
+                    Audio.playMusic("Casual 1");
+                }
+            }
         }
 
         private void checkFade()
         {
             int section = curSection + speedBonus;
-            if(mode.id == 0)//master
+            if(ruleset.id == 0)//master
             {
                 if (section == 4 && level % 100 > 84) Audio.stopMusic();
                 if ((ruleset.gameRules == 2 || ruleset.gameRules == 3) && section == 6 && level % 100 > 84) Audio.stopMusic();
                 if ((ruleset.gameRules == 2 || ruleset.gameRules == 3) && section == 8 && level % 100 > 84) Audio.stopMusic();
                 if (ruleset.gameRules == 4 && section == 7 && level % 100 > 84) Audio.stopMusic();
             }
-            if(mode.id == 1)//death
+            if(ruleset.id == 1)//death
             {
                 if (curSection == 2 && level % 100 > 84) Audio.stopMusic();
                 if (curSection == 4 && level % 100 > 84) Audio.stopMusic();
             }
-            if (mode.id == 3)//shirase
+            if (ruleset.id == 3)//shirase
             {
                 if (curSection == 4 && level % 100 > 84) Audio.stopMusic();
                 if (curSection == 6 && level % 100 > 84) Audio.stopMusic();

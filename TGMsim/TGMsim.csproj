@@ -81,6 +81,7 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="GameResult.cs" />
+    <Compile Include="GameRules.cs" />
     <Compile Include="GameSelect.cs" />
     <Compile Include="GameTimer.cs" />
     <Compile Include="Login.cs" />
@@ -93,6 +94,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rotation.cs" />
     <Compile Include="Rules.cs" />
+    <Compile Include="R_ARS3.cs" />
+    <Compile Include="R_ARS1.cs" />
     <Compile Include="R_ARIKA.cs" />
     <Compile Include="Tetromino.cs" />
     <EmbeddedResource Include="Form1.resx">
@@ -116,6 +119,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="Res\Audio\Casual 1.ogg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Res\Audio\crdtinvis.ogg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

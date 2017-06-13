@@ -24,7 +24,7 @@ namespace TGMsim
         long interval;
 
         Controller pad1 = new Controller();
-        Rules rules = new Rules();
+        GameRules rules = new GameRules();
 
         Image imgBuffer;
         Graphics graphics, drawBuffer;
@@ -225,7 +225,7 @@ namespace TGMsim
                             }
                             else
                             {
-                                rules.setGame(gSel.menuSelection + 1);
+                                //rules.setGame(gSel.menuSelection + 1);
                                 changeMenu(3);
                             }
                         }
@@ -248,6 +248,7 @@ namespace TGMsim
                     mSel.logic(pad1);
                     if ((pad1.inputRot1 | pad1.inputRot3) == 1)
                     {
+                        rules = new GameRules();
                         //TODO: change rules based on what mode is selected
                         if (gSel.menuSelection < 5)
                             changeMenu(4);
@@ -263,21 +264,16 @@ namespace TGMsim
                                     changeMenu(7);
                                     break;
                                 case 1://eternal shirase
-                                    rules.setGame(4);
-                                    var m = new Mode();
-                                    m.setMode(2);
-                                    m.endLevel = 0;
+                                    rules.setup(4,2);
+                                    rules.endLevel = 0;
                                     //todo: add more gimmicks, loop?
                                     break;
                                 case 2://garbage
-                                    rules.setGame(4);
-                                    m = new Mode();
-                                    m.setMode(4);
-
+                                    rules.setup(4,4);
                                     saved = false;
                                     menuState = 4;
                                     Audio.stopMusic();
-                                    field1 = new Field(pad1, rules, m, musicStream);
+                                    field1 = new Field(pad1, rules, musicStream);
                                     break;
                                 case 3://20g practice
                                     changeMenu(4);
@@ -298,7 +294,7 @@ namespace TGMsim
                         if (saved == false)
                         {
                             field1.results.username = player.name;
-                            if (rules.gameRules == 4 && field1.mode.id == 0 && player.name != "   ")
+                            if (rules.gameRules == 4 && field1.ruleset.id == 0 && player.name != "   ")
                             {
                                 //add result to history
                                 for (int i = 0; i < 6; i++)
@@ -308,11 +304,11 @@ namespace TGMsim
                                 player.TIHistory[6] = field1.results.grade;
 
                                 //if exam, check results for promotion
-                                if (field1.mode.exam != -1)
+                                if (field1.ruleset.exam != -1)
                                 {
-                                    if (field1.results.grade >= field1.mode.exam)
+                                    if (field1.results.grade >= field1.ruleset.exam)
                                     {
-                                        player.TIGrade = field1.mode.exam;
+                                        player.TIGrade = field1.ruleset.exam;
                                     }
                                 }
 
@@ -323,7 +319,7 @@ namespace TGMsim
                                 }
                             }
 
-                            if (!field1.cheating && field1.mode.exam == -1) //TODO: check if this is a replay as well
+                            if (!field1.cheating && field1.ruleset.exam == -1) //TODO: check if this is a replay as well
                                 field1.newHiscore = testHiscore(field1.results);
                             if (player.name != "   ")
                                 player.updateUser();
@@ -433,10 +429,7 @@ namespace TGMsim
                         drawBuffer.DrawString(hiscoreTable[mSel.game][i].username, DefaultFont, new SolidBrush(Color.White), 250, 100 + 30 * i);
                         if (mSel.game == 3)
                             drawBuffer.DrawString(hiscoreTable[mSel.game][i].level.ToString(), DefaultFont, new SolidBrush(Color.White), 290, 100 + 30 * i);
-                        if (mSel.game == 0)
-                            drawBuffer.DrawString(rules.gradesTGM1[hiscoreTable[mSel.game][i].grade], DefaultFont, new SolidBrush(Color.White), 330, 100 + 30 * i);
-                        else
-                            drawBuffer.DrawString(rules.gradesTGM3[hiscoreTable[mSel.game][i].grade], DefaultFont, new SolidBrush(Color.White), 330, 100 + 30 * i);
+                        drawBuffer.DrawString(rules.grades[hiscoreTable[mSel.game][i].grade], DefaultFont, new SolidBrush(Color.White), 330, 100 + 30 * i);
                         var temptimeVAR = hiscoreTable[mSel.game][i].time;
                         var min = (int)Math.Floor((double)temptimeVAR / 60000);
                         temptimeVAR -= min * 60000;
@@ -516,32 +509,32 @@ namespace TGMsim
 
         private void setupGame()
         {
-            Mode m = new Mode();
+            //Mode m = new Mode();
             Audio.stopMusic();
-            if (mSel.game == 3 && mSel.selection == 1)
-                m.setMode(2);
-            else if (mSel.game == 5 && mSel.selection == 1)
-                m.setMode(5);
-            else if (mSel.game == 5 && mSel.selection == 2)
-                m.setMode(6);
-            else if (mSel.game == 6 && mSel.selection == 3)
-                m.setMode(7);
+            if (mSel.game == 3 && mSel.selection == 1)//shirase
+                rules.setup(4,2);
+            else if (mSel.game == 5 && mSel.selection == 1)//rounds
+                rules.setup(6,5);
+            else if (mSel.game == 5 && mSel.selection == 2)//konoha
+                rules.setup(6,6);
+            else if (mSel.game == 6 && mSel.selection == 3)//20G
+                rules.setup(7,7);
             else
-                m.setMode(mSel.selection);
+                rules.setup(mSel.game + 1, mSel.selection);
 
-            //m.mute = prefs.muted; //TODO: input lag
+            //m.mute = prefs.muted;
 
             if (player.name == "   ")
             {
-                if (m.id != 6)
-                    m.bigmode = cMen.cheats[3];
-                m.mute = cMen.cheats[4];
+                if (rules.id != 6)
+                    rules.bigmode = cMen.cheats[3];
+                rules.mute = cMen.cheats[4];
             }
 
-            if (mSel.game == 3 && m.id == 0 && player.name != "   ")
-                m.exam = checkExam();
+            if (mSel.game == 3 && rules.id == 0 && player.name != "   ")
+                rules.exam = checkExam();
 
-            field1 = new Field(pad1, rules, m, musicStream);
+            field1 = new Field(pad1, rules, musicStream);
             if (player.name == "   ")
             {
                 field1.godmode = cMen.cheats[0];
@@ -649,7 +642,6 @@ namespace TGMsim
             hiscoreTable[g].Insert(place, gameResult);
             hiscoreTable[g].RemoveAt(hiscoreTable[g].Count - 1);
 
-            //TODO: write to the file
             string hiFile = "Sav/gm" + (g+1) + ".dat";
             File.Delete(hiFile);
             using (FileStream fsStream = new FileStream(hiFile, FileMode.Create))

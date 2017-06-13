@@ -12,6 +12,7 @@ namespace TGMsim
         {
             type = "ARIKA";
         }
+        
 
         public override Tetromino rotate(Tetromino tet, int p, List<List<int>> gameField, int rule, bool large, bool spawn)
         {
@@ -31,7 +32,10 @@ namespace TGMsim
                     lowY = tet.bits[q].y;
             }
 
-            switch (tet.id)
+            testTet = new Tetromino(tet.id, (tet.rotation + p + 4) % 4, tet.x, tet.y, tet.big);
+            testTet.groundTimer = tet.groundTimer;
+
+            /*switch (tet.id)
             {
                 case 1: //I has two rotation states; KICKS ONLY IN NEW RULES
                     //check current rotation
@@ -878,8 +882,22 @@ namespace TGMsim
                     break;
                 case 7: //O has one. do nothing.
                     return testTet;
+            }*/
+            if(testRestrict(testTet, 0, gameField, large))
+            for (int i = 1; i < 3; i++)//test wallkicks in order, stop at first rotation that works
+            {
+                if (!checkUnder(testTet, gameField, large, spawn))
+                {
+                    if (i != 2)
+                        testTet.move(1, 0);
+                    else
+                        testTet.move(-2, 0);
+                }
             }
-            return tet;
+            if (!checkUnder(testTet, gameField, large, spawn)) //did any kick of the rotation work?
+                return tet;
+
+            return testTet;
         }
 
         private bool testRestrict(Tetromino tet, int p, List<List<int>> gameField, bool large)
@@ -895,7 +913,8 @@ namespace TGMsim
             }
 
 
-            //universal center-testing
+            //universal center-testing (two up from bottom center will never kick)
+            if((tet.bits[1].y * (2 / big) - (lowY * ((2 / big) - 1))) - ((1 + tet.rotation / 2) * (2 / big)) > -1 && tet.bits[1].x * (2 / big) - (4 % (6 - big)) > -1)
             if (gameField[tet.bits[1].x * (2 / big) - (4 % (6 - big))][(tet.bits[1].y * (2 / big) - (lowY * ((2 / big) - 1))) - ((1 + tet.rotation / 2) * (2 / big))] != 0)
                 return false;
 
@@ -904,9 +923,6 @@ namespace TGMsim
                 int tetX, tetY;
                 tetX = tet.bits[i].x * (2 / big) - (4 % (6 - big));
                 tetY = tet.bits[i].y * (2 / big) - (lowY * ((2 / big) - 1));
-
-                
-
 
 
                 switch(tet.id)
