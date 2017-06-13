@@ -14,6 +14,7 @@ namespace TGMsim
             public int type; //fading, vanishing, garbage, bones, ice, big
             public int startLvl;
             public int endLvl;
+            public int parameter; //only used for garbage right now...
         }
 
         public int id = 0;
@@ -86,8 +87,33 @@ namespace TGMsim
                     lvlBonus = 5;
                     var gL = new Gimmick();
                     gL.type = 2;
+                    gL.startLvl = 500;
+                    gL.endLvl = 600;
+                    gL.parameter = 20;
+                    gimList.Add(gL);
+                    gL = new Gimmick();
+                    gL.type = 2;
+                    gL.startLvl = 600;
+                    gL.endLvl = 700;
+                    gL.parameter = 18;
+                    gimList.Add(gL);
+                    gL = new Gimmick();
+                    gL.type = 2;
                     gL.startLvl = 700;
+                    gL.endLvl = 800;
+                    gL.parameter = 10;
+                    gimList.Add(gL);
+                    gL = new Gimmick();
+                    gL.type = 2;
+                    gL.startLvl = 800;
+                    gL.endLvl = 900;
+                    gL.parameter = 9;
+                    gimList.Add(gL);
+                    gL = new Gimmick();
+                    gL.type = 2;
+                    gL.startLvl = 900;
                     gL.endLvl = 1000;
+                    gL.parameter = 8;
                     gimList.Add(gL);
                     gL = new Gimmick();
                     gL.type = 3;
