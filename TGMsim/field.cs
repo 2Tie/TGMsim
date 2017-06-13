@@ -853,6 +853,12 @@ namespace TGMsim
                                 else
                                     timerCount = ruleset.baseARE;
                                 Audio.playSound(s_Impact);
+
+                                if (checkGimmick(2) && garbTimer >= ruleset.garbAmt)
+                                {
+                                    raiseGarbage(1);
+                                    garbTimer = 0;
+                                }
                             }
                             else
                             {
@@ -1836,12 +1842,6 @@ namespace TGMsim
                                         textBrush = new SolidBrush(Color.Gold);
 
                                     Audio.playSound(s_Contact);
-
-                                    if (checkGimmick(2) && garbTimer >= ruleset.garbAmt)
-                                    {
-                                        raiseGarbage(1);
-                                        garbTimer = 0;
-                                    }
 
                                     
 
