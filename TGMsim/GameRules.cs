@@ -60,6 +60,7 @@ namespace TGMsim
             public int type; //fading, vanishing, garbage, bones, ice, big
             public int startLvl;
             public int endLvl;
+            public int parameter;
         }
 
         public int id = 0;
@@ -76,7 +77,6 @@ namespace TGMsim
         public int limit = 0;
         public bool mute = false;
         public List<Gimmick> gimList = new List<Gimmick>();
-        public int garbAmt = 10;
         public int bigMove = 1;
 
         public Color border = Color.LightGray;
@@ -308,13 +308,38 @@ namespace TGMsim
                     lvlBonus = 5;
                     var gL = new Gimmick();
                     gL.type = 2;
+                    gL.startLvl = 500;
+                    gL.endLvl = 600;
+                    gL.parameter = 20;
+                    gimList.Add(gL);
+                    gL = new Gimmick();
+                    gL.type = 2;
+                    gL.startLvl = 600;
+                    gL.endLvl = 700;
+                    gL.parameter = 18;
+                    gimList.Add(gL);
+                    gL = new Gimmick();
+                    gL.type = 2;
                     gL.startLvl = 700;
+                    gL.endLvl = 800;
+                    gL.parameter = 10;
+                    gimList.Add(gL);
+                    gL = new Gimmick();
+                    gL.type = 2;
+                    gL.startLvl = 800;
+                    gL.endLvl = 900;
+                    gL.parameter = 9;
+                    gimList.Add(gL);
+                    gL = new Gimmick();
+                    gL.type = 2;
+                    gL.startLvl = 900;
                     gL.endLvl = 1000;
+                    gL.parameter = 8;
                     gimList.Add(gL);
                     gL = new Gimmick();
                     gL.type = 3;
                     gL.startLvl = 1000;
-                    gL.endLvl = 1300;
+                    gL.endLvl = 1301;
                     gimList.Add(gL);
                     gL = new Gimmick();
                     gL.type = 5;
@@ -325,11 +350,11 @@ namespace TGMsim
                     shiraseGrades = true;
                     border = Color.DarkBlue;
                     g20 = true;
-                    delayTable.Add(new List<int> { 12, 12, 12, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6 });
-                    delayTable.Add(new List<int> { 8, 7, 6, 6, 5, 5, 5, 5, 5, 5, 5, 5, 6 });
-                    delayTable.Add(new List<int> { 8, 6, 6, 6, 4, 4, 4, 4, 4, 4, 4, 4, 4 });
-                    delayTable.Add(new List<int> { 18, 18, 17, 15, 13, 12, 12, 12, 12, 12, 10, 8, 15 });
-                    delayTable.Add(new List<int> { 6, 5, 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 6 });
+                    delayTable.Add(new List<int> { 12, 12, 12, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6 });
+                    delayTable.Add(new List<int> { 8, 7, 6, 6, 5, 5, 5, 5, 5, 5, 5, 5, 5, 6 });
+                    delayTable.Add(new List<int> { 8, 6, 6, 6, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4 });
+                    delayTable.Add(new List<int> { 18, 18, 17, 15, 13, 12, 12, 12, 12, 12, 12, 10, 8, 15 });
+                    delayTable.Add(new List<int> { 6, 5, 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 6 });
                     break;
                 case 3://sprint
                     gradedBy = 4;

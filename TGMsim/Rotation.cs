@@ -42,9 +42,9 @@ namespace TGMsim
                 tetY = tet.bits[i].y;// * (2 / big) - (lowY * ((2 / big) - 1));
                 //check OoB
                 if (tetY + 2-big > 21)
-                    return false;
-                if (tetY < 0)
                     continue;
+                if (tetY < 0)
+                    return false;
 
                 if (tetX + 2-big > 9)
                     return false;

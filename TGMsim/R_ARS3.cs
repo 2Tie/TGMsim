@@ -29,8 +29,9 @@ namespace TGMsim
                     lowY = tet.bits[q].y;
             }
 
-            testTet = new Tetromino(tet.id, (tet.rotation + p + 4) % 4, tet.x - 3, tet.y - 3, tet.big);
+            testTet = new Tetromino(tet.id, (tet.rotation + p + 4) % 4, tet.x - 3, tet.y - 20, tet.big);
             testTet.groundTimer = tet.groundTimer;
+            testTet.bone = tet.bone;
 
             if (testRestrict(tet, p, gameField, large))//test kick restrictions
             {
@@ -50,9 +51,9 @@ namespace TGMsim
 
             if(tet.id == 1 && tet.floored && !checkUnder(testTet, gameField, large, spawn))//test I floorkicks
             {
-                testTet.move(1 * bigOffset, -1 * bigOffset);
+                testTet.move(1 * bigOffset, bigOffset);
                 if (!checkUnder(testTet, gameField, large, spawn))
-                    testTet.move(0, -1 * bigOffset);
+                    testTet.move(0, bigOffset);
             }
 
             if (tet.id == 2 && tet.floored && !checkUnder(testTet, gameField, large, spawn))//test T floorkicks
@@ -85,7 +86,7 @@ namespace TGMsim
             //universal center-testing (two up from bottom center will never kick)
             if (tet.id < 5)
                 if (tet.bits[1].x > -1 && tet.bits[1].y - ((1 + (tet.rotation / 2)) * (3 - big)) > -1)
-                    if (gameField[tet.bits[1].x][tet.bits[1].y - ((1 + (tet.rotation / 2)) * (3 - big))] != 0)
+                    if (gameField[tet.bits[1].x][tet.bits[1].y + ((1 + (tet.rotation / 2)) * (3 - big))] != 0)
                         return false;
 
             for (int i = 0; i < 4; i++)
@@ -101,9 +102,9 @@ namespace TGMsim
                         case 4:
                             //test other center
                             if (tet.rotation % 2 == 0)
-                                if (gameField[tetX][tetY + (1 * (((tet.rotation + 2) % 4) - 1)) * (2 / big)] != 0)
+                                if (gameField[tetX][tetY - (1 * (((tet.rotation + 2) % 4) - 1)) * (2 / big)] != 0)
                                 {
-                                    if (gameField[tetX + (((tet.id - 3) * 2) - 1)][tetY - ((tet.rotation / 2) + 1)] != 0 && tet.rotation + ((((tet.id - 3) * 2) - 1) * p) == 1)
+                                    if (gameField[tetX + (((tet.id - 3) * 2) - 1)][tetY + ((tet.rotation / 2) + 1)] != 0 && tet.rotation + ((((tet.id - 3) * 2) - 1) * p) == 1)
                                         return true;
                                     return false;
                                 }
