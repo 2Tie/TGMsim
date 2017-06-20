@@ -20,6 +20,9 @@ namespace TGMsim
         public bool swapped = false;
         public bool floored = false;
         public int groundTimer = 0;
+        public int item = 0;
+
+        public enum itemType { none, freefall, deleven };
 
         public List<BlockBit> bits = new List<BlockBit>(); //first four will always be the "small" version
 
@@ -220,11 +223,35 @@ namespace TGMsim
 
         public Tetromino clone()
         {
-            Tetromino newTet = new Tetromino(id, this.rotation, this.x - 3, this.y - 20, this.big);
-            newTet.bone = this.bone;
-            newTet.kicked = kicked;
-            newTet.groundTimer = groundTimer;
-            return newTet;
+            return clone(this.rotation);
+        }
+
+        public Tetromino cloneBig()
+        {
+            Tetromino newTet = new Tetromino(id, this.rotation, this.x - 3, this.y - 20, true);
+            return copyExtra(newTet);
+        }
+
+        public Tetromino clone(int ro)
+        {
+            Tetromino newTet = new Tetromino(id, ro, this.x - 3, this.y - 20, this.big);
+            return copyExtra(newTet);
+        }
+
+        public Tetromino clone(bool reset)
+        {
+            int rot = 0;
+            if (reset) rot = this.rotation;
+            Tetromino newTet = new Tetromino(id, rot, 0, 0, this.big);
+            return copyExtra(newTet);
+        }
+
+        private Tetromino copyExtra(Tetromino tet)
+        {
+            tet.bone = this.bone;
+            tet.kicked = kicked;
+            tet.groundTimer = groundTimer;
+            return tet;
         }
     }
 }

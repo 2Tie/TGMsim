@@ -2051,9 +2051,7 @@ namespace TGMsim
             //get next tetromino, generate another for "next"
             if (ruleset.nextNum > 0)
             {
-                activeTet = new Tetromino(nextTet[0].id, ruleset.bigmode);
-                activeTet.groundTimer = ruleset.baseLock;
-                activeTet.bone = nextTet[0].bone;
+                activeTet = nextTet[0].cloneBig();
                 for (int i = 0; i < nextTet.Count - 1; i++)
                 {
                     nextTet[i] = nextTet[i + 1];
@@ -2138,19 +2136,15 @@ namespace TGMsim
             if (heldPiece != null)
             {
                 swappedHeld = 2;
-                tempTet = new Tetromino(heldPiece.id, ruleset.bigmode);
-                tempTet.bone = heldPiece.bone;
-                heldPiece = new Tetromino(activeTet.id, false);
-                heldPiece.bone = activeTet.bone;
+                tempTet = heldPiece.clone(false);;
+                heldPiece = activeTet.clone(false);
                 activeTet = tempTet;
                 activeTet.groundTimer = ruleset.baseLock;
-                activeTet.bone = tempTet.bone;
             }
             else
             {
                 swappedHeld = 1;
-                heldPiece = new Tetromino(activeTet.id, false);
-                heldPiece.bone = activeTet.bone;
+                heldPiece = activeTet.clone(false);
                 spawnPiece();
                 currentTimer = (int)Field.timerType.ARE;
                 timerCount = ruleset.baseARE;

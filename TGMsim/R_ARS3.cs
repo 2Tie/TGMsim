@@ -16,7 +16,7 @@ namespace TGMsim
         public override Tetromino rotate(Tetromino tet, int p, List<List<int>> gameField, int rule, bool large, bool spawn)
         {
 
-            Tetromino testTet = tet.clone();
+            Tetromino testTet = tet.clone((tet.rotation + p + 4)%4);
 
             int bigOffset = 1;
             if (large)
@@ -29,7 +29,7 @@ namespace TGMsim
                     lowY = tet.bits[q].y;
             }
 
-            testTet = new Tetromino(tet.id, (tet.rotation + p + 4) % 4, tet.x - 3, tet.y - 20, tet.big);
+            //testTet = new Tetromino(tet.id, (tet.rotation + p + 4) % 4, tet.x - 3, tet.y - 20, tet.big);
             testTet.groundTimer = tet.groundTimer;
             testTet.bone = tet.bone;
 
