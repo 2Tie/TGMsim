@@ -226,9 +226,9 @@ namespace TGMsim
             return clone(this.rotation);
         }
 
-        public Tetromino cloneBig()
+        public Tetromino cloneBig(bool rbig)
         {
-            Tetromino newTet = new Tetromino(id, this.rotation, this.x - 3, this.y - 20, true);
+            Tetromino newTet = new Tetromino(id, this.rotation, this.x - 3, this.y - 20, rbig);
             return copyExtra(newTet);
         }
 

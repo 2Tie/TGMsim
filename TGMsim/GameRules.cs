@@ -36,6 +36,7 @@ namespace TGMsim
         public double FPS = 60.00;
 
         public bool showGrade = true;
+        public int initialGrade = 0;
 
         public List<List<double>> comboTable = new List<List<double>>();
 
@@ -285,6 +286,8 @@ namespace TGMsim
                     gradedBy = 2;
                     border = Color.DarkRed;
                     g20 = true;
+                    showGrade = true;
+                    initialGrade = -1;
                     delayTable.Add(new List<int> { 18, 14, 14, 8, 7, 6 });
                     delayTable.Add(new List<int> { 14, 8, 8, 8, 7, 6 });
                     delayTable.Add(new List<int> { 10, 10, 9, 8, 6, 6 });
@@ -350,6 +353,8 @@ namespace TGMsim
                     shiraseGrades = true;
                     border = Color.DarkBlue;
                     g20 = true;
+                    showGrade = true;
+                    initialGrade = -1;
                     delayTable.Add(new List<int> { 12, 12, 12, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6 });
                     delayTable.Add(new List<int> { 8, 7, 6, 6, 5, 5, 5, 5, 5, 5, 5, 5, 5, 6 });
                     delayTable.Add(new List<int> { 8, 6, 6, 6, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4 });

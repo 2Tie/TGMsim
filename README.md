@@ -29,7 +29,7 @@ In the Mode Select screen, pressing the Hold button will show the Hiscores for t
 
 ## Credits
 
-Code by 2Tie, Prism019
+Code by 2Tie, odiefrom, Prism019
 
 Music by Staxx
 

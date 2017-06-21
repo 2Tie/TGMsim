@@ -95,6 +95,8 @@ namespace TGMsim
         public bool torikan = false;
         public long torDef = 0;
 
+        public int bgtimer = 0;
+
         public int bravoCounter = 0;
         public int tetrises = 0;
         public int totalTets = 0;
@@ -270,6 +272,8 @@ namespace TGMsim
 
             gravTable = ruleset.gravTable;
 
+            gm2grade = ruleset.initialGrade;
+
 
             ruleset.baseARE = ruleset.delayTable[0][0];
             ruleset.baseARELine = ruleset.delayTable[1][0];
@@ -321,7 +325,7 @@ namespace TGMsim
             if (ruleset.id == 4)
                 randomize();
 
-            updateMusic();
+            //updateMusic();
             //playMusic("Level 1");
             //playSound(s_Ready);
         }
@@ -341,7 +345,9 @@ namespace TGMsim
             //draw the background
             int bg = 9;
             if (curSection < 9) bg = curSection;
+            if (bgtimer > 0 && bgtimer < 10) bg -= 1;
             if (bgs[bg] != null) drawBuffer.DrawImage(bgs[bg], 0, 0, 800, 600);
+            if (bgtimer > 0) drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(255 - (25*Math.Abs(bgtimer-10)), Color.Black)), 0, 0, 800, 600);
 
             //draw the field
             drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(120, Color.Black)), x, y + 25, width, height);
@@ -620,7 +626,7 @@ namespace TGMsim
                 drawBuffer.DrawString(convertTime((long)(timer.elapsedTime * ruleset.FPS / 60)), SystemFonts.DefaultFont, textBrush, x + 290, 550);
 
             //GRADE TEXT
-            if (ruleset.showGrade)
+            if (ruleset.showGrade && gm2grade != -1)
             {
                 drawGrade(drawBuffer);
             }
@@ -700,6 +706,7 @@ namespace TGMsim
             {
                 starting = 0;
                 timer.start();
+                updateMusic();
             }
 
             if (starting == 0)
@@ -710,6 +717,9 @@ namespace TGMsim
                 {
                     //timing logic
                     long temptimeVAR = (long)(timer.elapsedTime * ruleset.FPS / 60);
+
+                    if (bgtimer > 0) bgtimer += 1;
+                    if (bgtimer == 21) bgtimer = 0;
                     
                     if (coolTime.elapsedTime > 3000)
                     {
@@ -781,7 +791,7 @@ namespace TGMsim
 
                     inputDelayDir = pad.inputH;
 
-                    if(creditsProgress == 0 &&((ruleset.gameRules > 1) == (creditsPause.elapsedTime >= 3000)) && inCredits)
+                    if(creditsProgress == 0 &&((ruleset.gameRules > 1) == (creditsPause.elapsedTime >= 3000) || ruleset.id == 1) && inCredits)
                     {
                         if (creditsType < 2)
                             Audio.playMusic("crdtvanish");
@@ -789,7 +799,7 @@ namespace TGMsim
                             Audio.playMusic("crdtinvis");
                     }
 
-                    if (inCredits && ((ruleset.gameRules > 1) == (creditsPause.elapsedTime >= 3000)))
+                    if (inCredits && ((ruleset.gameRules > 1) == (creditsPause.elapsedTime >= 3000) || ruleset.id == 1))
                     {
                         creditsProgress++;
                         if (pad.inputStart == 1 && ruleset.gameRules == 1)
@@ -867,7 +877,7 @@ namespace TGMsim
                         //elseif timer is ARE and done, get next tetromino
                         else if (currentTimer == (int)Field.timerType.ARE)
                         {
-                            if (timerCount <= 0 && ((inCredits == (creditsPause.elapsedTime > 3000)) || ruleset.gameRules == 1))
+                            if (timerCount <= 0 && ((inCredits == (creditsPause.elapsedTime > 3000)) || ruleset.gameRules == 1 || ruleset.id == 1))
                             {
                                 swappedHeld = 0;
                                 spawnPiece();
@@ -1186,10 +1196,10 @@ namespace TGMsim
                                             }
                                             if (ruleset.id == 1)
                                             {
-                                                if (level >= 500)
-                                                    gradeLevel = 27;
-                                                if (level >= 999)
-                                                    gradeLevel = 32;
+                                                //if (level >= 500)
+                                                //    gm2grade = 27;
+                                                //if (level >= 999)
+                                                //    gm2grade = 32;
                                             }
 
                                         }
@@ -1285,13 +1295,17 @@ namespace TGMsim
                                                 //CHECK TORIKANS
                                                 if (ruleset.id == 1) //death
                                                 {
-                                                    if (curSection == 5 && temptime > 205000)
+                                                    if (curSection == 5)
                                                     {
-                                                        level = 500;
-                                                        torikan = true;
-                                                        torDef = temptime - 205000;
-                                                        endGame();
-                                                        return;
+                                                        if (temptime > 205000)
+                                                        {
+                                                            level = 500;
+                                                            torikan = true;
+                                                            torDef = temptime - 205000;
+                                                            triggerCredits();
+                                                        }
+                                                        else
+                                                            gm2grade = 27;
                                                     }
                                                 }
                                                 if (ruleset.gameRules == 4)
@@ -1302,7 +1316,6 @@ namespace TGMsim
                                                         torikan = true;
                                                         torDef = temptime - 420000;
                                                         endGame();
-                                                        return;
                                                     }
                                                     /*if (ruleset.id == 2) //shirase
                                                     {
@@ -1312,7 +1325,6 @@ namespace TGMsim
                                                             torikan = true;
                                                             torDef = temptime - 148000;
                                                             endGame();
-                                                            return;
                                                         }
                                                         if (curSection == 10 && temptime > 296000)
                                                         {
@@ -1320,9 +1332,16 @@ namespace TGMsim
                                                             torikan = true;
                                                             torDef = temptime - 296000;
                                                             endGame();
-                                                            return;
                                                         }
                                                     }*/
+                                                }
+
+                                                if(torikan)
+                                                {
+                                                    currentTimer = (int)Field.timerType.LineClear;
+                                                    timerCount = ruleset.baseLineClear;
+                                                    Audio.playSound(s_Clear);
+                                                    return;
                                                 }
 
                                                 //MUSIC
@@ -1338,8 +1357,9 @@ namespace TGMsim
                                                     ruleset.baseLock = ruleset.delayTable[3][num];
                                                     ruleset.baseLineClear = ruleset.delayTable[4][num];
                                                 }
-                                                
-                                                
+
+                                                //UPDATE BACKGROUND
+                                                bgtimer = 1;
 
                                                 //MEDALS
                                                 if (ruleset.gameRules != 1 && ruleset.id != 6)
@@ -2051,7 +2071,8 @@ namespace TGMsim
             //get next tetromino, generate another for "next"
             if (ruleset.nextNum > 0)
             {
-                activeTet = nextTet[0].cloneBig();
+                activeTet = nextTet[0].cloneBig(ruleset.bigmode);
+                activeTet.groundTimer = ruleset.baseLock;
                 for (int i = 0; i < nextTet.Count - 1; i++)
                 {
                     nextTet[i] = nextTet[i + 1];
@@ -2274,7 +2295,7 @@ namespace TGMsim
             timer.stop();
             inCredits = true;
             Audio.stopMusic();
-            if (ruleset.gameRules == 1)
+            if (ruleset.gameRules == 1 || ruleset.id == 1)
                 Audio.playMusic("crdtvanish");
             else
             {
@@ -2306,6 +2327,11 @@ namespace TGMsim
                     else
                         creditsType = 1;
                 }
+            }
+            if (ruleset.id == 1)//death
+            {
+                if (level == 999)
+                    gm2grade = 32;
             }
         }
 
