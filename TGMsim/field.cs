@@ -422,8 +422,8 @@ namespace TGMsim
                 {
                     if (ghostPiece.bits[i].y < 20)
                     {
-                        drawBuffer.DrawImage(tetImgs[ghostPiece.id], x + 25 * ghostPiece.bits[i].x, y + height - (25 * (ghostPiece.bits[i].y + (big-1))), 25 * big, 25 * big);
-                        drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(130, Color.Black)), x + 25 * ghostPiece.bits[i].x, y + height - (25 * (ghostPiece.bits[i].y + (big-1))), 25 * big, 25 * big);
+                        drawBuffer.DrawImage(tetImgs[ghostPiece.id], x + 25 * ghostPiece.bits[i].x, y + height - (25 * (ghostPiece.bits[i].y)), 25 * big, 25 * big);
+                        drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(130, Color.Black)), x + 25 * ghostPiece.bits[i].x, y + height - (25 * (ghostPiece.bits[i].y)), 25 * big, 25 * big);
                     }
                 }
             }
@@ -455,7 +455,7 @@ namespace TGMsim
                         bool line = true;
                         for (int j = 1; j < 4; j++)//for each other piece, left
                         {
-                            if (activeTet.bits[i].x - 1 == activeTet.bits[(i + j) % 4].x && activeTet.bits[i].y == activeTet.bits[(i + j) % 4].y)
+                            if (activeTet.bits[i].x - big == activeTet.bits[(i + j) % 4].x && activeTet.bits[i].y == activeTet.bits[(i + j) % 4].y)
                                 line = false;
 
                         }
@@ -465,17 +465,17 @@ namespace TGMsim
                         line = true;
                         for (int j = 1; j < 4; j++)//for each other piece, up
                         {
-                            if (activeTet.bits[i].x == activeTet.bits[(i + j) % 4].x && activeTet.bits[i].y - 1 == activeTet.bits[(i + j) % 4].y)
+                            if (activeTet.bits[i].x == activeTet.bits[(i + j) % 4].x && activeTet.bits[i].y - big == activeTet.bits[(i + j) % 4].y)
                                 line = false;
 
                         }
                         if (line)
-                            drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(200, Color.Yellow)), x + 25 * activeTet.bits[i].x, y + height + 22 - (25 * activeTet.bits[i].y), 25 * big, 3);
+                            drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(200, Color.Yellow)), x + 25 * activeTet.bits[i].x, y + height + 22 - (25 * (activeTet.bits[i].y - (big - 1))), 25 * big, 3);
 
                         line = true;
                         for (int j = 1; j < 4; j++)//for each other piece, right
                         {
-                            if (activeTet.bits[i].x + 1 == activeTet.bits[(i + j) % 4].x && activeTet.bits[i].y == activeTet.bits[(i + j) % 4].y)
+                            if (activeTet.bits[i].x + big == activeTet.bits[(i + j) % 4].x && activeTet.bits[i].y == activeTet.bits[(i + j) % 4].y)
                                 line = false;
 
                         }
@@ -485,12 +485,12 @@ namespace TGMsim
                         line = true;
                         for (int j = 1; j < 4; j++)//for each other piece, down
                         {
-                            if (activeTet.bits[i].x == activeTet.bits[(i + j) % 4].x && activeTet.bits[i].y + 1 == activeTet.bits[(i + j) % 4].y)
+                            if (activeTet.bits[i].x == activeTet.bits[(i + j) % 4].x && activeTet.bits[i].y + big == activeTet.bits[(i + j) % 4].y)
                                 line = false;
 
                         }
                         if (line)
-                            drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(200, Color.Yellow)), x + 25 * activeTet.bits[i].x, y + height - (25 * activeTet.bits[i].y + 25 * (big-1)), 25 * big, 3);
+                            drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(200, Color.Yellow)), x + 25 * activeTet.bits[i].x, y + height - (25 * activeTet.bits[i].y), 25 * big, 3);
                     }
                 }
             }
@@ -592,9 +592,9 @@ namespace TGMsim
             }
 
             if (godmode)
-                drawBuffer.DrawString("GODMODE", f_Maestro, new SolidBrush(Color.Orange), 20, 680);
+                drawBuffer.DrawString("GODMODE", f_Maestro, new SolidBrush(Color.Orange), 10, 530);
             if (g0)
-                drawBuffer.DrawString("0G MODE", f_Maestro, new SolidBrush(Color.Orange), 20, 700);
+                drawBuffer.DrawString("0G MODE", f_Maestro, new SolidBrush(Color.Orange), 10, 550);
             //if (mode.bigmode)
                 //drawBuffer.DrawString("BIG MODE", f_Maestro, new SolidBrush(Color.Orange), 20, 720);
 
@@ -602,7 +602,11 @@ namespace TGMsim
             //if (ruleset.gameRules == 1 && mode.id == 0 )
                 drawBuffer.DrawString("POINTS:", f_Maestro, textBrush, x + 280, 260);
 
-            //drawBuffer.DrawString(gradePoints.ToString(), SystemFonts.DefaultFont, textBrush, 20, 280);
+
+            if (creditsProgress >= ruleset.creditsLength + 180)
+                drawBuffer.DrawString("PUT THE BLOCK !!", f_Maestro, textBrush, 260, 585);
+
+            drawBuffer.DrawString(gradePoints.ToString(), SystemFonts.DefaultFont, textBrush, 20, 280);
 
             string cTex = "REGRET!";
             if (ruleset.gameRules == 4 && coolTime.elapsedTime > 0)
@@ -910,7 +914,7 @@ namespace TGMsim
                             {
                                 if (activeTet.bits[i].y < 0)
                                     continue;
-                                if (activeTet.bits[i].y - big -1 <= -1)
+                                if (activeTet.bits[i].y - big - 1 <= -1)
                                 {
                                     activeTet.floored = true;
                                     break;
@@ -936,8 +940,6 @@ namespace TGMsim
 
                                     //GIMMICKS
 
-                                    
-
                                     if (checkGimmick(2))
                                         garbTimer += 1;
 
@@ -945,6 +947,7 @@ namespace TGMsim
                                     if (inCredits == true && creditsProgress >= ruleset.creditsLength)
                                     {
                                         endGame();
+                                        return;
                                     }
 
                                     int lowY = 22;
@@ -964,28 +967,28 @@ namespace TGMsim
                                         {
                                             for (int k = 0; k < (big % 2) + 1; k++)
                                             {
-                                                if (activeTet.bits[i].y + k < 0)
+                                                if (activeTet.bits[i].y - k < 0)
                                                     continue;
                                                 if (checkGimmick(1) || creditsType == 2)
-                                                    gameField[activeTet.bits[i].x  + j][activeTet.bits[i].y + k] = 8;
+                                                    gameField[activeTet.bits[i].x  + j][activeTet.bits[i].y - k] = 8;
                                                 else if (activeTet.bone == true)
-                                                    gameField[activeTet.bits[i].x + j][activeTet.bits[i].y + k] = 10;
+                                                    gameField[activeTet.bits[i].x + j][activeTet.bits[i].y - k] = 10;
                                                 else
-                                                    gameField[activeTet.bits[i].x + j][activeTet.bits[i].y + k] = activeTet.id;
+                                                    gameField[activeTet.bits[i].x + j][activeTet.bits[i].y - k] = activeTet.id;
 
                                                 if (creditsType == 1)
                                                 {
                                                     vanPip vP = new vanPip();
                                                     vP.time = creditsProgress;
                                                     vP.x = activeTet.bits[i].x + j;
-                                                    vP.y = activeTet.bits[i].y + k;
+                                                    vP.y = activeTet.bits[i].y - k;
                                                     vanList.Add(vP);
                                                 }
 
                                                 flashPip fP = new flashPip();
                                                 fP.time = 2;
                                                 fP.x = activeTet.bits[i].x  + j;
-                                                fP.y = activeTet.bits[i].y  + k;
+                                                fP.y = activeTet.bits[i].y  - k;
                                                 flashList.Add(fP);
                                             }
                                         }
@@ -1140,7 +1143,7 @@ namespace TGMsim
                                                         }
                                                         if (comboval > 10) comboval = 10;
 
-                                                        int newPts = (int)(Math.Ceiling(ruleset.baseGradePts[bigFull - 1][grade] * ruleset.comboTable[bigFull - 1][gradeCombo]) * Math.Ceiling((double)level / 250));
+                                                        int newPts = (int)(Math.Ceiling(ruleset.baseGradePts[bigFull - 1][grade] * ruleset.comboTable[bigFull - 1][gradeCombo - 1]) * Math.Ceiling((double)level / 250));
                                                         if (level > 249 && level < 500)
                                                             newPts = newPts * 2;
                                                         if (level > 499 && level < 750)
@@ -2157,15 +2160,15 @@ namespace TGMsim
             if (heldPiece != null)
             {
                 swappedHeld = 2;
-                tempTet = heldPiece.clone(false);;
-                heldPiece = activeTet.clone(false);
+                tempTet = heldPiece.cloneBig(ruleset.bigmode);;
+                heldPiece = activeTet.clone(false, false);
                 activeTet = tempTet;
                 activeTet.groundTimer = ruleset.baseLock;
             }
             else
             {
                 swappedHeld = 1;
-                heldPiece = activeTet.clone(false);
+                heldPiece = activeTet.clone(false, false);
                 spawnPiece();
                 currentTimer = (int)Field.timerType.ARE;
                 timerCount = ruleset.baseARE;
@@ -2199,14 +2202,14 @@ namespace TGMsim
                     {
                         for (int k = 0; k < (big % 2) + 1; k++)
                         {
-                            if (activeTet.bits[i].y + k < 0)
+                            if (activeTet.bits[i].y - k < 0)
                                 continue;
                             if (checkGimmick(1) || creditsType == 2)
-                                gameField[activeTet.bits[i].x + j][activeTet.bits[i].y + k] = 8;
+                                gameField[activeTet.bits[i].x + j][activeTet.bits[i].y - k] = 8;
                             else if (activeTet.bone == true)
-                                gameField[activeTet.bits[i].x + j][activeTet.bits[i].y + k] = 10;
+                                gameField[activeTet.bits[i].x + j][activeTet.bits[i].y - k] = 10;
                             else
-                                gameField[activeTet.bits[i].x + j][activeTet.bits[i].y + k] = activeTet.id;
+                                gameField[activeTet.bits[i].x + j][activeTet.bits[i].y - k] = activeTet.id;
 
                         }
                     }
@@ -2449,7 +2452,7 @@ namespace TGMsim
                 }
                 if(tet.big)
                 {
-                    if (tet.bits[i].y + 1 > 21)
+                    if (tet.bits[i].y - 1 < 0)
                     {
                         status = false;
                         break;
@@ -2459,12 +2462,12 @@ namespace TGMsim
                         status = false;
                         break;
                     }
-                    if (gameField[tet.bits[i].x][tet.bits[i].y+1] != 0)
+                    if (gameField[tet.bits[i].x][tet.bits[i].y-1] != 0)
                     {
                         status = false;
                         break;
                     }
-                    if (gameField[tet.bits[i].x+1][tet.bits[i].y+1] != 0)
+                    if (gameField[tet.bits[i].x+1][tet.bits[i].y-1] != 0)
                     {
                         status = false;
                         break;

@@ -238,11 +238,11 @@ namespace TGMsim
             return copyExtra(newTet);
         }
 
-        public Tetromino clone(bool reset)
+        public Tetromino clone(bool reset, bool rbig)
         {
             int rot = 0;
             if (reset) rot = this.rotation;
-            Tetromino newTet = new Tetromino(id, rot, 0, 0, this.big);
+            Tetromino newTet = new Tetromino(id, rot, 0, 0, rbig);
             return copyExtra(newTet);
         }
 

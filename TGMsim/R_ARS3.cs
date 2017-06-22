@@ -85,7 +85,7 @@ namespace TGMsim
 
             //universal center-testing (two up from bottom center will never kick)
             if (tet.id < 5)
-                if (tet.bits[1].x > -1 && tet.bits[1].y - ((1 + (tet.rotation / 2)) * (3 - big)) > -1)
+                if (tet.bits[1].x > -1 && tet.bits[1].y + ((1 + (tet.rotation / 2)) * (3 - big)) < 22)
                     if (gameField[tet.bits[1].x][tet.bits[1].y + ((1 + (tet.rotation / 2)) * (3 - big))] != 0)
                         return false;
 
