@@ -22,17 +22,6 @@ namespace TGMsim
             if (large)
                 bigOffset = 2;
 
-            int lowY = 22;
-            for (int q = 0; q < tet.bits.Count; q++)
-            {
-                if (tet.bits[q].y < lowY)
-                    lowY = tet.bits[q].y;
-            }
-
-            //testTet = new Tetromino(tet.id, (tet.rotation + p + 4) % 4, tet.x - 3, tet.y - 20, tet.big);
-            testTet.groundTimer = tet.groundTimer;
-            testTet.bone = tet.bone;
-
             if (testRestrict(tet, p, gameField, large))//test kick restrictions
             {
                 for (int i = 1; i < 3; i++)//test wallkicks in order, stop at first rotation that works

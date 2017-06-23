@@ -123,6 +123,7 @@ namespace TGMsim
         public bool g20 = false;
         public bool g0 = false;
         public bool w4 = false;
+        public bool toriless = false;
 
         public List<GameRules.Gimmick> activeGim = new List<GameRules.Gimmick>();
         public int gimIndex = 0;
@@ -632,7 +633,12 @@ namespace TGMsim
             //GRADE TEXT
             if (ruleset.showGrade && gm2grade != -1)
             {
-                drawGrade(drawBuffer);
+                string gd;
+                if (ruleset.gameRules == 1)
+                    gd = ruleset.grades[grade];
+                else
+                    gd = ruleset.grades[gm2grade];
+                drawGrade(drawBuffer, gd);
             }
 
             if (ruleset.exam != -1)
@@ -688,6 +694,9 @@ namespace TGMsim
 
                 drawBuffer.DrawString("Press B to", SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 310);
                 drawBuffer.DrawString("return to menu!", SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 320);
+
+                if (ruleset.id == 2 && gm2grade != 0)
+                    drawGrade(drawBuffer, "S" + (gm2grade));
             }
             
         }
@@ -1296,7 +1305,7 @@ namespace TGMsim
                                                     Audio.playSound(s_Section);
 
                                                 //CHECK TORIKANS
-                                                if (ruleset.id == 1) //death
+                                                if (ruleset.id == 1 && !toriless) //death
                                                 {
                                                     if (curSection == 5)
                                                     {
@@ -1311,7 +1320,7 @@ namespace TGMsim
                                                             gm2grade = 27;
                                                     }
                                                 }
-                                                if (ruleset.gameRules == 4)
+                                                if (ruleset.gameRules == 4 && !toriless)
                                                 {
                                                     if (ruleset.id == 0 && curSection == 5 && temptime > 420000 && ruleset.exam == -1) //ti master
                                                     {
@@ -1320,7 +1329,7 @@ namespace TGMsim
                                                         torDef = temptime - 420000;
                                                         endGame();
                                                     }
-                                                    /*if (ruleset.id == 2) //shirase
+                                                    if (ruleset.id == 2) //shirase
                                                     {
                                                         if (curSection == 5 && temptime > 148000)
                                                         {
@@ -1336,7 +1345,7 @@ namespace TGMsim
                                                             torDef = temptime - 296000;
                                                             endGame();
                                                         }
-                                                    }*/
+                                                    }
                                                 }
 
                                                 if(torikan)
@@ -1407,17 +1416,32 @@ namespace TGMsim
                                                     sectionTimes.Add(sectionTime.elapsedTime);
 
                                                     //check Regrets!
-                                                    if (ruleset.gameRules == 4 && ruleset.id == 0)
+                                                    if (ruleset.gameRules == 4)
                                                     {
-                                                        if (sectionTime.elapsedTime > ruleset.secRegrets[curSection - 1])
+                                                        if (ruleset.id == 0)//master
                                                         {
-                                                            if (curSection != 9)
-                                                                secCools[curSection - 1] = -1;
-                                                            else
+                                                            if (sectionTime.elapsedTime > ruleset.secRegrets[curSection - 1])
+                                                            {
+                                                                if (curSection != 9)
+                                                                    secCools[curSection - 1] = -1;
+                                                                else
+                                                                    secCools.Add(-1);
+
+                                                                Audio.playSound(s_Regret);
+                                                                coolTime.start();
+                                                            }
+                                                        }
+                                                        if (ruleset.id == 2)//shirase
+                                                        {
+                                                            if (sectionTime.elapsedTime > 60000)
+                                                            {
                                                                 secCools.Add(-1);
 
-                                                            Audio.playSound(s_Regret);
-                                                            coolTime.start();
+                                                                Audio.playSound(s_Regret);
+                                                                coolTime.start();
+                                                            }
+                                                            else
+                                                                secCools.Add(0);
                                                         }
                                                         if (secCools[curSection - 1] == 1)
                                                             speedBonus += 1;
@@ -2252,18 +2276,27 @@ namespace TGMsim
                 //handle TGM3 section modifyers
                 if (ruleset.gameRules == 4)
                 {
-                    foreach (int i in secCools)
+                    if (ruleset.id == 0)
                     {
-                        gm2grade += i;
+                        foreach (int i in secCools)
+                        {
+                            gm2grade += i;
+                        }
+
+                        if (gm2grade < 0)
+                            gm2grade = 0;
+                        if (gm2grade > 32)
+                            gm2grade = 32;
                     }
-
-                    if (gm2grade < 0)
-                        gm2grade = 0;
-                    if (gm2grade > 32)
-                        gm2grade = 32;
+                    if(ruleset.id == 2)
+                    {
+                        gm2grade += secCools.Count + 1;
+                        foreach (int i in secCools)
+                        {
+                            gm2grade += i;
+                        }
+                    }
                 }
-
-
 
                 timer.stop();
                 Audio.stopMusic();
@@ -2597,17 +2630,17 @@ namespace TGMsim
             gameField = newField;
         }
 
-        private void drawGrade(Graphics drawBuffer)
+        private void drawGrade(Graphics drawBuffer, string gd)
         {
-            string gd;
+            //string gd;
             int gold = 0;
             if (textBrush.Color == Color.Gold)
                 gold = 78;
 
-            if (ruleset.gameRules == 1)
-                gd = ruleset.grades[grade];
-            else
-                gd = ruleset.grades[gm2grade];
+            //if (ruleset.gameRules == 1)
+                //gd = ruleset.grades[grade];
+            //else
+               // gd = ruleset.grades[gm2grade];
 
             for (int i = 0; i < gd.Length; i++)
             {

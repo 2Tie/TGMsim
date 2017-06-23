@@ -22,17 +22,6 @@ namespace TGMsim
             if (large)
                 bigOffset = 2;
 
-            int lowY = 22;
-            for (int q = 0; q < tet.bits.Count; q++)
-            {
-                if (tet.bits[q].y < lowY)
-                    lowY = tet.bits[q].y;
-            }
-
-            //testTet = new Tetromino(tet.id, (tet.rotation + p + 4) % 4, tet.x - 3, tet.y - 20, tet.big);
-            testTet.groundTimer = tet.groundTimer;
-            testTet.bone = tet.bone;
-
             if (testRestrict(tet, p, gameField, large))//test kick restrictions
             {
                 for (int i = 1; i < 3; i++)//test wallkicks in order, stop at first rotation that works
@@ -49,16 +38,22 @@ namespace TGMsim
                     testTet.move(3 * bigOffset, 0);
             }
 
-            if(tet.id == 1 && tet.floored && !checkUnder(testTet, gameField, large, spawn))//test I floorkicks
+            if(tet.id == 1)//test I floorkicks
             {
-                testTet.move(1 * bigOffset, bigOffset);
-                if (!checkUnder(testTet, gameField, large, spawn))
-                    testTet.move(0, bigOffset);
+                if (tet.rotation % 2 == 0 && tet.floored && !checkUnder(testTet, gameField, large, spawn))
+                {
+                    testTet.move(bigOffset, bigOffset);
+                    testTet.kicked++;
+                    if (!checkUnder(testTet, gameField, large, spawn))
+                        testTet.move(0, bigOffset);
+                }
+                if (tet.rotation % 2 == 1 && tet.kicked > 0)
+                    testTet.groundTimer = 1;
             }
 
-            if (tet.id == 2 && tet.floored && !checkUnder(testTet, gameField, large, spawn))//test T floorkicks
+            if (tet.id == 2 && tet.floored && !checkUnder(testTet, gameField, large, spawn) && (tet.rotation + p + 4) % 4 == 2)//test T floorkicks
             {
-                testTet.move(1 * bigOffset, -1 * bigOffset);
+                testTet.move(bigOffset, bigOffset);
             }
 
             if (!checkUnder(testTet, gameField, large, spawn)) //did any kick of the rotation work?

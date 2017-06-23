@@ -545,6 +545,8 @@ namespace TGMsim
                     field1.cheating = true;
                 if (cMen.cheats[5])
                     field1.w4 = true;
+                if (cMen.cheats[6])
+                    field1.toriless = true;
             }
             saved = false;
         }

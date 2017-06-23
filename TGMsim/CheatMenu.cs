@@ -11,7 +11,7 @@ namespace TGMsim
     {
         int selection = 0;
         int dInput = 0;
-        public List<bool> cheats = new List<bool> { false, false, false, false, false, false };
+        public List<bool> cheats = new List<bool> { false, false, false, false, false, false, false };
 
         public void logic(Controller pad) 
         {
@@ -51,6 +51,7 @@ namespace TGMsim
             drawBuffer.DrawString("BIG MODE", SystemFonts.DefaultFont, new SolidBrush(Color.White), 220, 245);
             drawBuffer.DrawString("MUTE MUSIC", SystemFonts.DefaultFont, new SolidBrush(Color.White), 220, 260);
             drawBuffer.DrawString("4W", SystemFonts.DefaultFont, new SolidBrush(Color.White), 220, 275);
+            drawBuffer.DrawString("NO TORIKAN", SystemFonts.DefaultFont, new SolidBrush(Color.White), 220, 290);
             drawBuffer.DrawString("►", SystemFonts.DefaultFont, new SolidBrush(Color.White), 294, 200 + (15 * selection));
         }
     }

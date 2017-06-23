@@ -353,7 +353,7 @@ namespace TGMsim
                     shiraseGrades = true;
                     border = Color.DarkBlue;
                     g20 = true;
-                    showGrade = true;
+                    showGrade = false;
                     initialGrade = -1;
                     delayTable.Add(new List<int> { 12, 12, 12, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6 });
                     delayTable.Add(new List<int> { 8, 7, 6, 6, 5, 5, 5, 5, 5, 5, 5, 5, 5, 6 });
