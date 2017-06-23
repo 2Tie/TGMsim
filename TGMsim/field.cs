@@ -2480,6 +2480,8 @@ namespace TGMsim
         public void tetGrav(Tetromino tet, int i, bool ghost, bool sonic)
         {
             int g = 0;
+            int big = 0;
+            if (tet.big) big = 1;
             for (g = 0; g < i; g++)
             {
                 bool breakout = false;
@@ -2488,16 +2490,25 @@ namespace TGMsim
                 {
                     if (tet.bits[p].y > 21)
                         continue;
-                    if (gameField[tet.bits[p].x][tet.bits[p].y - g] != 0)
+                    if (gameField[tet.bits[p].x][tet.bits[p].y - g - big] != 0)
                     {
                         g = g - 1;
                         breakout = true;
                         break;
                     }
+                    if (tet.big)
+                    {
+                        if (gameField[tet.bits[p].x + 1][tet.bits[p].y - g - big] != 0)
+                        {
+                            g = g - 1;
+                            breakout = true;
+                            break;
+                        }
+                    }
                 }
                 for (int p = 0; p < tet.bits.Count; p++)
                 {
-                    if (tet.bits[p].y - g == 0)
+                    if (tet.bits[p].y - g - big == 0)
                     {
                         breakout = true;
                         break;
