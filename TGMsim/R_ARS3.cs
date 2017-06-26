@@ -22,6 +22,26 @@ namespace TGMsim
             if (large)
                 bigOffset = 2;
 
+            if (tet.id == 1)//test I floorkicks
+            {
+                if (tet.rotation % 2 == 0 && tet.floored && !checkUnder(testTet, gameField, large, spawn))
+                {
+                    testTet.move(0, bigOffset);
+                    testTet.kicked++;
+                    if (!checkUnder(testTet, gameField, large, spawn))
+                    {
+                        testTet.move(0, bigOffset);
+                        if (!checkUnder(testTet, gameField, large, spawn))
+                        {
+                            testTet.move(0, -2 * bigOffset);
+                            testTet.kicked = 0;
+                        }
+                    }
+                }
+                if (tet.rotation % 2 == 1 && tet.kicked > 0)
+                    testTet.groundTimer = 1;
+            }
+
             if (testRestrict(tet, p, gameField, large))//test kick restrictions
             {
                 for (int i = 1; i < 3; i++)//test wallkicks in order, stop at first rotation that works
@@ -38,18 +58,7 @@ namespace TGMsim
                     testTet.move(3 * bigOffset, 0);
             }
 
-            if(tet.id == 1)//test I floorkicks
-            {
-                if (tet.rotation % 2 == 0 && tet.floored && !checkUnder(testTet, gameField, large, spawn))
-                {
-                    testTet.move(bigOffset, bigOffset);
-                    testTet.kicked++;
-                    if (!checkUnder(testTet, gameField, large, spawn))
-                        testTet.move(0, bigOffset);
-                }
-                if (tet.rotation % 2 == 1 && tet.kicked > 0)
-                    testTet.groundTimer = 1;
-            }
+            
 
             if (tet.id == 2 && tet.floored && !checkUnder(testTet, gameField, large, spawn) && (tet.rotation + p + 4) % 4 == 2)//test T floorkicks
             {

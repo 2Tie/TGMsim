@@ -596,18 +596,22 @@ namespace TGMsim
                 drawBuffer.DrawString("GODMODE", f_Maestro, new SolidBrush(Color.Orange), 10, 530);
             if (g0)
                 drawBuffer.DrawString("0G MODE", f_Maestro, new SolidBrush(Color.Orange), 10, 550);
+            if (toriless)
+                drawBuffer.DrawString("TORILESS MODE", f_Maestro, new SolidBrush(Color.Orange), 10, 570);
             //if (mode.bigmode)
-                //drawBuffer.DrawString("BIG MODE", f_Maestro, new SolidBrush(Color.Orange), 20, 720);
+            //drawBuffer.DrawString("BIG MODE", f_Maestro, new SolidBrush(Color.Orange), 20, 720);
 
             //BIGGER TEXT
             //if (ruleset.gameRules == 1 && mode.id == 0 )
-                drawBuffer.DrawString("POINTS:", f_Maestro, textBrush, x + 280, 260);
+            drawBuffer.DrawString("POINTS:", f_Maestro, textBrush, x + 280, 260);
 
 
             if (creditsProgress >= ruleset.creditsLength + 180)
                 drawBuffer.DrawString("PUT THE BLOCK !!", f_Maestro, textBrush, 260, 585);
 
-            drawBuffer.DrawString(gradePoints.ToString(), SystemFonts.DefaultFont, textBrush, 20, 280);
+            //debug stuff
+            //drawBuffer.DrawString(gradePoints.ToString(), SystemFonts.DefaultFont, textBrush, 20, 280);
+            //drawBuffer.DrawString(ruleset.baseLineClear.ToString(), SystemFonts.DefaultFont, textBrush, 20, 290);
 
             string cTex = "REGRET!";
             if (ruleset.gameRules == 4 && coolTime.elapsedTime > 0)

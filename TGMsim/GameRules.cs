@@ -34,6 +34,7 @@ namespace TGMsim
         public int fieldH = 22;
 
         public double FPS = 60.00;
+        public int lag = 0;
 
         public bool showGrade = true;
         public int initialGrade = 0;
@@ -112,6 +113,7 @@ namespace TGMsim
                     hold = false;
                     hardDrop = 0;
                     rotation = 0;
+                    lag = 2;
                     lockType = 0;
                     bigMove = 1;
                     baseARE = 30;
@@ -133,6 +135,7 @@ namespace TGMsim
                     hold = false;
                     hardDrop = 1;
                     rotation = 0;
+                    lag = 0;
                     lockType = 0;
                     bigMove = 2;
                     baseARE = 25;
@@ -154,6 +157,7 @@ namespace TGMsim
                     hold = false;
                     hardDrop = 1;
                     rotation = 0;
+                    lag = 0;
                     lockType = 0;
                     bigMove = 1;
                     baseARE = 25;
@@ -178,6 +182,7 @@ namespace TGMsim
                     hold = true;
                     hardDrop = 1;
                     rotation = 1;
+                    lag = 4;
                     lockType = 0;
                     bigMove = 2;
                     baseARE = 25;
@@ -308,6 +313,7 @@ namespace TGMsim
                     sections.Add(1000);
                     sections.Add(1100);
                     sections.Add(1200);
+                    sections.Add(1300);
                     lvlBonus = 5;
                     var gL = new Gimmick();
                     gL.type = 2;

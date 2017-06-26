@@ -145,23 +145,6 @@ namespace TGMsim
                 case 4:
                     saved = false;
                     menuState = 4;
-                    switch (gSel.menuSelection)
-                    {
-                        case 0:
-                            FPS = 59.84;
-                            if (prefs.delay == true) pad1.setLag(2);
-                            break;
-                        case 1:
-                        case 2:
-                            FPS = 61.68;
-                            break;
-                        case 3:
-                        case 4:
-                        case 5:
-                            FPS = 60.00;
-                            if (prefs.delay == true) pad1.setLag(4);
-                            break;
-                    }
                     setupGame();
                     break;
 
@@ -533,6 +516,10 @@ namespace TGMsim
 
             if (mSel.game == 3 && rules.id == 0 && player.name != "   ")
                 rules.exam = checkExam();
+
+            if (prefs.delay)
+                pad1.setLag(rules.lag);
+            FPS = rules.FPS;
 
             field1 = new Field(pad1, rules, musicStream);
             if (player.name == "   ")
