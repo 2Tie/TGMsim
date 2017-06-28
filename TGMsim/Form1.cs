@@ -62,6 +62,7 @@ namespace TGMsim
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
 
             this.ClientSize = new Size(800, 600);//Size(1280, 780);
+            this.Icon = new Icon(@"Res/GFX/fundoshi.ico");
 
             interval = (long)TimeSpan.FromSeconds(1.0 / FPS).TotalMilliseconds;
             fonts.AddFontFile(@"Res\Maestro.ttf");
