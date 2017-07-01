@@ -91,6 +91,8 @@
     <Compile Include="Generator.cs" />
     <Compile Include="G_ARS1.cs" />
     <Compile Include="G_ARS2.cs" />
+    <Compile Include="G_ARS3.cs" />
+    <Compile Include="G_SEGA.cs" />
     <Compile Include="Login.cs" />
     <Compile Include="LoopStream.cs" />
     <Compile Include="ModeSelect.cs" />

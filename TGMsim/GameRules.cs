@@ -41,6 +41,10 @@ namespace TGMsim
         public bool showGrade = true;
         public int initialGrade = 0;
 
+        public string GameName = "error";
+        public string ModeName = "error";
+
+
         public List<List<double>> comboTable = new List<List<double>>();
 
         public List<int> decayRate = new List<int>() { 125, 80, 80, 50, 45, 45, 45, 40, 40, 40, 40, 40, 30, 30, 30, 20, 20, 20, 20, 20, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 10 };
@@ -109,6 +113,7 @@ namespace TGMsim
             switch (game)
             {
                 case 1: //TGM
+                    GameName = "TGM";
                     FPS = 59.84;
                     nextNum = 1;
                     hold = false;
@@ -132,6 +137,7 @@ namespace TGMsim
                     gravTable = new List<int> { 4, 6, 8, 10, 12, 16, 32, 48, 64, 80, 96, 112, 128, 144, 4, 32, 64, 96, 128, 160, 192, 224, 256, 512, 768, 1024, 1280, 1024, 768, 5120 };
                     break;
                 case 2: //TGM2 OR TAP
+                    GameName = "TGM2";
                     FPS = 61.68;
                     nextNum = 1;
                     hold = false;
@@ -155,6 +161,7 @@ namespace TGMsim
                     gravTable = new List<int> { 4, 6, 8, 10, 12, 16, 32, 48, 64, 80, 96, 112, 128, 144, 4, 32, 64, 96, 128, 160, 192, 224, 256, 512, 768, 1024, 1280, 1024, 768, 5120 };
                     break;
                 case 3: //TGM2 OR TAP
+                    GameName = "TAP";
                     FPS = 61.68;
                     nextNum = 1;
                     hold = false;
@@ -179,13 +186,38 @@ namespace TGMsim
                     gravTable = new List<int> { 4, 6, 8, 10, 12, 16, 32, 48, 64, 80, 96, 112, 128, 144, 4, 32, 64, 96, 128, 160, 192, 224, 256, 512, 768, 1024, 1280, 1024, 768, 5120 };
                     break;
                 case 4: //TI and ACE
-                case 5:
-                case 7:
+                    GameName = "TGM3";
                     FPS = 60.00;
                     nextNum = 3;
                     hold = true;
                     hardDrop = 1;
                     rotation = 1;
+                    generator = (int)Gens.TGM3;
+                    lag = 3;
+                    lockType = 0;
+                    bigMove = 2;
+                    baseARE = 25;
+                    baseARELine = 25;
+                    baseDAS = 14;
+                    baseLock = 30;
+                    baseLineClear = 40;
+                    gravType = 1;
+                    baseGrav = 1024;
+                    genAttps = 6;
+                    fieldW = 10;
+                    fieldH = 22;
+                    showGrade = false;
+                    gravTable = new List<int> { 1024, 1536, 2048, 2560, 3072, 4096, 8192, 12288, 16384, 20480, 24576, 28672, 32768, 36864, 1024, 8192, 16348, 24576, 32768, 40960, 49152, 57344, 65536, 131072, 196608, 262144, 327680, 262144, 196608, 1310720 };
+                    break;
+                case 5:
+                case 7:
+                    GameName = "Custom";
+                    FPS = 60.00;
+                    nextNum = 3;
+                    hold = true;
+                    hardDrop = 1;
+                    rotation = 1;
+                    generator = (int)Gens.TGM3;
                     lag = 3;
                     lockType = 0;
                     bigMove = 2;
@@ -203,6 +235,7 @@ namespace TGMsim
                     gravTable = new List<int> { 1024, 1536, 2048, 2560, 3072, 4096, 8192, 12288, 16384, 20480, 24576, 28672, 32768, 36864, 1024, 8192, 16348, 24576, 32768, 40960, 49152, 57344, 65536, 131072, 196608, 262144, 327680, 262144, 196608, 1310720 };
                     break;
                 case 6: //4
+                    GameName = "SEGA";
                     FPS = 60.00;
                     nextNum = 4;
                     hold = true;
@@ -230,6 +263,7 @@ namespace TGMsim
             switch (mode)//Master, Death, shirase, sprint, garbage clear, rounds, konoha, grav training
             {
                 case 0:
+                    ModeName = "MASTER";
                     gradedBy = 1;
                     endLevel = 999;
                     sections.Add(100);
@@ -280,6 +314,7 @@ namespace TGMsim
                     }
                     break;
                 case 1://death
+                    ModeName = "DEATH";
                     endLevel = 999;
                     sections.Add(100);
                     sections.Add(200);
@@ -304,6 +339,7 @@ namespace TGMsim
                     delayTable.Add(new List<int> { 12, 6, 6, 6, 5, 4 });
                     break;
                 case 2://shirase
+                    ModeName = "SHIRASE";
                     endLevel = 1300;
                     sections.Add(100);
                     sections.Add(200);
@@ -388,6 +424,7 @@ namespace TGMsim
                     delayTable.Add(new List<int> { 41 });
                     break;
                 case 5://rounds
+                    ModeName = "ICY SHIRASE";
                     gradedBy = 2;
                     lvlBonus = 5;
                     endLevel = 1200;
@@ -427,6 +464,7 @@ namespace TGMsim
                     delayTable.Add(new List<int> { 6, 5, 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 6 });
                     break;
                 case 6://konoha
+                    ModeName = "BIG BRAVO MANIA";
                     endLevel = 0;
                     gradedBy = 3;
                     limitType = 3;
@@ -453,6 +491,7 @@ namespace TGMsim
                     delayTable.Add(new List<int> { 40, 25, 16, 12, 6, 6, 6, 6, 6 });
                     break;
                 case 7://20g training
+                    ModeName = "20G TRAINING";
                     endLevel = 200;
                     g20 = true;
                     gradedBy = 4;

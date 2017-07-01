@@ -32,7 +32,7 @@ namespace TGMsim
 
         public virtual int rand(int s)
         {
-            return 0;
+            return (int)(((s * 0x41C64E6D) + 12345) & 0xFFFFFFFF);
         }
 
         public virtual int pull()

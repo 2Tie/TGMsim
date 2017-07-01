@@ -43,6 +43,11 @@ namespace TGMsim
                         selection = 1;
                     break;
                 case 5:
+                    if (selection == 3)
+                        selection = 0;
+                    if (selection == -1)
+                        selection = 2;
+                    break;
                 case 6:
                     if (selection == 4)
                         selection = 0;

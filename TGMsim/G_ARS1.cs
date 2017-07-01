@@ -20,11 +20,6 @@ namespace TGMsim
             history[0] = temp;
         }
 
-        public override int rand(int s)
-        {
-            return (int)(((s * 0x41C64E6D) + 12345) & 0xFFFFFFFF);
-        }
-
         public override int pull()
         {
             int temp = 0;

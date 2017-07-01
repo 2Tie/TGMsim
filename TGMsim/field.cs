@@ -31,7 +31,6 @@ namespace TGMsim
 
         Tetromino activeTet;
         public List<Tetromino> nextTet = new List<Tetromino>();
-        public List<int> lastTet = new List<int>() { 6, 6, 6, 6};
         public Rotation RSYS = new R_ARS1();
         public Generator GEN;
 
@@ -267,6 +266,7 @@ namespace TGMsim
             if (ruleset.generator == 0) GEN = new Generator(seed);
             if (ruleset.generator == 1) GEN = new G_ARS1(seed);
             if (ruleset.generator == 2) GEN = new G_ARS2(seed);
+            if (ruleset.generator == 3) GEN = new G_ARS3(seed);
 
             activeTet = new Tetromino(0, ruleset.bigmode); //first piece cannot be S, Z, or O
 
@@ -614,11 +614,15 @@ namespace TGMsim
             drawBuffer.DrawString("POINTS:", f_Maestro, textBrush, x + 280, 260);
 
 
+            drawBuffer.DrawString(ruleset.GameName, f_Maestro, textBrush, 20, 20);
+            drawBuffer.DrawString(ruleset.ModeName, f_Maestro, textBrush, 20, 40);
+
+
             if (creditsProgress >= ruleset.creditsLength + 180)
                 drawBuffer.DrawString("PUT THE BLOCK !!", f_Maestro, textBrush, 260, 585);
 
             //debug stuff
-            drawBuffer.DrawString(gradePoints.ToString(), SystemFonts.DefaultFont, textBrush, 20, 280);
+            //drawBuffer.DrawString(gradePoints.ToString(), SystemFonts.DefaultFont, textBrush, 20, 280);
             //drawBuffer.DrawString(ruleset.baseLineClear.ToString(), SystemFonts.DefaultFont, textBrush, 20, 290);
 
             string cTex = "REGRET!";
@@ -2415,7 +2419,6 @@ namespace TGMsim
             int tempID = GEN.pull() + 1;
 
             Tetromino tempTet = new Tetromino(tempID, false);//force non-big here so they're not stretched out in the queue
-            lastTet[lastTet.Count - 1] = tempTet.id;
             if (checkGimmick(3))
                 tempTet.bone = true;
             
