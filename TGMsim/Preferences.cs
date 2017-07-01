@@ -64,7 +64,7 @@ namespace TGMsim
             {
                 if (menuState == 0)
                 {
-                    if (selection == 2)
+                    if (selection == 3)
                     {
                         menuState = 1;
                         selection = 0;

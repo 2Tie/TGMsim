@@ -38,6 +38,14 @@ namespace TGMsim
 
             if (ApplicationIsActivated())
             {
+
+                //SHIFT HISTORY
+                for (int i = 0; i < 5; i++)
+                {
+                    inputHistory[i] = inputHistory[i + 1];
+                }
+                inputHistory[5] = 0;
+
                 //log inputs
 
                 //up or down = w or s
@@ -149,12 +157,6 @@ namespace TGMsim
                     inputPressedHold = false;
                 }
 
-                //SHIFT HISTORY
-                for(int i = 0; i < 5; i++)
-                {
-                    inputHistory[i] = inputHistory[i + 1];
-                }
-                inputHistory[5] = 0;
             }
         }
 

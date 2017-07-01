@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NAudio.CoreAudioApi;
 
 namespace TGMsim
 {
@@ -36,6 +37,8 @@ namespace TGMsim
                 LoopStream loop = new LoopStream(musicStream);
                 songPlayer.Init(loop);
                 songPlayer.Volume = musVol;
+                //NAudio.CoreAudioApi.AudioMeterInformation test = new NAudio.CoreAudioApi.AudioMeterInformation(new  );
+                //float vol = test.MasterPeakValue;
                 songPlayer.Play();
 
             }

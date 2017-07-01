@@ -17,6 +17,8 @@ namespace TGMsim
         public int genAttps = 4;
 
         public int rotation = 0; //TGM, TGM3, SRS
+        public int generator = 0; //dummy, TGM1, TGM2, TGM3, ACE, 
+        public enum Gens { dummy = 0, TGM1, TGM2, TGM3, ACE, SEGA};
 
         public int baseARE = 30;
         public int baseARELine = 30;
@@ -70,7 +72,6 @@ namespace TGMsim
         public List<int> sections = new List<int>();
         public bool bigmode = false;
         public bool g20 = false;
-        public bool easyGen = false;
         public bool shiraseGrades = false;
         public int exam = -1;
         public int lvlBonus = 0;
@@ -113,6 +114,7 @@ namespace TGMsim
                     hold = false;
                     hardDrop = 0;
                     rotation = 0;
+                    generator = (int)Gens.TGM1;
                     lag = 2;
                     lockType = 0;
                     bigMove = 1;
@@ -135,6 +137,7 @@ namespace TGMsim
                     hold = false;
                     hardDrop = 1;
                     rotation = 0;
+                    generator = (int)Gens.TGM2;
                     lag = 0;
                     lockType = 0;
                     bigMove = 2;
@@ -157,6 +160,7 @@ namespace TGMsim
                     hold = false;
                     hardDrop = 1;
                     rotation = 0;
+                    generator = (int)Gens.TGM2;
                     lag = 0;
                     lockType = 0;
                     bigMove = 1;
@@ -182,7 +186,7 @@ namespace TGMsim
                     hold = true;
                     hardDrop = 1;
                     rotation = 1;
-                    lag = 4;
+                    lag = 3;
                     lockType = 0;
                     bigMove = 2;
                     baseARE = 25;
@@ -377,6 +381,11 @@ namespace TGMsim
                     limitType = 4;
                     limit = 1;
                     sections.Add(999);
+                    delayTable.Add(new List<int> { 30 });
+                    delayTable.Add(new List<int> { 30 });
+                    delayTable.Add(new List<int> { 16 });
+                    delayTable.Add(new List<int> { 30 });
+                    delayTable.Add(new List<int> { 41 });
                     break;
                 case 5://rounds
                     gradedBy = 2;
@@ -423,7 +432,7 @@ namespace TGMsim
                     limitType = 3;
                     limit = 180000;//three minutes
                     bigmode = true;
-                    easyGen = true;
+                    //easyGen = true;
                     sections.Add(100);
                     sections.Add(200);
                     sections.Add(300);

@@ -83,10 +83,14 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="FrameTimer.cs" />
     <Compile Include="GameResult.cs" />
     <Compile Include="GameRules.cs" />
     <Compile Include="GameSelect.cs" />
     <Compile Include="GameTimer.cs" />
+    <Compile Include="Generator.cs" />
+    <Compile Include="G_ARS1.cs" />
+    <Compile Include="G_ARS2.cs" />
     <Compile Include="Login.cs" />
     <Compile Include="LoopStream.cs" />
     <Compile Include="ModeSelect.cs" />
@@ -120,6 +124,9 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <None Include="Res\Audio\Casual 1.ogg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Res\Audio\Casual 2.ogg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Res\Audio\crdtinvis.ogg">

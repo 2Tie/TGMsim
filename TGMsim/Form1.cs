@@ -48,8 +48,7 @@ namespace TGMsim
 
         NAudio.Vorbis.VorbisWaveReader musicStream;
         NAudio.Wave.WaveOutEvent songPlayer = new NAudio.Wave.WaveOutEvent();
-
-        int buffS;
+        
         System.Windows.Media.MediaPlayer s_Start = new System.Windows.Media.MediaPlayer();
         System.Windows.Media.MediaPlayer s_Login = new System.Windows.Media.MediaPlayer();
         System.Windows.Media.MediaPlayer s_GSel = new System.Windows.Media.MediaPlayer();
@@ -64,7 +63,7 @@ namespace TGMsim
             this.ClientSize = new Size(800, 600);//Size(1280, 780);
             this.Icon = new Icon(@"Res/GFX/fundoshi.ico");
 
-            interval = (long)TimeSpan.FromSeconds(1.0 / FPS).TotalMilliseconds;
+            //interval = (long)TimeSpan.FromSeconds(1.0 / FPS).TotalMilliseconds;
             fonts.AddFontFile(@"Res\Maestro.ttf");
             FontFamily fontFam = fonts.Families[0];
             f_Maestro = new System.Drawing.Font(fontFam, 16, GraphicsUnit.Pixel);
@@ -99,6 +98,8 @@ namespace TGMsim
         {
             timer.start();
 
+            int cycle = 1;
+
             while (this.Created)
             {
                 startTime = timer.elapsedTime;
@@ -106,8 +107,12 @@ namespace TGMsim
                 gameLogic();
                 gameRender();
 
+                interval =  16 + (cycle % 1);
+                cycle++;
+                if (cycle == 4) cycle = 1;
+
                 Application.DoEvents();
-                while (timer.elapsedTime - startTime < interval) ;
+                while (timer.elapsedTime - startTime < interval);
             }
         }
 
@@ -254,10 +259,10 @@ namespace TGMsim
                                     break;
                                 case 2://garbage
                                     rules.setup(4,4);
-                                    saved = false;
-                                    menuState = 4;
-                                    Audio.stopMusic();
-                                    field1 = new Field(pad1, rules, musicStream);
+                                    //saved = false;
+                                    changeMenu(4);
+                                    //Audio.stopMusic();
+                                    //field1 = new Field(pad1, rules, musicStream);
                                     break;
                                 case 3://20g practice
                                     changeMenu(4);
@@ -501,6 +506,8 @@ namespace TGMsim
                 rules.setup(6,5);
             else if (mSel.game == 5 && mSel.selection == 2)//konoha
                 rules.setup(6,6);
+            else if (mSel.game == 6 && mSel.selection == 2)//garbage
+                rules.setup(7, 4);
             else if (mSel.game == 6 && mSel.selection == 3)//20G
                 rules.setup(7,7);
             else

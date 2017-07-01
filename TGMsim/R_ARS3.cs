@@ -83,15 +83,14 @@ namespace TGMsim
                     lowY = tet.bits[q].y;
             }
 
-            if (tet.id == 1 || tet.id > 4)//I, S, Z, and O have no kick restrictions
+            if (tet.id == 6 || tet.id < 4)//I, S, Z, and O have no kick restrictions
                 return true;
 
 
             //universal center-testing (two up from bottom center will never kick)
-            if (tet.id < 5)
-                if (tet.bits[1].x > -1 && tet.bits[1].y + ((1 + (tet.rotation / 2)) * (3 - big)) < 22)
-                    if (gameField[tet.bits[1].x][tet.bits[1].y + ((1 + (tet.rotation / 2)) * (3 - big))] != 0)
-                        return false;
+            if (tet.bits[1].x > -1 && tet.bits[1].y + ((1 + (tet.rotation / 2)) * (3 - big)) < 22)
+                if (gameField[tet.bits[1].x][tet.bits[1].y + ((1 + (tet.rotation / 2)) * (3 - big))] != 0)
+                    return false;
 
             for (int i = 0; i < 4; i++)
             {
@@ -102,8 +101,8 @@ namespace TGMsim
                 if (i == 1)
                     switch (tet.id)
                     {
-                        case 3:
                         case 4:
+                        case 5:
                             //test other center
                             if (tet.rotation % 2 == 0)
                                 if (gameField[tetX][tetY - (1 * (((tet.rotation + 2) % 4) - 1)) * (2 / big)] != 0)

@@ -57,60 +57,40 @@ namespace TGMsim
                             break;
                     }
                     break;
-                case 2://T
+                case 2://Z
                     switch (r)
                     {
                         case 0:
+                        case 2:
                             bits.Add(new BlockBit(0, 1));
                             bits.Add(new BlockBit(1, 1));
-                            bits.Add(new BlockBit(2, 1));
-                            bits.Add(new BlockBit(1, 2));
-                            break;
-                        case 1:
-                            bits.Add(new BlockBit(1, 0));
-                            bits.Add(new BlockBit(1, 1));
-                            bits.Add(new BlockBit(2, 1));
-                            bits.Add(new BlockBit(1, 2));
-                            break;
-                        case 2:
-                            bits.Add(new BlockBit(0, 2));
                             bits.Add(new BlockBit(1, 2));
                             bits.Add(new BlockBit(2, 2));
-                            bits.Add(new BlockBit(1, 1));
                             break;
+                        case 1:
                         case 3:
-                            bits.Add(new BlockBit(0, 1));
+                            bits.Add(new BlockBit(2, 1));
                             bits.Add(new BlockBit(1, 1));
-                            bits.Add(new BlockBit(1, 0));
                             bits.Add(new BlockBit(1, 2));
+                            bits.Add(new BlockBit(2, 0));
                             break;
                     }
                     break;
-                case 3://L
+                case 3://S
                     switch (r)
                     {
                         case 0:
-                            bits.Add(new BlockBit(0, 1));
-                            bits.Add(new BlockBit(1, 1));
-                            bits.Add(new BlockBit(2, 1));
-                            bits.Add(new BlockBit(0, 2));
-                            break;
-                        case 1:
-                            bits.Add(new BlockBit(1, 1));
-                            bits.Add(new BlockBit(1, 2));
-                            bits.Add(new BlockBit(1, 0));
-                            bits.Add(new BlockBit(2, 2));
-                            break;
                         case 2:
                             bits.Add(new BlockBit(0, 2));
                             bits.Add(new BlockBit(1, 2));
-                            bits.Add(new BlockBit(2, 2));
+                            bits.Add(new BlockBit(1, 1));
                             bits.Add(new BlockBit(2, 1));
                             break;
+                        case 1:
                         case 3:
-                            bits.Add(new BlockBit(1, 0));
-                            bits.Add(new BlockBit(1, 1));
+                            bits.Add(new BlockBit(0, 1));
                             bits.Add(new BlockBit(1, 2));
+                            bits.Add(new BlockBit(1, 1));
                             bits.Add(new BlockBit(0, 0));
                             break;
                     }
@@ -144,55 +124,75 @@ namespace TGMsim
                             break;
                     }
                     break;
-                case 5://S
+                case 5://L
                     switch (r)
                     {
                         case 0:
+                            bits.Add(new BlockBit(0, 1));
+                            bits.Add(new BlockBit(1, 1));
+                            bits.Add(new BlockBit(2, 1));
+                            bits.Add(new BlockBit(0, 2));
+                            break;
+                        case 1:
+                            bits.Add(new BlockBit(1, 1));
+                            bits.Add(new BlockBit(1, 2));
+                            bits.Add(new BlockBit(1, 0));
+                            bits.Add(new BlockBit(2, 2));
+                            break;
                         case 2:
                             bits.Add(new BlockBit(0, 2));
                             bits.Add(new BlockBit(1, 2));
-                            bits.Add(new BlockBit(1, 1));
+                            bits.Add(new BlockBit(2, 2));
                             bits.Add(new BlockBit(2, 1));
                             break;
-                        case 1:
                         case 3:
-                            bits.Add(new BlockBit(0, 1));
-                            bits.Add(new BlockBit(1, 2));
+                            bits.Add(new BlockBit(1, 0));
                             bits.Add(new BlockBit(1, 1));
+                            bits.Add(new BlockBit(1, 2));
                             bits.Add(new BlockBit(0, 0));
                             break;
                     }
                     break;
-                case 6://Z
+                case 6://O
                     switch (r)
                     {
                         case 0:
+                        case 1:
                         case 2:
-                            bits.Add(new BlockBit(0, 1));
-                            bits.Add(new BlockBit(1, 1));
+                        case 3:
                             bits.Add(new BlockBit(1, 2));
                             bits.Add(new BlockBit(2, 2));
-                            break;
-                        case 1:
-                        case 3:
                             bits.Add(new BlockBit(2, 1));
                             bits.Add(new BlockBit(1, 1));
-                            bits.Add(new BlockBit(1, 2));
-                            bits.Add(new BlockBit(2, 0));
                             break;
                     }
                     break;
-                case 7://O
+                case 7://T
                     switch (r)
                     {
                         case 0:
+                            bits.Add(new BlockBit(0, 1));
+                            bits.Add(new BlockBit(1, 1));
+                            bits.Add(new BlockBit(2, 1));
+                            bits.Add(new BlockBit(1, 2));
+                            break;
                         case 1:
+                            bits.Add(new BlockBit(1, 0));
+                            bits.Add(new BlockBit(1, 1));
+                            bits.Add(new BlockBit(2, 1));
+                            bits.Add(new BlockBit(1, 2));
+                            break;
                         case 2:
-                        case 3:
+                            bits.Add(new BlockBit(0, 2));
                             bits.Add(new BlockBit(1, 2));
                             bits.Add(new BlockBit(2, 2));
-                            bits.Add(new BlockBit(2, 1));
                             bits.Add(new BlockBit(1, 1));
+                            break;
+                        case 3:
+                            bits.Add(new BlockBit(0, 1));
+                            bits.Add(new BlockBit(1, 1));
+                            bits.Add(new BlockBit(1, 0));
+                            bits.Add(new BlockBit(1, 2));
                             break;
                     }
                     break;
