@@ -9,7 +9,7 @@ using System.Windows.Input;
 
 namespace TGMsim
 {
-    class Controller
+    class Controller //4-way stick, horizontal input overrides vertical input. Three upper buttons, a lower button, and a start button.
     {
         public Key keyRot1, keyRot2, keyRot3, keyHold, keyUp, keyDown, keyLeft, keyRight, keyStart;
 
@@ -84,19 +84,19 @@ namespace TGMsim
 
                 //map history to inputs
 
-                //up or down = w or s
-                if ((inputHistory[0] & -32768) != 0)
-                    inputV += 1;
-
-                if ((inputHistory[0] & 0x4000) != 0)
-                    inputV -= 1;
-
                 //left or right = a or d
                 if ((inputHistory[0] & 0x2000) != 0)
                     inputH -= 1;
 
                 if ((inputHistory[0] & 0x1000) != 0)
                     inputH += 1;
+
+                //up or down = w or s
+                if ((inputHistory[0] & -32768) != 0 && inputH == 0)
+                    inputV += 1;
+
+                if ((inputHistory[0] & 0x4000) != 0 && inputH == 0)
+                    inputV -= 1;
 
                 //start = enter
                 if ((inputHistory[0] & 0x0800) != 0)
