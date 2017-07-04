@@ -14,8 +14,9 @@ TAP Death
 TGM3 Master  (has grading errors)  
 TGM3 Shirase
 
-TGM4 Rounds (a work-in-progress)  
-TGM4 Konoha (a work-in-progress)
+SEGA Tetris (heavily WIP)  
+SEGA Bloxeed (heavily WIP)  
+SEGA Flash Point (heavily WIP)  
 
 ## Controls
 
