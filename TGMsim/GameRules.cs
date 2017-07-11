@@ -16,7 +16,7 @@ namespace TGMsim
 
         public int genAttps = 4;
 
-        public int rotation = 0; //TGM, TGM3, SRS
+        public int rotation = 0; //TGM, TGM3, SEGA, SRS
         public int generator = 0; //dummy, TGM1, TGM2, TGM3, ACE, 
         public enum Gens { dummy = 0, TGM1, TGM2, TGM3, ACE, SEGA};
 
@@ -40,6 +40,7 @@ namespace TGMsim
 
         public bool showGrade = true;
         public int initialGrade = 0;
+        public int variant = 0;
 
         public string GameName = "error";
         public string ModeName = "error";
@@ -65,7 +66,7 @@ namespace TGMsim
 
         public struct Gimmick
         {
-            public int type; //fading, vanishing, garbage, bones, ice, big
+            public int type; //fading, vanishing, copygarbage, bones, ice, big, random garbage, preset garbage
             public int startLvl;
             public int endLvl;
             public int parameter;
@@ -112,6 +113,29 @@ namespace TGMsim
             gameRules = game;
             switch (game)
             {
+                case 0: //SEGA
+                    GameName = "SEGA";
+                    FPS = 60.00;
+                    nextNum = 1;
+                    hold = false;
+                    hardDrop = 0;
+                    rotation = 2;
+                    generator = (int)Gens.SEGA;
+                    lockType = 0;
+                    bigMove = 1;
+                    baseARE = 25;
+                    baseARELine = 25;
+                    baseDAS = 14;
+                    baseLock = 30;
+                    baseLineClear = 40;
+                    gravType = 0;
+                    baseGrav = 256;
+                    genAttps = 6;
+                    fieldW = 10;
+                    fieldH = 20;
+                    showGrade = false;
+                    gravTable = new List<int> { 4, 6, 8, 10, 12, 16, 32, 48, 64, 80, 96, 112, 128, 144, 4, 32, 64, 96, 128, 160, 192, 224, 256, 512, 768, 1024, 1280, 1024, 768, 5120 };
+                    break;
                 case 1: //TGM
                     GameName = "TGM";
                     FPS = 59.84;
@@ -211,7 +235,7 @@ namespace TGMsim
                     break;
                 case 5:
                 case 7:
-                    GameName = "Custom";
+                    GameName = "BONUS";
                     FPS = 60.00;
                     nextNum = 3;
                     hold = true;
@@ -234,28 +258,28 @@ namespace TGMsim
                     showGrade = false;
                     gravTable = new List<int> { 1024, 1536, 2048, 2560, 3072, 4096, 8192, 12288, 16384, 20480, 24576, 28672, 32768, 36864, 1024, 8192, 16348, 24576, 32768, 40960, 49152, 57344, 65536, 131072, 196608, 262144, 327680, 262144, 196608, 1310720 };
                     break;
-                case 6: //4
-                    GameName = "SEGA";
+                case 6: //GMX?
+                    GameName = "XTREME";
                     FPS = 60.00;
-                    nextNum = 4;
-                    hold = true;
-                    hardDrop = 1;
-                    rotation = 1;
-                    lockType = 1;
-                    bigMove = 2;
-                    //recycled from TGM3 until more is known
+                    nextNum = 1;
+                    hold = false;
+                    hardDrop = 0;
+                    rotation = 2;
+                    generator = (int)Gens.SEGA;
+                    lockType = 0;
+                    bigMove = 1;
                     baseARE = 25;
                     baseARELine = 25;
                     baseDAS = 14;
                     baseLock = 30;
                     baseLineClear = 40;
-                    gravType = 1;
-                    baseGrav = 1024;
+                    gravType = 0;
+                    baseGrav = 256;
                     genAttps = 6;
                     fieldW = 10;
-                    fieldH = 22;
+                    fieldH = 20;
                     showGrade = false;
-                    gravTable = new List<int> { 1024, 1536, 2048, 2560, 3072, 4096, 8192, 12288, 16384, 20480, 24576, 28672, 32768, 36864, 1024, 8192, 16348, 24576, 32768, 40960, 49152, 57344, 65536, 131072, 196608, 262144, 327680, 262144, 196608, 1310720 };
+                    gravTable = new List<int> { 4, 6, 8, 10, 12, 16, 32, 48, 64, 80, 96, 112, 128, 144, 4, 32, 64, 96, 128, 160, 192, 224, 256, 512, 768, 1024, 1280, 1024, 768, 5120 };
                     break;
             }
 
@@ -497,6 +521,37 @@ namespace TGMsim
                     gradedBy = 4;
 
                     sections.Add(200);
+                    delayTable.Add(new List<int> { 27 });
+                    delayTable.Add(new List<int> { 27 });
+                    delayTable.Add(new List<int> { 14 });
+                    delayTable.Add(new List<int> { 30 });
+                    delayTable.Add(new List<int> { 40 });
+                    break;
+                case 8: //segatet
+                    ModeName = "TETRIS";
+                    sections.Add(100);
+                    sections.Add(200);
+                    sections.Add(300);
+                    sections.Add(400);
+                    sections.Add(500);
+                    sections.Add(600);
+                    sections.Add(700);
+                    sections.Add(800);
+                    sections.Add(900);
+                    endLevel = 999;
+                    delayTable.Add(new List<int> { 30 });
+                    delayTable.Add(new List<int> { 30 });
+                    delayTable.Add(new List<int> { 20 });
+                    delayTable.Add(new List<int> { 30 });
+                    delayTable.Add(new List<int> { 42 });
+                    break;
+                case 9: //miner
+                    ModeName = "MINER";
+                    sections.Add(100);
+                    sections.Add(200);
+                    sections.Add(300);
+                    sections.Add(400);
+                    endLevel = 500;
                     delayTable.Add(new List<int> { 27 });
                     delayTable.Add(new List<int> { 27 });
                     delayTable.Add(new List<int> { 14 });

@@ -22,8 +22,8 @@ namespace TGMsim
 
         public bool checkUnder(Tetromino tet, List<List<int>> gameField, bool large, bool spawn)
         {
-            if (spawn)
-                return true;
+            //if (spawn)
+            //    return true;
 
             int lowY = 22;
             int big = 2;
@@ -41,8 +41,8 @@ namespace TGMsim
                 tetX = tet.bits[i].x;// * (2 / big) - (4 % (6 - big));
                 tetY = tet.bits[i].y;// * (2 / big) - (lowY * ((2 / big) - 1));
                 //check OoB
-                if (tetY + 2-big > 21)
-                    continue;
+                if (tetY + 2-big > gameField[0].Count - 1)
+                    return false;
                 if (tetY < 0)
                     return false;
 

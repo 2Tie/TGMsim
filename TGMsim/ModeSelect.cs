@@ -14,6 +14,11 @@ namespace TGMsim
         private int prevSel;
         int dInput;
 
+        public int variant = 0;
+
+        List<List<string>> modes = new List<List<string>>();
+
+
         SolidBrush active = new SolidBrush(Color.White);
         SolidBrush locked = new SolidBrush(Color.Gray);
 
@@ -31,24 +36,32 @@ namespace TGMsim
                 selection = (selection - pad.inputV);
                 dInput = pad.inputV;
             }
-
-            switch(game)
+            if (game == 7 && selection == 1)
             {
-                case 2:
+                if (pad.inputH == 1)
+                    variant = 1;
+                if (pad.inputH == -1)
+                    variant = 0;
+            }
+
+            switch (game)
+            {
                 case 3:
                 case 4:
+                case 5:
+                case 6:
                     if (selection == 2)
                         selection = 0;
                     if (selection == -1)
                         selection = 1;
                     break;
-                case 5:
+                case 0:
                     if (selection == 3)
                         selection = 0;
                     if (selection == -1)
                         selection = 2;
                     break;
-                case 6:
+                case 7:
                     if (selection == 4)
                         selection = 0;
                     if (selection == -1)
@@ -68,32 +81,40 @@ namespace TGMsim
         }
         public void render(Graphics drawBuffer)
         {
-            if (game < 4)
+            if (game == 0)
+                drawBuffer.DrawString("Tetris", SystemFonts.DefaultFont, active, 300, 300);
+            else if (game < 5)
                 drawBuffer.DrawString("Master", SystemFonts.DefaultFont, active, 300, 300);
-            if (game == 4)
-                drawBuffer.DrawString("Roads", SystemFonts.DefaultFont, locked, 300, 300);
             if (game == 5)
-                drawBuffer.DrawString("Tetris", SystemFonts.DefaultFont, locked, 300, 300);
+                drawBuffer.DrawString("Roads", SystemFonts.DefaultFont, locked, 300, 300);
             if (game == 6)
+                drawBuffer.DrawString("Dynamo", SystemFonts.DefaultFont, locked, 300, 300);
+            if (game == 7)
                 drawBuffer.DrawString("Custom", SystemFonts.DefaultFont, locked, 300, 300);
             drawBuffer.DrawString("→", SystemFonts.DefaultFont, new SolidBrush(Color.White), 285, 300 + 12*selection);
             switch(game)
             {
-                case 2://tap
-                    drawBuffer.DrawString("Death", SystemFonts.DefaultFont, active, 300, 312);
-                    break;
-                case 3://tgm3
-                    drawBuffer.DrawString("Shirase", SystemFonts.DefaultFont, active, 300, 312);
-                    break;
-                case 4://ACE
-                    drawBuffer.DrawString("Promotion Exam", SystemFonts.DefaultFont, locked, 300, 312);
-                    break;
-                case 5://TGM4
+                case 0://SEGA
                     drawBuffer.DrawString("Bloxeed", SystemFonts.DefaultFont, locked, 300, 312);
                     drawBuffer.DrawString("Flash Point", SystemFonts.DefaultFont, locked, 300, 324);
                     break;
-                case 6://bonus
-                    drawBuffer.DrawString("~Eternal Shirase~", SystemFonts.DefaultFont, new SolidBrush(Color.White), 300, 312);
+                case 3://tap
+                    drawBuffer.DrawString("Death", SystemFonts.DefaultFont, active, 300, 312);
+                    break;
+                case 4://tgm3
+                    drawBuffer.DrawString("Shirase", SystemFonts.DefaultFont, active, 300, 312);
+                    break;
+                case 5://ACE
+                    drawBuffer.DrawString("Promotion Exam", SystemFonts.DefaultFont, locked, 300, 312);
+                    break;
+                case 6://GMX
+                    drawBuffer.DrawString("Endura", SystemFonts.DefaultFont, locked, 300, 312);
+                    break;
+                case 7://bonus
+                    if (variant == 0)
+                        drawBuffer.DrawString("Miner", SystemFonts.DefaultFont, new SolidBrush(Color.White), 300, 312);
+                    else
+                        drawBuffer.DrawString("Zen", SystemFonts.DefaultFont, new SolidBrush(Color.White), 300, 312);
                     drawBuffer.DrawString("Garbage Clearer", SystemFonts.DefaultFont, new SolidBrush(Color.White), 300, 324);
                     drawBuffer.DrawString("20G Practice", SystemFonts.DefaultFont, new SolidBrush(Color.White), 300, 336);
                     break;

@@ -144,8 +144,8 @@ namespace TGMsim
                 case 3:
                     Audio.playSound(s_GSel);
                     menuState = 3;
-                    if (gSel.menuSelection != 4)
-                    loadHiscores(gSel.menuSelection + 1);
+                    if (gSel.menuSelection != 5 && gSel.menuSelection != 0 && gSel.menuSelection != 7)
+                        loadHiscores(gSel.menuSelection);
                     mSel = new ModeSelect(gSel.menuSelection);
                     break;
                 case 4:
@@ -206,15 +206,10 @@ namespace TGMsim
                         }
                         else
                         {
-                            if (gSel.menuSelection == 7) //settings
+                            if (gSel.menuSelection == 8) //settings
                                 changeMenu(8);
-                            else if (gSel.menuSelection == 6) //Bonus
+                            else //chose a game, let's choose a mode
                             {
-                                changeMenu(3);
-                            }
-                            else
-                            {
-                                //rules.setGame(gSel.menuSelection + 1);
                                 changeMenu(3);
                             }
                         }
@@ -237,38 +232,12 @@ namespace TGMsim
                     mSel.logic(pad1);
                     if ((pad1.inputRot1 | pad1.inputRot3) == 1)
                     {
-                        rules = new GameRules();
-                        //TODO: change rules based on what mode is selected
-                        if (gSel.menuSelection < 5)
-                            changeMenu(4);
-                        else if (gSel.menuSelection == 5 && mSel.selection != 0) //konoha
-                        {
-                            changeMenu(4);
-                        }
+                        if (mSel.game == 7 && mSel.selection == 0)
+                            changeMenu(7);
+                        else if (mSel.game == 5 || mSel.game == 6)//UNSUPPORTED AT THE MOMENT
+                            return;
                         else
-                        {
-                            switch (mSel.selection)
-                            {
-                                case 0://Custom
-                                    changeMenu(7);
-                                    break;
-                                case 1://eternal shirase
-                                    rules.setup(4,2);
-                                    rules.endLevel = 0;
-                                    //todo: add more gimmicks, loop?
-                                    break;
-                                case 2://garbage
-                                    rules.setup(4,4);
-                                    //saved = false;
-                                    changeMenu(4);
-                                    //Audio.stopMusic();
-                                    //field1 = new Field(pad1, rules, musicStream);
-                                    break;
-                                case 3://20g practice
-                                    changeMenu(4);
-                                    break;
-                            }
-                        }
+                            changeMenu(4);
                     }
                     if (pad1.inputRot2 == 1)
                         changeMenu(2);
@@ -498,20 +467,22 @@ namespace TGMsim
 
         private void setupGame()
         {
-            //Mode m = new Mode();
             Audio.stopMusic();
-            if (mSel.game == 3 && mSel.selection == 1)//shirase
-                rules.setup(4,2);
-            else if (mSel.game == 5 && mSel.selection == 1)//rounds
-                rules.setup(6,5);
-            else if (mSel.game == 5 && mSel.selection == 2)//konoha
-                rules.setup(6,6);
-            else if (mSel.game == 6 && mSel.selection == 2)//garbage
+            rules = new GameRules();
+            if (mSel.game == 4 && mSel.selection == 1)//shirase
+                rules.setup(4, 2);
+            else if (mSel.game == 0 && mSel.selection == 0)//segatet
+                rules.setup(0, 8);
+            else if (mSel.game == 7 && mSel.selection == 1)//miner
+                rules.setup(7, 9);
+            else if (mSel.game == 7 && mSel.selection == 2)//garbage
                 rules.setup(7, 4);
-            else if (mSel.game == 6 && mSel.selection == 3)//20G
-                rules.setup(7,7);
+            else if (mSel.game == 7 && mSel.selection == 3)//20G
+                rules.setup(7, 7);
             else
-                rules.setup(mSel.game + 1, mSel.selection);
+                rules.setup(mSel.game, mSel.selection);
+
+            rules.variant = mSel.variant;
 
             //m.mute = prefs.muted;
 
@@ -522,7 +493,7 @@ namespace TGMsim
                 rules.mute = cMen.cheats[4];
             }
 
-            if (mSel.game == 3 && rules.id == 0 && player.name != "   ")
+            if (mSel.game == 4 && rules.id == 0 && player.name != "   ")
                 rules.exam = checkExam();
 
             if (prefs.delay)
@@ -553,7 +524,7 @@ namespace TGMsim
 
             switch (gameResult.game)
             {
-                case 0:
+                case 1:
                     for (int i = 0; i < hiscoreTable[0].Count; i++ ) //for each entry in TGM1
                     {
                         if (hiscoreTable[0][i].grade < gameResult.grade)
@@ -573,7 +544,7 @@ namespace TGMsim
                         //else try the next one.
                     }
                     break;
-                case 4:
+                case 5:
                     for (int i = 0; i < hiscoreTable[0].Count; i++ )
                     {
                         if (hiscoreTable[4][i].level < gameResult.level)
@@ -600,8 +571,9 @@ namespace TGMsim
                         
                     }
                     break;
-                case 5:
+                case 0:
                 case 6:
+                case 7:
                     return false;
                     //break;
                 default:

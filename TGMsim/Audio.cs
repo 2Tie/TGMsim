@@ -12,8 +12,11 @@ namespace TGMsim
         static NAudio.Wave.WaveOutEvent songPlayer = new NAudio.Wave.WaveOutEvent();
         static NAudio.Vorbis.VorbisWaveReader musicStream;
 
-        static public float musVol = 0.3f;
-        static public float sfxVol = 0.3f;
+        //static MMDeviceEnumerator numer = new MMDeviceEnumerator();
+        //static MMDevice endpoint = numer.GetDefaultAudioEndpoint(DataFlow.All, Role.Communications);
+
+        static public float musVol = 0.7f;
+        static public float sfxVol = 0.7f;
 
         static public void addSound(System.Windows.Media.MediaPlayer plr, string uri)
         {
@@ -24,7 +27,7 @@ namespace TGMsim
         static public void playSound(System.Windows.Media.MediaPlayer snd)
         {
             snd.IsMuted = false;
-            snd.Volume = sfxVol;
+            //snd.Volume = sfxVol;
             snd.Position = new TimeSpan(0);
             snd.Play();
         }
@@ -36,9 +39,9 @@ namespace TGMsim
                 musicStream = new NAudio.Vorbis.VorbisWaveReader(@"Res\Audio\" + song + ".ogg");
                 LoopStream loop = new LoopStream(musicStream);
                 songPlayer.Init(loop);
-                songPlayer.Volume = musVol;
-                //NAudio.CoreAudioApi.AudioMeterInformation test = new NAudio.CoreAudioApi.AudioMeterInformation(new  );
-                //float vol = test.MasterPeakValue;
+                //SimpleAudioVolume test = 
+                //AudioMeterInformation test = endpoint.AudioMeterInformation;
+                //songPlayer.Volume = 1;
                 songPlayer.Play();
 
             }

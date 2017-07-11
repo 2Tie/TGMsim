@@ -209,7 +209,7 @@ namespace TGMsim
 
             bgs.Add(Image.FromFile("Res/GFX/bgs/1.png"));
             bgs.Add(Image.FromFile("Res/GFX/bgs/2.png"));
-            bgs.Add(null);
+            bgs.Add(Image.FromFile("Res/GFX/bgs/3.png"));
             bgs.Add(null);
             bgs.Add(null);
             bgs.Add(null);
@@ -257,6 +257,7 @@ namespace TGMsim
 
             if (ruleset.rotation == 0) RSYS = new R_ARS1();
             if (ruleset.rotation == 1) RSYS = new R_ARS3();
+            if (ruleset.rotation == 2) RSYS = new R_SEGA();
 
             
             //TODO: if playback, manually set seed
@@ -267,6 +268,7 @@ namespace TGMsim
             if (ruleset.generator == 1) GEN = new G_ARS1(seed);
             if (ruleset.generator == 2) GEN = new G_ARS2(seed);
             if (ruleset.generator == 3) GEN = new G_ARS3(seed);
+            if (ruleset.generator == 5) GEN = new G_SEGA(seed);
 
             activeTet = new Tetromino(0, ruleset.bigmode); //first piece cannot be S, Z, or O
 
@@ -330,6 +332,11 @@ namespace TGMsim
             if (w4)
                 w4ify();
 
+            if (ruleset.id == 9)
+            {
+                for (int i = 0; i < 13; i++)
+                    raiseGarbage(true);
+            }
 
             if (ruleset.id == 4)
                 randomize();
@@ -405,7 +412,7 @@ namespace TGMsim
                             if (j > 0)
                                 if (gameField[i][j - 1] == 0)//down
                                     drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.White)), x + 25 * i, y + height + 22 - (j * 25), 25, 3);
-                            if (j < 21)
+                            if (j < gameField[0].Count-1)
                                 if (gameField[i][j + 1] == 0)//up
                                     drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.White)), x + 25 * i, y + height - (j * 25), 25, 3);
                         }
@@ -571,7 +578,7 @@ namespace TGMsim
 
             }//////ADJUST AFTER HERE
 
-            if (ruleset.gameRules < 6) //grav meter
+            //if (ruleset.gameRules < 6) //grav meter
             {
                 drawBuffer.FillRectangle(new SolidBrush(gravColor), x + 280, 505, 60, 8);
                 drawBuffer.FillRectangle(new SolidBrush(gravMeter), x + 280, 505, (int)Math.Round(((double)gravTable[gravLevel] * 60) / ((Math.Pow(256, ruleset.gravType + 1) * 20))), 8);
@@ -582,7 +589,7 @@ namespace TGMsim
             //SMALL TEXT
             //levels
             drawBuffer.DrawString(level.ToString(), f_Maestro, textBrush, x + 290, 485);
-            if (ruleset.gameRules < 6)
+            //if (ruleset.gameRules < 6)
             {
                 if (ruleset.sections.Count == curSection)
                     drawBuffer.DrawString(ruleset.sections[curSection - 1].ToString(), f_Maestro, textBrush, x + 290, 525);
@@ -870,7 +877,7 @@ namespace TGMsim
                                 //settle pieces and start ARE
                                 for (int i = 0; i < full.Count; i++)
                                 {
-                                    for (int j = full[i]; j < 21; j++)
+                                    for (int j = full[i]; j < gameField[0].Count-1; j++)
                                     {
                                         for (int k = 0; k < 10; k++)
                                         {
@@ -901,12 +908,26 @@ namespace TGMsim
                                     }
                                     for (int k = 0; k < 10; k++)
                                     {
-                                        gameField[k][21] = 0;
+                                        gameField[k][gameField[0].Count-1] = 0;
                                     }
                                 }
 
                                 if (w4)
                                     w4ify();
+
+                                if (ruleset.id == 9)//and if no pieces in 12
+                                {
+                                    bool raise = true;
+                                    for (int j = 0; j < 10; j++)
+                                    {
+                                        if (gameField[j][12] != 0)
+                                        {
+                                            raise = false;
+                                        }
+                                    }
+                                    if (raise)
+                                        raiseGarbage(true);
+                                }
 
                                 full.Clear();
                                 currentTimer = (int)Field.timerType.ARE;
@@ -1038,11 +1059,23 @@ namespace TGMsim
                                         }
                                     }
                                     activeTet.id = 0;
+
+                                    if (ruleset.id == 9 && ruleset.variant == 1)//and if no pieces in 12
+                                    {
+                                        int drop = 0;
+                                        for (int d = 0; d < 4; d++)
+                                            for (int j = 0; j < 10; j++)
+                                                if (gameField[j][16 + d] != 0)
+                                                    drop = d;
+                                        if (drop > 0)
+                                            dropField(drop);
+                                    }
+
                                     //check for full rows and screenclears
 
                                     int tetCount = 0;
 
-                                    for (int i = 21; i >= 0; i--)
+                                    for (int i = gameField[0].Count-1; i >= 0; i--)
                                     {
                                         int columnCount = 0;
                                         for (int j = 0; j < 10; j++)
@@ -1955,6 +1988,9 @@ namespace TGMsim
 
                         bool son = false;
 
+                        if (pad.inputStart == 1 && ruleset.id == 9 && ruleset.variant == 1)
+                            endGame();
+
                         if (pad.inputV == 1 && ruleset.hardDrop == 1)
                         {
                             blockDrop = 19;
@@ -2189,7 +2225,7 @@ namespace TGMsim
 
             gravCounter = 0;
 
-            if (level % 100 != 99 && level != (ruleset.endLevel - 1) && inCredits == false)
+            if (level % 100 != 99 && level != (ruleset.endLevel - 1) && inCredits == false && ruleset.id != 9)
             {
                 level++;
                 if (level % 100 == 99 || level == (ruleset.endLevel - 1))
@@ -2452,7 +2488,7 @@ namespace TGMsim
                 for (int j = 0; j < 10; j++ )
                     gameField[j][21-i] = 0;
             }
-            for (int i = 21; i > 0; i--)
+            for (int i = gameField[0].Count-1; i > 0; i--)
             {
                 for (int j = 0; j < 10; j++)
                 {
@@ -2463,6 +2499,46 @@ namespace TGMsim
                 for (int j = 0; j < 10; j++)
                     if (gameField[j][num] != 0)
                         gameField[j][num - 1 - i] = 9;
+        }
+
+        private void raiseGarbage(bool rand)
+        {
+            for (int i = gameField[0].Count - 1; i > 0; i--)
+            {
+                for (int j = 0; j < 10; j++)
+                {
+                    gameField[j][i] = gameField[j][i - 1];
+                }
+            }
+            if (rand)
+            {
+                int r = GEN.read() % 10;
+                for (int j = 0; j < 10; j++)
+                    if (j != r)
+                        gameField[j][0] = 9;
+                    else
+                        gameField[j][0] = 0;
+            }
+        }
+
+        private void dropField(int num)
+        {
+            for (int p = 0; p < num; p++)
+            {
+                for (int i = 0; i < gameField[0].Count - 1; i++)
+                    for (int j = 0; j < 10; j++)
+                        gameField[j][i] = gameField[j][i + 1];
+                for (int j = 0; j < 10; j++)
+                    gameField[j][gameField[0].Count - 1] = 0;
+                for (int d = 0; d < flashList.Count; d++)//update flashpips
+                {
+                    var vP = new flashPip();
+                    vP.time = flashList[d].time;
+                    vP.x = flashList[d].x;
+                    vP.y = flashList[d].y - 1;
+                    flashList[d] = vP;
+                }
+            }
         }
 
         public bool emptyUnderTet(Tetromino tet)
@@ -2515,7 +2591,7 @@ namespace TGMsim
 
                 for (int p = 0; p < tet.bits.Count; p++)
                 {
-                    if (tet.bits[p].y > 21)
+                    if (tet.bits[p].y > gameField[0].Count-1)
                         continue;
                     if (gameField[tet.bits[p].x][tet.bits[p].y - g - big] != 0)
                     {
