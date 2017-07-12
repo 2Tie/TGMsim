@@ -12,6 +12,7 @@ using System.IO;
 using System.Drawing.Text;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using System.Globalization;
 
 namespace TGMsim
 {
@@ -45,8 +46,8 @@ namespace TGMsim
 
         List<List<GameResult>> hiscoreTable = new List<List<GameResult>>();
         bool saved;
-
-        NAudio.Vorbis.VorbisWaveReader musicStream;
+        string repNam;
+        
         NAudio.Wave.WaveOutEvent songPlayer = new NAudio.Wave.WaveOutEvent();
         
         System.Windows.Media.MediaPlayer s_Start = new System.Windows.Media.MediaPlayer();
@@ -215,18 +216,18 @@ namespace TGMsim
                         }
                     }
                     else
-                    {
                         if (pad1.inputRot2 == 1)
+                    {
+                        if (gSel.prompt)
+                            gSel.prompt = false;
+                        else
                         {
-                            if (gSel.prompt)
-                                gSel.prompt = false;
-                            else
-                            {
-                                gSel.pSel = 0;
-                                gSel.prompt = true;
-                            }
+                            gSel.pSel = 0;
+                            gSel.prompt = true;
                         }
                     }
+                    else if(pad1.inputHold == 1)
+                        readReplay();
                     break;
                 case 3: //mode select
                     mSel.logic(pad1);
@@ -249,7 +250,7 @@ namespace TGMsim
                     if (field1.gameRunning == false)
                     {
                         //test and save a hiscore ONCE
-                        if (saved == false)
+                        if (saved == false && field1.isPlayback == false)
                         {
                             field1.results.username = player.name;
                             if (rules.gameRules == 4 && field1.ruleset.id == 0 && player.name != "   ")
@@ -283,14 +284,18 @@ namespace TGMsim
                                 player.updateUser();
                             saved = true;
                         }
+                        if(field1.isPlayback)
+                        {
+                            player.name = repNam;
+                        }
 
                     }
                     if (field1.cont == true)
-                    {
                         setupGame();
-                    }
                     if (field1.exit == true)
                         changeMenu(2);
+                    if (field1.record == true)
+                        writeReplay();
                     break;
                 case 6://hiscores
                     if (pad1.inputPressedRot2)
@@ -470,19 +475,17 @@ namespace TGMsim
             Audio.stopMusic();
             rules = new GameRules();
             if (mSel.game == 4 && mSel.selection == 1)//shirase
-                rules.setup(4, 2);
+                rules.setup(4, 2, 0);
             else if (mSel.game == 0 && mSel.selection == 0)//segatet
-                rules.setup(0, 8);
+                rules.setup(0, 8, 0);
             else if (mSel.game == 7 && mSel.selection == 1)//miner
-                rules.setup(7, 9);
+                rules.setup(7, 9, mSel.variant);
             else if (mSel.game == 7 && mSel.selection == 2)//garbage
-                rules.setup(7, 4);
+                rules.setup(7, 4, 0);
             else if (mSel.game == 7 && mSel.selection == 3)//20G
-                rules.setup(7, 7);
+                rules.setup(7, 7, 0);
             else
-                rules.setup(mSel.game, mSel.selection);
-
-            rules.variant = mSel.variant;
+                rules.setup(mSel.game, mSel.selection, 0);
 
             //m.mute = prefs.muted;
 
@@ -500,7 +503,7 @@ namespace TGMsim
                 pad1.setLag(rules.lag);
             FPS = rules.FPS;
 
-            field1 = new Field(pad1, rules, musicStream);
+            field1 = new Field(pad1, rules, -1);
             if (player.name == "   ")
             {
                 field1.godmode = cMen.cheats[0];
@@ -605,6 +608,59 @@ namespace TGMsim
             return false;
         }
 
+        private void writeReplay()
+        {
+            var tim = System.DateTime.Now.ToString("G", new CultureInfo("ja-JP"));
+            tim = tim.Replace("/", "_").Replace(":", "_");
+            string repFile = "Sav/"+tim+" "+rules.GameName+" "+rules.ModeName+".rep";
+            using (FileStream fsStream = new FileStream(repFile, FileMode.OpenOrCreate))
+            using (BinaryWriter sw = new BinaryWriter(fsStream, Encoding.UTF8))
+            {
+                sw.Write(player.name);
+                sw.Write((byte)1);
+                sw.Write(pad1.replay.Count);
+                sw.Write(rules.gameRules);
+                sw.Write(rules.id + (rules.variant << 13));
+                sw.Write(field1.seed);
+                for (int i = 0; i < pad1.replay.Count; i++)
+                    sw.Write(pad1.replay[i]);
+            }
+            field1.record = false;
+        }
+
+        private void readReplay()
+        {
+            OpenFileDialog box = new OpenFileDialog();
+            box.Filter = "replay files (*.rep)|*.rep";
+            box.RestoreDirectory = true;
+
+            if (box.ShowDialog() == DialogResult.OK)
+            {
+                BinaryReader sr = new BinaryReader(box.OpenFile());
+                pad1.replay = new List<short>();
+                repNam = sr.ReadString();
+                byte ver = sr.ReadByte();
+                int length = sr.ReadInt32();
+                int gam = sr.ReadInt32();
+                int t = sr.ReadInt32();
+                int mod = t & 0x0FFF;
+                int v = (t >> 13) & 0x000F;
+                int s = sr.ReadInt32();
+                for (int i = 0; i < length; i++)
+                    pad1.replay.Add(sr.ReadInt16());
+                sr.Close();
+
+                if (ver != 1)
+                    throw new Exception();
+
+                rules.setup(gam, mod, v);
+                field1 = new Field(pad1, rules, s);
+                Audio.stopMusic();
+            }
+
+            
+        }
+
         private void saveHiscore(GameResult gameResult, int g, int place)
         {
 
@@ -704,7 +760,10 @@ namespace TGMsim
 
                 }
                 if (reading == false)
+                {
+                    scores.Close();
                     break;
+                }
             }
         }
 

@@ -108,9 +108,10 @@ namespace TGMsim
             }
         }
 
-        public void setup(int game, int mode)
+        public void setup(int game, int mode, int vari)
         {
             gameRules = game;
+            variant = vari;
             switch (game)
             {
                 case 0: //SEGA

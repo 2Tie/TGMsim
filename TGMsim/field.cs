@@ -116,7 +116,7 @@ namespace TGMsim
         int curSection;
 
         public GameResult results;
-        int seed = 0;
+        public int seed = 0;
 
         public bool cheating = false;
         public bool godmode = false;
@@ -132,6 +132,9 @@ namespace TGMsim
 
         public bool cont = false;
         public bool exit = false;
+        public bool record = false;
+
+        public bool isPlayback = false;
 
         List<Image> tetImgs = new List<Image>();
         List<Image> tetSImgs = new List<Image>();
@@ -145,7 +148,6 @@ namespace TGMsim
         Font f_Maestro;
 
         NAudio.Wave.WaveOutEvent soundList = new NAudio.Wave.WaveOutEvent();
-        NAudio.Vorbis.VorbisWaveReader vorbisStream;
         System.Windows.Media.MediaPlayer s_Ready = new System.Windows.Media.MediaPlayer();
         System.Windows.Media.MediaPlayer s_Go = new System.Windows.Media.MediaPlayer();
         System.Windows.Media.MediaPlayer s_Tet1 = new System.Windows.Media.MediaPlayer();
@@ -176,7 +178,7 @@ namespace TGMsim
         Controller pad;
         int inputDelayH = 0, inputDelayDir = 0;
 
-        public Field(Controller ctlr, GameRules rules, NAudio.Vorbis.VorbisWaveReader music)
+        public Field(Controller ctlr, GameRules rules, int startSeed)
         {
             x = 200;
             y = 50;
@@ -253,16 +255,25 @@ namespace TGMsim
 
             pad = ctlr;
             ruleset = rules;
-            vorbisStream = music;
 
             if (ruleset.rotation == 0) RSYS = new R_ARS1();
             if (ruleset.rotation == 1) RSYS = new R_ARS3();
             if (ruleset.rotation == 2) RSYS = new R_SEGA();
 
-            
-            //TODO: if playback, manually set seed
-            Random r = new Random();
-            seed = r.Next(Int32.MaxValue);
+
+            if (startSeed != -1)
+            {
+                seed = startSeed;
+                isPlayback = true;
+                pad.enablePlayback();
+            }
+            else
+            {
+                Random r = new Random();
+                seed = r.Next(Int32.MaxValue);
+                isPlayback = false;
+                pad.enableRecording();
+            }
 
             if (ruleset.generator == 0) GEN = new Generator(seed);
             if (ruleset.generator == 1) GEN = new G_ARS1(seed);
@@ -720,6 +731,35 @@ namespace TGMsim
 
                 if (ruleset.id == 2 && gm2grade != 0)
                     drawGrade(drawBuffer, "S" + (gm2grade));
+            }
+
+            //replay stuff
+            if(isPlayback)
+            {
+                //BG
+                drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(120, Color.Black)), 10, 80, 180, 500);
+
+                //DATA
+                drawBuffer.DrawString("REPLAY", f_Maestro, textBrush, 20, 60);
+                drawBuffer.DrawString("length: " + pad.replay.Count, SystemFonts.DefaultFont, textBrush, 20, 80);
+                drawBuffer.DrawString("progress: " + pad.progress, SystemFonts.DefaultFont, textBrush, 20, 100);
+
+                //CONTROLS
+                drawBuffer.FillEllipse(new SolidBrush(Color.Gray), 35, 180, 20, 20);
+                drawBuffer.FillEllipse(new SolidBrush(Color.Red), 25 + (pad.inputH*20), 170 + (pad.inputV*20), 40, 40);
+
+                Color unpressed = Color.Gray;
+                Color pressed = Color.GreenYellow;
+
+                drawBuffer.FillEllipse(new SolidBrush(pad.inputPressedRot1 ? pressed : unpressed), 90, 170, 20, 20);
+                drawBuffer.FillEllipse(new SolidBrush(pad.inputPressedRot2 ? pressed : unpressed), 120, 165, 20, 20);
+                drawBuffer.FillEllipse(new SolidBrush(pad.inputPressedRot3 ? pressed : unpressed), 150, 170, 20, 20);
+                drawBuffer.FillEllipse(new SolidBrush(pad.inputPressedHold ? pressed : unpressed), 105, 200, 20, 20);
+
+                //INTERNALS
+                drawBuffer.DrawString("gradepoints: " + gradePoints, SystemFonts.DefaultFont, textBrush, 20, 240);
+                drawBuffer.DrawString("combo: " + gradeCombo, SystemFonts.DefaultFont, textBrush, 20, 260);
+                drawBuffer.DrawString("internal grade: " + gm2grade, SystemFonts.DefaultFont, textBrush, 20, 280);
             }
             
         }
@@ -2156,9 +2196,18 @@ namespace TGMsim
                             exit = true;
                             Audio.stopMusic();
                         }
+                        if (pad.inputPressedHold && !isPlayback)
+                        {
+                            //TODO: save replay
+                            record = true;
+                        }
                     }
-                    if(fadeout == 91)
+                    if (fadeout == 91)
+                    {
+                        pad.recording = false;
+                        pad.playback = false;
                         Audio.playMusic("results");
+                    }
                 }
             }
         }

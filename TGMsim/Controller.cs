@@ -17,6 +17,10 @@ namespace TGMsim
         public bool inputPressedRot1 = false, inputPressedRot2 = false, inputPressedRot3 = false, inputPressedHold = false;
         List<short> inputHistory = new List<short> {0,0,0,0,0,0}; //up, down, left, right, rot1, rot2, rot3, hold, start, 7 bits for frame length (unused for lag, used for replays).
         public int lag = 0;
+        public bool recording = false;
+        public bool playback = false;
+        public List<short> replay = new List<short>();
+        public int progress = 0;
 
         public Controller()
         {
@@ -36,15 +40,15 @@ namespace TGMsim
             //reset inputs
             inputH = inputV = inputStart = inputRot1 = inputRot2 = inputRot3 = inputHold = 0;
 
-            if (ApplicationIsActivated())
+            //SHIFT HISTORY
+            for (int i = 0; i < 5; i++)
             {
+                inputHistory[i] = inputHistory[i + 1];
+            }
+            inputHistory[5] = 0;
 
-                //SHIFT HISTORY
-                for (int i = 0; i < 5; i++)
-                {
-                    inputHistory[i] = inputHistory[i + 1];
-                }
-                inputHistory[5] = 0;
+            if (ApplicationIsActivated() && playback == false)
+            {
 
                 //log inputs
 
@@ -80,89 +84,111 @@ namespace TGMsim
                 //hold = Space
                 if (Keyboard.IsKeyDown(keyHold))
                     inputHistory[lag] += 0x0080;
+            }
 
+            if (playback)
+            {
+                inputHistory[lag] = replay[progress];
+                progress++;
+            }
 
-                //map history to inputs
+            //map history to inputs
 
-                //left or right = a or d
-                if ((inputHistory[0] & 0x2000) != 0)
+            //left or right = a or d
+            if ((inputHistory[0] & 0x2000) != 0)
                     inputH -= 1;
 
-                if ((inputHistory[0] & 0x1000) != 0)
-                    inputH += 1;
+            if ((inputHistory[0] & 0x1000) != 0)
+                inputH += 1;
 
-                //up or down = w or s
-                if ((inputHistory[0] & -32768) != 0 && inputH == 0)
-                    inputV += 1;
+            //up or down = w or s
+            if ((inputHistory[0] & -32768) != 0 && inputH == 0)
+                inputV += 1;
 
-                if ((inputHistory[0] & 0x4000) != 0 && inputH == 0)
-                    inputV -= 1;
+            if ((inputHistory[0] & 0x4000) != 0 && inputH == 0)
+                inputV -= 1;
 
-                //start = enter
-                if ((inputHistory[0] & 0x0800) != 0)
-                    inputStart = 1;
+            //start = enter
+            if ((inputHistory[0] & 0x0800) != 0)
+                inputStart = 1;
 
-                //rot1 = o or [
-                if ((inputHistory[0] & 0x0400) != 0)
+            //rot1 = o or [
+            if ((inputHistory[0] & 0x0400) != 0)
+            {
+                if (!inputPressedRot1)
                 {
-                    if (!inputPressedRot1)
-                    {
-                        inputRot1 = 1;
-                    }
-                    inputPressedRot1 = true;
+                    inputRot1 = 1;
                 }
-                else
-                {
-                    inputPressedRot1 = false;
-                }
-
-                if ((inputHistory[0] & 0x0100) != 0)
-                {
-                    if (!inputPressedRot3)
-                    {
-                        inputRot3 = 1;
-                    }
-                    inputPressedRot3 = true;
-                }
-                else
-                {
-                    inputPressedRot3 = false;
-                }
-
-                //rot2 = p
-                if ((inputHistory[0] & 0x0200) != 0)
-                {
-                    if (!inputPressedRot2)
-                    {
-                        inputRot2 = 1;
-                    }
-                    inputPressedRot2 = true;
-                }
-                else
-                {
-                    inputPressedRot2 = false;
-                }
-
-                //hold = Space
-                if ((inputHistory[0] & 0x0080) != 0)
-                {
-                    if (!inputPressedHold)
-                    {
-                        inputHold = 1;
-                    }
-                    inputPressedHold = true;
-                }
-                else
-                {
-                    inputPressedHold = false;
-                }
-
+                inputPressedRot1 = true;
             }
+            else
+            {
+                inputPressedRot1 = false;
+            }
+
+            if ((inputHistory[0] & 0x0100) != 0)
+            {
+                if (!inputPressedRot3)
+                {
+                    inputRot3 = 1;
+                }
+                inputPressedRot3 = true;
+            }
+            else
+            {
+                inputPressedRot3 = false;
+            }
+
+            //rot2 = p
+            if ((inputHistory[0] & 0x0200) != 0)
+            {
+                if (!inputPressedRot2)
+                {
+                    inputRot2 = 1;
+                }
+                inputPressedRot2 = true;
+            }
+            else
+            {
+                inputPressedRot2 = false;
+            }
+
+            //hold = Space
+            if ((inputHistory[0] & 0x0080) != 0)
+            {
+                if (!inputPressedHold)
+                {
+                    inputHold = 1;
+                }
+                inputPressedHold = true;
+            }
+            else
+            {
+                inputPressedHold = false;
+            }
+
+            //add inputs to replay
+            if(recording == true)
+            replay.Add(inputHistory[lag]);
         }
 
         public void setLag(int l)
         {
             lag = l;
+        }
+
+        public void enableRecording()
+        {
+            recording = true;
+            replay = new List<short>();
+        }
+
+        public void enablePlayback()
+        {
+            recording = false;
+            playback = true;
+            progress = 0;
+            //TODO: load the playback at some point so that file can be loaded and field can be set to playback and seed set??
         }
 
         public static bool ApplicationIsActivated()
