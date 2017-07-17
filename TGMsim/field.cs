@@ -725,7 +725,10 @@ namespace TGMsim
                 }
 
                 drawBuffer.DrawString("Press Start to", SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 280);
-                drawBuffer.DrawString("restart the field!", SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 290);
+                if (isPlayback)
+                    drawBuffer.DrawString("restart the replay!", SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 290);
+                else
+                    drawBuffer.DrawString("reset the field!", SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 290);
 
                 drawBuffer.DrawString("Press B to", SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 310);
                 drawBuffer.DrawString("return to menu!", SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 320);

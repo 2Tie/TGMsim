@@ -33,6 +33,8 @@ namespace TGMsim
         Profile player;
         Preferences prefs;
 
+        string fileName;
+
         PrivateFontCollection fonts = new PrivateFontCollection();
         Font f_Maestro;
 
@@ -228,8 +230,9 @@ namespace TGMsim
                     }
                     else if (pad1.inputHold == 1)
                     {
-                        if (readReplay())
+                        if (queryReplay())
                         {
+                            loadReplay();
                             saved = false;
                             menuState = 4;
                         }
@@ -284,7 +287,7 @@ namespace TGMsim
                                 }
                             }
 
-                            if (!field1.cheating && field1.ruleset.exam == -1) //TODO: check if this is a replay as well
+                            if (!field1.cheating && field1.ruleset.exam == -1)
                                 field1.newHiscore = testHiscore(field1.results);
                             if (player.name != "   ")
                                 player.updateUser();
@@ -297,7 +300,13 @@ namespace TGMsim
 
                     }
                     if (field1.cont == true)
-                        setupGame();
+                    {
+                        field1.cont = false;
+                        if (field1.isPlayback)
+                            loadReplay();
+                        else
+                            setupGame();
+                    }
                     if (field1.exit == true)
                         changeMenu(2);
                     if (field1.record == true)
@@ -638,7 +647,7 @@ namespace TGMsim
             field1.recorded = true;
         }
 
-        private bool readReplay()
+        private bool queryReplay()
         {
             OpenFileDialog box = new OpenFileDialog();
             box.Filter = "replay files (*.rep)|*.rep";
@@ -646,31 +655,38 @@ namespace TGMsim
 
             if (box.ShowDialog() == DialogResult.OK)
             {
-                BinaryReader sr = new BinaryReader(box.OpenFile());
-                pad1.replay = new List<short>();
-                repNam = sr.ReadString();
-                byte ver = sr.ReadByte();
-                int length = sr.ReadInt32();
-                int gam = sr.ReadInt32();
-                int t = sr.ReadInt32();
-                int mod = t & 0x0FFF;
-                int v = (t >> 13) & 0x000F;
-                int s = sr.ReadInt32();
-                for (int i = 0; i < length; i++)
-                    pad1.replay.Add(sr.ReadInt16());
-                sr.Close();
-
-                if (ver != 1)
-                    throw new Exception();
-                rules = new GameRules();
-                rules.setup(gam, mod, v);
-                field1 = new Field(pad1, rules, s);
-                Audio.stopMusic();
+                fileName = box.FileName;
                 return true;
             }
             else
                 return false;
             
+        }
+
+        private void loadReplay()
+        {
+            FileStream fs = new FileStream(fileName, FileMode.Open);
+            BinaryReader sr = new BinaryReader(fs);
+            pad1.replay = new List<short>();
+            repNam = sr.ReadString();
+            byte ver = sr.ReadByte();
+            int length = sr.ReadInt32();
+            int gam = sr.ReadInt32();
+            int t = sr.ReadInt32();
+            int mod = t & 0x0FFF;
+            int v = (t >> 13) & 0x000F;
+            int s = sr.ReadInt32();
+            for (int i = 0; i < length; i++)
+                pad1.replay.Add(sr.ReadInt16());
+            sr.Close();
+            fs.Dispose();
+
+            if (ver != 1)
+                throw new Exception();
+            rules = new GameRules();
+            rules.setup(gam, mod, v);
+            field1 = new Field(pad1, rules, s);
+            Audio.stopMusic();
         }
 
         private void saveHiscore(GameResult gameResult, int g, int place)
