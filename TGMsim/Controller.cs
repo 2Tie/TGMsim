@@ -14,7 +14,7 @@ namespace TGMsim
         public Key keyRot1, keyRot2, keyRot3, keyHold, keyUp, keyDown, keyLeft, keyRight, keyStart;
 
         public int inputH, inputV, inputStart, inputRot1, inputRot2, inputRot3, inputHold;
-        public bool inputPressedRot1 = false, inputPressedRot2 = false, inputPressedRot3 = false, inputPressedHold = false;
+        public bool inputPressedRot1 = false, inputPressedRot2 = false, inputPressedRot3 = false, inputPressedHold = false, superStart = false;
         List<short> inputHistory = new List<short> {0,0,0,0,0,0}; //up, down, left, right, rot1, rot2, rot3, hold, start, 7 bits for frame length (unused for lag, used for replays).
         public int lag = 0;
         public bool recording = false;
@@ -39,6 +39,7 @@ namespace TGMsim
         {
             //reset inputs
             inputH = inputV = inputStart = inputRot1 = inputRot2 = inputRot3 = inputHold = 0;
+            superStart = false;
 
             //SHIFT HISTORY
             for (int i = 0; i < 5; i++)
@@ -47,49 +48,57 @@ namespace TGMsim
             }
             inputHistory[5] = 0;
 
-            if (ApplicationIsActivated() && playback == false)
+            if (ApplicationIsActivated())
             {
+                if (playback == false)
+                {
+                    //log inputs
 
-                //log inputs
+                    //up or down = w or s
+                    if (Keyboard.IsKeyDown(keyUp))
+                        inputHistory[lag] += -32768;
 
-                //up or down = w or s
-                if (Keyboard.IsKeyDown(keyUp))
-                    inputHistory[lag] += -32768;
+                    if (Keyboard.IsKeyDown(keyDown))
+                        inputHistory[lag] += 0x4000;
 
-                if (Keyboard.IsKeyDown(keyDown))
-                    inputHistory[lag] += 0x4000;
+                    //left or right = a or d
+                    if (Keyboard.IsKeyDown(keyLeft))
+                        inputHistory[lag] += 0x2000;
 
-                //left or right = a or d
-                if (Keyboard.IsKeyDown(keyLeft))
-                    inputHistory[lag] += 0x2000;
+                    if (Keyboard.IsKeyDown(keyRight))
+                        inputHistory[lag] += 0x1000;
 
-                if (Keyboard.IsKeyDown(keyRight))
-                    inputHistory[lag] += 0x1000;
+                    //start = enter
+                    if (Keyboard.IsKeyDown(keyStart))
+                        inputHistory[lag] += 0x0800;
 
+                    //rot1 = o or [
+                    if (Keyboard.IsKeyDown(keyRot1))
+                        inputHistory[lag] += 0x0400;
+
+                    if (Keyboard.IsKeyDown(keyRot3))
+                        inputHistory[lag] += 0x0100;
+
+                    //rot2 = p
+                    if (Keyboard.IsKeyDown(keyRot2))
+                        inputHistory[lag] += 0x0200;
+
+                    //hold = Space
+                    if (Keyboard.IsKeyDown(keyHold))
+                        inputHistory[lag] += 0x0080;
+                }
                 //start = enter
                 if (Keyboard.IsKeyDown(keyStart))
-                    inputHistory[lag] += 0x0800;
-
-                //rot1 = o or [
-                if (Keyboard.IsKeyDown(keyRot1))
-                    inputHistory[lag] += 0x0400;
-
-                if (Keyboard.IsKeyDown(keyRot3))
-                    inputHistory[lag] += 0x0100;
-
-                //rot2 = p
-                if (Keyboard.IsKeyDown(keyRot2))
-                    inputHistory[lag] += 0x0200;
-
-                //hold = Space
-                if (Keyboard.IsKeyDown(keyHold))
-                    inputHistory[lag] += 0x0080;
+                    superStart = true;
             }
 
             if (playback)
             {
                 inputHistory[lag] = replay[progress];
-                progress++;
+                if ((replay[progress] & 0x007f) == 0)
+                    progress++;
+                else
+                    replay[progress] -= 1;
             }
 
             //map history to inputs
@@ -168,8 +177,18 @@ namespace TGMsim
             }
 
             //add inputs to replay
-            if(recording == true)
-            replay.Add(inputHistory[0]);
+            if (recording == true)
+            {
+                if (replay.Count == 0)
+                    replay.Add(inputHistory[0]);
+                else
+                {
+                    if ((replay[replay.Count - 1] & 0xFF80) != (inputHistory[0] & 0xFF80) || (replay[replay.Count - 1] & 0x007F) == 0x7F)
+                        replay.Add(inputHistory[0]);
+                    else
+                        replay[replay.Count - 1] += 1;
+                }
+            }
         }
 
         public void setLag(int l)

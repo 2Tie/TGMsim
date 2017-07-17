@@ -2046,6 +2046,9 @@ namespace TGMsim
                         if (pad.inputStart == 1 && ruleset.id == 9 && ruleset.variant == 1)
                             endGame();
 
+                        if (isPlayback == true && pad.superStart)
+                            endGame();
+
                         if (pad.inputV == 1 && ruleset.hardDrop == 1)
                         {
                             blockDrop = 19;
