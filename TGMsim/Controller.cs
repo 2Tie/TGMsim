@@ -169,7 +169,7 @@ namespace TGMsim
 
             //add inputs to replay
             if(recording == true)
-            replay.Add(inputHistory[lag]);
+            replay.Add(inputHistory[0]);
         }
 
         public void setLag(int l)

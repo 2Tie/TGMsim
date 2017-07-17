@@ -133,6 +133,7 @@ namespace TGMsim
         public bool cont = false;
         public bool exit = false;
         public bool record = false;
+        public bool recorded = false;
 
         public bool isPlayback = false;
 
@@ -723,11 +724,22 @@ namespace TGMsim
                     drawBuffer.DrawString(convertTime((long)(torDef * ruleset.FPS / 60)) + " over!", SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 260);
                 }
 
-                drawBuffer.DrawString("Press start to", SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 280);
+                drawBuffer.DrawString("Press Start to", SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 280);
                 drawBuffer.DrawString("restart the field!", SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 290);
 
                 drawBuffer.DrawString("Press B to", SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 310);
                 drawBuffer.DrawString("return to menu!", SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 320);
+
+                if (!isPlayback)
+                {
+                    if (!recorded)
+                    {
+                        drawBuffer.DrawString("Press Hold to", SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 340);
+                        drawBuffer.DrawString("record the replay!", SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 350);
+                    }
+                    else
+                        drawBuffer.DrawString("Replay recorded!", SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 340);
+                }
 
                 if (ruleset.id == 2 && gm2grade != 0)
                     drawGrade(drawBuffer, "S" + (gm2grade));
@@ -2196,7 +2208,7 @@ namespace TGMsim
                             exit = true;
                             Audio.stopMusic();
                         }
-                        if (pad.inputPressedHold && !isPlayback)
+                        if (pad.inputPressedHold && !isPlayback && !recorded)
                         {
                             //TODO: save replay
                             record = true;

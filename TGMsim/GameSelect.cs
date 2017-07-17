@@ -159,7 +159,7 @@ namespace TGMsim
             if (menuSelection == 1 || menuSelection == 3 || menuSelection == 4)
                 bhite = 300;
             if (menuSelection > 6)
-                bhite = 149;
+                bhite = 120;
             int bwith = 200;
             if (menuSelection > 6)
                 bwith = 400;
@@ -200,6 +200,7 @@ namespace TGMsim
             drawBuffer.DrawString("GMX", SystemFonts.DefaultFont, new SolidBrush(Color.White), 700, 200);
             drawBuffer.DrawString("Bonus", SystemFonts.DefaultFont, new SolidBrush(Color.White), 200, 500);
             drawBuffer.DrawString("Preferences", SystemFonts.DefaultFont, new SolidBrush(Color.White), 600, 500);
+            drawBuffer.DrawString("Press Hold to load a replay!", SystemFonts.DefaultFont, new SolidBrush(Color.White), 330, 580);
 
 
             //selection box

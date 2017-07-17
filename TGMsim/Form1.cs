@@ -226,8 +226,14 @@ namespace TGMsim
                             gSel.prompt = true;
                         }
                     }
-                    else if(pad1.inputHold == 1)
-                        readReplay();
+                    else if (pad1.inputHold == 1)
+                    {
+                        if (readReplay())
+                        {
+                            saved = false;
+                            menuState = 4;
+                        }
+                    }
                     break;
                 case 3: //mode select
                     mSel.logic(pad1);
@@ -286,7 +292,7 @@ namespace TGMsim
                         }
                         if(field1.isPlayback)
                         {
-                            player.name = repNam;
+                            field1.results.username = repNam;
                         }
 
                     }
@@ -295,7 +301,10 @@ namespace TGMsim
                     if (field1.exit == true)
                         changeMenu(2);
                     if (field1.record == true)
-                        writeReplay();
+                        if (player.name != "   ")
+                            writeReplay();
+                        else
+                            field1.record = false;
                     break;
                 case 6://hiscores
                     if (pad1.inputPressedRot2)
@@ -386,14 +395,22 @@ namespace TGMsim
                     break;
                 case 6:
                     drawBuffer.DrawString("hiscores", DefaultFont, new SolidBrush(Color.White), 5, 5);
-
+                    int gam = mSel.game - 1;
                     for (int i = 0; i < 6; i++ )
                     {
-                        drawBuffer.DrawString(hiscoreTable[mSel.game][i].username, DefaultFont, new SolidBrush(Color.White), 250, 100 + 30 * i);
-                        if (mSel.game == 3)
-                            drawBuffer.DrawString(hiscoreTable[mSel.game][i].level.ToString(), DefaultFont, new SolidBrush(Color.White), 290, 100 + 30 * i);
-                        drawBuffer.DrawString(rules.grades[hiscoreTable[mSel.game][i].grade], DefaultFont, new SolidBrush(Color.White), 330, 100 + 30 * i);
-                        var temptimeVAR = hiscoreTable[mSel.game][i].time;
+                        if (hiscoreTable[gam][i].lineC == 1)
+                        {
+                            drawBuffer.DrawLine(new Pen(Color.LimeGreen), 240, 111 + 30 * i, 550, 111 + 30 * i);
+                        }
+                        if (hiscoreTable[gam][i].lineC == 2)
+                        {
+                            drawBuffer.DrawLine(new Pen(Color.Orange), 240, 111 + 30 * i, 550, 111 + 30 * i);
+                        }
+                        drawBuffer.DrawString(hiscoreTable[gam][i].username, DefaultFont, new SolidBrush(Color.White), 250, 100 + 30 * i);
+                        if (gam == 3)
+                            drawBuffer.DrawString(hiscoreTable[gam][i].level.ToString(), DefaultFont, new SolidBrush(Color.White), 290, 100 + 30 * i);
+                        drawBuffer.DrawString(rules.grades[hiscoreTable[gam][i].grade], DefaultFont, new SolidBrush(Color.White), 330, 100 + 30 * i);
+                        var temptimeVAR = hiscoreTable[gam][i].time;
                         var min = (int)Math.Floor((double)temptimeVAR / 60000);
                         temptimeVAR -= min * 60000;
                         var sec = (int)Math.Floor((double)temptimeVAR / 1000);
@@ -401,20 +418,12 @@ namespace TGMsim
                         var msec = (int)temptimeVAR;
                         var msec10 = (int)(msec / 10);
                         drawBuffer.DrawString(string.Format("{0,2:00}:{1,2:00}:{2,2:00}", min, sec, msec10), DefaultFont, new SolidBrush(Color.White), 360, 100 + 30 * i);
-                        if (mSel.game != 0)
+                        if (gam != 0)
                         {
                             for (int j = 0; j < 6; j++)
                             {
-                                drawBuffer.DrawString(hiscoreTable[mSel.game][i].medals[j].ToString(), DefaultFont, new SolidBrush(Color.White), 420 + 10*j, 100 + 30 * i);
+                                drawBuffer.DrawString(hiscoreTable[gam][i].medals[j].ToString(), DefaultFont, new SolidBrush(Color.White), 420 + 10*j, 100 + 30 * i);
                             }
-                        }
-                        if (hiscoreTable[mSel.game][i].lineC == 1)
-                        {
-                            drawBuffer.DrawLine(new Pen(Color.LimeGreen), 240, 100 + 30 * i, 550, 100 + 30 * i);
-                        }
-                        if (hiscoreTable[mSel.game][i].lineC == 2)
-                        {
-                            drawBuffer.DrawLine(new Pen(Color.Orange), 240, 100 + 30 * i, 550, 100 + 30 * i);
                         }
                     }
 
@@ -626,9 +635,10 @@ namespace TGMsim
                     sw.Write(pad1.replay[i]);
             }
             field1.record = false;
+            field1.recorded = true;
         }
 
-        private void readReplay()
+        private bool readReplay()
         {
             OpenFileDialog box = new OpenFileDialog();
             box.Filter = "replay files (*.rep)|*.rep";
@@ -652,12 +662,14 @@ namespace TGMsim
 
                 if (ver != 1)
                     throw new Exception();
-
+                rules = new GameRules();
                 rules.setup(gam, mod, v);
                 field1 = new Field(pad1, rules, s);
                 Audio.stopMusic();
+                return true;
             }
-
+            else
+                return false;
             
         }
 
