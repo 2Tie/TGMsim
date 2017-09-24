@@ -12,6 +12,8 @@ namespace TGMsim
         static NAudio.Wave.WaveOutEvent songPlayer = new NAudio.Wave.WaveOutEvent();
         static NAudio.Vorbis.VorbisWaveReader musicStream;
 
+        static public string song = "";
+
         //static MMDeviceEnumerator numer = new MMDeviceEnumerator();
         //static MMDevice endpoint = numer.GetDefaultAudioEndpoint(DataFlow.All, Role.Communications);
 
@@ -32,10 +34,11 @@ namespace TGMsim
             snd.Play();
         }
 
-        static public void playMusic(string song)
+        static public void playMusic(string s)
         {
             try
             {
+                song = s;
                 musicStream = new NAudio.Vorbis.VorbisWaveReader(@"Res\Audio\" + song + ".ogg");
                 LoopStream loop = new LoopStream(musicStream);
                 songPlayer.Init(loop);

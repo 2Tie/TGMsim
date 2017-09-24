@@ -8,7 +8,7 @@ namespace TGMsim
 {
     public class Tetromino
     {
-        enum piece { I = 1, T, L, J, S, Z, O };
+        enum piece { I = 1, Z, S, J, L, O, T };
 
         public int id = 0;
         public int rotation = 0;

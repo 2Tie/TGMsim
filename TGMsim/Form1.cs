@@ -244,7 +244,7 @@ namespace TGMsim
                     {
                         if (mSel.game == 7 && mSel.selection == 0)
                             changeMenu(7);
-                        else if (mSel.game == 5 || mSel.game == 6)//UNSUPPORTED AT THE MOMENT
+                        else if (mSel.game == 5)//UNSUPPORTED AT THE MOMENT
                             return;
                         else
                             changeMenu(4);
@@ -496,6 +496,8 @@ namespace TGMsim
                 rules.setup(4, 2, 0);
             else if (mSel.game == 0 && mSel.selection == 0)//segatet
                 rules.setup(0, 8, 0);
+            else if (mSel.game == 6 && mSel.selection == 0)//dynamo
+                rules.setup(6, 10, 0);
             else if (mSel.game == 7 && mSel.selection == 1)//miner
                 rules.setup(7, 9, mSel.variant);
             else if (mSel.game == 7 && mSel.selection == 2)//garbage

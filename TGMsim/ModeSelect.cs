@@ -88,7 +88,7 @@ namespace TGMsim
             if (game == 5)
                 drawBuffer.DrawString("Roads", SystemFonts.DefaultFont, locked, 300, 300);
             if (game == 6)
-                drawBuffer.DrawString("Dynamo", SystemFonts.DefaultFont, locked, 300, 300);
+                drawBuffer.DrawString("Dynamo", SystemFonts.DefaultFont, active, 300, 300);
             if (game == 7)
                 drawBuffer.DrawString("Custom", SystemFonts.DefaultFont, locked, 300, 300);
             drawBuffer.DrawString("→", SystemFonts.DefaultFont, new SolidBrush(Color.White), 285, 300 + 12*selection);

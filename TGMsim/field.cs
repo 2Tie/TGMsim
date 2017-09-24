@@ -352,10 +352,7 @@ namespace TGMsim
 
             if (ruleset.id == 4)
                 randomize();
-
-            //updateMusic();
-            //playMusic("Level 1");
-            //playSound(s_Ready);
+            
         }
 
         public void randomize()
@@ -900,7 +897,9 @@ namespace TGMsim
 
                     if(creditsProgress == 0 &&((ruleset.gameRules > 1) == (creditsPause.count >= 3000) || ruleset.id == 1) && inCredits)
                     {
-                        if (creditsType < 2)
+                        if (ruleset.id == 7 || ruleset.id == 9 || (ruleset.id == 10 && ruleset.variant == 0))
+                            Audio.playMusic("crdtcas");
+                        else if (creditsType < 2)
                             Audio.playMusic("crdtvanish");
                         else
                             Audio.playMusic("crdtinvis");
@@ -1194,11 +1193,11 @@ namespace TGMsim
                                             for (int i = 0; i < bigFull; i++)//1234 for tgm1 - tap, 1246 in tgm3, 1236 in tgm4
                                             {
                                                 level++;
-                                                if (ruleset.gameRules == 4 && i > 2)
+                                                if (ruleset.gameRules == 4 && i > 1)
                                                     level++;
-                                                if (ruleset.gameRules > 3 && i > 3)
+                                                if (ruleset.gameRules > 3 && i > 2)
                                                     level++;
-                                                if (ruleset.gameRules > 4 && i > 3)
+                                                if (ruleset.gameRules > 4 && i > 2)
                                                     level++;
                                             }
                                         else
@@ -2800,36 +2799,41 @@ namespace TGMsim
 
             if(ruleset.id == 0)
             {
-                if (section == 0)
+                if (ruleset.gameRules == 4)
                 {
-                    Audio.stopMusic();
-                    Audio.playMusic("Level 1");
-                }
-                if (section == 5)
-                {
-                    Audio.stopMusic();
-                    Audio.playMusic("Level 2");
-                }
-                if(ruleset.gameRules == 2 || ruleset.gameRules == 3)
-                {
-                    if (section == 7)
+                    if (section >= 8 && Audio.song != "Level 3")
                     {
                         Audio.stopMusic();
                         Audio.playMusic("Level 3");
+                        return;
                     }
-                    if (section == 9)
+                }
+                if (ruleset.gameRules == 2 || ruleset.gameRules == 3)
+                {
+                    if (section >= 9 && Audio.song != "Level 4")
                     {
                         Audio.stopMusic();
                         Audio.playMusic("Level 4");
+                        return;
                     }
-                }
-                if (ruleset.gameRules == 4)
-                {
-                    if (section == 8)
+                    if (section >= 7 && Audio.song != "Level 3")
                     {
                         Audio.stopMusic();
                         Audio.playMusic("Level 3");
+                        return;
                     }
+                }
+                if (section >= 5 && Audio.song != "Level 2")
+                {
+                    Audio.stopMusic();
+                    Audio.playMusic("Level 2");
+                    return;
+                }
+                if (section >= 0 && Audio.song != "Level 1")
+                {
+                    Audio.stopMusic();
+                    Audio.playMusic("Level 1");
+                    return;
                 }
             }
 
@@ -2839,16 +2843,19 @@ namespace TGMsim
                 {
                     Audio.stopMusic();
                     Audio.playMusic("Level 2");
+                    return;
                 }
                 if (curSection == 3)
                 {
                     Audio.stopMusic();
                     Audio.playMusic("Level 3");
+                    return;
                 }
                 if (curSection == 5)
                 {
                     Audio.stopMusic();
                     Audio.playMusic("Level 4");
+                    return;
                 }
             }
             else if (ruleset.id == 2)//shirase
@@ -2857,26 +2864,65 @@ namespace TGMsim
                 {
                     Audio.stopMusic();
                     Audio.playMusic("Level 3");
+                    return;
                 }
                 if (curSection == 5)
                 {
                     Audio.stopMusic();
                     Audio.playMusic("Level 4");
+                    return;
                 }
                 if (curSection == 7)
                 {
                     Audio.stopMusic();
                     Audio.playMusic("Level 5");
+                    return;
                 }
                 if (curSection == 10)
                 {
                     Audio.stopMusic();
                     Audio.playMusic("Level 6");
+                    return;
                 }
                 if (curSection == 14)
                 {
                     Audio.stopMusic();
                     Audio.playMusic("Shirase");
+                    return;
+                }
+            }
+            else if (ruleset.id == 10) //dynamo
+            {
+                section += ruleset.variant*5;
+                if (section >= 20 && Audio.song != "Level 5")
+                {
+                    Audio.stopMusic();
+                    Audio.playMusic("Level 5");
+                    return;
+                }
+                if (section >= 15 && Audio.song != "Level 4")
+                {
+                    Audio.stopMusic();
+                    Audio.playMusic("Level 4");
+                    return;
+                }
+                if (section >= 10 && Audio.song != "Level 3")
+                {
+                    Audio.stopMusic();
+                    Audio.playMusic("Level 3");
+                    return;
+                }
+                if(section >= 5 && Audio.song != "Level 2")
+                {
+                    Audio.stopMusic();
+                    Audio.playMusic("Level 2");
+                    return;
+                }
+                if(section >= 0 && Audio.song != "Level 1")
+                {
+                    Audio.stopMusic();
+                    Audio.playMusic("Level 1");
+                    return;
                 }
             }
             else
@@ -2885,6 +2931,7 @@ namespace TGMsim
                 {
                     Audio.stopMusic();
                     Audio.playMusic("Casual 1");
+                    return;
                 }
             }
         }

@@ -58,7 +58,7 @@ namespace TGMsim
 
 
             //universal center-testing (two up from bottom center will never kick)
-            if(tet.id == 2 || tet.id == 3 || tet.id == 7)
+            if(tet.id == 2 || tet.id == 3 || tet.id == 4)
                 if (tet.bits[1].x > -1 && tet.bits[1].y + ((1 + (tet.rotation / 2)) * (3 - big)) < 22)
                     if (gameField[tet.bits[1].x][tet.bits[1].y + ((1 + (tet.rotation / 2)) * (3 - big))] != 0)
                         return false;
@@ -72,16 +72,15 @@ namespace TGMsim
                 if (i == 1)
                     switch (tet.id)
                     {
-                        case 4:
-                        case 5:
+                        case 4://J
+                        case 5://L
                             //test other center
-                            if (tet.rotation % 2 == 0)
-                                if (gameField[tetX][tetY - (1 * (((tet.rotation + 2) % 4) - 1)) * (2 / big)] != 0)
-                                {
-                                    if (gameField[tetX + (((tet.id - 3) * 2) - 1)][tetY + ((tet.rotation / 2) + 1)] != 0 && tet.rotation + ((((tet.id - 3) * 2) - 1) * p) == 1)
-                                        return true;
-                                    return false;
-                                }
+                            if (tet.rotation % 2 == 0 && gameField[tetX][tetY - 1] != 0)
+                            {
+                                if (gameField[tetX + (((tet.id - 4) * -2) + 1)][tetY + ((tet.rotation / 2) + 1)] != 0 && tet.rotation + ((((tet.id - 4) * 2) - 1) * p) == -1)
+                                    return true;
+                                return false;
+                            }
                             continue;
                     }
             }

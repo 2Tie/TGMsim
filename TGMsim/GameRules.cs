@@ -264,11 +264,11 @@ namespace TGMsim
                     FPS = 60.00;
                     nextNum = 1;
                     hold = false;
-                    hardDrop = 0;
-                    rotation = 2;
-                    generator = (int)Gens.SEGA;
+                    hardDrop = 1;
+                    rotation = 1;
+                    generator = (int)Gens.TGM3;
                     lockType = 0;
-                    bigMove = 1;
+                    bigMove = 2;
                     baseARE = 25;
                     baseARELine = 25;
                     baseDAS = 14;
@@ -278,14 +278,15 @@ namespace TGMsim
                     baseGrav = 256;
                     genAttps = 6;
                     fieldW = 10;
-                    fieldH = 20;
+                    fieldH = 22;
                     showGrade = false;
-                    gravTable = new List<int> { 4, 6, 8, 10, 12, 16, 32, 48, 64, 80, 96, 112, 128, 144, 4, 32, 64, 96, 128, 160, 192, 224, 256, 512, 768, 1024, 1280, 1024, 768, 5120 };
+                    gravLevels = new List<int>() { 0, 25, 50, 75, 100, 125, 150, 175, 200, 225, 250, 275, 300, 325, 350, 375, 400, 425, 450, 475, 500, 600, 700,  800,  900, 1000};
+                    gravTable = new List<int>    { 4, 11, 19, 26,  34,  41,  49,  56,  64,  72,  80,  88,  96, 104, 112, 120, 128, 160, 192, 224, 256, 512, 768, 1024, 1280, 5120};
                     break;
             }
 
             id = mode;
-            switch (mode)//Master, Death, shirase, sprint, garbage clear, rounds, konoha, grav training
+            switch (mode)//Master, Death, shirase, sprint, garbage clear, rounds, konoha, grav training, dynamo, endura
             {
                 case 0:
                     ModeName = "MASTER";
@@ -330,11 +331,6 @@ namespace TGMsim
                             delayTable.Add(new List<int> { 14, 8, 8, 8, 8, 6, 6, 6, 6 });
                             delayTable.Add(new List<int> { 30, 30, 30, 30, 30, 17, 17, 15, 15 });
                             delayTable.Add(new List<int> { 40, 25, 16, 12, 6, 6, 6, 6, 6 });
-                            break;
-                        case 5://ace
-                            break;
-                        case 6://tgm4
-                            
                             break;
                     }
                     break;
@@ -558,6 +554,26 @@ namespace TGMsim
                     delayTable.Add(new List<int> { 14 });
                     delayTable.Add(new List<int> { 30 });
                     delayTable.Add(new List<int> { 40 });
+                    break;
+                case 10: //dynamo
+                    ModeName = "DYANMO";
+                    sections.Add(100);
+                    sections.Add(200);
+                    sections.Add(300);
+                    sections.Add(400);
+                    sections.Add(500);
+                    sections.Add(600);
+                    sections.Add(700);
+                    sections.Add(800);
+                    sections.Add(900);
+                    endLevel = 999;
+                    delayTable.Add(new List<int> { 27 });
+                    delayTable.Add(new List<int> { 27 });
+                    delayTable.Add(new List<int> { 14 });
+                    delayTable.Add(new List<int> { 30 });
+                    delayTable.Add(new List<int> { 40 });
+                    break;
+                case 11: //endura
                     break;
             }
         }
