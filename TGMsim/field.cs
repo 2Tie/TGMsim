@@ -213,7 +213,7 @@ namespace TGMsim
             bgs.Add(Image.FromFile("Res/GFX/bgs/1.png"));
             bgs.Add(Image.FromFile("Res/GFX/bgs/2.png"));
             bgs.Add(Image.FromFile("Res/GFX/bgs/3.png"));
-            bgs.Add(null);
+            bgs.Add(Image.FromFile("Res/GFX/bgs/4.png"));
             bgs.Add(null);
             bgs.Add(null);
             bgs.Add(null);
