@@ -2190,15 +2190,20 @@ namespace TGMsim
                 }
                 else //gamerunning == false
                 {
-                    if (fadeout < 22)
+                    if(fadeout < 92)
                     {
-                        for (int i = 0; i < 10; i++)
-                            if (gameField[i][fadeout] != 0)
-                                gameField[i][fadeout] = 9;
-                        fadeout++;
-                    }
-                    else if (fadeout - 22 < 70)
-                    {
+                        if (fadeout < ruleset.fieldH)
+                        {
+                            for (int i = 0; i < 10; i++)
+                                if (gameField[i][fadeout] != 0)
+                                    gameField[i][fadeout] = 9;
+                        }
+                        if (fadeout == 91)
+                        {
+                            pad.recording = false;
+                            pad.playback = false;
+                            Audio.playMusic("results");
+                        }
                         fadeout++;
                     }
                     else
@@ -2214,16 +2219,7 @@ namespace TGMsim
                             Audio.stopMusic();
                         }
                         if (pad.inputPressedHold && !isPlayback && !recorded)
-                        {
-                            //TODO: save replay
                             record = true;
-                        }
-                    }
-                    if (fadeout == 91)
-                    {
-                        pad.recording = false;
-                        pad.playback = false;
-                        Audio.playMusic("results");
                     }
                 }
             }

@@ -594,6 +594,7 @@ namespace TGMsim
                         
                     }
                     break;
+                case -1:
                 case 0:
                 case 6:
                 case 7:
