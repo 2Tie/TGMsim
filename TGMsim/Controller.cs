@@ -94,11 +94,14 @@ namespace TGMsim
 
             if (playback)
             {
-                inputHistory[lag] = replay[progress];
-                if ((replay[progress] & 0x007f) == 0)
-                    progress++;
-                else
-                    replay[progress] -= 1;
+                if (progress < replay.Count)
+                {
+                    inputHistory[lag] = replay[progress];
+                    if ((replay[progress] & 0x007f) == 0)
+                        progress++;
+                    else
+                        replay[progress] -= 1;
+                }
             }
 
             //map history to inputs

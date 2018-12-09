@@ -92,19 +92,12 @@ namespace TGMsim
 
             if (delaytimer == 0 && menuSelection < 3)
             {
-                if (pad1.inputH == 1)
+                if (pad1.inputH != 0)
                 {
-                    username[menuSelection] = (username[menuSelection] + 1) % 46; //increase the currently selected letter
-                    delaytimer = 10;
-                    pSound(s_Roll);
-                }
-                else if (pad1.inputH == -1)
-                {
-
-                    username[menuSelection] = (username[menuSelection] - 1) % 46;//decrease the currently selected letter
+                    username[menuSelection] = (username[menuSelection] + pad1.inputH) % 44; //increase the currently selected letter by input direction
                     if (username[menuSelection] == -1)
                     {
-                        username[menuSelection] = 45;
+                        username[menuSelection] = 43;
                     }
                     delaytimer = 10;
                     pSound(s_Roll);
@@ -150,7 +143,7 @@ namespace TGMsim
 
         string getLetter(int i)
         {
-            return "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!?.#$%&'ß ".Substring(i, 1);
+            return "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!.#$%&ß ".Substring(i, 1);
         }
 
         private void addSound(System.Windows.Media.MediaPlayer plr, string uri)

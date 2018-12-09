@@ -8,7 +8,7 @@ namespace TGMsim
 {
     class Generator
     {
-        public string type;
+        public string type = "BASE";
         public int seed;
         public int rolls;
         public List<int> history = new List<int>(4);

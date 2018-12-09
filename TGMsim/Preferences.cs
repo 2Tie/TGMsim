@@ -17,7 +17,8 @@ namespace TGMsim
         public int menuState = 0;//main, input change
         int selection = 0;
 
-        int dInput = 0;
+        int vInput = 0;
+        int hInput = 0;
 
         public Preferences(Profile prof, Controller pad)
         {
@@ -34,14 +35,14 @@ namespace TGMsim
             }
 
 
-            if (nPad.inputV != 0 && nPad.inputV != dInput)
+            if (nPad.inputV != 0 && nPad.inputV != vInput)
             {
                 selection -= nPad.inputV;
-                dInput = nPad.inputV;
+                vInput = nPad.inputV;
             }
 
             if (nPad.inputV == 0)
-                dInput = 0;
+                vInput = 0;
 
 
             if (menuState == 0)
@@ -87,19 +88,23 @@ namespace TGMsim
             {
                 if (selection == 0)
                 {
-                    Audio.musVol += ((float)(nPad.inputH * 0.1));
-                    if (Audio.musVol > 1) Audio.musVol = 1;
+                    if(hInput != nPad.inputH)
+                        Audio.musVol += nPad.inputH;
+                    if (Audio.musVol > 10) Audio.musVol = 10;
                     if (Audio.musVol < 0) Audio.musVol = 0;
+                    Audio.setMusicVolume(Audio.musVol);
                 }
                 if (selection == 1)
                 {
-                    Audio.sfxVol += ((float)(nPad.inputH * 0.1));
-                    if (Audio.sfxVol > 1) Audio.sfxVol = 1;
+                    if (hInput != nPad.inputH)
+                        Audio.sfxVol += nPad.inputH;
+                    if (Audio.sfxVol > 10) Audio.sfxVol = 10;
                     if (Audio.sfxVol < 0) Audio.sfxVol = 0;
                 }
                 if (selection == 2)
                     delay = !delay;
             }
+            hInput = nPad.inputH;
 
             if (nPad.inputRot2 == 1 && menuState == 1)
             {
@@ -112,8 +117,8 @@ namespace TGMsim
         {
             if (menuState == 0)
             {
-                drawBuffer.DrawString("Music Volume: " + Audio.musVol, SystemFonts.DefaultFont, new SolidBrush(Color.White), 100, 100);
-                drawBuffer.DrawString("SFX Volume: " + Audio.sfxVol, SystemFonts.DefaultFont, new SolidBrush(Color.White), 100, 120);
+                drawBuffer.DrawString("Music Volume: " + Audio.musVol*10 + "%", SystemFonts.DefaultFont, new SolidBrush(Color.White), 100, 100);
+                drawBuffer.DrawString("SFX Volume: " + Audio.sfxVol*10 + "%", SystemFonts.DefaultFont, new SolidBrush(Color.White), 100, 120);
                 drawBuffer.DrawString("Emulate Input Lag: " + delay, SystemFonts.DefaultFont, new SolidBrush(Color.White), 100, 140);
                 drawBuffer.DrawString("Rebind keys", SystemFonts.DefaultFont, new SolidBrush(Color.White), 100, 160);
             }
@@ -175,7 +180,7 @@ namespace TGMsim
                             break;
                         }
                     nPad.poll();
-                    dInput = nPad.inputV;
+                    vInput = nPad.inputV;
                     inputting = false;
                 }
         }

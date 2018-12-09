@@ -36,7 +36,14 @@ namespace TGMsim
                 selection = (selection - pad.inputV);
                 dInput = pad.inputV;
             }
-            if (game == 7 && selection == 1)
+            if (game == 7 && selection == 1)//zen
+            {
+                if (pad.inputH == 1)
+                    variant = 1;
+                if (pad.inputH == -1)
+                    variant = 0;
+            }
+            if (game == 6 && selection == 0)//dynamo
             {
                 if (pad.inputH == 1)
                     variant = 1;
@@ -62,10 +69,10 @@ namespace TGMsim
                         selection = 2;
                     break;
                 case 7:
-                    if (selection == 4)
+                    if (selection == 6)
                         selection = 0;
                     if (selection == -1)
-                        selection = 3;
+                        selection = 5;
                     break;
                 default:
                     if (selection == 1)
@@ -88,7 +95,16 @@ namespace TGMsim
             if (game == 5)
                 drawBuffer.DrawString("Roads", SystemFonts.DefaultFont, locked, 300, 300);
             if (game == 6)
+            {
                 drawBuffer.DrawString("Dynamo", SystemFonts.DefaultFont, active, 300, 300);
+                if (variant < 4)
+                    for (int i = 0; i < variant; i++)
+                    {
+                        drawBuffer.DrawString("+", SystemFonts.DefaultFont, active, 342 + 8 * i, 300);
+                    }
+                else
+                    drawBuffer.DrawString("*", SystemFonts.DefaultFont, active, 342, 300);
+            }
             if (game == 7)
                 drawBuffer.DrawString("Custom", SystemFonts.DefaultFont, locked, 300, 300);
             drawBuffer.DrawString("→", SystemFonts.DefaultFont, new SolidBrush(Color.White), 285, 300 + 12*selection);
@@ -117,6 +133,8 @@ namespace TGMsim
                         drawBuffer.DrawString("Zen", SystemFonts.DefaultFont, new SolidBrush(Color.White), 300, 312);
                     drawBuffer.DrawString("Garbage Clearer", SystemFonts.DefaultFont, new SolidBrush(Color.White), 300, 324);
                     drawBuffer.DrawString("20G Practice", SystemFonts.DefaultFont, new SolidBrush(Color.White), 300, 336);
+                    drawBuffer.DrawString("Icy Shirase", SystemFonts.DefaultFont, new SolidBrush(Color.White), 300, 348);
+                    drawBuffer.DrawString("Big Bravo Mania", SystemFonts.DefaultFont, new SolidBrush(Color.White), 300, 360);
                     break;
             }
         }

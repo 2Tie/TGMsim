@@ -291,6 +291,8 @@ namespace TGMsim
                                 field1.newHiscore = testHiscore(field1.results);
                             if (player.name != "   ")
                                 player.updateUser();
+                            if (field1.MOD.id == 10 && field1.MOD.level == 999 && player.dynamoProgress == field1.MOD.variant && player.dynamoProgress != 4)
+                                player.dynamoProgress = field1.MOD.variant + 1;
                             saved = true;
                         }
                         if(field1.isPlayback)
@@ -359,8 +361,9 @@ namespace TGMsim
                         changeMenu(2);
                 }
             } else {
-                player.readUserData();
-                changeMenu(2);
+                if (player.readUserData())
+                    changeMenu(2);
+                else player.name = "   ";
             }
         }
 
@@ -497,13 +500,17 @@ namespace TGMsim
             else if (mSel.game == 0 && mSel.selection == 0)//segatet
                 rules.setup(0, 8, 0);
             else if (mSel.game == 6 && mSel.selection == 0)//dynamo
-                rules.setup(6, 10, 0);
+                rules.setup(6, 10, mSel.variant);
             else if (mSel.game == 7 && mSel.selection == 1)//miner
                 rules.setup(7, 9, mSel.variant);
             else if (mSel.game == 7 && mSel.selection == 2)//garbage
                 rules.setup(7, 4, 0);
             else if (mSel.game == 7 && mSel.selection == 3)//20G
                 rules.setup(7, 7, 0);
+            else if (mSel.game == 7 && mSel.selection == 4)//icy
+                rules.setup(8, 5, 0);
+            else if (mSel.game == 7 && mSel.selection == 5)//big bravo
+                rules.setup(8, 6, 0);
             else
                 rules.setup(mSel.game, mSel.selection, 0);
 
@@ -512,11 +519,10 @@ namespace TGMsim
             if (player.name == "   ")
             {
                 if (rules.id != 6)
-                    rules.bigmode = cMen.cheats[3];
-                rules.mute = cMen.cheats[4];
+                    rules.mod.bigmode = cMen.cheats[3];
+                Audio.muted = cMen.cheats[4];
             }
-
-            if (mSel.game == 4 && rules.id == 0 && player.name != "   ")
+            else if (mSel.game == 4 && rules.id == 0)
                 rules.exam = checkExam();
 
             if (prefs.delay)
@@ -633,7 +639,7 @@ namespace TGMsim
         {
             var tim = System.DateTime.Now.ToString("G", new CultureInfo("ja-JP"));
             tim = tim.Replace("/", "_").Replace(":", "_");
-            string repFile = "Sav/"+tim+" "+rules.GameName+" "+rules.ModeName+".rep";
+            string repFile = "Sav/"+tim+" "+rules.GameName+" "+rules.mod.ModeName+".rep";
             using (FileStream fsStream = new FileStream(repFile, FileMode.OpenOrCreate))
             using (BinaryWriter sw = new BinaryWriter(fsStream, Encoding.UTF8))
             {
@@ -641,7 +647,7 @@ namespace TGMsim
                 sw.Write((byte)1);
                 sw.Write(pad1.replay.Count);
                 sw.Write(rules.gameRules);
-                sw.Write(rules.id + (rules.variant << 13));
+                sw.Write(rules.id + (rules.mod.variant << 13));
                 sw.Write(field1.seed);
                 for (int i = 0; i < pad1.replay.Count; i++)
                     sw.Write(pad1.replay[i]);
@@ -971,8 +977,8 @@ namespace TGMsim
                 sw.Write((char)prefs.nPad.keyRot3);
                 sw.Write((char)prefs.nPad.keyHold);
                 sw.Write((char)prefs.nPad.keyStart);
-                int temp = ((int)Math.Floor(Audio.musVol * 10) << 4) + (int)Math.Floor(Audio.sfxVol * 10);
-                sw.Write((char)temp);
+                byte temp = (byte)(((Audio.musVol & 0xF) << 4) + (Audio.sfxVol & 0xF));
+                sw.Write(temp);
                 sw.Write(player.name);
             }
         }
@@ -991,8 +997,8 @@ namespace TGMsim
             prefs.nPad.keyHold = (Key)prf.ReadByte();
             prefs.nPad.keyStart = (Key)prf.ReadByte();
             byte temp = prf.ReadByte();
-            Audio.musVol = (float)((temp >> 4) & 0x0F)/10;
-            Audio.sfxVol = (float)(temp & 0x0F) / 10;
+            Audio.musVol = (temp >> 4) & 0x0F;
+            Audio.sfxVol = temp & 0x0F;
             player.name = prf.ReadString();
             prf.Close();
         }

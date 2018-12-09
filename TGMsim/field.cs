@@ -33,24 +33,26 @@ namespace TGMsim
         public List<Tetromino> nextTet = new List<Tetromino>();
         public Rotation RSYS = new R_ARS1();
         public Generator GEN;
+        public Mode MOD;// = new M_Master2();
 
         public List<List<int>> gameField = new List<List<int>>();
 
         public List<int> full = new List<int>();
 
-        public List<int> medals = new List<int>() { 0, 0, 0, 0, 0, 0 };
+        //public List<int> medals = new List<int>() { 0, 0, 0, 0, 0, 0 };
 
         public List<long> sectionTimes = new List<long>();
-        public List<bool> GMflags = new List<bool>();
-        public List<int> secTet = new List<int>();
-        public List<int> secCools = new List<int>();
+        //public List<bool> GMflags = new List<bool>();
+        //public List<int> secTet = new List<int>();
+        //public List<int> secCools = new List<int>();
+
         public List<vanPip> vanList = new List<vanPip>();
         public List<flashPip> flashList = new List<flashPip>();
-        public int creditsType = 0;
+        //public int creditsType = 0;
         int fadeout = 0;
 
 
-        public bool isGM = false;
+        //public bool isGM = false;
 
         public Tetromino heldPiece;
 
@@ -61,7 +63,7 @@ namespace TGMsim
         public FrameTimer startTime = new FrameTimer();
         public FrameTimer sectionTime = new FrameTimer();
         public FrameTimer creditsPause = new FrameTimer();
-        public FrameTimer coolTime = new FrameTimer();
+        //public FrameTimer coolTime = new FrameTimer();
         public FrameTimer bravoTime = new FrameTimer();
         public long masterTime = 0;
 
@@ -76,13 +78,13 @@ namespace TGMsim
         //public int groundTimer = 0;
         public int gravCounter = 0;
         public int gravLevel = 0;
-        public int level = 0;
-        public int grade = 0;
-        public int gm2grade = 0;
+        //public int level = 0;
+        //public int grade = 0;
+        //public int gm2grade = 0;
         public int score = 0;
         public int combo = 1;
-        public int gradeCombo = 0;
-        public bool comboing = false;
+        //public int gradeCombo = 0;
+        //public bool comboing = false;
         public int gradePoints = 0;
         public int gradeLevel = 0;
         public int gradeTime = 0;
@@ -92,23 +94,23 @@ namespace TGMsim
         public bool inCredits = false;
         int creditsProgress;
         public bool newHiscore = false;
-        public bool torikan = false;
-        public long torDef = 0;
+        //public bool torikan = false;
+        //public long torDef = 0;
 
         public int bgtimer = 0;
 
-        public int bravoCounter = 0;
-        public int tetrises = 0;
-        public int totalTets = 0;
-        public int rotations = 0;
-        bool recoverChecking = false;
-        public int recoveries = 0;
-        public int speedBonus = 0;
+        //public int bravoCounter = 0;
+        //public int tetrises = 0;
+        //public int totalTets = 0;
+        //public int rotations = 0;
+        //bool recoverChecking = false;
+        //public int recoveries = 0;
+        //public int speedBonus = 0;
         public int creditGrades = 0;
 
-        public int softCounter = 0;
+        /*public int softCounter = 0;
         public int sonicCounter = 0;
-        public int tetLife = 0;
+        public int tetLife = 0;*/
 
         //Rules ruleset;
         //public Mode mode;
@@ -126,7 +128,7 @@ namespace TGMsim
         public bool w4 = false;
         public bool toriless = false;
 
-        public List<GameRules.Gimmick> activeGim = new List<GameRules.Gimmick>();
+        public List<Mode.Gimmick> activeGim = new List<Mode.Gimmick>();
         public int gimIndex = 0;
         int garbTimer = 0;
 
@@ -144,35 +146,10 @@ namespace TGMsim
         Image gradeImg;
         Color frameColour;
         SolidBrush textBrush = new SolidBrush(Color.White);
+        int bgAlpha = 180;//120
 
         PrivateFontCollection fonts = new PrivateFontCollection();
         Font f_Maestro;
-
-        NAudio.Wave.WaveOutEvent soundList = new NAudio.Wave.WaveOutEvent();
-        System.Windows.Media.MediaPlayer s_Ready = new System.Windows.Media.MediaPlayer();
-        System.Windows.Media.MediaPlayer s_Go = new System.Windows.Media.MediaPlayer();
-        System.Windows.Media.MediaPlayer s_Tet1 = new System.Windows.Media.MediaPlayer();
-        System.Windows.Media.MediaPlayer s_Tet2 = new System.Windows.Media.MediaPlayer();
-        System.Windows.Media.MediaPlayer s_Tet3 = new System.Windows.Media.MediaPlayer();
-        System.Windows.Media.MediaPlayer s_Tet4 = new System.Windows.Media.MediaPlayer();
-        System.Windows.Media.MediaPlayer s_Tet5 = new System.Windows.Media.MediaPlayer();
-        System.Windows.Media.MediaPlayer s_Tet6 = new System.Windows.Media.MediaPlayer();
-        System.Windows.Media.MediaPlayer s_Tet7 = new System.Windows.Media.MediaPlayer();
-        System.Windows.Media.MediaPlayer s_PreRot = new System.Windows.Media.MediaPlayer();
-        System.Windows.Media.MediaPlayer s_Contact = new System.Windows.Media.MediaPlayer();
-        System.Windows.Media.MediaPlayer s_Lock = new System.Windows.Media.MediaPlayer();
-        System.Windows.Media.MediaPlayer s_Clear = new System.Windows.Media.MediaPlayer();
-        System.Windows.Media.MediaPlayer s_Impact = new System.Windows.Media.MediaPlayer();
-        System.Windows.Media.MediaPlayer s_Grade = new System.Windows.Media.MediaPlayer();
-        System.Windows.Media.MediaPlayer s_Hold = new System.Windows.Media.MediaPlayer();
-        System.Windows.Media.MediaPlayer s_GameClear = new System.Windows.Media.MediaPlayer();
-        System.Windows.Media.MediaPlayer s_Cool = new System.Windows.Media.MediaPlayer();
-        System.Windows.Media.MediaPlayer s_Regret = new System.Windows.Media.MediaPlayer();
-        System.Windows.Media.MediaPlayer s_Section = new System.Windows.Media.MediaPlayer();
-        System.Windows.Media.MediaPlayer s_Tetris = new System.Windows.Media.MediaPlayer();
-        System.Windows.Media.MediaPlayer s_Combo = new System.Windows.Media.MediaPlayer();
-        System.Windows.Media.MediaPlayer s_Medal = new System.Windows.Media.MediaPlayer();
-        System.Windows.Media.MediaPlayer s_Bell = new System.Windows.Media.MediaPlayer();
 
         Pen gridPen = new Pen(new SolidBrush(Color.White));
 
@@ -224,38 +201,13 @@ namespace TGMsim
             medalImg = Image.FromFile("Res/GFX/medals.png");
             gradeImg = Image.FromFile("Res/GFX/grades.png");
 
-
-            Audio.addSound(s_Ready, @"\Res\Audio\SE\SEP_ready.wav");
-            Audio.addSound(s_Go, @"/Res/Audio/SE/SEP_go.wav");
-            Audio.addSound(s_Tet1, @"/Res/Audio/SE/SEB_mino1.wav");
-            Audio.addSound(s_Tet2, @"/Res/Audio/SE/SEB_mino2.wav");
-            Audio.addSound(s_Tet3, @"/Res/Audio/SE/SEB_mino3.wav");
-            Audio.addSound(s_Tet4, @"/Res/Audio/SE/SEB_mino4.wav");
-            Audio.addSound(s_Tet5, @"/Res/Audio/SE/SEB_mino5.wav");
-            Audio.addSound(s_Tet6, @"/Res/Audio/SE/SEB_mino6.wav");
-            Audio.addSound(s_Tet7, @"/Res/Audio/SE/SEB_mino7.wav");
-            Audio.addSound(s_PreRot, @"/Res/Audio/SE/SEB_prerotate.wav");
-            Audio.addSound(s_Contact, @"/Res/Audio/SE/SEB_fixa.wav");
-            Audio.addSound(s_Lock, @"/Res/Audio/SE/SEB_instal.wav");
-            Audio.addSound(s_Clear, @"/Res/Audio/SE/SEB_disappear.wav");
-            Audio.addSound(s_Impact, @"/Res/Audio/SE/SEB_fall.wav");
-            Audio.addSound(s_Grade,  @"/Res/Audio/SE/SEP_levelchange.wav");
-            Audio.addSound(s_Hold, @"/Res/Audio/SE/SEB_prehold.wav");
-            Audio.addSound(s_GameClear, @"/Res/Audio/SE/SEP_gameclear.wav");
-            Audio.addSound(s_Cool, @"/Res/Audio/SE/SEP_cool.wav");
-            Audio.addSound(s_Regret, @"/Res/Audio/SE/SEI_vs_select.wav");
-            Audio.addSound(s_Section, @"/Res/Audio/SE/SEP_lankup.wav");
-            Audio.addSound(s_Combo, @"/Res/Audio/SE/SEP_combo.wav");
-            Audio.addSound(s_Tetris, @"/Res/Audio/SE/SEP_tetris.wav");
-            Audio.addSound(s_Medal, @"/Res/Audio/SE/SEP_platinum.wav");
-            Audio.addSound(s_Bell, @"/Res/Audio/SE/bell.wav");
-
             fonts.AddFontFile(@"Res\Maestro.ttf");
             FontFamily fontFam = fonts.Families[0];
             f_Maestro = new System.Drawing.Font(fontFam, 16, GraphicsUnit.Pixel);
 
             pad = ctlr;
             ruleset = rules;
+            MOD = rules.mod;
 
             if (ruleset.rotation == 0) RSYS = new R_ARS1();
             if (ruleset.rotation == 1) RSYS = new R_ARS3();
@@ -276,13 +228,30 @@ namespace TGMsim
                 pad.enableRecording();
             }
 
-            if (ruleset.generator == 0) GEN = new Generator(seed);
-            if (ruleset.generator == 1) GEN = new G_ARS1(seed);
-            if (ruleset.generator == 2) GEN = new G_ARS2(seed);
-            if (ruleset.generator == 3) GEN = new G_ARS3(seed);
-            if (ruleset.generator == 5) GEN = new G_SEGA(seed);
+            switch (ruleset.generator)
+            {
+                case 0:
+                    GEN = new Generator(seed);
+                    break;
+                case 1:
+                    GEN = new G_ARS1(seed);
+                    break;
+                case 2:
+                    GEN = new G_ARS2(seed);
+                    break;
+                case 3:
+                case 4:
+                    GEN = new G_ARS3(seed);
+                    break;
+                case 5:
+                    GEN = new G_SEGA(seed);
+                    break;
+                case 6:
+                    GEN = new G_ARS3Easy(seed);
+                    break;
+            }
 
-            activeTet = new Tetromino(0, ruleset.bigmode); //first piece cannot be S, Z, or O
+            activeTet = new Tetromino(0, MOD.bigmode); //first piece cannot be S, Z, or O
 
             if (nextTet.Count == 0 && ruleset.nextNum > 0) //generate nextTet
             {
@@ -292,25 +261,23 @@ namespace TGMsim
                 }
             }
 
-            g20 = ruleset.g20;
+            g20 = MOD.g20;
 
             gravTable = ruleset.gravTable;
 
-            gm2grade = ruleset.initialGrade;
+            MOD.grade = MOD.initialGrade;
 
 
-            ruleset.baseARE = ruleset.delayTable[0][0];
-            ruleset.baseARELine = ruleset.delayTable[1][0];
-            ruleset.baseDAS = ruleset.delayTable[2][0];
-            ruleset.baseLock = ruleset.delayTable[3][0];
-            ruleset.baseLineClear = ruleset.delayTable[4][0];
+            MOD.baseARE = MOD.delayTable[0][0];
+            MOD.baseARELine = MOD.delayTable[1][0];
+            MOD.baseDAS = MOD.delayTable[2][0];
+            MOD.baseLock = MOD.delayTable[3][0];
+            MOD.baseLineClear = MOD.delayTable[4][0];
 
-            frameColour = ruleset.border;
+            frameColour = MOD.border;
 
             if (ruleset.exam != -1)
                 frameColour = Color.Gold;
-
-            speedBonus = ruleset.lvlBonus;
 
             gameRunning = true;
             starting = 1;
@@ -318,18 +285,18 @@ namespace TGMsim
             
             while (gravLevel < gravTable.Count - 1) //update gravity
             {
-                if (level + (speedBonus * 100) >= ruleset.gravLevels[gravLevel + 1])
+                if (MOD.level + (MOD.lvlBonus * 100) >= ruleset.gravLevels[gravLevel + 1])
                     gravLevel++;
                 else
                     break;
             }
 
-            if ((ruleset.g20 == true || gravTable[gravLevel] == Math.Pow(256, ruleset.gravType + 1) * 20) && ruleset.gameRules < 4)
+            if ((MOD.g20 == true || gravTable[gravLevel] == Math.Pow(256, ruleset.gravType + 1) * 20) && ruleset.gameRules < 4)
                 textBrush = new SolidBrush(Color.Gold);
             
             startTime.tick();
             sectionTime.tick();
-            secTet.Add(0);
+            //secTet.Add(0);
 
             for (int i = 0; i < ruleset.fieldW; i++)
             {
@@ -375,12 +342,12 @@ namespace TGMsim
             if (bgtimer > 0) drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(255 - (25*Math.Abs(bgtimer-10)), Color.Black)), 0, 0, 800, 600);
 
             //draw the field
-            drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(120, Color.Black)), x, y + 25, width, height);
+            drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(bgAlpha, Color.Black)), x, y + 25, width, height);
 
             //TODO: credits text?
 
             //draw the info bg
-            drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(120, Color.Black)), x + 275, y + 20, 100, height + 10);
+            drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(bgAlpha, Color.Black)), x + 275, y + 20, 100, height + 10);
 
             //draw the pieces
             for (int i = 0; i < 10; i++)
@@ -440,7 +407,7 @@ namespace TGMsim
                 big = 2;
 
             //draw the ghost piece
-            if (level < 100 && ghostPiece != null && activeTet.id == ghostPiece.id)
+            if (MOD.level < 100 && ghostPiece != null && activeTet.id == ghostPiece.id)
             {
 
                 for (int i = 0; i < activeTet.bits.Count; i++)
@@ -466,7 +433,7 @@ namespace TGMsim
                         if (activeTet.groundTimer > 0)
                         {
                             drawBuffer.DrawImage(tetImgs[activeTet.id], x + 25 * activeTet.bits[i].x, y + height - (25 * activeTet.bits[i].y), 25 * big, 25 * big);
-                            drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb((ruleset.baseLock - activeTet.groundTimer) * 127 / ruleset.baseLock, Color.Black)), x + 25 * activeTet.bits[i].x, y + height - (25 * activeTet.bits[i].y), 25 * big, 25 * big);
+                            drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb((MOD.baseLock - activeTet.groundTimer) * 127 / MOD.baseLock, Color.Black)), x + 25 * activeTet.bits[i].x, y + height - (25 * activeTet.bits[i].y), 25 * big, 25 * big);
                         }
                         //else
                             //drawBuffer.DrawImage(tetImgs[9], x + 25 * (activeTet.bits[i].x * (2 / big) - (4 % (6 - big))), y - 25 + 25 * (activeTet.bits[i].y * (2 / big) - (lowY * ((2 / big) - 1))), 25 * (2 / big), 25 * (2 / big));
@@ -591,27 +558,27 @@ namespace TGMsim
             {
                 drawBuffer.FillRectangle(new SolidBrush(gravColor), x + 280, 505, 60, 8);
                 drawBuffer.FillRectangle(new SolidBrush(gravMeter), x + 280, 505, (int)Math.Round(((double)gravTable[gravLevel] * 60) / ((Math.Pow(256, ruleset.gravType + 1) * 20))), 8);
-                if (ruleset.g20 == true || gravTable[gravLevel] == Math.Pow(256, ruleset.gravType + 1) * 20)
+                if (MOD.g20 == true || gravTable[gravLevel] == Math.Pow(256, ruleset.gravType + 1) * 20)
                     drawBuffer.FillRectangle(new SolidBrush(Color.Red), x + 280, 505, 60, 8);
             }
 
             //SMALL TEXT
             //levels
-            drawBuffer.DrawString(level.ToString(), f_Maestro, textBrush, x + 290, 485);
-            //if (ruleset.gameRules < 6)
+            drawBuffer.DrawString(MOD.level.ToString(), f_Maestro, textBrush, x + 290, 485);
+            if (MOD.drawSec)
             {
-                if (ruleset.sections.Count == curSection)
-                    drawBuffer.DrawString(ruleset.sections[curSection - 1].ToString(), f_Maestro, textBrush, x + 290, 525);
+                if (MOD.sections.Count == curSection)
+                    drawBuffer.DrawString(MOD.sections[curSection - 1].ToString(), f_Maestro, textBrush, x + 290, 525);
                 else
-                    drawBuffer.DrawString(ruleset.sections[curSection].ToString(), f_Maestro, textBrush, x + 290, 525);
+                    drawBuffer.DrawString(MOD.sections[curSection].ToString(), f_Maestro, textBrush, x + 290, 525);
             }
-
-            drawBuffer.DrawString(score.ToString(), f_Maestro, textBrush, x + 280, 280);
+            //score
+            drawBuffer.DrawString(MOD.score.ToString(), f_Maestro, textBrush, x + 280, 280);
             if (ruleset.gameRules == 1 && ruleset.id == 0)
             {
                 drawBuffer.DrawString("NEXT GRADE:", f_Maestro, textBrush, x + 280, 140);
-                if (grade != ruleset.gradePointsTGM1.Count)
-                    drawBuffer.DrawString(ruleset.gradePointsTGM1[grade + 1].ToString(), f_Maestro, textBrush, x + 280, 160);
+                if (MOD.grade != 18)
+                    drawBuffer.DrawString(MOD.gradePointsTGM1[MOD.grade + 1].ToString(), f_Maestro, textBrush, x + 280, 160);
                 else
                     drawBuffer.DrawString("??????", f_Maestro, textBrush, x + 280, 160);
             }
@@ -631,7 +598,7 @@ namespace TGMsim
 
 
             drawBuffer.DrawString(ruleset.GameName, f_Maestro, textBrush, 20, 20);
-            drawBuffer.DrawString(ruleset.ModeName, f_Maestro, textBrush, 20, 40);
+            drawBuffer.DrawString(MOD.ModeName, f_Maestro, textBrush, 20, 40);
 
 
             if (creditsProgress >= ruleset.creditsLength + 180)
@@ -641,37 +608,36 @@ namespace TGMsim
             //drawBuffer.DrawString(gradePoints.ToString(), SystemFonts.DefaultFont, textBrush, 20, 280);
             //drawBuffer.DrawString(ruleset.baseLineClear.ToString(), SystemFonts.DefaultFont, textBrush, 20, 290);
 
-            string cTex = "REGRET!";
+            /*string cTex = "REGRET!";
             if (ruleset.gameRules == 4 && coolTime.count > 0)
             {
-                if (level % 100 >= 70)//cool
+                if (MOD.level % 100 >= 70)//cool
                 {
                     cTex = "COOL!";
                 }
                 drawBuffer.DrawString(cTex, SystemFonts.DefaultFont, textBrush, x + 300, 350);
-            }
+            }*/
 
-            if (bravoTime.count > 0)
-                drawBuffer.DrawString("BRAVO! X" + bravoCounter, SystemFonts.DefaultFont, textBrush, x + 280, 400);
+            //if (bravoTime.count > 0)
+                //drawBuffer.DrawString("BRAVO! X" + bravoCounter, SystemFonts.DefaultFont, textBrush, x + 280, 400);
 
             if (ruleset.gameRules == 6)
                 drawBuffer.DrawString("LEVEL:", f_Maestro, textBrush, x + 280, 465);
             
-            if (ruleset.limitType == 3)//time limit?
-                drawBuffer.DrawString(convertTime((long)((ruleset.limit - timer.count) * ruleset.FPS / 60)), SystemFonts.DefaultFont, textBrush, x + 290, 550);
+            if (MOD.limitType == 3)//time limit?
+                drawBuffer.DrawString(convertTime((long)((MOD.limit - timer.count) * ruleset.FPS / 60)), SystemFonts.DefaultFont, textBrush, x + 290, 550);
             else
                 drawBuffer.DrawString(convertTime((long)(timer.count * ruleset.FPS / 60)), SystemFonts.DefaultFont, textBrush, x + 290, 550);
 
             //GRADE TEXT
-            if (ruleset.showGrade && gm2grade != -1)
+            if (MOD.shiragrades == false)
             {
-                string gd;
-                if (ruleset.gameRules == 1)
-                    gd = ruleset.grades[grade];
-                else
-                    gd = ruleset.grades[gm2grade];
-                drawGrade(drawBuffer, gd);
+                if (MOD.showGrade && MOD.grade != -1)
+                    drawGrade(drawBuffer, ruleset.grades[MOD.grade]);
             }
+            else
+                if (MOD.grade != 0)
+                    drawGrade(drawBuffer, "S" + MOD.grade);
 
             if (ruleset.exam != -1)
                 drawBuffer.DrawString("EXAM: " + ruleset.grades[ruleset.exam].ToString(), f_Maestro, textBrush, x + 280, 100);
@@ -681,8 +647,8 @@ namespace TGMsim
             if (ruleset.gameRules != 1)
                 for (int i = 0; i < 6; i++)
                 {
-                    if (medals[i] != 0)
-                        drawBuffer.DrawImage(medalImg, new Rectangle(x + 280 + (i % 3) * 20, 190 + (30 * (int)(Math.Floor((double)i / 3))), 25, 15), i * 26, (medals[i] - 1) * 16, 25, 15, GraphicsUnit.Pixel);
+                    if (MOD.medals[i] != 0)
+                        drawBuffer.DrawImage(medalImg, new Rectangle(x + 280 + (i % 3) * 20, 190 + (30 * (int)(Math.Floor((double)i / 3))), 25, 15), i * 26, (MOD.medals[i] - 1) * 16, 25, 16, GraphicsUnit.Pixel);
                 }
 
             //fadeout
@@ -715,10 +681,10 @@ namespace TGMsim
                     throw new DivideByZeroException();
                 }
 
-                if (torikan)
+                if (MOD.torikan)
                 {
                     drawBuffer.DrawString("Torikan hit!", SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 250);
-                    drawBuffer.DrawString(convertTime((long)(torDef * ruleset.FPS / 60)) + " over!", SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 260);
+                    drawBuffer.DrawString(convertTime((long)(MOD.torDef * ruleset.FPS / 60)) + " over!", SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 260);
                 }
 
                 drawBuffer.DrawString("Press Start to", SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 280);
@@ -741,15 +707,15 @@ namespace TGMsim
                         drawBuffer.DrawString("Replay recorded!", SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 340);
                 }
 
-                if (ruleset.id == 2 && gm2grade != 0)
-                    drawGrade(drawBuffer, "S" + (gm2grade));
+                if (ruleset.id == 2 && MOD.grade != 0)
+                    drawGrade(drawBuffer, "S" + (MOD.grade));
             }
 
             //replay stuff
             if(isPlayback)
             {
                 //BG
-                drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(120, Color.Black)), 10, 80, 180, 500);
+                drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(bgAlpha, Color.Black)), 10, 80, 180, 500);
 
                 //DATA
                 drawBuffer.DrawString("REPLAY", f_Maestro, textBrush, 20, 60);
@@ -758,7 +724,7 @@ namespace TGMsim
 
                 //CONTROLS
                 drawBuffer.FillEllipse(new SolidBrush(Color.Gray), 35, 180, 20, 20);
-                drawBuffer.FillEllipse(new SolidBrush(Color.Red), 25 + (pad.inputH*20), 170 + (pad.inputV*20), 40, 40);
+                drawBuffer.FillEllipse(new SolidBrush(Color.Red), 25 + (pad.inputH*20), 170 - (pad.inputV*20), 40, 40);
 
                 Color unpressed = Color.Gray;
                 Color pressed = Color.GreenYellow;
@@ -769,10 +735,11 @@ namespace TGMsim
                 drawBuffer.FillEllipse(new SolidBrush(pad.inputPressedHold ? pressed : unpressed), 105, 200, 20, 20);
 
                 //INTERNALS
-                drawBuffer.DrawString("gradepoints: " + gradePoints, SystemFonts.DefaultFont, textBrush, 20, 240);
-                drawBuffer.DrawString("combo: " + gradeCombo, SystemFonts.DefaultFont, textBrush, 20, 260);
-                drawBuffer.DrawString("internal grade: " + gm2grade, SystemFonts.DefaultFont, textBrush, 20, 280);
+                //drawBuffer.DrawString("gradepoints: " + MOD.gradePoints, SystemFonts.DefaultFont, textBrush, 20, 240);
+                //drawBuffer.DrawString("combo: " + MOD.gradeCombo, SystemFonts.DefaultFont, textBrush, 20, 260);
+                //drawBuffer.DrawString("internal grade: " + MOD.gm2grade, SystemFonts.DefaultFont, textBrush, 20, 280);
             }
+            MOD.draw(drawBuffer, f_Maestro, isPlayback);
             
         }
 
@@ -785,20 +752,20 @@ namespace TGMsim
             {
                 starting = 2;
                 //play READY
-                Audio.playSound(s_Ready);
+                Audio.playSound(Audio.s_Ready);
             }
             if (startTime.count > 2000 && starting == 2)
             {
                 starting = 3;
                 //play GO
-                Audio.playSound(s_Go);
+                Audio.playSound(Audio.s_Go);
             }
             if (startTime.count > 3000 && starting == 3)
             {
                 starting = 0;
                 startTime.count = 0;
                 timer.tick();
-                updateMusic();
+                MOD.updateMusic();
             }
 
             if (starting == 0)
@@ -809,15 +776,11 @@ namespace TGMsim
                 {
                     //timing logic
                     if (timer.count > 0 && inCredits == false)
-                    {
                         timer.tick();//16.66.... (17 16 17)
-                        sectionTime.tick();
-                    }
 
                     if (inCredits)
                         creditsPause.tick();
-
-                    if (coolTime.count > 0) coolTime.tick();
+                    
                     if (bravoTime.count > 0) bravoTime.tick();
 
                     long temptimeVAR = (long)(timer.count * ruleset.FPS / 60);
@@ -826,17 +789,13 @@ namespace TGMsim
 
                     if (bgtimer > 0) bgtimer += 1;
                     if (bgtimer == 21) bgtimer = 0;
-                    
-                    if (coolTime.count > 3000)
-                    {
-                        coolTime.count = 0;
-                    }
+
                     if (bravoTime.count > 1000)
                     {
                         bravoTime.count = 0;
                     }
                     justSpawned = false;
-                    if (ruleset.limit - timer.count <= 0 && ruleset.limitType == 3)
+                    if (MOD.limit - timer.count <= 0 && MOD.limitType == 3)
                         endGame();
 
                     //vanishing logic
@@ -888,7 +847,7 @@ namespace TGMsim
                             inputDelayH--;
                         }
                         if (inputDelayH == -1 || inputDelayDir != pad.inputH)
-                            inputDelayH = ruleset.baseDAS;
+                            inputDelayH = MOD.baseDAS;
                     }
                     else
                         inputDelayH = -1;
@@ -897,9 +856,9 @@ namespace TGMsim
 
                     if(creditsProgress == 0 &&((ruleset.gameRules > 1) == (creditsPause.count >= 3000) || ruleset.id == 1) && inCredits)
                     {
-                        if (ruleset.id == 7 || ruleset.id == 9 || (ruleset.id == 10 && ruleset.variant == 0))
+                        if (ruleset.id == 7 || ruleset.id == 9 || (ruleset.id == 10 && MOD.variant == 0))
                             Audio.playMusic("crdtcas");
-                        else if (creditsType < 2)
+                        else if (MOD.creditsType < 2)
                             Audio.playMusic("crdtvanish");
                         else
                             Audio.playMusic("crdtinvis");
@@ -912,12 +871,7 @@ namespace TGMsim
                             creditsProgress += 3;
                     }
 
-                    gradeTime++;
-                    if (gradeTime > ruleset.decayRate[grade] && gradePoints != 0 && !comboing && !inCredits)
-                    {
-                        gradeTime = 0;
-                        gradePoints--;
-                    }
+                    MOD.onTick(timer.count);
 
                     //GAME LOGIC
 
@@ -986,10 +940,10 @@ namespace TGMsim
                                 full.Clear();
                                 currentTimer = (int)Field.timerType.ARE;
                                 if (ruleset.gameRules >= 3)
-                                    timerCount = ruleset.baseARELine;
+                                    timerCount = MOD.baseARELine;
                                 else
-                                    timerCount = ruleset.baseARE;
-                                Audio.playSound(s_Impact);
+                                    timerCount = MOD.baseARE;
+                                Audio.playSound(Audio.s_Impact);
                             }
                             else
                             {
@@ -1022,12 +976,12 @@ namespace TGMsim
                     {
 
                         activeTet.floored = false;
-                        tetLife++;
+                        activeTet.life++;
 
                         if (activeTet.id != 0)
                         {
                             int big = 0;
-                            if (ruleset.bigmode)
+                            if (MOD.bigmode)
                                 big = 1;
                             for (int i = 0; i < activeTet.bits.Count; i++)
                             {
@@ -1079,7 +1033,7 @@ namespace TGMsim
                                     for (int i = 0; i < activeTet.bits.Count; i++) //SET THE PIECES
                                     {
                                         int big = 2;
-                                        if (ruleset.bigmode)
+                                        if (MOD.bigmode)
                                             big = 1;
 
                                         for (int j = 0; j < (big % 2) + 1; j++ )
@@ -1088,14 +1042,14 @@ namespace TGMsim
                                             {
                                                 if (activeTet.bits[i].y - k < 0)
                                                     continue;
-                                                if (checkGimmick(1) || creditsType == 2)
+                                                if (checkGimmick(1) || MOD.creditsType == 2)
                                                     gameField[activeTet.bits[i].x  + j][activeTet.bits[i].y - k] = 8;
                                                 else if (activeTet.bone == true)
                                                     gameField[activeTet.bits[i].x + j][activeTet.bits[i].y - k] = 10;
                                                 else
                                                     gameField[activeTet.bits[i].x + j][activeTet.bits[i].y - k] = activeTet.id;
 
-                                                if (creditsType == 1)
+                                                if (MOD.creditsType == 1)//vanishing?
                                                 {
                                                     vanPip vP = new vanPip();
                                                     vP.time = creditsProgress;
@@ -1104,17 +1058,21 @@ namespace TGMsim
                                                     vanList.Add(vP);
                                                 }
 
-                                                flashPip fP = new flashPip();
-                                                fP.time = 2;
-                                                fP.x = activeTet.bits[i].x  + j;
-                                                fP.y = activeTet.bits[i].y  - k;
-                                                flashList.Add(fP);
+                                                //add to flash, if not bone
+                                                if (!activeTet.bone)
+                                                {
+                                                    flashPip fP = new flashPip();
+                                                    fP.time = 2;
+                                                    fP.x = activeTet.bits[i].x + j;
+                                                    fP.y = activeTet.bits[i].y - k;
+                                                    flashList.Add(fP);
+                                                }
                                             }
                                         }
                                     }
                                     activeTet.id = 0;
 
-                                    if (ruleset.id == 9 && ruleset.variant == 1)//and if no pieces in 12
+                                    if (ruleset.id == 9 && MOD.variant == 1)//and if no pieces in 12
                                     {
                                         int drop = 0;
                                         for (int d = 0; d < 4; d++)
@@ -1175,682 +1133,65 @@ namespace TGMsim
                                         }
                                     }
 
-                                    if (tetCount >= 150 && ruleset.gameRules > 4)
-                                        recoverChecking = true;
-
                                     if (full.Count > 0)  //if full rows, clear the rows, start the line clear timer, give points
                                     {
                                         int bigFull = full.Count;
-                                        int oldLvl = level;
-                                        if (ruleset.bigmode)
+                                        int oldLvl = MOD.level;
+                                        if (MOD.bigmode)
                                             bigFull = bigFull / 2;
                                         for (int i = 0; i < full.Count; i++)
                                         {
                                             for (int j = 0; j < 10; j++)
                                                 gameField[j][full[i]] = 0;
                                         }
-                                        if (ruleset.id != 6)
-                                            for (int i = 0; i < bigFull; i++)//1234 for tgm1 - tap, 1246 in tgm3, 1236 in tgm4
-                                            {
-                                                level++;
-                                                if (ruleset.gameRules == 4 && i > 1)
-                                                    level++;
-                                                if (ruleset.gameRules > 3 && i > 2)
-                                                    level++;
-                                                if (ruleset.gameRules > 4 && i > 2)
-                                                    level++;
-                                            }
-                                        else
-                                        {
-                                            for (int i = 0; i < full.Count; i++)
-                                                level++;
-                                            if (full.Count > 6)
-                                                level += 4;
-                                        }
+                                        
+                                        MOD.onPut(activeTet, true);
 
-                                        if (level > ruleset.endLevel && ruleset.endLevel != 0)
-                                            level = ruleset.endLevel;
+                                        MOD.onClear(bigFull, activeTet, timer.count, tetCount==0);
 
                                         //garbage!
                                         garbTimer -= bigFull;
                                         if (garbTimer < 0) garbTimer = 0;
 
-                                        //calculate combo!
-
-                                        if (bigFull == 4)
-                                        {
-                                            tetrises++;
-                                            secTet[curSection]++;
-                                            Audio.playSound(s_Tetris);
-                                        }
-
-                                        int bravo = 1;
-                                        if (tetCount == 0)
-                                        {
-                                            bravoCounter++;
-                                            bravo = 4;
-                                            bravoTime.tick();
-                                        }
-                                        //give points
-                                        
-                                            combo = combo + (2 * bigFull) - 2;
-                                        if (!inCredits && ruleset.gradedBy == 1)
-                                        {
-                                            int newscore = 0;
-                                            int sped = ruleset.baseLock - tetLife;
-                                            if (sped < 0) sped = 0;
-                                            if (softCounter > 20)
-                                                softCounter = 20;
-                                            if (ruleset.gameRules == 1)
-                                                newscore = ((int)Math.Ceiling((double)(oldLvl + bigFull) / 4) + softCounter) * bigFull * combo * bravo;
-                                            if (ruleset.gameRules == 2)
-                                                newscore = ((int)Math.Ceiling((double)(oldLvl + bigFull) / 4) + softCounter + (2*sonicCounter)) * bigFull * combo * bravo;
-                                            if (ruleset.gameRules == 3)
-                                                newscore = ((int)Math.Ceiling((double)(oldLvl + bigFull) / 4) + softCounter + (2 * sonicCounter)) * bigFull * combo * bravo + (int)(Math.Ceiling((double)level/2)) + (sped*7);
-                                            if (ruleset.gameRules == 4)
-                                                newscore = ((int)Math.Ceiling((double)(oldLvl + bigFull) / 4) + softCounter) * bigFull * combo + (int)(Math.Ceiling((double)level/2)) + sped;
-
-                                            score += newscore;
-                                        }
-
-                                        if (ruleset.gameRules != 1)
-                                        {
-                                            if (ruleset.id == 0)
-                                            {
-                                                
-                                                if (ruleset.gradedBy == 1)
-                                                {
-                                                    if (!inCredits)
-                                                    {
-                                                        int comboval = gradeCombo;
-                                                        int comborow = bigFull - 1;
-
-                                                        if (ruleset.gameRules > 3)
-                                                        {
-                                                            comborow = (comborow + 3) % 4;
-                                                        }
-                                                        if (comboval > 10) comboval = 10;
-
-                                                        int newPts = (int)(Math.Ceiling(ruleset.baseGradePts[bigFull - 1][grade] * ruleset.comboTable[bigFull - 1][gradeCombo]) * Math.Ceiling((double)level / 250));
-                                                        if (level > 249 && level < 500)
-                                                            newPts = newPts * 2;
-                                                        if (level > 499 && level < 750)
-                                                            newPts = newPts * 3;
-                                                        if (level > 749 && level < 1000)
-                                                            newPts = newPts * 4;
-
-                                                        if (bigFull > 1)
-                                                        {
-                                                            gradeCombo++;
-                                                        }
-                                                        gradePoints += newPts;
-                                                    }
-                                                    else if (ruleset.gameRules == 4)
-                                                    {
-                                                        if (creditsType == 1)
-                                                            switch (bigFull)
-                                                            {
-                                                                case 0:
-                                                                    break;
-                                                                case 1:
-                                                                    creditGrades += 4;
-                                                                    break;
-                                                                case 2:
-                                                                    creditGrades += 8;
-                                                                    break;
-                                                                case 3:
-                                                                    creditGrades += 12;
-                                                                    break;
-                                                                case 4:
-                                                                    creditGrades += 26;
-                                                                    break;
-                                                            }
-                                                        else
-                                                            switch (bigFull)
-                                                            {
-                                                                case 0:
-                                                                    break;
-                                                                case 1:
-                                                                    creditGrades += 10;
-                                                                    break;
-                                                                case 2:
-                                                                    creditGrades += 20;
-                                                                    break;
-                                                                case 3:
-                                                                    creditGrades += 30;
-                                                                    break;
-                                                                case 4:
-                                                                    creditGrades += 100;
-                                                                    break;
-                                                            }
-                                                    }
-
-                                                    if (comboing)
-                                                        Audio.playSound(s_Combo);
-                                                }
-                                            }
-                                            if (ruleset.id == 1)
-                                            {
-                                                //if (level >= 500)
-                                                //    gm2grade = 27;
-                                                //if (level >= 999)
-                                                //    gm2grade = 32;
-                                            }
-
-                                        }
-                                        comboing = true;
-
-                                        //check GM conditions
-                                        long temptime = timer.count;
-
-
-                                        if (ruleset.id == 6)
-                                        {
-                                            if (level < 1000)
-                                            {
-                                                ruleset.limit += 1000 * (int)(Math.Floor((double)bigFull / 3));
-                                            }
-                                            if (bravo == 4)
-                                            {
-                                                if (level < 1000)
-                                                {
-                                                    if (bigFull == 1)
-                                                        ruleset.limit += 1000 * 5;
-                                                    if (bigFull == 1)
-                                                        ruleset.limit += 1000 * 8;
-                                                    if (bigFull == 1)
-                                                        ruleset.limit += 1000 * 10;
-                                                    if (bigFull == 1)
-                                                        ruleset.limit += 1000 * 15;
-                                                }
-                                                else
-                                                {
-                                                    if (bigFull == 1)
-                                                        ruleset.limit += 1000 * 1;
-                                                    if (bigFull == 1)
-                                                        ruleset.limit += 1000 * 2;
-                                                    if (bigFull == 1)
-                                                        ruleset.limit += 1000 * 3;
-                                                }
-                                            }
-                                        }
-                                        
-
-                                        //update grade
-
-                                        if (ruleset.gameRules == 1)
-                                        {
-                                            bool checking = true;
-                                            while (checking == true)
-                                            {
-
-                                                if (grade < ruleset.gradePointsTGM1.Count - 1)
-                                                {
-                                                    if (score >= ruleset.gradePointsTGM1[grade + 1])
-                                                    {
-                                                        grade++;
-                                                        Audio.playSound(s_Grade);
-                                                        masterTime = timer.count;
-                                                    }
-                                                    else
-                                                        checking = false;
-                                                }
-                                                else
-                                                    checking = false;
-
-                                            }
-                                        }
-                                        else
-                                        {
-                                            if (gradePoints > 99)
-                                            {
-                                                if (grade < ruleset.gradeIntTGM2.Count - 1)
-                                                {
-                                                    grade++;
-                                                    gradePoints = 0;
-                                                    if (ruleset.gradeIntTGM2[grade] != gm2grade)
-                                                    {
-                                                        gm2grade++;
-                                                        if (ruleset.gameRules < 4)
-                                                            Audio.playSound(s_Grade);
-                                                    }
-                                                }
-                                            }
-                                        }
-
-                                        if (ruleset.sections.Count != curSection)
-                                            if (level >= ruleset.sections[curSection])
+                                        if (MOD.sections.Count != curSection)//update section
+                                            if (MOD.level >= MOD.sections[curSection])
                                             {
                                                 curSection++;
-                                                secTet.Add(0);
 
                                                 if (ruleset.gameRules > 3)
-                                                    Audio.playSound(s_Section);
+                                                    Audio.playSound(Audio.s_Section);
 
-                                                //CHECK TORIKANS
-                                                if (ruleset.id == 1 && !toriless) //death
-                                                {
-                                                    if (curSection == 5)
-                                                    {
-                                                        if (temptime > 205000)
-                                                        {
-                                                            level = 500;
-                                                            torikan = true;
-                                                            torDef = temptime - 205000;
-                                                            triggerCredits();
-                                                        }
-                                                        else
-                                                            gm2grade = 27;
-                                                    }
-                                                }
-                                                if (ruleset.gameRules == 4 && !toriless)
-                                                {
-                                                    if (ruleset.id == 0 && curSection == 5 && temptime > 420000 && ruleset.exam == -1) //ti master
-                                                    {
-                                                        level = 500;
-                                                        torikan = true;
-                                                        torDef = temptime - 420000;
-                                                        endGame();
-                                                    }
-                                                    if (ruleset.id == 2) //shirase
-                                                    {
-                                                        if (curSection == 5 && temptime > 148000)
-                                                        {
-                                                            level = 500;
-                                                            torikan = true;
-                                                            torDef = temptime - 148000;
-                                                            endGame();
-                                                        }
-                                                        if (curSection == 10 && temptime > 296000)
-                                                        {
-                                                            level = 1000;
-                                                            torikan = true;
-                                                            torDef = temptime - 296000;
-                                                            endGame();
-                                                        }
-                                                    }
-                                                }
-
-                                                if(torikan)
+                                                if(MOD.torikan && !toriless)
                                                 {
                                                     currentTimer = (int)Field.timerType.LineClear;
-                                                    timerCount = ruleset.baseLineClear;
-                                                    Audio.playSound(s_Clear);
+                                                    timerCount = MOD.baseLineClear;
+                                                    Audio.playSound(Audio.s_Clear);
+                                                    if (MOD.toriCredits)
+                                                        triggerCredits();
+                                                    else
+                                                        endGame();
                                                     return;
                                                 }
-
-                                                //MUSIC
-                                                updateMusic();
-
-                                                //DELAYS
-                                                int num = curSection + speedBonus - 5;
-                                                if (num > 0 && num < ruleset.delayTable[0].Count)
-                                                {
-                                                    ruleset.baseARE = ruleset.delayTable[0][num];
-                                                    ruleset.baseARELine = ruleset.delayTable[1][num];
-                                                    ruleset.baseDAS = ruleset.delayTable[2][num];
-                                                    ruleset.baseLock = ruleset.delayTable[3][num];
-                                                    ruleset.baseLineClear = ruleset.delayTable[4][num];
-                                                }
-
+                                                
                                                 //UPDATE BACKGROUND
                                                 bgtimer = 1;
-
-                                                //MEDALS
-                                                if (ruleset.gameRules != 1 && ruleset.id != 6)
-                                                {
-                                                    int sectime = 90000;
-                                                    if (ruleset.id == 1 || ruleset.id == 2)
-                                                        sectime = 42000;
-                                                    if (sectionTime.count < sectime - 10000 && medals[2] < 1)
-                                                    {
-                                                        medals[2] = 1;
-                                                        Audio.playSound(s_Medal);
-                                                    }
-                                                    if (sectionTime.count < sectime - 5000 && medals[2] < 2)
-                                                    {
-                                                        medals[2] = 2;
-                                                        Audio.playSound(s_Medal);
-                                                    }
-                                                    if (sectionTime.count < sectime && medals[2] < 3)
-                                                    {
-                                                        medals[2] = 3;
-                                                        Audio.playSound(s_Medal);
-                                                    }
-
-                                                    if (curSection == 3 && ruleset.gameRules < 4)
-                                                        if ((rotations * 5) / (totalTets * 6) >= 1)
-                                                        {
-                                                            medals[1] = 1;
-                                                            rotations = 0;
-                                                            totalTets = 0;
-                                                            Audio.playSound(s_Medal);
-                                                        }
-                                                    if (curSection == 7 && ruleset.gameRules < 4)
-                                                        if ((rotations * 5) / (totalTets * 6) >= 1)
-                                                        {
-                                                            medals[1] = 2;
-                                                            rotations = 0;
-                                                            totalTets = 0;
-                                                            Audio.playSound(s_Medal);
-                                                        }
-
-
-                                                    sectionTimes.Add(sectionTime.count);
-
-                                                    //check Regrets!
-                                                    if (ruleset.gameRules == 4)
-                                                    {
-                                                        if (ruleset.id == 0)//master
-                                                        {
-                                                            if (sectionTime.count > ruleset.secRegrets[curSection - 1])
-                                                            {
-                                                                if (curSection != 9)
-                                                                    secCools[curSection - 1] = -1;
-                                                                else
-                                                                    secCools.Add(-1);
-
-                                                                Audio.playSound(s_Regret);
-                                                                coolTime.tick();
-                                                            }
-                                                        }
-                                                        if (ruleset.id == 2)//shirase
-                                                        {
-                                                            if (sectionTime.count > 60000)
-                                                            {
-                                                                secCools.Add(-1);
-
-                                                                Audio.playSound(s_Regret);
-                                                                coolTime.tick();
-                                                            }
-                                                            else
-                                                                secCools.Add(0);
-                                                        }
-                                                        if (secCools[curSection - 1] == 1)
-                                                            speedBonus += 1;
-                                                    }
-                                                    sectionTime.count = 0;
-                                                }
                                             }
-
-                                        //check medal conditions!!
-                                        if (ruleset.gameRules != 1)
-                                        {
-                                            //AC
-                                            if (bravoCounter == 1 && medals[0] == 0)
-                                            {
-                                                medals[0] = 1;
-                                                Audio.playSound(s_Medal);
-                                            }
-                                            if (bravoCounter == 2 && medals[0] == 1)
-                                            {
-                                                medals[0] = 2;
-                                                Audio.playSound(s_Medal);
-                                            }
-                                            if (bravoCounter == 3 && medals[0] == 2)
-                                            {
-                                                medals[0] = 3;
-                                                Audio.playSound(s_Medal);
-                                            }
-
-                                            //RO
-                                            
-                                            //ST
-
-
-                                            //SK
-                                            int tt = 1;
-                                            if (ruleset.id == 1 || ruleset.id == 2)
-                                                tt = 2;
-                                            if (ruleset.bigmode == true)
-                                                tt = 10;
-                                            if (tetrises == (int)(Math.Ceiling((double)10 / tt)) && medals[3] == 0)
-                                            {
-                                                medals[3] = 1;
-                                                Audio.playSound(s_Medal);
-                                            }
-
-                                            //RE
-                                            if (recoverChecking == true && tetCount <= 70)
-                                                recoveries++;
-                                            if (recoveries == 1 && medals[4] == 0)
-                                            {
-                                                medals[4] = 1;
-                                                Audio.playSound(s_Medal);
-                                            }
-                                            if (recoveries == 2 && medals[4] == 0)
-                                            {
-                                                medals[4] = 2;
-                                                Audio.playSound(s_Medal);
-                                            }
-                                            if (recoveries == 4 && medals[4] == 0)
-                                            {
-                                                medals[4] = 3;
-                                                Audio.playSound(s_Medal);
-                                            }
-                                            //CO
-                                            int big = 1;
-                                            if (ruleset.bigmode == true)
-                                                big = 2;
-                                            if ((int)(Math.Ceiling((double)4 / big)) == gradeCombo)
-                                            {
-                                                medals[5] = 1;
-                                                Audio.playSound(s_Medal);
-                                            }
-                                            if ((int)(Math.Ceiling((double)5 / big)) == gradeCombo)
-                                            {
-                                                medals[5] = 2;
-                                                Audio.playSound(s_Medal);
-                                            }
-                                            if ((int)(Math.Ceiling((double)7 / big)) == gradeCombo)
-                                            {
-                                                medals[5] = 3;
-                                                Audio.playSound(s_Medal);
-                                            }
-                                            
-                                        }
-
-
-                                        //GM FLAG CHECKS
-                                        switch (ruleset.gameRules)
-                                        {
-                                            case 1:
-                                                if (GMflags.Count == 0 && level >= 300)
-                                                {
-                                                    if (score >= 12000 && temptime <= 255000)
-                                                        GMflags.Add(true);
-                                                    else
-                                                        GMflags.Add(false);
-                                                }
-                                                else if (GMflags.Count == 1 && level >= 500)
-                                                {
-                                                    if (score >= 40000 && temptime <= 450000)
-                                                        GMflags.Add(true);
-                                                    else
-                                                        GMflags.Add(false);
-                                                }
-                                                else if (GMflags.Count == 2 && level >= ruleset.endLevel)
-                                                {
-                                                    level = 999;
-                                                    if (score >= 126000 && temptime <= 810000)
-                                                        GMflags.Add(true);
-                                                    else
-                                                        GMflags.Add(false);
-
-
-                                                    //check for awarding GM
-                                                    if (GMflags[0] && GMflags[1] && GMflags[2])
-                                                    {
-                                                        isGM = true;
-                                                    }
-                                                }
-                                                break;
-                                            case 2:
-                                                if (GMflags.Count == 0 && level >= 100)
-                                                {
-                                                    if (secTet[0] > 0 && temptime <= 90000)
-                                                        GMflags.Add(true);
-                                                    else
-                                                        GMflags.Add(false);
-                                                }
-                                                else if (GMflags.Count == 1 && level >= 200)
-                                                {
-                                                    if (secTet[1] > 0)
-                                                        GMflags.Add(true);
-                                                    else
-                                                        GMflags.Add(false);
-                                                }
-                                                else if (GMflags.Count == 2 && level >= 300)
-                                                {
-                                                    if (secTet[2] > 0)
-                                                        GMflags.Add(true);
-                                                    else
-                                                        GMflags.Add(false);
-                                                }
-                                                else if (GMflags.Count == 3 && level >= 400)
-                                                {
-                                                    if (secTet[3] > 0)
-                                                        GMflags.Add(true);
-                                                    else
-                                                        GMflags.Add(false);
-                                                }
-                                                else if (GMflags.Count == 4 && level >= 500)
-                                                {
-                                                    if (secTet[4] > 0)
-                                                        GMflags.Add(true);
-                                                    else
-                                                        GMflags.Add(false);
-
-                                                    if (temptime <= 360000)
-                                                        GMflags.Add(true);
-                                                    else
-                                                        GMflags.Add(false);
-                                                }
-                                                else if (GMflags.Count == 6 && level >= 600)
-                                                {
-                                                    if (secTet[5] > 0 && sectionTimes[5] > (sectionTimes[0] + sectionTimes[1] + sectionTimes[2] + sectionTimes[3] + sectionTimes[4]) / 5)
-                                                        GMflags.Add(true);
-                                                    else
-                                                        GMflags.Add(false);
-                                                }
-                                                else if (GMflags.Count == 7 && level >= 700)
-                                                {
-                                                    if (secTet[6] > 0 && sectionTimes[6] > (sectionTimes[0] + sectionTimes[1] + sectionTimes[2] + sectionTimes[3] + sectionTimes[4]) / 5)
-                                                        GMflags.Add(true);
-                                                    else
-                                                        GMflags.Add(false);
-                                                }
-                                                else if (GMflags.Count == 8 && level >= 800)
-                                                {
-                                                    if (secTet[7] > 0 && sectionTimes[7] > (sectionTimes[0] + sectionTimes[1] + sectionTimes[2] + sectionTimes[3] + sectionTimes[4]) / 5)
-                                                        GMflags.Add(true);
-                                                    else
-                                                        GMflags.Add(false);
-                                                }
-                                                else if (GMflags.Count == 9 && level >= 900)
-                                                {
-                                                    if (secTet[8] > 0 && sectionTimes[8] > (sectionTimes[0] + sectionTimes[1] + sectionTimes[2] + sectionTimes[3] + sectionTimes[4]) / 5)
-                                                        GMflags.Add(true);
-                                                    else
-                                                        GMflags.Add(false);
-                                                }
-                                                else if (GMflags.Count == 10 && level == 999)
-                                                {
-                                                    if (sectionTime.count <= 45000 && temptime <= 570000 && gm2grade == 17)
-                                                        GMflags.Add(true);
-                                                    else
-                                                        GMflags.Add(false);
-                                                }
-                                                break;
-                                            case 3: //add tap gm flags
-                                                if (GMflags.Count == 0 && level >= 100)
-                                                {
-                                                    if (secTet[0] > 1 && sectionTimes[0] <= 65000)
-                                                        GMflags.Add(true);
-                                                    else
-                                                        GMflags.Add(false);
-                                                }
-                                                else if (GMflags.Count == 1 && level >= 200)
-                                                {
-                                                    if (secTet[1] > 1 && sectionTimes[1] <= 65000)
-                                                        GMflags.Add(true);
-                                                    else
-                                                        GMflags.Add(false);
-                                                }
-                                                else if (GMflags.Count == 2 && level >= 300)
-                                                {
-                                                    if (secTet[2] > 1 && sectionTimes[2] <= 65000)
-                                                        GMflags.Add(true);
-                                                    else
-                                                        GMflags.Add(false);
-                                                }
-                                                else if (GMflags.Count == 3 && level >= 400)
-                                                {
-                                                    if (secTet[3] > 1 && sectionTimes[3] <= 65000)
-                                                        GMflags.Add(true);
-                                                    else
-                                                        GMflags.Add(false);
-                                                }
-                                                else if (GMflags.Count == 4 && level >= 500)
-                                                {
-                                                    if (secTet[4] > 1 && sectionTimes[4] <= 65000)
-                                                        GMflags.Add(true);
-                                                    else
-                                                        GMflags.Add(false);
-                                                }
-                                                else if (GMflags.Count == 5 && level >= 600)
-                                                {
-                                                    if (secTet[5] > 0 && sectionTimes[5] <= ((sectionTimes[0] + sectionTimes[1] + sectionTimes[2] + sectionTimes[3] + sectionTimes[4]) / 5) + 2000)
-                                                        GMflags.Add(true);
-                                                    else
-                                                        GMflags.Add(false);
-                                                }
-                                                else if (GMflags.Count == 6 && level >= 700)
-                                                {
-                                                    if (secTet[6] > 0 && sectionTimes[6] <= sectionTimes[5] + 2000)
-                                                        GMflags.Add(true);
-                                                    else
-                                                        GMflags.Add(false);
-                                                }
-                                                else if (GMflags.Count == 7 && level >= 800)
-                                                {
-                                                    if (secTet[7] > 0 && sectionTimes[7] <= sectionTimes[6] + 2000)
-                                                        GMflags.Add(true);
-                                                    else
-                                                        GMflags.Add(false);
-                                                }
-                                                else if (GMflags.Count == 8 && level >= 900)
-                                                {
-                                                    if (secTet[8] > 0 && sectionTimes[8] <= sectionTimes[7] + 2000)
-                                                        GMflags.Add(true);
-                                                    else
-                                                        GMflags.Add(false);
-                                                }
-                                                else if (GMflags.Count == 9 && level >= 999)
-                                                {
-                                                    if (temptime <= 525000 && sectionTimes[9] <= sectionTimes[8] + 2000 && gm2grade == 17)
-                                                        GMflags.Add(true);
-                                                    else
-                                                        GMflags.Add(false);
-                                                }
-                                                break;
-                                        }
 
                                         //update gimmicks
                                         bool thaw = false;
-                                        if (ruleset.gimList.Count > 0)
+                                        if (MOD.gimList.Count > 0)
                                         {
-                                            if (ruleset.gimList.Count > gimIndex)
-                                                if (ruleset.gimList[gimIndex].startLvl <= level)
+                                            if (MOD.gimList.Count > gimIndex)
+                                                if (MOD.gimList[gimIndex].startLvl <= MOD.level)
                                                 {
-                                                    activeGim.Add(ruleset.gimList[gimIndex]);
+                                                    activeGim.Add(MOD.gimList[gimIndex]);
                                                     gimIndex++;
                                                 }
                                             for (int i = 0; i < activeGim.Count; i++)
                                             {
-                                                if (ruleset.gimList[gimIndex - activeGim.Count + i].endLvl <= level)
+                                                if (MOD.gimList[gimIndex - activeGim.Count + i].endLvl <= MOD.level)
                                                 {
-                                                    if (ruleset.gimList[gimIndex - activeGim.Count + i].type == 4)
+                                                    if (MOD.gimList[gimIndex - activeGim.Count + i].type == 4)
                                                         thaw = true;
                                                     activeGim.RemoveAt(i);
 
@@ -1859,7 +1200,7 @@ namespace TGMsim
                                         }
 
                                         if (checkGimmick(5))
-                                            ruleset.bigmode = true;
+                                            MOD.bigmode = true;
 
                                         //thaw ice
                                         if (thaw)
@@ -1908,112 +1249,44 @@ namespace TGMsim
                                                 for (int j = 0; j < 10; j++)
                                                     gameField[j][full[i]] = 0;
                                             }
-                                            for (int i = 0; i < full.Count; i++)
-                                            {
-                                                for (int j = full[i]; j > 0; j--)
-                                                {
-                                                    for (int k = 0; k < 10; k++)
-                                                    {
-                                                        gameField[k][j] = gameField[k][j - 1];
-                                                    }
-                                                    for (int c = 0; c < vanList.Count; c++)
-                                                    {
-                                                        if (vanList[c].y == j)
-                                                        {
-                                                            var vP = new vanPip();
-                                                            vP.time = vanList[c].time;
-                                                            vP.x = vanList[c].x;
-                                                            vP.y = vanList[c].y + 1;
-                                                            vanList[c] = vP;
-                                                        }
-                                                    }
-                                                }
-                                                for (int k = 0; k < 10; k++)
-                                                {
-                                                    gameField[k][21] = 0;
-                                                }
-                                            }
-
-                                            full.Clear();
+                                            
                                         }
 
 
                                         //check finish condition
-                                        if (ruleset.endLevel != 0 && level >= ruleset.endLevel && inCredits == false)
+                                        if (MOD.endLevel != 0 && MOD.level >= MOD.endLevel && inCredits == false)
                                         {
                                             triggerCredits();
                                         }
 
                                         //start timer
                                         currentTimer = (int)Field.timerType.LineClear;
-                                        timerCount = ruleset.baseLineClear;
-                                        Audio.playSound(s_Clear);
+                                        timerCount = MOD.baseLineClear;
+                                        Audio.playSound(Audio.s_Clear);
 
                                     }
                                     else //start the ARE, check if new grav level
                                     {
                                         currentTimer = (int)Field.timerType.ARE;
-                                        timerCount = ruleset.baseARE;
+                                        timerCount = MOD.baseARE;
 
-                                        combo = 1;
-                                        gradeCombo = 0;
-                                        comboing = false;
-
+                                        MOD.onPut(activeTet, false);
                                     }
 
                                     checkFade();
-                                    
-
-                                    //check level for section cool
-                                    if (level % 100 > 69)
-                                    {
-                                        
-
-                                        
-                                        if (ruleset.gameRules == 4 && ruleset.id == 0)
-                                        {
-
-                                            if (secCools.Count <= curSection && curSection != 9)
-                                            {
-                                                if (curSection != 0)
-                                                {
-                                                    if ((secCools[curSection - 1] == 1 && sectionTime.count < sectionTimes[curSection - 1] + 2000) || (secCools[curSection - 1] != 1 && sectionTime.count < ruleset.secCools[curSection]))
-                                                    {
-                                                        secCools.Add(1);
-                                                        Audio.playSound(s_Cool);
-                                                        coolTime.tick();
-                                                    }
-                                                    else
-                                                        secCools.Add(0);
-                                                }
-                                                else
-                                                {
-                                                    if (sectionTime.count < ruleset.secCools[curSection])
-                                                    {
-                                                        secCools.Add(1);
-                                                        Audio.playSound(s_Cool);
-                                                        coolTime.tick();
-                                                    }
-                                                    else
-                                                        secCools.Add(0);
-                                                }
-                                            }
-                                        }
-                                    }
-
 
                                     while (gravLevel < gravTable.Count - 1)
                                     {
-                                        if (level + (speedBonus * 100) >= ruleset.gravLevels[gravLevel + 1])
+                                        if (MOD.level + (MOD.lvlBonus * 100) >= ruleset.gravLevels[gravLevel + 1])
                                             gravLevel++;
                                         else
                                             break;
                                     }
 
-                                    if ((ruleset.g20 == true || gravTable[gravLevel] == Math.Pow(256, ruleset.gravType + 1) * 20) && ruleset.gameRules < 4)
+                                    if ((MOD.g20 == true || gravTable[gravLevel] == Math.Pow(256, ruleset.gravType + 1) * 20) && ruleset.gameRules < 4)
                                         textBrush = new SolidBrush(Color.Gold);
 
-                                    Audio.playSound(s_Contact);
+                                    Audio.playSound(Audio.s_Contact);
                                     return;
 
                                 }
@@ -2026,8 +1299,7 @@ namespace TGMsim
                             else
                             {
                                 currentTimer = (int)Field.timerType.LockDelay;
-                                Audio.playSound(s_Lock);
-                                //timerCount = ruleset.baseLock;
+                                Audio.playSound(Audio.s_Lock);
                             }
                         }
                         else
@@ -2042,7 +1314,7 @@ namespace TGMsim
 
                         bool son = false;
 
-                        if (pad.inputStart == 1 && ruleset.id == 9 && ruleset.variant == 1)
+                        if (pad.inputStart == 1 && ruleset.id == 9 && MOD.variant == 1)
                             endGame();
 
                         if (isPlayback == true && pad.superStart)
@@ -2059,9 +1331,9 @@ namespace TGMsim
                             if (!activeTet.floored)
                             {
                                 //blockDrop++;
-                                softCounter++;
+                                activeTet.soft++;
                             }
-                            else if (!safelock || !(ruleset.gameRules > 3 || ruleset.id == 1 || (ruleset.gameRules == 2 && level > 899) || (ruleset.gameRules == 3 && level > 899)))
+                            else if (!safelock || !(ruleset.gameRules > 3 || ruleset.id == 1 || (ruleset.gameRules == 2 && MOD.level > 899) || (ruleset.gameRules == 3 && MOD.level > 899)))
                             {
                                 if(activeTet.floored)
                                     gravCounter = 0;
@@ -2102,7 +1374,7 @@ namespace TGMsim
                             int big = 0;
                             if (activeTet.big)
                                 big = 1;
-                            if (pad.inputH != 0 && (inputDelayH < 1 || inputDelayH == ruleset.baseDAS))
+                            if (pad.inputH != 0 && (inputDelayH < 1 || inputDelayH == MOD.baseDAS))
                             {
                                 bool safe = true;
 
@@ -2133,7 +1405,7 @@ namespace TGMsim
                                 if (safe) //if it's fine, move them all by one
                                 {
                                     activeTet.move(pad.inputH*((ruleset.bigMove*big)+1-big), 0);
-                                    if (ruleset.lockType == 1) activeTet.groundTimer = ruleset.baseLock;
+                                    if (ruleset.lockType == 1) activeTet.groundTimer = MOD.baseLock;
                                 }
                             }
                         }
@@ -2230,8 +1502,8 @@ namespace TGMsim
             //get next tetromino, generate another for "next"
             if (ruleset.nextNum > 0)
             {
-                activeTet = nextTet[0].cloneBig(ruleset.bigmode);
-                activeTet.groundTimer = ruleset.baseLock;
+                activeTet = nextTet[0].cloneBig(MOD.bigmode);
+                activeTet.groundTimer = MOD.baseLock;
                 for (int i = 0; i < nextTet.Count - 1; i++)
                 {
                     nextTet[i] = nextTet[i + 1];
@@ -2240,32 +1512,32 @@ namespace TGMsim
                 if (pad.inputPressedHold && ruleset.hold == true && swappedHeld == 0)
                 {
                     hold();
-                    Audio.playSound(s_Hold);
+                    Audio.playSound(Audio.s_Hold);
                 }
                 else if (starting == 0)
                 {
                     switch (nextTet[nextTet.Count - 1].id)
                     {
                         case 1:
-                            Audio.playSound(s_Tet1);
+                            Audio.playSound(Audio.s_Tet1);
                             break;
                         case 2:
-                            Audio.playSound(s_Tet2);
+                            Audio.playSound(Audio.s_Tet2);
                             break;
                         case 3:
-                            Audio.playSound(s_Tet3);
+                            Audio.playSound(Audio.s_Tet3);
                             break;
                         case 4:
-                            Audio.playSound(s_Tet4);
+                            Audio.playSound(Audio.s_Tet4);
                             break;
                         case 5:
-                            Audio.playSound(s_Tet5);
+                            Audio.playSound(Audio.s_Tet5);
                             break;
                         case 6:
-                            Audio.playSound(s_Tet6);
+                            Audio.playSound(Audio.s_Tet6);
                             break;
                         case 7:
-                            Audio.playSound(s_Tet7);
+                            Audio.playSound(Audio.s_Tet7);
                             break;
                     }
                 }
@@ -2281,18 +1553,19 @@ namespace TGMsim
                 if (ruleset.gameRules == 6 || pad.inputRot3 == 0)
                 {
                     if(rotatePiece(activeTet, intRot, true))
-                        Audio.playSound(s_PreRot);
+                        Audio.playSound(Audio.s_PreRot);
                 }
             }
 
             gravCounter = 0;
 
-            if (level % 100 != 99 && level != (ruleset.endLevel - 1) && inCredits == false && ruleset.id != 9)
+            /*if (level % 100 != 99 && level != (ruleset.endLevel - 1) && inCredits == false && ruleset.id != 9)
             {
                 level++;
                 if (level % 100 == 99 || level == (ruleset.endLevel - 1))
                     Audio.playSound(s_Bell);
-            }
+            }*/
+            MOD.onSpawn();
 
             bool blocked = false;
 
@@ -2302,9 +1575,6 @@ namespace TGMsim
             {
                 endGame();
             }
-            softCounter = 0;
-            sonicCounter = 0;
-            tetLife = 0;
 
             justSpawned = true;
         }
@@ -2316,10 +1586,10 @@ namespace TGMsim
             if (heldPiece != null)
             {
                 swappedHeld = 2;
-                tempTet = heldPiece.cloneBig(ruleset.bigmode);;
+                tempTet = heldPiece.cloneBig(MOD.bigmode);;
                 heldPiece = activeTet.clone(false, false);
                 activeTet = tempTet;
-                activeTet.groundTimer = ruleset.baseLock;
+                activeTet.groundTimer = MOD.baseLock;
             }
             else
             {
@@ -2327,13 +1597,13 @@ namespace TGMsim
                 heldPiece = activeTet.clone(false, false);
                 spawnPiece();
                 currentTimer = (int)Field.timerType.ARE;
-                timerCount = ruleset.baseARE;
+                timerCount = MOD.baseARE;
             }
         }
 
         private void endGame()
         {
-            if (godmode == true && !inCredits && !torikan)
+            if (godmode == true && !inCredits && (!MOD.torikan || toriless))
             {
                 clearField();
             }
@@ -2360,7 +1630,7 @@ namespace TGMsim
                         {
                             if (activeTet.bits[i].y - k < 0)
                                 continue;
-                            if (checkGimmick(1) || creditsType == 2)
+                            if (checkGimmick(1) || MOD.creditsType == 2)
                                 gameField[activeTet.bits[i].x + j][activeTet.bits[i].y - k] = 8;
                             else if (activeTet.bone == true)
                                 gameField[activeTet.bits[i].x + j][activeTet.bits[i].y - k] = 10;
@@ -2379,14 +1649,12 @@ namespace TGMsim
                     if (creditsProgress >= ruleset.creditsLength)//cleared credits
                     {
                         results.lineC = 1;
-                        if ((ruleset.gameRules == 2 || ruleset.gameRules == 3) && isGM == true)
-                            gm2grade = 32;
 
                         if (ruleset.gameRules == 4)
                         {
-                            if (creditsType == 1)
+                            if (MOD.creditsType == 1)
                                 creditGrades += 50;
-                            if (creditsType == 2)
+                            if (MOD.creditsType == 2)
                                 creditGrades += 160;
                         }
 
@@ -2395,14 +1663,14 @@ namespace TGMsim
                     }
                     else//topped out in credits
                     {
-                        if ((ruleset.gameRules == 2 || ruleset.gameRules == 3) && isGM == true)
-                            gm2grade = 27;
+                        //if ((ruleset.gameRules == 2 || ruleset.gameRules == 3) && isGM == true)
+                            //MOD.grade = 27;
                     }
                 }
 
                 for (; creditGrades > 100; creditGrades -= 100)
                 {
-                    gm2grade++;
+                    MOD.grade++;
                 }
 
                 //handle TGM3 section modifyers
@@ -2410,53 +1678,46 @@ namespace TGMsim
                 {
                     if (ruleset.id == 0)
                     {
-                        foreach (int i in secCools)
+                        /*foreach (int i in secCools)
                         {
-                            gm2grade += i;
-                        }
+                            MOD.grade += i;
+                        }*/
 
-                        if (gm2grade < 0)
-                            gm2grade = 0;
-                        if (gm2grade > 32)
-                            gm2grade = 32;
+                        if (MOD.grade < 0)
+                            MOD.grade = 0;
+                        if (MOD.grade > 32)
+                            MOD.grade = 32;
                     }
-                    if(ruleset.id == 2)
+                    /*if(ruleset.id == 2)
                     {
-                        gm2grade += secCools.Count + 1;
+                        MOD.grade += secCools.Count + 1;
                         foreach (int i in secCools)
                         {
-                            gm2grade += i;
+                            MOD.grade += i;
                         }
-                    }
+                    }*/
                 }
                 
                 Audio.stopMusic();
                 results.game = ruleset.gameRules - 1;
                 results.username = "CHEATS";
                 if (ruleset.gameRules == 1)
-                    results.grade = grade;
+                    results.grade = MOD.grade;
                 else
-                    results.grade = gm2grade;
+                    results.grade = MOD.grade;
                 results.score = score;
                 if (ruleset.gameRules == 1)
                     results.time = (long)((masterTime * ruleset.FPS) / 60);
                 else
                     results.time = (long)((timer.count * ruleset.FPS) / 60);
-                results.level = level;
-                results.medals = medals;
+                results.level = MOD.level;
+                results.medals = MOD.medals;
                 results.delay = pad.lag != 0;
             }
         }
 
         private void triggerCredits()
         {
-            if ((rotations * 5) / (totalTets * 6) >= 1 && ruleset.gameRules > 1 && ruleset.gameRules < 4)
-            {
-                medals[1] = 3;
-                rotations = 0;
-                totalTets = 0;
-                Audio.playSound(s_Medal);
-            }
             
             inCredits = true;
             Audio.stopMusic();
@@ -2464,46 +1725,30 @@ namespace TGMsim
                 Audio.playMusic("crdtvanish");
             else
             {
-                Audio.playSound(s_GameClear); //allclear
+                Audio.playSound(Audio.s_GameClear); //allclear
                 clearField();
             }
 
             if (ruleset.id == 0)
             {
-                isGM = true;
-                for (int i = 0; i < GMflags.Count; i++ )
-                {
-                    if (GMflags[i] == false)
-                        isGM = false;
-                }
-                if ((ruleset.gameRules == 2 && GMflags.Count(p => p == true) == 11) || (ruleset.gameRules == 3 && GMflags.Count(p => p == true) == 10))
-                {
-                    isGM = true;
-                }
+                if ((ruleset.gameRules == 2 && MOD.grade == 32) || (ruleset.gameRules == 3 && MOD.grade == 32)) //tgm2 always has invisible
+                    MOD.creditsType = 2;
 
-                if ((ruleset.gameRules == 2 && isGM) || (ruleset.gameRules == 3 && isGM)) //tgm2 always has invisible
-                    creditsType = 2;
-
-                if (ruleset.gameRules == 4)
+                /*if (ruleset.gameRules == 4)
                 {
-                    if (grade > 26 && secCools.Sum() == 8)
-                        creditsType = 2;
+                    if (MOD.grade > 26 && secCools.Sum() == 8)
+                        MOD.creditsType = 2;
                     else
-                        creditsType = 1;
-                }
-            }
-            if (ruleset.id == 1)//death
-            {
-                if (level == 999)
-                    gm2grade = 32;
+                        MOD.creditsType = 1;
+                }*/
             }
         }
 
         private bool rotatePiece(Tetromino tet, int p, bool spawn)
         {
             bool success = true;
-            rotations++;
-            Tetromino tmptet = RSYS.rotate(tet, p, gameField, ruleset.gameRules, ruleset.bigmode, spawn);
+            tet.rotations++;
+            Tetromino tmptet = RSYS.rotate(tet, p, gameField, ruleset.gameRules, MOD.bigmode, spawn);
             if (activeTet == tmptet)
                 success = false;
             activeTet = tmptet;
@@ -2512,8 +1757,6 @@ namespace TGMsim
 
         public Tetromino generatePiece()
         {
-            totalTets++;
-
             int tempID = GEN.pull() + 1;
 
             Tetromino tempTet = new Tetromino(tempID, false);//force non-big here so they're not stretched out in the queue
@@ -2692,14 +1935,10 @@ namespace TGMsim
                 g -= 1;
             }
             if (g != 0 && ghost == false && activeTet.kicked == 0 && ruleset.lockType == 0)
-                activeTet.groundTimer = ruleset.baseLock;
+                activeTet.groundTimer = MOD.baseLock;
 
-            if (i == 19 && g20 == false && g > sonicCounter && sonic)
-                sonicCounter = g;
-
-            //if (activeTet.kicked != 0)
-                //activeTet.groundTimer = 0;
-            
+            if (i == 19 && g20 == false && g > activeTet.sonic && sonic)
+                activeTet.sonic = g;
         }
 
         private string convertTime(long numtime)
@@ -2770,11 +2009,6 @@ namespace TGMsim
             if (textBrush.Color == Color.Gold)
                 gold = 78;
 
-            //if (ruleset.gameRules == 1)
-                //gd = ruleset.grades[grade];
-            //else
-               // gd = ruleset.grades[gm2grade];
-
             for (int i = 0; i < gd.Length; i++)
             {
                 int dex = "0123456789SmMVOKTG".IndexOf(gd.Substring(i, 1));
@@ -2784,7 +2018,7 @@ namespace TGMsim
 
         
 
-        private void updateMusic()
+        /*private void updateMusic()
         {
             int cools = 0;
             foreach (int i in secCools)
@@ -2889,7 +2123,7 @@ namespace TGMsim
             }
             else if (ruleset.id == 10) //dynamo
             {
-                section += ruleset.variant*5;
+                section += MOD.variant*5;
                 if (section >= 20 && Audio.song != "Level 5")
                 {
                     Audio.stopMusic();
@@ -2930,35 +2164,35 @@ namespace TGMsim
                     return;
                 }
             }
-        }
+        }*/
 
         private void checkFade()
         {
             int cools = 0;
-            foreach (int i in secCools)
+            /*foreach (int i in secCools)
             {
                 if (i == 1) cools++;
-            }
+            }*/
             int section = curSection + cools;
 
             if (ruleset.id == 0)//master
             {
-                if (section == 4 && level % 100 > 84) Audio.stopMusic();
-                if ((ruleset.gameRules == 2 || ruleset.gameRules == 3) && section == 6 && level % 100 > 84) Audio.stopMusic();
-                if ((ruleset.gameRules == 2 || ruleset.gameRules == 3) && section == 8 && level % 100 > 84) Audio.stopMusic();
-                if (ruleset.gameRules == 4 && section == 7 && level % 100 > 84) Audio.stopMusic();
+                if (section == 4 && MOD.level % 100 > 84) Audio.stopMusic();
+                if ((ruleset.gameRules == 2 || ruleset.gameRules == 3) && section == 6 && MOD.level % 100 > 84) Audio.stopMusic();
+                if ((ruleset.gameRules == 2 || ruleset.gameRules == 3) && section == 8 && MOD.level % 100 > 84) Audio.stopMusic();
+                if (ruleset.gameRules == 4 && section == 7 && MOD.level % 100 > 84) Audio.stopMusic();
             }
             if(ruleset.id == 1)//death
             {
-                if (curSection == 2 && level % 100 > 84) Audio.stopMusic();
-                if (curSection == 4 && level % 100 > 84) Audio.stopMusic();
+                if (curSection == 2 && MOD.level % 100 > 84) Audio.stopMusic();
+                if (curSection == 4 && MOD.level % 100 > 84) Audio.stopMusic();
             }
             if (ruleset.id == 2)//shirase
             {
-                if (curSection == 4 && level % 100 > 84) Audio.stopMusic();
-                if (curSection == 6 && level % 100 > 84) Audio.stopMusic();
-                if (curSection == 9 && level % 100 > 84) Audio.stopMusic();
-                if (curSection == 13 && level % 100 > 84) Audio.stopMusic();
+                if (curSection == 4 && MOD.level % 100 > 84) Audio.stopMusic();
+                if (curSection == 6 && MOD.level % 100 > 84) Audio.stopMusic();
+                if (curSection == 9 && MOD.level % 100 > 84) Audio.stopMusic();
+                if (curSection == 13 && MOD.level % 100 > 84) Audio.stopMusic();
             }
         }
     }

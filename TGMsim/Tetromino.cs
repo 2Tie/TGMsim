@@ -22,6 +22,12 @@ namespace TGMsim
         public int groundTimer = 0;
         public int item = 0;
 
+        //stats
+        public int soft = 0;
+        public int sonic = 0;
+        public int life = 0;
+        public int rotations = 0;
+
         public enum itemType { none, freefall, deleven };
 
         public List<BlockBit> bits = new List<BlockBit>(); //first four will always be the "small" version
@@ -251,6 +257,10 @@ namespace TGMsim
             tet.bone = this.bone;
             tet.kicked = kicked;
             tet.groundTimer = groundTimer;
+            tet.soft = soft;
+            tet.sonic = sonic;
+            tet.life = life;
+            tet.rotations = rotations;
             return tet;
         }
     }

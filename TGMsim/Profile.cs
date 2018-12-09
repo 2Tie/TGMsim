@@ -18,6 +18,7 @@ namespace TGMsim
         public int TIGrade = 0;
         public List<int> TIHistory = new List<int>{0,0,0,0,0,0,0};
         public List<bool> certs = new List<bool>{false, false, false, false, false, false, false, false, false, false}; //Official GM certifications (1, 2, tap, tap death, 3, 3 shirase, ACE TM, 4 world, 4 rounds, 4 konoha)
+        public int dynamoProgress = 0;
 
         public bool createUser()
         {
@@ -87,7 +88,15 @@ namespace TGMsim
         public bool readUserData()
         {
             //read the user data and pass it to the game
-            BinaryReader file = new BinaryReader(File.OpenRead("Sav/" + name + ".usr"));
+            BinaryReader file;
+            try
+            {
+                 file = new BinaryReader(File.OpenRead("Sav/" + name + ".usr"));
+            }
+            catch (FileNotFoundException e)
+            {
+                return false;
+            }
             if (file.ReadString() != name)//read name
                 return false;
             if (file.ReadByte() != 0x03)//read save version, compare to current
@@ -123,8 +132,9 @@ namespace TGMsim
 
             //ACE grade data
             file.ReadByte();
-            //future use
-            file.ReadByte();
+            //future use, three bits used by dynamo
+            byte t = file.ReadByte();
+            dynamoProgress = (int)(t & 0x7);
             return true;
         }
 
@@ -174,7 +184,7 @@ namespace TGMsim
 
                 sw.Write(tempbyte);//current TI grade + previous seven rankings
                 sw.Write(new byte[1]);//ACE grade
-                sw.Write(new byte[1]);//unused
+                sw.Write((byte)(dynamoProgress));//unused
             }
             return true;
         }
