@@ -4,7 +4,7 @@ Open-source TGM Series clone, aiming for accuracy, and extensibility down the li
 
 ## Currently supported game modes:
 
-TGM1 Master (has visual errors)
+TGM1 Master (has visual errors - lock flash is mistimed)
 
 TGM2 Master
 
@@ -14,8 +14,8 @@ TAP Death
 TGM3 Master 
 TGM3 Shirase
 
-SEGA Tetris (heavily WIP)  
-SEGA Bloxeed (heavily WIP)  
+SEGA Tetris
+SEGA Bloxeed (missing powerups)  
 SEGA Flash Point (heavily WIP)  
 
 New Dynamo Mode (heavily WIP)

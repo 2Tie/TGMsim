@@ -291,7 +291,7 @@ namespace TGMsim
                     break;
             }
 
-            if ((MOD.g20 == true || gravTable[gravLevel] == Math.Pow(256, ruleset.gravType + 1) * 20) && ruleset.gameRules < 4)
+            if ((MOD.g20 == true || gravTable[gravLevel] == Math.Pow(256, ruleset.gravType + 1) * 20) && (int)ruleset.gameRules < 4)
                 textBrush = new SolidBrush(Color.Gold);
             
             startTime.tick();
@@ -538,12 +538,12 @@ namespace TGMsim
             Color gravColor, gravMeter;
             switch (ruleset.gameRules)
             {
-                case 1:
+                case GameRules.Games.TGM1:
                     gravColor = Color.White;
                     gravMeter = Color.Teal;
                     break;
-                case 2:
-                case 3:
+                case GameRules.Games.TGM2:
+                case GameRules.Games.TGM3:
                     gravColor = Color.Green;
                     gravMeter = Color.Orange;
                     break;
@@ -574,7 +574,7 @@ namespace TGMsim
             }
             //score
             drawBuffer.DrawString(MOD.score.ToString(), f_Maestro, textBrush, x + 280, 280);
-            if (ruleset.gameRules == 1 && ruleset.id == 0)
+            if (ruleset.gameRules == GameRules.Games.TGM1 && ruleset.id == 0)
             {
                 drawBuffer.DrawString("NEXT GRADE:", f_Maestro, textBrush, x + 280, 140);
                 if (MOD.grade != 18)
@@ -621,7 +621,7 @@ namespace TGMsim
             //if (bravoTime.count > 0)
                 //drawBuffer.DrawString("BRAVO! X" + bravoCounter, SystemFonts.DefaultFont, textBrush, x + 280, 400);
 
-            if (ruleset.gameRules == 6)
+            if (ruleset.gameRules == GameRules.Games.GMX)
                 drawBuffer.DrawString("LEVEL:", f_Maestro, textBrush, x + 280, 465);
             
             if (MOD.limitType == 3)//time limit?
@@ -644,7 +644,7 @@ namespace TGMsim
 
 
             //DRAW MEDALS
-            if (ruleset.gameRules != 1)
+            if ((int)ruleset.gameRules > 1)
                 for (int i = 0; i < 6; i++)
                 {
                     if (MOD.medals[i] != 0)
@@ -838,9 +838,9 @@ namespace TGMsim
 
                         //check inputs and handle logic pertaining to them
 
-                    if (ruleset.gameRules == 6 && pad.inputPressedRot3 == true)
-                        inputDelayH = 0;
-                    else if (pad.inputH == 1 || pad.inputH == -1)
+                    //if (ruleset.gameRules == 6 && pad.inputPressedRot3 == true)//gm4 leftover
+                        //inputDelayH = 0;
+                    if (pad.inputH == 1 || pad.inputH == -1)
                     {
                         if (inputDelayH > 0)
                         {
@@ -854,7 +854,7 @@ namespace TGMsim
 
                     inputDelayDir = pad.inputH;
 
-                    if(creditsProgress == 0 &&((ruleset.gameRules > 1) == (creditsPause.count >= 3000) || ruleset.id == 1) && inCredits)
+                    if(creditsProgress == 0 &&(((int)ruleset.gameRules > 1) == (creditsPause.count >= 3000) || ruleset.id == 1) && inCredits)
                     {
                         if (ruleset.id == 7 || ruleset.id == 9 || (ruleset.id == 10 && MOD.variant == 0))
                             Audio.playMusic("crdtcas");
@@ -864,10 +864,10 @@ namespace TGMsim
                             Audio.playMusic("crdtinvis");
                     }
 
-                    if (inCredits && ((ruleset.gameRules > 1) == (creditsPause.count >= 3000) || ruleset.id == 1))
+                    if (inCredits && (((int)ruleset.gameRules > 1) == (creditsPause.count >= 3000) || ruleset.id == 1))
                     {
                         creditsProgress++;
-                        if (pad.inputStart == 1 && ruleset.gameRules == 1)
+                        if (pad.inputStart == 1 && ruleset.gameRules == GameRules.Games.TGM1)
                             creditsProgress += 3;
                     }
 
@@ -937,9 +937,8 @@ namespace TGMsim
                                         raiseGarbage(true);
                                 }
 
-                                full.Clear();
                                 currentTimer = (int)Field.timerType.ARE;
-                                if (ruleset.gameRules >= 3)
+                                if ((int)ruleset.gameRules >= 3)
                                     timerCount = MOD.baseARELine;
                                 else
                                     timerCount = MOD.baseARE;
@@ -954,16 +953,43 @@ namespace TGMsim
                         //elseif timer is ARE and done, get next tetromino
                         else if (currentTimer == (int)Field.timerType.ARE)
                         {
-                            if (timerCount <= 0 && ((inCredits == (creditsPause.count > 3000)) || ruleset.gameRules == 1 || ruleset.id == 1))
+                            if (timerCount <= 0 && ((inCredits == (creditsPause.count > 3000)) || ruleset.gameRules == GameRules.Games.TGM1 || ruleset.id == 1))
                             {
                                 swappedHeld = 0;
                                 spawnPiece();
 
-                                if (checkGimmick(2) && garbTimer >= getActiveGimmickParameter(2))
+                                if (checkGimmick(2) && MOD.garbTimer >= getActiveGimmickParameter(2) && (MOD.raiseGarbOnClear == true || full.Count == 0))
                                 {
-                                    raiseGarbage(1);
-                                    garbTimer = 0;
+                                    bool check = true;
+                                    if(MOD.garbSafeLine != 0)
+                                        for(int i = 19; i > MOD.garbSafeLine; --i)
+                                        {
+                                            for(int x = 0; x < 10; x++)
+                                                if(gameField[x][i] != 0)
+                                                {
+                                                    check = false;
+                                                    break;
+                                                }
+                                            if (!check)
+                                                break;
+                                        }
+                                    if(check)
+                                        switch (MOD.garbType)
+                                        {
+                                            case Mode.GarbType.COPY:
+                                                raiseGarbage(1);
+                                                break;
+                                            case Mode.GarbType.RANDOM:
+                                                raiseGarbage(true);
+                                                break;
+                                            case Mode.GarbType.FIXED:
+                                                raiseGarbageSlice();
+                                                break;
+                                        }
+                                    MOD.garbTimer = 0;
                                 }
+
+                                full.Clear();
                             }
                             else
                             {
@@ -1013,8 +1039,7 @@ namespace TGMsim
 
                                     //GIMMICKS
 
-                                    if (checkGimmick(2))
-                                        garbTimer += 1;
+                                    //garbage is handled in mode
 
                                     
                                     if (inCredits == true && creditsProgress >= ruleset.creditsLength)
@@ -1149,109 +1174,9 @@ namespace TGMsim
 
                                         MOD.onClear(bigFull, activeTet, timer.count, tetCount==0);
 
-                                        //garbage!
-                                        garbTimer -= bigFull;
-                                        if (garbTimer < 0) garbTimer = 0;
+                                        //garbage is handled per mode
 
-                                        if (MOD.sections.Count != curSection)//update section
-                                            if (MOD.level >= MOD.sections[curSection])
-                                            {
-                                                curSection++;
-
-                                                if (ruleset.gameRules > 3)
-                                                    Audio.playSound(Audio.s_Section);
-
-                                                if(MOD.torikan && !toriless)
-                                                {
-                                                    currentTimer = (int)Field.timerType.LineClear;
-                                                    timerCount = MOD.baseLineClear;
-                                                    Audio.playSound(Audio.s_Clear);
-                                                    if (MOD.toriCredits)
-                                                        triggerCredits();
-                                                    else
-                                                        endGame();
-                                                    return;
-                                                }
-                                                
-                                                //UPDATE BACKGROUND
-                                                bgtimer = 1;
-                                            }
-
-                                        //update gimmicks
-                                        bool thaw = false;
-                                        if (MOD.gimList.Count > 0)
-                                        {
-                                            if (MOD.gimList.Count > gimIndex)
-                                                if (MOD.gimList[gimIndex].startLvl <= MOD.level)
-                                                {
-                                                    activeGim.Add(MOD.gimList[gimIndex]);
-                                                    gimIndex++;
-                                                }
-                                            for (int i = 0; i < activeGim.Count; i++)
-                                            {
-                                                if (MOD.gimList[gimIndex - activeGim.Count + i].endLvl <= MOD.level)
-                                                {
-                                                    if (MOD.gimList[gimIndex - activeGim.Count + i].type == 4)
-                                                        thaw = true;
-                                                    activeGim.RemoveAt(i);
-
-                                                }
-                                            }
-                                        }
-
-                                        if (checkGimmick(5))
-                                            MOD.bigmode = true;
-
-                                        //thaw ice
-                                        if (thaw)
-                                        {
-                                            for (int i = 0; i < 22; i++)
-                                            {
-                                                int columnCount = 0;
-                                                for (int j = 0; j < 10; j++)
-                                                    if (gameField[j][i] != 0)
-                                                        columnCount++;
-                                                if (columnCount == 10)
-                                                {
-                                                    if (!checkGimmick(4) || i < 11)
-                                                    {
-                                                        full.Add(i);
-                                                        //clear these from vanishing list
-                                                        int count = 0;
-                                                        List<int> remcell = new List<int>();
-                                                        foreach (var vP in vanList)
-                                                        {
-                                                            if (vP.y == i)
-                                                                remcell.Add(count);
-                                                            count++;
-                                                        }
-                                                        for (int c = 0; c < remcell.Count; c++)
-                                                        {
-                                                            vanList.RemoveAt(remcell[remcell.Count - c - 1]);
-                                                        }
-
-                                                        remcell = new List<int>();
-                                                        foreach (var vP in flashList)
-                                                        {
-                                                            if (vP.y == i)
-                                                                remcell.Add(count);
-                                                            count++;
-                                                        }
-                                                        for (int c = 0; c < remcell.Count; c++)
-                                                        {
-                                                            flashList.RemoveAt(remcell[remcell.Count - c - 1]);
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                            for (int i = 0; i < full.Count; i++)
-                                            {
-                                                for (int j = 0; j < 10; j++)
-                                                    gameField[j][full[i]] = 0;
-                                            }
-                                            
-                                        }
-
+                                        //section stuff used to be here
 
                                         //check finish condition
                                         if (MOD.endLevel != 0 && MOD.level >= MOD.endLevel && inCredits == false)
@@ -1273,6 +1198,105 @@ namespace TGMsim
                                         MOD.onPut(activeTet, false);
                                     }
 
+                                    if (MOD.sections.Count != curSection)//update section
+                                        if (MOD.level >= MOD.sections[curSection])
+                                        {
+                                            curSection++;
+
+                                            if ((int)ruleset.gameRules > 3)
+                                                Audio.playSound(Audio.s_Section);
+
+                                            if (MOD.torikan && !toriless)
+                                            {
+                                                currentTimer = (int)Field.timerType.LineClear;
+                                                timerCount = MOD.baseLineClear;
+                                                Audio.playSound(Audio.s_Clear);
+                                                if (MOD.toriCredits)
+                                                    triggerCredits();
+                                                else
+                                                    endGame();
+                                                return;
+                                            }
+
+                                            //UPDATE BACKGROUND
+                                            bgtimer = 1;
+                                        }
+
+                                    //update gimmicks
+                                    bool thaw = false;
+                                    if (MOD.gimList.Count > 0)
+                                    {
+                                        if (MOD.gimList.Count > gimIndex)
+                                            if (MOD.gimList[gimIndex].startLvl <= MOD.level)
+                                            {
+                                                activeGim.Add(MOD.gimList[gimIndex]);
+                                                gimIndex++;
+                                            }
+                                        for (int i = 0; i < activeGim.Count; i++)
+                                        {
+                                            if (MOD.gimList[gimIndex - activeGim.Count + i].endLvl <= MOD.level)
+                                            {
+                                                if (MOD.gimList[gimIndex - activeGim.Count + i].type == 4)
+                                                    thaw = true;
+                                                activeGim.RemoveAt(i);
+
+                                            }
+                                        }
+                                    }
+
+                                    if (checkGimmick(5))
+                                        MOD.bigmode = true;
+
+                                    //thaw ice
+                                    if (thaw)
+                                    {
+                                        for (int i = 0; i < 22; i++)
+                                        {
+                                            int columnCount = 0;
+                                            for (int j = 0; j < 10; j++)
+                                                if (gameField[j][i] != 0)
+                                                    columnCount++;
+                                            if (columnCount == 10)
+                                            {
+                                                if (!checkGimmick(4) || i < 11)
+                                                {
+                                                    full.Add(i);
+                                                    //clear these from vanishing list
+                                                    int count = 0;
+                                                    List<int> remcell = new List<int>();
+                                                    foreach (var vP in vanList)
+                                                    {
+                                                        if (vP.y == i)
+                                                            remcell.Add(count);
+                                                        count++;
+                                                    }
+                                                    for (int c = 0; c < remcell.Count; c++)
+                                                    {
+                                                        vanList.RemoveAt(remcell[remcell.Count - c - 1]);
+                                                    }
+
+                                                    remcell = new List<int>();
+                                                    foreach (var vP in flashList)
+                                                    {
+                                                        if (vP.y == i)
+                                                            remcell.Add(count);
+                                                        count++;
+                                                    }
+                                                    for (int c = 0; c < remcell.Count; c++)
+                                                    {
+                                                        flashList.RemoveAt(remcell[remcell.Count - c - 1]);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        for (int i = 0; i < full.Count; i++)
+                                        {
+                                            for (int j = 0; j < 10; j++)
+                                                gameField[j][full[i]] = 0;
+                                        }
+
+                                    }//end section check
+
                                     checkFade();
 
                                     while (gravLevel < gravTable.Count - 1)
@@ -1283,7 +1307,7 @@ namespace TGMsim
                                             break;
                                     }
 
-                                    if ((MOD.g20 == true || gravTable[gravLevel] == Math.Pow(256, ruleset.gravType + 1) * 20) && ruleset.gameRules < 4)
+                                    if ((MOD.g20 == true || gravTable[gravLevel] == Math.Pow(256, ruleset.gravType + 1) * 20) && (int)ruleset.gameRules < 4 && (int)ruleset.gameRules > 0)
                                         textBrush = new SolidBrush(Color.Gold);
 
                                     Audio.playSound(Audio.s_Contact);
@@ -1332,8 +1356,9 @@ namespace TGMsim
                             {
                                 //blockDrop++;
                                 activeTet.soft++;
+                                MOD.onSoft();
                             }
-                            else if (!safelock || !(ruleset.gameRules > 3 || ruleset.id == 1 || (ruleset.gameRules == 2 && MOD.level > 899) || (ruleset.gameRules == 3 && MOD.level > 899)))
+                            else if (!safelock || !((int)ruleset.gameRules > 3 || ruleset.id == 1 || ((int)ruleset.gameRules == 2 && MOD.level > 899) || ((int)ruleset.gameRules == 3 && MOD.level > 899)))
                             {
                                 if(activeTet.floored)
                                     gravCounter = 0;
@@ -1345,11 +1370,11 @@ namespace TGMsim
                             safelock = false;
                         }
 
-                        if (ruleset.gameRules == 6 && ruleset.hardDrop == 1 && pad.inputV == 1 && pad.inputPressedRot3 == true)
+                        /*if (ruleset.gameRules == 6 && ruleset.hardDrop == 1 && pad.inputV == 1 && pad.inputPressedRot3 == true) //gm4 leftovers
                         {
                             gravCounter = 0;
                             activeTet.groundTimer = 0;
-                        }
+                        }*/
 
                         if (pad.inputHold == 1 && ruleset.hold == true && swappedHeld == 0)
                         {
@@ -1357,7 +1382,7 @@ namespace TGMsim
                         }
 
                         int rot;
-                        if (ruleset.gameRules < 6)
+                        if (ruleset.gameRules != GameRules.Games.TGM3)
                             rot = (pad.inputRot1 | pad.inputRot3) - pad.inputRot2;
                         else
                             rot = pad.inputRot1 - pad.inputRot2;
@@ -1413,26 +1438,43 @@ namespace TGMsim
                         //calc gravity LAST so I-jumps are doable?
 
 
-                        if (!g0)
+                        if (!g0)//handle 
                             for (int tempGrav = gravCounter; tempGrav >= Math.Pow(256, ruleset.gravType + 1); tempGrav = tempGrav - (int)Math.Pow(256, ruleset.gravType + 1))
-                        {
-                            blockDrop++;
-                        }
+                            {
+                                blockDrop++;
+                            }
 
                         if (!activeTet.floored)
                         {
-                            if (pad.inputV == -1 && (gravTable[gravLevel] <= Math.Pow(256, ruleset.gravType + 1)))
+                            if (ruleset.gravType < 2)
                             {
-                                blockDrop += 1;
+                                if (pad.inputV == -1 && (gravTable[gravLevel] <= Math.Pow(256, ruleset.gravType + 1)))
+                                {
+                                    blockDrop += 1;
+                                }
+                                else
+                                    gravCounter += gravTable[gravLevel]; //add our current gravity strength
+                                if (gravCounter >= Math.Pow(256, ruleset.gravType + 1))
+                                {
+                                    blockDrop += 1;
+                                    gravCounter = 0;
+                                }
                             }
                             else
-                                gravCounter += gravTable[gravLevel]; //add our current gravity strength
-                        }
-
-                        if (gravCounter >= Math.Pow(256, ruleset.gravType + 1))
-                        {
-                            blockDrop += 1;
-                            gravCounter = 0;
+                            {
+                                if (pad.inputV == -1 && gravTable[gravLevel] > 1)
+                                {
+                                    blockDrop = 1;
+                                    gravCounter = 0;
+                                }
+                                else
+                                    gravCounter++;
+                                if (gravCounter >= gravTable[gravLevel])
+                                {
+                                    blockDrop = 1;
+                                    gravCounter = 0;
+                                }
+                            }
                         }
 
                         if (g20 || (gravTable[gravLevel] == Math.Pow(256, ruleset.gravType + 1) * 20))
@@ -1548,13 +1590,10 @@ namespace TGMsim
                 intRot += 1;
             if (pad.inputPressedRot2)
                 intRot -= 1;
-            if (intRot != 0 && pad.inputRot1 + pad.inputRot2 == 0)
+            if (intRot != 0 && pad.inputRot1 + pad.inputRot2 + pad.inputRot3 == 0)
             {
-                if (ruleset.gameRules == 6 || pad.inputRot3 == 0)
-                {
-                    if(rotatePiece(activeTet, intRot, true))
-                        Audio.playSound(Audio.s_PreRot);
-                }
+                if (rotatePiece(activeTet, intRot, true))
+                    Audio.playSound(Audio.s_PreRot);
             }
 
             gravCounter = 0;
@@ -1650,7 +1689,7 @@ namespace TGMsim
                     {
                         results.lineC = 1;
 
-                        if (ruleset.gameRules == 4)
+                        if (ruleset.gameRules == GameRules.Games.TGM3)
                         {
                             if (MOD.creditsType == 1)
                                 creditGrades += 50;
@@ -1674,7 +1713,7 @@ namespace TGMsim
                 }
 
                 //handle TGM3 section modifyers
-                if (ruleset.gameRules == 4)
+                if (ruleset.gameRules == GameRules.Games.TGM3)
                 {
                     if (ruleset.id == 0)
                     {
@@ -1699,14 +1738,11 @@ namespace TGMsim
                 }
                 
                 Audio.stopMusic();
-                results.game = ruleset.gameRules - 1;
+                results.game = (int)ruleset.gameRules;
                 results.username = "CHEATS";
-                if (ruleset.gameRules == 1)
-                    results.grade = MOD.grade;
-                else
-                    results.grade = MOD.grade;
+                results.grade = MOD.grade;
                 results.score = score;
-                if (ruleset.gameRules == 1)
+                if (ruleset.gameRules == GameRules.Games.TGM1)
                     results.time = (long)((masterTime * ruleset.FPS) / 60);
                 else
                     results.time = (long)((timer.count * ruleset.FPS) / 60);
@@ -1721,7 +1757,7 @@ namespace TGMsim
             
             inCredits = true;
             Audio.stopMusic();
-            if (ruleset.gameRules == 1 || ruleset.id == 1)
+            if (ruleset.gameRules == GameRules.Games.TGM1 || ruleset.id == 1)
                 Audio.playMusic("crdtvanish");
             else
             {
@@ -1731,7 +1767,7 @@ namespace TGMsim
 
             if (ruleset.id == 0)
             {
-                if ((ruleset.gameRules == 2 && MOD.grade == 32) || (ruleset.gameRules == 3 && MOD.grade == 32)) //tgm2 always has invisible
+                if ((ruleset.gameRules == GameRules.Games.TGM2 || ruleset.gameRules == GameRules.Games.TAP) && MOD.grade == 32) //tgm2 always has invisible
                     MOD.creditsType = 2;
 
                 /*if (ruleset.gameRules == 4)
@@ -1748,7 +1784,7 @@ namespace TGMsim
         {
             bool success = true;
             tet.rotations++;
-            Tetromino tmptet = RSYS.rotate(tet, p, gameField, ruleset.gameRules, MOD.bigmode, spawn);
+            Tetromino tmptet = RSYS.rotate(tet, p, gameField, (int)ruleset.gameRules, MOD.bigmode, spawn);
             if (activeTet == tmptet)
                 success = false;
             activeTet = tmptet;
@@ -1826,6 +1862,29 @@ namespace TGMsim
             }
         }
 
+        private void raiseGarbageSlice()
+        {
+            if (MOD.garbTemplate.Count > 0)
+            {
+                    for (int j = 0; j < 10; j++)//skim the top
+                        gameField[j][gameField[0].Count - 1] = 0;
+                for (int i = gameField[0].Count - 1; i > 0; i--)
+                {
+                    for (int j = 0; j < 10; j++)
+                    {
+                        gameField[j][i] = gameField[j][i-1];
+                    }
+                }
+                for (int j = 0; j < 10; j++)
+                    gameField[j][0] = MOD.garbTemplate[MOD.garbLine][j];
+                MOD.garbLine++;
+                if (MOD.garbLine >= MOD.garbTemplate.Count)
+                    MOD.garbLine = 0;
+            }
+            else
+                throw new Exception("Tried to use empty garbage template");
+        }
+
         private void dropField(int num)
         {
             for (int p = 0; p < num; p++)
@@ -1896,8 +1955,8 @@ namespace TGMsim
 
                 for (int p = 0; p < tet.bits.Count; p++)
                 {
-                    if (tet.bits[p].y > gameField[0].Count-1)
-                        continue;
+                    if (tet.bits[p].y > gameField[0].Count - 1)
+                        throw new Exception("piece over the top");//continue;
                     if (gameField[tet.bits[p].x][tet.bits[p].y - g - big] != 0)
                     {
                         g = g - 1;
@@ -2178,9 +2237,9 @@ namespace TGMsim
             if (ruleset.id == 0)//master
             {
                 if (section == 4 && MOD.level % 100 > 84) Audio.stopMusic();
-                if ((ruleset.gameRules == 2 || ruleset.gameRules == 3) && section == 6 && MOD.level % 100 > 84) Audio.stopMusic();
-                if ((ruleset.gameRules == 2 || ruleset.gameRules == 3) && section == 8 && MOD.level % 100 > 84) Audio.stopMusic();
-                if (ruleset.gameRules == 4 && section == 7 && MOD.level % 100 > 84) Audio.stopMusic();
+                if ((ruleset.gameRules == GameRules.Games.TGM2 || ruleset.gameRules == GameRules.Games.TAP) && section == 6 && MOD.level % 100 > 84) Audio.stopMusic();
+                if ((ruleset.gameRules == GameRules.Games.TGM2 || ruleset.gameRules == GameRules.Games.TAP) && section == 8 && MOD.level % 100 > 84) Audio.stopMusic();
+                if (ruleset.gameRules == GameRules.Games.TGM3 && section == 7 && MOD.level % 100 > 84) Audio.stopMusic();
             }
             if(ruleset.id == 1)//death
             {

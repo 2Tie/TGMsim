@@ -111,7 +111,7 @@ namespace TGMsim
             switch(game)
             {
                 case 0://SEGA
-                    drawBuffer.DrawString("Bloxeed", SystemFonts.DefaultFont, locked, 300, 312);
+                    drawBuffer.DrawString("Bloxeed", SystemFonts.DefaultFont, active, 300, 312);
                     drawBuffer.DrawString("Flash Point", SystemFonts.DefaultFont, locked, 300, 324);
                     break;
                 case 3://tap

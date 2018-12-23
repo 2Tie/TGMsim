@@ -12,26 +12,21 @@ namespace TGMsim
         public List<int> levelUpTimes = new List<int> { 3480, 2320, 2320, 2320, 2320, 2320, 2320, 2320, 2320, 3480, 3480, 1740, 1740, 1740, 1740, 3480 };
         public int timeCounter = 0;
         public int lineCounter = 0;
+        List<int> linePoints = new List<int> { 100, 400, 900, 2000 };
 
         public M_SegaTet()
         {
             ModeName = "TETRIS";
             showGrade = false;
             drawSec = false;
-            sections.Add(1);
             sections.Add(2);
-            sections.Add(3);
             sections.Add(4);
-            sections.Add(5);
             sections.Add(6);
-            sections.Add(7);
             sections.Add(8);
             sections.Add(9);
             sections.Add(10);
             sections.Add(11);
-            sections.Add(12);
             sections.Add(13);
-            sections.Add(14);
             sections.Add(15);
             endLevel = 0;
             delayTable.Add(new List<int> { 30 });
@@ -43,13 +38,19 @@ namespace TGMsim
 
         public override void onPut(Tetromino tet, bool clear)
         {
-            int l = level > 15 ? 15 : level;
-            if (timeCounter > levelUpTimes[l])
+            if (timeCounter > levelUpTimes[level > 15 ? 15 : level])
             {
                 level++;
-                //curSection++;
                 timeCounter = 0;
+                lineCounter = 0;
             }
+        }
+
+        public override void onSoft()
+        {
+            //add softdrop points
+            if (level < 15) //softdrop at 1G doesn't award points
+                score += Math.Min(4, level / 2) + 1;
         }
 
         public override void onTick(long time)
@@ -59,12 +60,15 @@ namespace TGMsim
 
         public override void onClear(int lines, Tetromino tet, long time, bool bravo)
         {
+            //add points
+            int scorelevel = Math.Min(4, level / 2) + 1;
+            score += scorelevel * linePoints[lines - 1] * (bravo ? 10 : 1);
+
             timeCounter = 0;
             lineCounter += lines;
             if(lineCounter >= 4)
             {
                 level++;
-                //curSection++;
                 lineCounter = 0;
             }
         }
@@ -73,7 +77,7 @@ namespace TGMsim
         {
             Brush tb = new SolidBrush(Color.White);
             drawBuffer.DrawString(timeCounter.ToString(), f, tb, 20, 300);
-            drawBuffer.DrawString(levelUpTimes[level].ToString(), f, tb, 20, 312);
+            drawBuffer.DrawString(levelUpTimes[level > 15 ? 15 : level].ToString(), f, tb, 20, 312);
         }
     }
 }

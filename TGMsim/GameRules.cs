@@ -9,7 +9,7 @@ namespace TGMsim
 {
     class GameRules
     {
-        public int gameRules = 1;
+        public Games gameRules;
         public int nextNum = 1;
         public bool hold = false;
         public int hardDrop = 0; //no, sonic, firm
@@ -20,13 +20,14 @@ namespace TGMsim
         public int generator = 0; //dummy, TGM1, TGM2, TGM3, ACE, 
         public enum Rots { ARS1 = 0, ARS3, SEGA};
         public enum Gens { dummy = 0, TGM1, TGM2, TGM3, ACE, SEGA, EZ};
+        public enum Games { SEGA = 0, TGM1, TGM2, TAP, TGM3, ACE, GMX, EXTRA, GUIDELINE}
 
         //public int baseARE = 30;
         //public int baseARELine = 30;
         //public int baseDAS = 14;
         //public int baseLock = 30;
         //public int baseLineClear = 41;
-        public int gravType = 0; //b256, b65536
+        public int gravType = 0; //b256, b65536, frames
         public int baseGrav = 4;
 
         public int lockType = 0; //step-reset, move-reset
@@ -111,13 +112,13 @@ namespace TGMsim
             }
         }
 
-        public void setup(int game, int mode, int vari)
+        public void setup(Games game, int mode, int vari)
         {
             gameRules = game;
             //variant = vari;
             switch (game)
             {
-                case 0: //SEGA
+                case Games.SEGA: //SEGA
                     GameName = "SEGA";
                     FPS = 60.00;
                     nextNum = 1;
@@ -132,15 +133,17 @@ namespace TGMsim
                     //baseDAS = 14;
                     //baseLock = 30;
                     //baseLineClear = 40;
-                    gravType = 0;
+                    gravType = 2;
                     baseGrav = 256;
                     genAttps = 6;
                     fieldW = 10;
                     fieldH = 20;
                     //showGrade = false;
-                    gravTable = new List<int> { 4, 6, 8, 10, 12, 16, 32, 48, 64, 80, 96, 112, 128, 144, 4, 32, 64, 96, 128, 160, 192, 224, 256, 512, 768, 1024, 1280, 1024, 768, 5120 };
+                    //gravTable = new List<int> { 5.3, 10.6, 14.2, 17.06, 21.3, 25.6, 32, 42.6, 64, 128, 25.6, 32, 42.6, 64, 128, 256 }; //actual. all final decimal places repeat.
+                    gravTable = new List<int> { 48, 24, 18, 15, 12, 10, 8, 6, 4, 2, 10,  8, 6, 4, 2, 1 };
+                    gravLevels = new List<int> { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
                     break;
-                case 1: //TGM
+                case Games.TGM1: //TGM
                     GameName = "TGM";
                     FPS = 59.84;
                     nextNum = 1;
@@ -164,7 +167,7 @@ namespace TGMsim
                     //showGrade = true;
                     gravTable = new List<int> { 4, 6, 8, 10, 12, 16, 32, 48, 64, 80, 96, 112, 128, 144, 4, 32, 64, 96, 128, 160, 192, 224, 256, 512, 768, 1024, 1280, 1024, 768, 5120 };
                     break;
-                case 2: //TGM2
+                case Games.TGM2: //TGM2
                     GameName = "TGM2";
                     FPS = 61.68;
                     nextNum = 1;
@@ -183,7 +186,7 @@ namespace TGMsim
                     creditsLength = 3238;
                     gravTable = new List<int> { 4, 6, 8, 10, 12, 16, 32, 48, 64, 80, 96, 112, 128, 144, 4, 32, 64, 96, 128, 160, 192, 224, 256, 512, 768, 1024, 1280, 1024, 768, 5120 };
                     break;
-                case 3: //TAP
+                case Games.TAP: //TAP
                     GameName = "TAP";
                     FPS = 61.68;
                     nextNum = 1;
@@ -202,7 +205,7 @@ namespace TGMsim
                     creditsLength = 3238;
                     gravTable = new List<int> { 4, 6, 8, 10, 12, 16, 32, 48, 64, 80, 96, 112, 128, 144, 4, 32, 64, 96, 128, 160, 192, 224, 256, 512, 768, 1024, 1280, 1024, 768, 5120 };
                     break;
-                case 4: //TI and ACE
+                case Games.TGM3: //TI and ACE
                     GameName = "TGM3";
                     FPS = 60.00;
                     nextNum = 3;
@@ -226,8 +229,8 @@ namespace TGMsim
                     //showGrade = false;
                     gravTable = new List<int> { 1024, 1536, 2048, 2560, 3072, 4096, 8192, 12288, 16384, 20480, 24576, 28672, 32768, 36864, 1024, 8192, 16348, 24576, 32768, 40960, 49152, 57344, 65536, 131072, 196608, 262144, 327680, 262144, 196608, 1310720 };
                     break;
-                case 5:
-                case 7:
+                case Games.ACE:
+                case Games.EXTRA:
                     GameName = "BONUS";
                     FPS = 60.00;
                     nextNum = 3;
@@ -251,7 +254,7 @@ namespace TGMsim
                     //showGrade = false;
                     gravTable = new List<int> { 1024, 1536, 2048, 2560, 3072, 4096, 8192, 12288, 16384, 20480, 24576, 28672, 32768, 36864, 1024, 8192, 16348, 24576, 32768, 40960, 49152, 57344, 65536, 131072, 196608, 262144, 327680, 262144, 196608, 1310720 };
                     break;
-                case 6: //GMX?
+                case Games.GMX: //GMX?
                     GameName = "XTREME";
                     FPS = 60.00;
                     nextNum = 1;
@@ -275,7 +278,7 @@ namespace TGMsim
                     gravLevels = new List<int>() { 0, 25, 50, 75, 100, 125, 150, 175, 200, 225, 250, 275, 300, 325, 350, 375, 400, 425, 450, 475, 500, 600, 700,  800,  900, 1000};
                     gravTable = new List<int>    { 4, 11, 19, 26,  34,  41,  49,  56,  64,  72,  80,  88,  96, 104, 112, 120, 128, 160, 192, 224, 256, 512, 768, 1024, 1280, 5120};
                     break;
-                case 8://step reset
+                case Games.GUIDELINE://step reset
                     GameName = "BONUS?";
                     FPS = 60.0;
                     nextNum = 4;
@@ -298,132 +301,28 @@ namespace TGMsim
             id = mode;
             switch (mode)//Master, Death, shirase, sprint, garbage clear, rounds, konoha, grav training, dynamo, endura
             {
-                case 0:
-                    /*ModeName = "MASTER";
-                    gradedBy = 1;
-                    endLevel = 999;
-                    sections.Add(100);
-                    sections.Add(200);
-                    sections.Add(300);
-                    sections.Add(400);
-                    sections.Add(500);
-                    sections.Add(600);
-                    sections.Add(700);
-                    sections.Add(800);
-                    sections.Add(900);
-                    sections.Add(999);*/
+                case 0: //Master
                     switch (game)
                     {
-                        case 1:
+                        case Games.TGM1:
                             mod = new M_Master1();
                             break;
-                        case 2://tgm2
+                        case Games.TGM2://tgm2
                             mod = new M_Master2();
                             break;
-                        case 3://tap
+                        case Games.TAP://tap
                             mod = new M_Master2Plus();
                             break;
-                        case 4://tgm3
+                        case Games.TGM3://tgm3
                             mod = new M_Master3();
                             break;
                     }
                     break;
                 case 1://death
                     mod = new M_Death();
-                    /*ModeName = "DEATH";
-                    endLevel = 999;
-                    sections.Add(100);
-                    sections.Add(200);
-                    sections.Add(300);
-                    sections.Add(400);
-                    sections.Add(500);
-                    sections.Add(600);
-                    sections.Add(700);
-                    sections.Add(800);
-                    sections.Add(900);
-                    sections.Add(999);
-                    lvlBonus = 5;
-                    gradedBy = 2;
-                    border = Color.DarkRed;
-                    g20 = true;
-                    showGrade = true;
-                    initialGrade = -1;
-                    delayTable.Add(new List<int> { 18, 14, 14, 8, 7, 6 });
-                    delayTable.Add(new List<int> { 14, 8, 8, 8, 7, 6 });
-                    delayTable.Add(new List<int> { 10, 10, 9, 8, 6, 6 });
-                    delayTable.Add(new List<int> { 30, 26, 22, 18, 15, 15 });
-                    delayTable.Add(new List<int> { 12, 6, 6, 6, 5, 4 });*/
                     break;
                 case 2://shirase
                     mod = new M_Shirase();
-                    /*
-                    ModeName = "SHIRASE";
-                    endLevel = 1300;
-                    sections.Add(100);
-                    sections.Add(200);
-                    sections.Add(300);
-                    sections.Add(400);
-                    sections.Add(500);
-                    sections.Add(600);
-                    sections.Add(700);
-                    sections.Add(800);
-                    sections.Add(900);
-                    sections.Add(1000);
-                    sections.Add(1100);
-                    sections.Add(1200);
-                    sections.Add(1300);
-                    lvlBonus = 5;
-                    var gL = new Gimmick();
-                    gL.type = 2;
-                    gL.startLvl = 500;
-                    gL.endLvl = 600;
-                    gL.parameter = 20;
-                    gimList.Add(gL);
-                    gL = new Gimmick();
-                    gL.type = 2;
-                    gL.startLvl = 600;
-                    gL.endLvl = 700;
-                    gL.parameter = 18;
-                    gimList.Add(gL);
-                    gL = new Gimmick();
-                    gL.type = 2;
-                    gL.startLvl = 700;
-                    gL.endLvl = 800;
-                    gL.parameter = 10;
-                    gimList.Add(gL);
-                    gL = new Gimmick();
-                    gL.type = 2;
-                    gL.startLvl = 800;
-                    gL.endLvl = 900;
-                    gL.parameter = 9;
-                    gimList.Add(gL);
-                    gL = new Gimmick();
-                    gL.type = 2;
-                    gL.startLvl = 900;
-                    gL.endLvl = 1000;
-                    gL.parameter = 8;
-                    gimList.Add(gL);
-                    gL = new Gimmick();
-                    gL.type = 3;
-                    gL.startLvl = 1000;
-                    gL.endLvl = 1301;
-                    gimList.Add(gL);
-                    gL = new Gimmick();
-                    gL.type = 5;
-                    gL.startLvl = 1300;
-                    gL.endLvl = 1301;
-                    gimList.Add(gL);
-                    gradedBy = 2;
-                    shiraseGrades = true;
-                    border = Color.DarkBlue;
-                    g20 = true;
-                    showGrade = false;
-                    initialGrade = -1;
-                    delayTable.Add(new List<int> { 12, 12, 12, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6 });
-                    delayTable.Add(new List<int> { 8, 7, 6, 6, 5, 5, 5, 5, 5, 5, 5, 5, 5, 6 });
-                    delayTable.Add(new List<int> { 8, 6, 6, 6, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4 });
-                    delayTable.Add(new List<int> { 18, 18, 17, 15, 13, 12, 12, 12, 12, 12, 12, 10, 8, 15 });
-                    delayTable.Add(new List<int> { 6, 5, 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 6 });*/
                     break;
                 case 3://sprint
                     /*gradedBy = 4;
@@ -443,107 +342,16 @@ namespace TGMsim
                     break;
                 case 5://rounds
                     mod = new M_IcyShirase();
-                    /*ModeName = "ICY SHIRASE";
-                    gradedBy = 2;
-                    lvlBonus = 5;
-                    endLevel = 1200;
-                    g20 = true;
-
-                    gL = new Gimmick();
-                    gL.type = 4;
-                    gL.startLvl = 300;
-                    gL.endLvl = 400;
-                    gimList.Add(gL);
-                    gL = new Gimmick();
-                    gL.type = 4;
-                    gL.startLvl = 500;
-                    gL.endLvl = 600;
-                    gimList.Add(gL);
-                    gL = new Gimmick();
-                    gL.type = 4;
-                    gL.startLvl = 700;
-                    gL.endLvl = 800;
-                    gimList.Add(gL);
-                    gL = new Gimmick();
-                    gL.type = 4;
-                    gL.startLvl = 900;
-                    gL.endLvl = 1000;
-                    gimList.Add(gL);
-                    gL = new Gimmick();
-                    gL.type = 4;
-                    gL.startLvl = 1100;
-                    gL.endLvl = 1200;
-                    gimList.Add(gL);
-                    border = Color.DarkRed;
-
-                    delayTable.Add(new List<int> { 12, 12, 12, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6 });
-                    delayTable.Add(new List<int> { 8, 7, 6, 6, 5, 5, 5, 5, 5, 5, 5, 5, 6 });
-                    delayTable.Add(new List<int> { 8, 6, 6, 6, 4, 4, 4, 4, 4, 4, 4, 4, 4 });
-                    delayTable.Add(new List<int> { 18, 18, 17, 15, 13, 12, 12, 12, 12, 12, 10, 8, 15 });
-                    delayTable.Add(new List<int> { 6, 5, 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 6 });*/
                     break;
                 case 6://konoha
                     generator = (int)Gens.EZ;
                     mod = new M_BigBravoMania();
-                    /*ModeName = "BIG BRAVO MANIA";
-                    endLevel = 0;
-                    gradedBy = 3;
-                    limitType = 3;
-                    limit = 180000;//three minutes
-                    bigmode = true;
-                    //easyGen = true;
-                    sections.Add(100);
-                    sections.Add(200);
-                    sections.Add(300);
-                    sections.Add(400);
-                    sections.Add(500);
-                    sections.Add(600);
-                    sections.Add(700);
-                    sections.Add(800);
-                    sections.Add(900);
-                    sections.Add(1000);
-                    sections.Add(1100);
-                    sections.Add(1200);
-                    border = Color.PaleVioletRed;
-                    delayTable.Add(new List<int> { 27, 27, 27, 18, 14, 14, 8, 7, 6 });
-                    delayTable.Add(new List<int> { 27, 27, 18, 14, 8, 8, 8, 7, 6 });
-                    delayTable.Add(new List<int> { 14, 8, 8, 8, 8, 6, 6, 6, 6 });
-                    delayTable.Add(new List<int> { 30, 30, 30, 30, 30, 17, 17, 15, 15 });
-                    delayTable.Add(new List<int> { 40, 25, 16, 12, 6, 6, 6, 6, 6 });*/
                     break;
                 case 7://20g training
                     mod = new M_Training();
-                    /*ModeName = "20G TRAINING";
-                    endLevel = 200;
-                    g20 = true;
-                    gradedBy = 4;
-
-                    sections.Add(200);
-                    delayTable.Add(new List<int> { 27 });
-                    delayTable.Add(new List<int> { 27 });
-                    delayTable.Add(new List<int> { 14 });
-                    delayTable.Add(new List<int> { 30 });
-                    delayTable.Add(new List<int> { 40 });*/
                     break;
                 case 8: //segatet
                     mod = new M_SegaTet();
-                    /*
-                    ModeName = "TETRIS";
-                    sections.Add(100);
-                    sections.Add(200);
-                    sections.Add(300);
-                    sections.Add(400);
-                    sections.Add(500);
-                    sections.Add(600);
-                    sections.Add(700);
-                    sections.Add(800);
-                    sections.Add(900);
-                    endLevel = 999;
-                    delayTable.Add(new List<int> { 30 });
-                    delayTable.Add(new List<int> { 30 });
-                    delayTable.Add(new List<int> { 20 });
-                    delayTable.Add(new List<int> { 30 });
-                    delayTable.Add(new List<int> { 42 });*/
                     break;
                 case 9: //miner
                     /*ModeName = "MINER";
@@ -560,24 +368,12 @@ namespace TGMsim
                     break;
                 case 10: //dynamo
                     mod = new M_Dynamo(vari);
-                    /*ModeName = "DYANMO";
-                    sections.Add(100);
-                    sections.Add(200);
-                    sections.Add(300);
-                    sections.Add(400);
-                    sections.Add(500);
-                    sections.Add(600);
-                    sections.Add(700);
-                    sections.Add(800);
-                    sections.Add(900);
-                    endLevel = 999;
-                    delayTable.Add(new List<int> { 27 });
-                    delayTable.Add(new List<int> { 27 });
-                    delayTable.Add(new List<int> { 14 });
-                    delayTable.Add(new List<int> { 30 });
-                    delayTable.Add(new List<int> { 40 });*/
                     break;
                 case 11: //endura
+                    break;
+                case 12: //bloxeed
+                    mod = new M_SegaBlox();
+                    gravTable = new List<int> { 16, 14, 12, 10, 8, 6, 4, 3, 2, 1, 10, 8, 6, 4, 2, 1 };
                     break;
             }
         }

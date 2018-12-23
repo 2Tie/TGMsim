@@ -18,6 +18,8 @@ namespace TGMsim
             public int parameter;
         }
 
+        public enum GarbType { FIXED, COPY, RANDOM } ;
+
         public string ModeName = "DUMMY";
         public int id = 0;
         public int endLevel = 999;
@@ -25,6 +27,12 @@ namespace TGMsim
         public int curSection;
         public bool bigmode = false;
         public bool g20 = false;
+        public GarbType garbType; //if garbage follows a fixed pattern or not
+        public int garbTimer = 0;
+        public List<List<int>> garbTemplate;
+        public bool raiseGarbOnClear = true;
+        public int garbSafeLine = 0;
+        public int garbLine = 0;
         public int lvlBonus = 0;
         public int level = 0;
         public int gradedBy = 0; //points, grade points, level, bravo, time
@@ -76,6 +84,11 @@ namespace TGMsim
         }
 
         public virtual void onTick(long time)
+        {
+
+        }
+
+        public virtual void onSoft()
         {
 
         }

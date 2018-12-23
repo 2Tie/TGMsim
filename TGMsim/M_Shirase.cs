@@ -127,6 +127,8 @@ namespace TGMsim
                 gradeCombo = 0;
                 comboing = false;
             }
+            if (level > 499 && level < 1000)
+                garbTimer++;
         }
 
         public override void onClear(int lines, Tetromino tet, long time, bool bravo)
@@ -135,6 +137,10 @@ namespace TGMsim
 
             int oldLvl = level;
             level += lines;
+
+            garbTimer -= lines;
+            if (garbTimer < 0)
+                garbTimer = 0;
 
             //check for tetris
             if (lines == 4)

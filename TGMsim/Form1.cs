@@ -262,7 +262,7 @@ namespace TGMsim
                         if (saved == false && field1.isPlayback == false)
                         {
                             field1.results.username = player.name;
-                            if (rules.gameRules == 4 && field1.ruleset.id == 0 && player.name != "   ")
+                            if (rules.gameRules == GameRules.Games.TGM3 && field1.ruleset.id == 0 && player.name != "   ")
                             {
                                 //add result to history
                                 for (int i = 0; i < 6; i++)
@@ -496,23 +496,25 @@ namespace TGMsim
             Audio.stopMusic();
             rules = new GameRules();
             if (mSel.game == 4 && mSel.selection == 1)//shirase
-                rules.setup(4, 2, 0);
+                rules.setup(GameRules.Games.TGM3, 2, 0);
             else if (mSel.game == 0 && mSel.selection == 0)//segatet
-                rules.setup(0, 8, 0);
+                rules.setup(GameRules.Games.SEGA, 8, 0);
+            else if (mSel.game == 0 && mSel.selection == 1)//bloxeed
+                rules.setup(GameRules.Games.SEGA, 12, 0);
             else if (mSel.game == 6 && mSel.selection == 0)//dynamo
-                rules.setup(6, 10, mSel.variant);
+                rules.setup(GameRules.Games.GMX, 10, mSel.variant);
             else if (mSel.game == 7 && mSel.selection == 1)//miner
-                rules.setup(7, 9, mSel.variant);
+                rules.setup(GameRules.Games.EXTRA, 9, mSel.variant);
             else if (mSel.game == 7 && mSel.selection == 2)//garbage
-                rules.setup(7, 4, 0);
+                rules.setup(GameRules.Games.EXTRA, 4, 0);
             else if (mSel.game == 7 && mSel.selection == 3)//20G
-                rules.setup(7, 7, 0);
+                rules.setup(GameRules.Games.EXTRA, 7, 0);
             else if (mSel.game == 7 && mSel.selection == 4)//icy
-                rules.setup(8, 5, 0);
+                rules.setup(GameRules.Games.GUIDELINE, 5, 0);
             else if (mSel.game == 7 && mSel.selection == 5)//big bravo
-                rules.setup(8, 6, 0);
+                rules.setup(GameRules.Games.GUIDELINE, 6, 0);
             else
-                rules.setup(mSel.game, mSel.selection, 0);
+                rules.setup((GameRules.Games)mSel.game, mSel.selection, 0);
 
             //m.mute = prefs.muted;
 
@@ -646,7 +648,7 @@ namespace TGMsim
                 sw.Write(player.name);
                 sw.Write((byte)1);
                 sw.Write(pad1.replay.Count);
-                sw.Write(rules.gameRules);
+                sw.Write((int)rules.gameRules);
                 sw.Write(rules.id + (rules.mod.variant << 13));
                 sw.Write(field1.seed);
                 for (int i = 0; i < pad1.replay.Count; i++)
@@ -693,7 +695,7 @@ namespace TGMsim
             if (ver != 1)
                 throw new Exception();
             rules = new GameRules();
-            rules.setup(gam, mod, v);
+            rules.setup((GameRules.Games)gam, mod, v);
             field1 = new Field(pad1, rules, s);
             Audio.stopMusic();
         }
