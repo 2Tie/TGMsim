@@ -29,10 +29,12 @@ namespace TGMsim
         public bool g20 = false;
         public GarbType garbType; //if garbage follows a fixed pattern or not
         public int garbTimer = 0;
-        public List<List<int>> garbTemplate;
-        public bool raiseGarbOnClear = true;
+        public List<List<int>> garbTemplate = new List<List<int>>();
+        public bool raiseGarbOnClear = false;
         public int garbSafeLine = 0;
         public int garbLine = 0;
+        public bool garbMeter = false;
+        public int garbDelay = 0;
         public int lvlBonus = 0;
         public int level = 0;
         public int gradedBy = 0; //points, grade points, level, bravo, time

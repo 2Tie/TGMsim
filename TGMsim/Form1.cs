@@ -495,7 +495,11 @@ namespace TGMsim
         {
             Audio.stopMusic();
             rules = new GameRules();
-            if (mSel.game == 4 && mSel.selection == 1)//shirase
+            if (mSel.game == 3 && mSel.selection == 1)//tgm+
+                rules.setup(GameRules.Games.TAP, 13, 0);
+            else if (mSel.game == 3 && mSel.selection == 2)//death
+                rules.setup(GameRules.Games.TAP, 1, 0);
+            else if (mSel.game == 4 && mSel.selection == 1)//shirase
                 rules.setup(GameRules.Games.TGM3, 2, 0);
             else if (mSel.game == 0 && mSel.selection == 0)//segatet
                 rules.setup(GameRules.Games.SEGA, 8, 0);

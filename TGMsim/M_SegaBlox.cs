@@ -62,6 +62,8 @@ namespace TGMsim
             garbType = GarbType.FIXED;
             raiseGarbOnClear = false;
             garbSafeLine = 16;
+            garbMeter = true;
+            garbDelay = 10;
             garbTemplate = new List<List<int>>();
             garbTemplate.Add(new List<int> { 1, 1, 1, 1, 1, 1, 1, 1, 1, 0 });
             garbTemplate.Add(new List<int> { 1, 1, 1, 1, 1, 1, 1, 1, 1, 0 });
@@ -96,6 +98,7 @@ namespace TGMsim
             garbTemplate.Add(new List<int> { 7, 0, 0, 0, 7, 7, 7, 7, 7, 7 });
             garbTemplate.Add(new List<int> { 7, 7, 0, 7, 7, 7, 7, 7, 7, 7 });
             delayTable[2][0] = 12;
+            delayTable[4][0] = 40;
             ModeName = "BLOXEED";
         }
 

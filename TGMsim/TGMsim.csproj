@@ -106,6 +106,7 @@
     <Compile Include="M_Master1.cs" />
     <Compile Include="M_Master2Plus.cs" />
     <Compile Include="M_Master3.cs" />
+    <Compile Include="M_Plus.cs" />
     <Compile Include="M_SegaBlox.cs" />
     <Compile Include="M_SegaTet.cs" />
     <Compile Include="M_Shirase.cs" />

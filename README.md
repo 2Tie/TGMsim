@@ -8,13 +8,14 @@ TGM1 Master (has visual errors - lock flash is mistimed)
 
 TGM2 Master
 
-TAP Master
+TAP Master  
+TAP TGM+  
 TAP Death
 
-TGM3 Master 
+TGM3 Master  
 TGM3 Shirase
 
-SEGA Tetris
+SEGA Tetris  
 SEGA Bloxeed (missing powerups)  
 SEGA Flash Point (heavily WIP)  
 

@@ -375,6 +375,9 @@ namespace TGMsim
                     mod = new M_SegaBlox();
                     gravTable = new List<int> { 16, 14, 12, 10, 8, 6, 4, 3, 2, 1, 10, 8, 6, 4, 2, 1 };
                     break;
+                case 13: //tgm+
+                    mod = new M_Plus();
+                    break;
             }
         }
     }

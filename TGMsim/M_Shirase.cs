@@ -82,6 +82,7 @@ namespace TGMsim
             gL.startLvl = 1300;
             gL.endLvl = 1301;
             gimList.Add(gL);
+            garbType = GarbType.COPY;
             gradedBy = 2;
             border = Color.DarkBlue;
             g20 = true;

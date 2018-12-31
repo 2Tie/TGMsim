@@ -53,7 +53,6 @@ namespace TGMsim
 
             switch (game)
             {
-                case 3:
                 case 4:
                 case 5:
                 case 6:
@@ -63,6 +62,7 @@ namespace TGMsim
                         selection = 1;
                     break;
                 case 0:
+                case 3:
                     if (selection == 3)
                         selection = 0;
                     if (selection == -1)
@@ -115,7 +115,8 @@ namespace TGMsim
                     drawBuffer.DrawString("Flash Point", SystemFonts.DefaultFont, locked, 300, 324);
                     break;
                 case 3://tap
-                    drawBuffer.DrawString("Death", SystemFonts.DefaultFont, active, 300, 312);
+                    drawBuffer.DrawString("TGM+", SystemFonts.DefaultFont, active, 300, 312);
+                    drawBuffer.DrawString("Death", SystemFonts.DefaultFont, active, 300, 324);
                     break;
                 case 4://tgm3
                     drawBuffer.DrawString("Shirase", SystemFonts.DefaultFont, active, 300, 312);

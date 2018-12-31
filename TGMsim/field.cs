@@ -72,8 +72,8 @@ namespace TGMsim
         bool safelock = false;
 
         public int x, y, width, height;
-        public enum timerType { ARE, DAS, LockDelay, LineClear, tgm1flash} ;
-        public int currentTimer = 0;
+        public enum timerType { ARE, DAS, LockDelay, LineClear, tgm1flash, GarbageRaise} ;
+        public timerType currentTimer = 0;
         public int timerCount = 0;
         //public int groundTimer = 0;
         public int gravCounter = 0;
@@ -130,7 +130,6 @@ namespace TGMsim
 
         public List<Mode.Gimmick> activeGim = new List<Mode.Gimmick>();
         public int gimIndex = 0;
-        int garbTimer = 0;
 
         public bool cont = false;
         public bool exit = false;
@@ -554,7 +553,7 @@ namespace TGMsim
 
             }//////ADJUST AFTER HERE
 
-            //if (ruleset.gameRules < 6) //grav meter
+            if (ruleset.gameRules != GameRules.Games.SEGA) //grav meter
             {
                 drawBuffer.FillRectangle(new SolidBrush(gravColor), x + 280, 505, 60, 8);
                 drawBuffer.FillRectangle(new SolidBrush(gravMeter), x + 280, 505, (int)Math.Round(((double)gravTable[gravLevel] * 60) / ((Math.Pow(256, ruleset.gravType + 1) * 20))), 8);
@@ -621,7 +620,7 @@ namespace TGMsim
             //if (bravoTime.count > 0)
                 //drawBuffer.DrawString("BRAVO! X" + bravoCounter, SystemFonts.DefaultFont, textBrush, x + 280, 400);
 
-            if (ruleset.gameRules == GameRules.Games.GMX)
+            if (ruleset.gameRules == GameRules.Games.GMX || ruleset.gameRules == GameRules.Games.SEGA)
                 drawBuffer.DrawString("LEVEL:", f_Maestro, textBrush, x + 280, 465);
             
             if (MOD.limitType == 3)//time limit?
@@ -650,6 +649,18 @@ namespace TGMsim
                     if (MOD.medals[i] != 0)
                         drawBuffer.DrawImage(medalImg, new Rectangle(x + 280 + (i % 3) * 20, 190 + (30 * (int)(Math.Floor((double)i / 3))), 25, 15), i * 26, (MOD.medals[i] - 1) * 16, 25, 16, GraphicsUnit.Pixel);
                 }
+
+            //garbage meter
+            if(MOD.garbMeter && checkGimmick(2))
+            {
+                int segment = getActiveGimmickParameter(2) / 6;
+                int n = (MOD.garbTimer / segment) - 1;
+                drawBuffer.DrawString(n.ToString(), f_Maestro, textBrush, 20, 400);
+                if (n > 6)
+                    n = 6;
+                if (n > 0)
+                    drawBuffer.FillRectangle(new SolidBrush(Color.Red), x + width + 5, y + 20 + (height + 10) / 6 * (6 - n), 10, (height + 10) / 6 * n);
+            }
 
             //fadeout
             if (fadeout > 22)
@@ -878,7 +889,36 @@ namespace TGMsim
                     //check ID of current tetromino.
                     if (activeTet.id == 0)
                     {
-                        if (currentTimer == (int)Field.timerType.LineClear)  //if timer is line clear and done, settle pieces and start ARE
+                        if(currentTimer == timerType.GarbageRaise)
+                        {
+                            --timerCount;
+                            if (timerCount == -1) //garbagedelay of zero means the delay is nonexistant
+                            {
+                                switch (MOD.garbType)
+                                {
+                                    case Mode.GarbType.COPY:
+                                        raiseGarbage(1);
+                                        break;
+                                    case Mode.GarbType.RANDOM:
+                                        raiseGarbage(true);
+                                        break;
+                                    case Mode.GarbType.FIXED:
+                                        raiseGarbageSlice();
+                                        break;
+                                }
+                                if (full.Count > 0)
+                                {
+                                    currentTimer = timerType.LineClear;
+                                    timerCount = MOD.baseLineClear;
+                                }
+                                else
+                                {
+                                    currentTimer = timerType.ARE;
+                                    timerCount = MOD.baseARE;
+                                }
+                            }
+                        }
+                        if (currentTimer == timerType.LineClear)  //if timer is line clear and done, settle pieces and start ARE
                         {
                             if (timerCount == 0)
                             {
@@ -937,7 +977,7 @@ namespace TGMsim
                                         raiseGarbage(true);
                                 }
 
-                                currentTimer = (int)Field.timerType.ARE;
+                                currentTimer = timerType.ARE;
                                 if ((int)ruleset.gameRules >= 3)
                                     timerCount = MOD.baseARELine;
                                 else
@@ -950,46 +990,14 @@ namespace TGMsim
                                 return;
                             }
                         }
-                        //elseif timer is ARE and done, get next tetromino
-                        else if (currentTimer == (int)Field.timerType.ARE)
+                        //if timer is ARE and done, get next tetromino
+                        if (currentTimer == timerType.ARE)
                         {
                             if (timerCount <= 0 && ((inCredits == (creditsPause.count > 3000)) || ruleset.gameRules == GameRules.Games.TGM1 || ruleset.id == 1))
                             {
+                                full.Clear();
                                 swappedHeld = 0;
                                 spawnPiece();
-
-                                if (checkGimmick(2) && MOD.garbTimer >= getActiveGimmickParameter(2) && (MOD.raiseGarbOnClear == true || full.Count == 0))
-                                {
-                                    bool check = true;
-                                    if(MOD.garbSafeLine != 0)
-                                        for(int i = 19; i > MOD.garbSafeLine; --i)
-                                        {
-                                            for(int x = 0; x < 10; x++)
-                                                if(gameField[x][i] != 0)
-                                                {
-                                                    check = false;
-                                                    break;
-                                                }
-                                            if (!check)
-                                                break;
-                                        }
-                                    if(check)
-                                        switch (MOD.garbType)
-                                        {
-                                            case Mode.GarbType.COPY:
-                                                raiseGarbage(1);
-                                                break;
-                                            case Mode.GarbType.RANDOM:
-                                                raiseGarbage(true);
-                                                break;
-                                            case Mode.GarbType.FIXED:
-                                                raiseGarbageSlice();
-                                                break;
-                                        }
-                                    MOD.garbTimer = 0;
-                                }
-
-                                full.Clear();
                             }
                             else
                             {
@@ -1029,7 +1037,7 @@ namespace TGMsim
                         if (activeTet.floored == true)
                         {
                             //check lock delay if grounded
-                            if (currentTimer == (int)Field.timerType.LockDelay)
+                            if (currentTimer == timerType.LockDelay)
                             {
                                 //if lock delay up, place piece.
                                 if (activeTet.groundTimer == 0)
@@ -1185,14 +1193,14 @@ namespace TGMsim
                                         }
 
                                         //start timer
-                                        currentTimer = (int)Field.timerType.LineClear;
+                                        currentTimer = timerType.LineClear;
                                         timerCount = MOD.baseLineClear;
                                         Audio.playSound(Audio.s_Clear);
 
                                     }
                                     else //start the ARE, check if new grav level
                                     {
-                                        currentTimer = (int)Field.timerType.ARE;
+                                        currentTimer = timerType.ARE;
                                         timerCount = MOD.baseARE;
 
                                         MOD.onPut(activeTet, false);
@@ -1208,7 +1216,7 @@ namespace TGMsim
 
                                             if (MOD.torikan && !toriless)
                                             {
-                                                currentTimer = (int)Field.timerType.LineClear;
+                                                currentTimer = timerType.LineClear;
                                                 timerCount = MOD.baseLineClear;
                                                 Audio.playSound(Audio.s_Clear);
                                                 if (MOD.toriCredits)
@@ -1310,6 +1318,30 @@ namespace TGMsim
                                     if ((MOD.g20 == true || gravTable[gravLevel] == Math.Pow(256, ruleset.gravType + 1) * 20) && (int)ruleset.gameRules < 4 && (int)ruleset.gameRules > 0)
                                         textBrush = new SolidBrush(Color.Gold);
 
+                                    //garbage
+                                    if (checkGimmick(2) && MOD.garbTimer >= getActiveGimmickParameter(2) && (MOD.raiseGarbOnClear == true || full.Count == 0))
+                                    {
+                                        bool check = true;
+                                        if (MOD.garbSafeLine != 0)
+                                            for (int i = 19; i > MOD.garbSafeLine; --i)
+                                            {
+                                                for (int x = 0; x < 10; x++)
+                                                    if (gameField[x][i] != 0)
+                                                    {
+                                                        check = false;
+                                                        break;
+                                                    }
+                                                if (!check)
+                                                    break;
+                                            }
+                                        if (check)
+                                        {
+                                            currentTimer = timerType.GarbageRaise;
+                                            timerCount = MOD.garbDelay;
+                                        }
+                                        MOD.garbTimer = 0;
+                                    }
+
                                     Audio.playSound(Audio.s_Contact);
                                     return;
 
@@ -1322,12 +1354,12 @@ namespace TGMsim
                             }
                             else
                             {
-                                currentTimer = (int)Field.timerType.LockDelay;
+                                currentTimer = timerType.LockDelay;
                                 Audio.playSound(Audio.s_Lock);
                             }
                         }
                         else
-                            currentTimer = (int)Field.timerType.ARE;
+                            currentTimer = timerType.ARE;
 
 
 
