@@ -75,6 +75,8 @@ namespace TGMsim
 
         public Color border = Color.LightGray;
 
+        public bool firstPiece = true;
+
         public Mode()
         {
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +12,7 @@ namespace TGMsim
         public M_Training()
         {
             ModeName = "20G TRAINING";
+            border = Color.DarkGreen;
             endLevel = 200;
             g20 = true;
             gradedBy = 4;
@@ -25,13 +27,19 @@ namespace TGMsim
 
         public override void onSpawn()
         {
-            if (level < endLevel)
+            if (firstPiece)
+            {
+                firstPiece = false;
+            }
+            else if (level < endLevel)
                 level += 1;
         }
 
         public override void onClear(int lines, Tetromino tet, long time, bool bravo)
         {
             level += lines;
+            if (level > endLevel && endLevel != 0)
+                level = endLevel;
         }
     }
 }

@@ -10,7 +10,7 @@ namespace TGMsim
     class GameSelect
     {
         public int menuSelection = 1;
-        private int prevSel = 0;
+        private int prevSel = 1;
         public int pSel = 0;
         public bool prompt = false;
         int hInput = 0;

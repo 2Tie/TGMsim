@@ -46,6 +46,8 @@ namespace TGMsim
         static public int sfxVol = 7;
 
         static public bool muted = false;
+        static public short loadedTally = 0;
+        static public short loadedWaiting = 0;
 
         static Audio()
         {
@@ -71,14 +73,21 @@ namespace TGMsim
             addSound(s_Section, @"/Res/Audio/SE/SEP_lankup.wav");
             addSound(s_Combo, @"/Res/Audio/SE/SEP_combo.wav");
             addSound(s_Tetris, @"/Res/Audio/SE/SEP_tetris.wav");
-            addSound(s_Medal, @"/Res/Audio/SE/SEP_platinum.wav");
+            addSound(s_Medal, @"/Res/Audio/SE/SEB_platinum.wav");
             addSound(s_Bell, @"/Res/Audio/SE/bell.wav");
         }
 
         static public void addSound(System.Windows.Media.MediaPlayer plr, string uri)
         {
+            loadedWaiting++;
             plr.IsMuted = true;
+            plr.MediaOpened += new EventHandler(sndLoadCallback);
             plr.Open(new Uri(Environment.CurrentDirectory + uri));
+        }
+
+        static private void sndLoadCallback(object s, EventArgs e)
+        {
+            loadedTally++;
         }
 
         static public void playSound(System.Windows.Media.MediaPlayer snd)

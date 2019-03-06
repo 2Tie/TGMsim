@@ -369,8 +369,7 @@ namespace TGMsim
 
         private void titleLogic()
         {
-
-            if (pad1.inputStart == 1)
+            if (pad1.inputStart == 1 && Audio.loadedTally == Audio.loadedWaiting)
             {
                 pad1.inputStart = 0;
                 Audio.playSound(s_Start);
@@ -388,7 +387,10 @@ namespace TGMsim
             {
                 case 0:
                     drawBuffer.DrawString("TGM sim title screen thingy", DefaultFont, new SolidBrush(Color.White), 325, 250);
-                    drawBuffer.DrawString("PRESS START", f_Maestro, new SolidBrush(Color.White), 350, 300);
+                    if( Audio.loadedTally < Audio.loadedWaiting)
+                        drawBuffer.DrawString("LOADING", f_Maestro, new SolidBrush(Color.White), 360, 500);
+                    else
+                        drawBuffer.DrawString("PRESS START", f_Maestro, new SolidBrush(Color.White), 350, 500);
                     break;
                 case 1:
                     drawBuffer.DrawString("login", DefaultFont, new SolidBrush(Color.White), 5, 5);
@@ -560,7 +562,7 @@ namespace TGMsim
             switch (gameResult.game)
             {
                 case 1:
-                    for (int i = 0; i < hiscoreTable[0].Count; i++ ) //for each entry in TGM1
+                    for (int i = 0; i < hiscoreTable[0].Count; i++) //for each entry in TGM1
                     {
                         if (hiscoreTable[0][i].grade < gameResult.grade)
                         {
@@ -580,7 +582,7 @@ namespace TGMsim
                     }
                     break;
                 case 5:
-                    for (int i = 0; i < hiscoreTable[0].Count; i++ )
+                    for (int i = 0; i < hiscoreTable[0].Count; i++)
                     {
                         if (hiscoreTable[4][i].level < gameResult.level)
                         {
@@ -603,15 +605,16 @@ namespace TGMsim
                                 }
                             }
                         }
-                        
+
                     }
                     break;
                 case -1:
                 case 0:
                 case 6:
                 case 7:
+                case 8:
                     return false;
-                    //break;
+                //break;
                 default:
                     for (int i = 0; i < hiscoreTable[gameResult.game].Count; i++)
                     {
@@ -637,7 +640,7 @@ namespace TGMsim
                         }
                     }
                     break;
-        }
+            }
             return false;
         }
 

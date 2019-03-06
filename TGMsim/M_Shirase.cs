@@ -84,7 +84,7 @@ namespace TGMsim
             gimList.Add(gL);
             garbType = GarbType.COPY;
             gradedBy = 2;
-            border = Color.DarkBlue;
+            border = Color.DarkRed;
             g20 = true;
             initialGrade = 0;
             delayTable.Add(new List<int> { 12, 12, 12, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6 });
@@ -96,7 +96,11 @@ namespace TGMsim
 
         public override void onSpawn()
         {
-            if (level < endLevel)
+            if (firstPiece)
+            {
+                firstPiece = false;
+            }
+            else if (level < endLevel)
             {
                 if (level < sections[curSection] - 1)
                     level += 1;

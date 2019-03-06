@@ -67,7 +67,11 @@ namespace TGMsim
 
         public override void onSpawn()
         {
-            if (level < endLevel)
+            if (firstPiece)
+            {
+                firstPiece = false;
+            }
+            else if (level < endLevel)
             {
                 if (level < sections[curSection] - 1)
                     level += 1;

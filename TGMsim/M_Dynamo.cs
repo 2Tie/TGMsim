@@ -31,6 +31,7 @@ namespace TGMsim
         public M_Dynamo(int v)
         {
             ModeName = "DYNAMO";
+            border = Color.MediumPurple;
             sections.Add(100);
             sections.Add(200);
             sections.Add(300);
@@ -93,7 +94,11 @@ namespace TGMsim
 
         public override void onSpawn()
         {
-            if (level < endLevel)
+            if (firstPiece)
+            {
+                firstPiece = false;
+            }
+            else if (level < endLevel)
             {
                 if (level < sections[curSection] - 1)
                     level += 1;

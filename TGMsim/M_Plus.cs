@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +12,7 @@ namespace TGMsim
         public M_Plus() : base()
         {
             ModeName = "TGM+";
+            border = Color.DarkBlue;
             sections.Add(100);
             sections.Add(200);
             sections.Add(300);
@@ -116,7 +118,11 @@ namespace TGMsim
 
         public override void onSpawn()
         {
-            if (level < endLevel)
+            if(firstPiece)
+            {
+                firstPiece = false;
+            }
+            else if (level < endLevel)
             {
                 if (level < sections[curSection] - 1)
                     level += 1;
@@ -151,6 +157,16 @@ namespace TGMsim
             int sped = baseLock - tet.life;
             if (sped < 0) sped = 0;
             score += ((int)Math.Ceiling((double)(oldLvl + lines) / 4) + tet.soft + (2 * tet.sonic)) * lines * combo * b + (int)(Math.Ceiling((double)level / 2)) + (sped * 7);
+
+            if (level >= sections[curSection])
+            {
+                curSection++;
+                //MUSIC
+                updateMusic();
+
+                if (level > endLevel && endLevel != 0)
+                    level = endLevel;
+            }
         }
     }
 }

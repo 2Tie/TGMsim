@@ -51,7 +51,11 @@ namespace TGMsim
 
         public override void onSpawn()
         {
-            if (level < endLevel)
+            if (firstPiece)
+            {
+                firstPiece = false;
+            }
+            else if (level < endLevel)
             {
                 if (level < sections[curSection] - 1)
                     level += 1;
@@ -169,9 +173,7 @@ namespace TGMsim
                         Audio.playSound(Audio.s_Medal);
                     }
                 
-
-
-                //BACKGROUND
+                
                 if (level > endLevel && endLevel != 0)
                     level = endLevel;
             }
