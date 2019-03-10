@@ -101,11 +101,13 @@
     <Compile Include="M_BigBravoMania.cs" />
     <Compile Include="M_Death.cs" />
     <Compile Include="M_Dynamo.cs" />
+    <Compile Include="M_Garbo.cs" />
     <Compile Include="M_IcyShirase.cs" />
     <Compile Include="M_Master2.cs" />
     <Compile Include="M_Master1.cs" />
     <Compile Include="M_Master2Plus.cs" />
     <Compile Include="M_Master3.cs" />
+    <Compile Include="M_Miner.cs" />
     <Compile Include="M_Plus.cs" />
     <Compile Include="M_SegaBlox.cs" />
     <Compile Include="M_SegaTet.cs" />

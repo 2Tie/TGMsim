@@ -17,7 +17,6 @@ TGM3 Shirase
 
 SEGA Tetris  
 SEGA Bloxeed (missing powerups)  
-SEGA Flash Point (heavily WIP)  
 
 New Dynamo Mode (heavily WIP)
 
@@ -29,7 +28,7 @@ Starting up the game, after the Title Screen is the Login Menu. Left and right w
 
 Games and modes are selected with the Rotate 1 button and backed out of with the Rotate 2 button. You can back out of the Game Select screen to the Login menu as well.
 
-In the Mode Select screen, pressing the Hold button will show the Hiscores for the selected game's Master mode. **Note: this has not been updated in a while and may crash for some selected games.**
+In the Mode Select screen, pressing the Hold button will show the Hiscores for the selected game's Master mode. 
 
 ## Credits
 

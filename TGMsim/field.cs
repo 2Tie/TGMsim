@@ -310,13 +310,13 @@ namespace TGMsim
             if (w4)
                 w4ify();
 
-            if (ruleset.id == 9)
+            if (MOD.autoGarbage)
             {
                 for (int i = 0; i < 13; i++)
                     raiseGarbage(true);
             }
 
-            if (ruleset.id == 4)
+            if (MOD.startWithRandField)
                 randomize();
             
         }
@@ -573,7 +573,7 @@ namespace TGMsim
             }
             //score
             drawBuffer.DrawString(MOD.score.ToString(), f_Maestro, textBrush, x + 280, 280);
-            if (ruleset.gameRules == GameRules.Games.TGM1 && ruleset.id == 0)
+            if (ruleset.gameRules == GameRules.Games.TGM1 && MOD.modeID == Mode.ModeType.MASTER)
             {
                 drawBuffer.DrawString("NEXT GRADE:", f_Maestro, textBrush, x + 280, 140);
                 if (MOD.grade != 18)
@@ -680,7 +680,7 @@ namespace TGMsim
             //endgame stats
             if (gameRunning == false && fadeout == 92)
             {
-                if (ruleset.id == 0)
+                if (MOD.modeID == Mode.ModeType.MASTER)
                 {
                     drawBuffer.DrawString("Grade: " + ruleset.grades[results.grade], SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 200);
                 }
@@ -707,6 +707,9 @@ namespace TGMsim
                 drawBuffer.DrawString("Press B to", SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 310);
                 drawBuffer.DrawString("return to menu!", SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 320);
 
+                if (newHiscore)
+                    drawBuffer.DrawString("New Hiscore registered!", SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 440);
+
                 if (!isPlayback)
                 {
                     if (!recorded)
@@ -718,7 +721,7 @@ namespace TGMsim
                         drawBuffer.DrawString("Replay recorded!", SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 340);
                 }
 
-                if (ruleset.id == 2 && MOD.grade != 0)
+                if (MOD.modeID == Mode.ModeType.SHIRASE && MOD.grade != 0)
                     drawGrade(drawBuffer, "S" + (MOD.grade));
             }
 
@@ -865,9 +868,9 @@ namespace TGMsim
 
                     inputDelayDir = pad.inputH;
 
-                    if(creditsProgress == 0 &&(((int)ruleset.gameRules > 1) == (creditsPause.count >= 3000) || ruleset.id == 1) && inCredits)
+                    if(creditsProgress == 0 &&(((int)ruleset.gameRules > 1) == (creditsPause.count >= 3000) || MOD.modeID == Mode.ModeType.DEATH) && inCredits)
                     {
-                        if (ruleset.id == 7 || ruleset.id == 9 || (ruleset.id == 10 && MOD.variant == 0))
+                        if (MOD.modeID == Mode.ModeType.TRAINING || MOD.modeID == Mode.ModeType.MINER || (MOD.modeID == Mode.ModeType.DYNAMO && MOD.variant == 0))
                             Audio.playMusic("crdtcas");
                         else if (MOD.creditsType < 2)
                             Audio.playMusic("crdtvanish");
@@ -875,7 +878,7 @@ namespace TGMsim
                             Audio.playMusic("crdtinvis");
                     }
 
-                    if (inCredits && (((int)ruleset.gameRules > 1) == (creditsPause.count >= 3000) || ruleset.id == 1))
+                    if (inCredits && (((int)ruleset.gameRules > 1) == (creditsPause.count >= 3000) || MOD.modeID == Mode.ModeType.DEATH))
                     {
                         creditsProgress++;
                         if (pad.inputStart == 1 && ruleset.gameRules == GameRules.Games.TGM1)
@@ -963,12 +966,12 @@ namespace TGMsim
                                 if (w4)
                                     w4ify();
 
-                                if (ruleset.id == 9)//and if no pieces in 12
+                                if (MOD.autoGarbage)//and if no pieces in 9
                                 {
                                     bool raise = true;
                                     for (int j = 0; j < 10; j++)
                                     {
-                                        if (gameField[j][12] != 0)
+                                        if (gameField[j][9] != 0)
                                         {
                                             raise = false;
                                         }
@@ -993,7 +996,7 @@ namespace TGMsim
                         //if timer is ARE and done, get next tetromino
                         if (currentTimer == timerType.ARE)
                         {
-                            if (timerCount <= 0 && ((inCredits == (creditsPause.count > 3000)) || ruleset.gameRules == GameRules.Games.TGM1 || ruleset.id == 1))
+                            if (timerCount <= 0 && ((inCredits == (creditsPause.count > 3000)) || ruleset.gameRules == GameRules.Games.TGM1 || MOD.modeID == Mode.ModeType.DEATH))
                             {
                                 full.Clear();
                                 swappedHeld = 0;
@@ -1105,7 +1108,7 @@ namespace TGMsim
                                     }
                                     activeTet.id = 0;
 
-                                    if (ruleset.id == 9 && MOD.variant == 1)//and if no pieces in 12
+                                    if (MOD.keepFieldSafe)//drop the field
                                     {
                                         int drop = 0;
                                         for (int d = 0; d < 4; d++)
@@ -1370,7 +1373,7 @@ namespace TGMsim
 
                         bool son = false;
 
-                        if (pad.inputStart == 1 && ruleset.id == 9 && MOD.variant == 1)
+                        if (pad.inputStart == 1 && MOD.startEnd)
                             endGame();
 
                         if (isPlayback == true && pad.superStart)
@@ -1390,7 +1393,7 @@ namespace TGMsim
                                 activeTet.soft++;
                                 MOD.onSoft();
                             }
-                            else if (!safelock || !((int)ruleset.gameRules > 3 || ruleset.id == 1 || ((int)ruleset.gameRules == 2 && MOD.level > 899) || ((int)ruleset.gameRules == 3 && MOD.level > 899)))
+                            else if (!safelock || !((int)ruleset.gameRules > 3 || MOD.modeID == Mode.ModeType.DEATH || ((int)ruleset.gameRules == 2 && MOD.level > 899) || ((int)ruleset.gameRules == 3 && MOD.level > 899)))
                             {
                                 if(activeTet.floored)
                                     gravCounter = 0;
@@ -1747,7 +1750,7 @@ namespace TGMsim
                 //handle TGM3 section modifyers
                 if (ruleset.gameRules == GameRules.Games.TGM3)
                 {
-                    if (ruleset.id == 0)
+                    if (MOD.modeID == Mode.ModeType.MASTER)
                     {
                         /*foreach (int i in secCools)
                         {
@@ -1789,7 +1792,7 @@ namespace TGMsim
             
             inCredits = true;
             Audio.stopMusic();
-            if (ruleset.gameRules == GameRules.Games.TGM1 || ruleset.id == 1)
+            if (ruleset.gameRules == GameRules.Games.TGM1 || MOD.modeID == Mode.ModeType.DEATH)
                 Audio.playMusic("crdtvanish");
             else
             {
@@ -1797,7 +1800,7 @@ namespace TGMsim
                 clearField();
             }
 
-            if (ruleset.id == 0)
+            if (MOD.modeID == Mode.ModeType.MASTER)
             {
                 if ((ruleset.gameRules == GameRules.Games.TGM2 || ruleset.gameRules == GameRules.Games.TAP) && MOD.grade == 32) //tgm2 always has invisible
                     MOD.creditsType = 2;
@@ -2266,19 +2269,19 @@ namespace TGMsim
             }*/
             int section = curSection + cools;
 
-            if (ruleset.id == 0)//master
+            if (MOD.modeID == Mode.ModeType.MASTER)//master
             {
                 if (section == 4 && MOD.level % 100 > 84) Audio.stopMusic();
                 if ((ruleset.gameRules == GameRules.Games.TGM2 || ruleset.gameRules == GameRules.Games.TAP) && section == 6 && MOD.level % 100 > 84) Audio.stopMusic();
                 if ((ruleset.gameRules == GameRules.Games.TGM2 || ruleset.gameRules == GameRules.Games.TAP) && section == 8 && MOD.level % 100 > 84) Audio.stopMusic();
                 if (ruleset.gameRules == GameRules.Games.TGM3 && section == 7 && MOD.level % 100 > 84) Audio.stopMusic();
             }
-            if(ruleset.id == 1)//death
+            if(MOD.modeID == Mode.ModeType.DEATH)//death
             {
                 if (curSection == 2 && MOD.level % 100 > 84) Audio.stopMusic();
                 if (curSection == 4 && MOD.level % 100 > 84) Audio.stopMusic();
             }
-            if (ruleset.id == 2)//shirase
+            if (MOD.modeID == Mode.ModeType.SHIRASE)//shirase
             {
                 if (curSection == 4 && MOD.level % 100 > 84) Audio.stopMusic();
                 if (curSection == 6 && MOD.level % 100 > 84) Audio.stopMusic();

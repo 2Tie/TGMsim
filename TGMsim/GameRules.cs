@@ -76,7 +76,7 @@ namespace TGMsim
             public int parameter;
         }*/
 
-        public int id = 0;
+        //public int id = 0;
         //public int endLevel = 999;
         //public List<int> sections = new List<int>();
         //public bool bigmode = false;
@@ -112,7 +112,7 @@ namespace TGMsim
             }
         }
 
-        public void setup(Games game, int mode, int vari)
+        public void setup(Games game, Mode.ModeType mode, int vari)
         {
             gameRules = game;
             //variant = vari;
@@ -297,11 +297,10 @@ namespace TGMsim
                     gravTable = new List<int> { 1024, 1536, 2048, 2560, 3072, 4096, 8192, 12288, 16384, 20480, 24576, 28672, 32768, 36864, 1024, 8192, 16348, 24576, 32768, 40960, 49152, 57344, 65536, 131072, 196608, 262144, 327680, 262144, 196608, 1310720 };
                     break;
             }
-
-            id = mode;
-            switch (mode)//Master, Death, shirase, sprint, garbage clear, rounds, konoha, grav training, dynamo, endura
+            
+            switch (mode)//Master, Death, shirase, sprint, garbage clear, rounds, konoha, grav training, miner, dynamo, endura
             {
-                case 0: //Master
+                case Mode.ModeType.MASTER: //Master //TODO:replace with the enum constants
                     switch (game)
                     {
                         case Games.TGM1:
@@ -318,18 +317,19 @@ namespace TGMsim
                             break;
                     }
                     break;
-                case 1://death
+                case Mode.ModeType.DEATH://death
                     mod = new M_Death();
                     break;
-                case 2://shirase
+                case Mode.ModeType.SHIRASE://shirase
                     mod = new M_Shirase();
                     break;
-                case 3://sprint
+                case Mode.ModeType.SPRINT://sprint
                     /*gradedBy = 4;
                     limitType = 1;
                     border = Color.DarkGreen;*/
                     break;
-                case 4://garbage clear
+                case Mode.ModeType.GARBAGE://garbage clear
+                    mod = new M_Garbo();
                     /*gradedBy = 4;
                     limitType = 4;
                     limit = 1;
@@ -340,20 +340,21 @@ namespace TGMsim
                     delayTable.Add(new List<int> { 30 });
                     delayTable.Add(new List<int> { 41 });*/
                     break;
-                case 5://rounds
+                case Mode.ModeType.ROUNDS://rounds
                     mod = new M_IcyShirase();
                     break;
-                case 6://konoha
+                case Mode.ModeType.KONOHA://konoha
                     generator = (int)Gens.EZ;
                     mod = new M_BigBravoMania();
                     break;
-                case 7://20g training
+                case Mode.ModeType.TRAINING://20g training
                     mod = new M_Training();
                     break;
-                case 8: //segatet
+                case Mode.ModeType.SEGA: //segatet
                     mod = new M_SegaTet();
                     break;
-                case 9: //miner
+                case Mode.ModeType.MINER: //miner
+                    mod = new M_Miner(vari);
                     /*ModeName = "MINER";
                     sections.Add(100);
                     sections.Add(200);
@@ -366,19 +367,20 @@ namespace TGMsim
                     delayTable.Add(new List<int> { 30 });
                     delayTable.Add(new List<int> { 40 });*/
                     break;
-                case 10: //dynamo
+                case Mode.ModeType.DYNAMO: //dynamo
                     mod = new M_Dynamo(vari);
                     break;
-                case 11: //endura
+                case Mode.ModeType.ENDURA: //endura
                     break;
-                case 12: //bloxeed
+                case Mode.ModeType.BLOX: //bloxeed
                     mod = new M_SegaBlox();
                     gravTable = new List<int> { 16, 14, 12, 10, 8, 6, 4, 3, 2, 1, 10, 8, 6, 4, 2, 1 };
                     break;
-                case 13: //tgm+
+                case Mode.ModeType.PLUS: //tgm+
                     mod = new M_Plus();
                     break;
             }
+            mod.modeID = mode;  
         }
     }
 }

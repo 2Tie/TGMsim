@@ -18,10 +18,12 @@ namespace TGMsim
             public int parameter;
         }
 
+        public enum ModeType { MASTER, DEATH, SHIRASE, SPRINT, GARBAGE, ROUNDS,  KONOHA, TRAINING, SEGA, MINER, DYNAMO, ENDURA, BLOX, PLUS }; //for the ID stuff //Master, Death, shirase, sprint, garbage clear, rounds, konoha, grav training, miner, dynamo, endura
+
         public enum GarbType { FIXED, COPY, RANDOM } ;
 
         public string ModeName = "DUMMY";
-        public int id = 0;
+        public ModeType modeID = 0;
         public int endLevel = 999;
         public List<int> sections = new List<int>();
         public int curSection;
@@ -58,6 +60,10 @@ namespace TGMsim
         public bool shiragrades = false;
         public bool drawSec = true;
         //public int gm2grade = 0;
+        public bool startWithRandField = false;
+        public bool autoGarbage = false;
+        public bool startEnd = false;
+        public bool keepFieldSafe = false;
 
         public int tetrises = 0;
         public List<int> secTet = new List<int>();

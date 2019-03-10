@@ -169,36 +169,39 @@ namespace TGMsim
                 }
             }
 
-            if (level >= sections[curSection])
+            if (curSection < sections.Count)
             {
-                curSection++;
-                secTet.Add(0);
-                secTimes.Add(secTimer.count);
-                secTimer = new FrameTimer();
-                //GM FLAGS
-
-                //MUSIC
-                updateMusic();
-                //DELAYS
-                if(coolCounter.Count(p => p == 1) > cools)
+                if (level >= sections[curSection])
                 {
-                    cools++;
-                    lvlBonus += 1;
+                    curSection++;
+                    secTet.Add(0);
+                    secTimes.Add(secTimer.count);
+                    secTimer = new FrameTimer();
+                    //GM FLAGS
 
-                    int num = (curSection + lvlBonus)/2 - 4;
-                    if (num > 0 && variant < 4)
+                    //MUSIC
+                    updateMusic();
+                    //DELAYS
+                    if (coolCounter.Count(p => p == 1) > cools)
                     {
-                        //update delays
-                        baseARE = delayTable[0][num];
-                        baseARELine = delayTable[1][num];
-                        baseDAS = delayTable[2][num];
-                        baseLock = delayTable[3][num];
-                        baseLineClear = delayTable[4][num];
+                        cools++;
+                        lvlBonus += 1;
+
+                        int num = (curSection + lvlBonus) / 2 - 4;
+                        if (num > 0 && variant < 4)
+                        {
+                            //update delays
+                            baseARE = delayTable[0][num];
+                            baseARELine = delayTable[1][num];
+                            baseDAS = delayTable[2][num];
+                            baseLock = delayTable[3][num];
+                            baseLineClear = delayTable[4][num];
+                        }
                     }
                 }
-                if (level > endLevel && endLevel != 0)
-                    level = endLevel;
             }
+            if (level > endLevel && endLevel != 0)
+                level = endLevel;
         }
 
         public override void draw(Graphics drawBuffer, Font f, bool replay)
