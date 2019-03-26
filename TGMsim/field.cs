@@ -39,31 +39,21 @@ namespace TGMsim
 
         public List<int> full = new List<int>();
 
-        //public List<int> medals = new List<int>() { 0, 0, 0, 0, 0, 0 };
-
         public List<long> sectionTimes = new List<long>();
-        //public List<bool> GMflags = new List<bool>();
-        //public List<int> secTet = new List<int>();
-        //public List<int> secCools = new List<int>();
 
         public List<vanPip> vanList = new List<vanPip>();
         public List<flashPip> flashList = new List<flashPip>();
-        //public int creditsType = 0;
         int fadeout = 0;
-
-
-        //public bool isGM = false;
+        
 
         public Tetromino heldPiece;
 
         public Tetromino ghostPiece;
-
-        //public GameTimer timer = new GameTimer();
+        
         public FrameTimer timer = new FrameTimer();
         public FrameTimer startTime = new FrameTimer();
         public FrameTimer sectionTime = new FrameTimer();
         public FrameTimer creditsPause = new FrameTimer();
-        //public FrameTimer coolTime = new FrameTimer();
         public FrameTimer bravoTime = new FrameTimer();
         public long masterTime = 0;
 
@@ -75,16 +65,10 @@ namespace TGMsim
         public enum timerType { ARE, DAS, LockDelay, LineClear, tgm1flash, GarbageRaise} ;
         public timerType currentTimer = 0;
         public int timerCount = 0;
-        //public int groundTimer = 0;
         public int gravCounter = 0;
         public int gravLevel = 0;
-        //public int level = 0;
-        //public int grade = 0;
-        //public int gm2grade = 0;
         public int score = 0;
         public int combo = 1;
-        //public int gradeCombo = 0;
-        //public bool comboing = false;
         public int gradePoints = 0;
         public int gradeLevel = 0;
         public int gradeTime = 0;
@@ -94,26 +78,11 @@ namespace TGMsim
         public bool inCredits = false;
         int creditsProgress;
         public bool newHiscore = false;
-        //public bool torikan = false;
-        //public long torDef = 0;
 
         public int bgtimer = 0;
-
-        //public int bravoCounter = 0;
-        //public int tetrises = 0;
-        //public int totalTets = 0;
-        //public int rotations = 0;
-        //bool recoverChecking = false;
-        //public int recoveries = 0;
-        //public int speedBonus = 0;
-        public int creditGrades = 0;
-
-        /*public int softCounter = 0;
-        public int sonicCounter = 0;
-        public int tetLife = 0;*/
-
-        //Rules ruleset;
-        //public Mode mode;
+        
+        public int creditGrades = 0;//TODO: migrate out
+        
         public GameRules ruleset;
         int curSection;
 
@@ -141,6 +110,8 @@ namespace TGMsim
         List<Image> tetImgs = new List<Image>();
         List<Image> tetSImgs = new List<Image>();
         List<Image> bgs = new List<Image>();
+        Image tetGem;
+        Image boneGem;
         Image medalImg;
         Image gradeImg;
         Color frameColour;
@@ -170,9 +141,9 @@ namespace TGMsim
             tetImgs.Add(Image.FromFile("Res/GFX/t3.png"));
             tetImgs.Add(Image.FromFile("Res/GFX/t7.png"));
             tetImgs.Add(Image.FromFile("Res/GFX/t2.png"));
-            tetImgs.Add(null);
-            tetImgs.Add(Image.FromFile("Res/GFX/t9.png"));
-            tetImgs.Add(Image.FromFile("Res/GFX/t8.png"));
+            tetImgs.Add(null); //invisible
+            tetImgs.Add(Image.FromFile("Res/GFX/t9.png")); //garbage
+            tetImgs.Add(Image.FromFile("Res/GFX/t8.png")); //bone
 
             tetSImgs.Add(null);
             tetSImgs.Add(Image.FromFile("Res/GFX/s1.png"));
@@ -182,9 +153,9 @@ namespace TGMsim
             tetSImgs.Add(Image.FromFile("Res/GFX/s3.png"));
             tetSImgs.Add(Image.FromFile("Res/GFX/s7.png"));
             tetSImgs.Add(Image.FromFile("Res/GFX/s2.png"));
-            tetSImgs.Add(null);
-            tetSImgs.Add(Image.FromFile("Res/GFX/s9.png"));
-            tetSImgs.Add(Image.FromFile("Res/GFX/s8.png"));
+            tetSImgs.Add(null); //invisible
+            tetSImgs.Add(Image.FromFile("Res/GFX/s9.png")); //garbage
+            tetSImgs.Add(Image.FromFile("Res/GFX/s8.png")); //bone
 
             bgs.Add(Image.FromFile("Res/GFX/bgs/1.png"));
             bgs.Add(Image.FromFile("Res/GFX/bgs/2.png"));
@@ -196,6 +167,9 @@ namespace TGMsim
             bgs.Add(null);
             bgs.Add(null);
             bgs.Add(null);
+
+            tetGem = Image.FromFile("Res/GFX/o8.png");
+            boneGem = Image.FromFile("Res/GFX/o9.png");
 
             medalImg = Image.FromFile("Res/GFX/medals.png");
             gradeImg = Image.FromFile("Res/GFX/grades.png");
@@ -307,6 +281,30 @@ namespace TGMsim
                 gameField.Add(tempList);
             }
 
+            if(MOD.presetBoards)
+            {
+                string b = "RES/Boards/" + MOD.boardsFile + ".brd";
+                using (FileStream fs = new FileStream(b, FileMode.Open))
+                using (BinaryReader br = new BinaryReader(fs))
+                {
+                    br.BaseStream.Position += MOD.boardsProgress * 100;
+                    byte temp;
+                    int p;
+                    for (int i = 0; i < 100; i++)
+                    {
+                        temp = br.ReadByte();
+                        p = (temp >> 4) & 0xF;
+                        if (p > 7)
+                            p += 1;//shift gem blocks into field index
+                        gameField[(i * 2) % 10][(int)((i * 2) / 10)] = p;
+                        p = temp & 0xF;
+                        if (p > 7)
+                            p += 1;//shift gem blocks into field index
+                        gameField[((i * 2) % 10) + 1][(int)((i * 2) / 10)] = p;
+                    }
+                }
+            }
+
             if (w4)
                 w4ify();
 
@@ -371,26 +369,36 @@ namespace TGMsim
                             drawBuffer.DrawImageUnscaled(tetImgs[block], x + 25 * i, y + height - (j * 25), 25, 25);
                         else if (block % 8 != 0)
                         {
-                            drawBuffer.DrawImageUnscaled(tetImgs[block], x + 25 * i, y + height - (j * 25), 25, 25);
-                            drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(130, Color.Black)), x + 25 * i, y + height - (j * 25), 25, 25);
+                            int o = 0;
+                            if (block > 9 && block < 17) //gem block
+                                o = 9;
+                            drawBuffer.DrawImageUnscaled(tetImgs[block - o], x + 25 * i, y + height - (j * 25), 25, 25);
+                            if (MOD.shadeStack)
+                                drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(130, Color.Black)), x + 25 * i, y + height - (j * 25), 25, 25);
+                            if(o == 9) //gem block
+                            {
+                                //drawBuffer.FillEllipse(new SolidBrush(Color.FromArgb(130, Color.White)), x + 25 * i, y + height - (j * 25), 25, 25);
+                                drawBuffer.DrawImageUnscaled(tetGem, x + 25 * i, y + height - (j * 25), 25, 25);
+                            }
                         }
 
                         //outline
-                        if (block % 8 != 0 && block != 10)
-                        {
-                            if (i > 0)
-                                if (gameField[i - 1][j] == 0)//left
-                                    drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.White)), x + 25 * i, y + height - (j * 25), 3, 25);
-                            if (i < 9)
-                                if (gameField[i + 1][j] == 0)//right
-                                    drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.White)), x + 25 * i + 22, y + height - (j * 25), 3, 25);
-                            if (j > 0)
-                                if (gameField[i][j - 1] == 0)//down
-                                    drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.White)), x + 25 * i, y + height + 22 - (j * 25), 25, 3);
-                            if (j < gameField[0].Count-1)
-                                if (gameField[i][j + 1] == 0)//up
-                                    drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.White)), x + 25 * i, y + height - (j * 25), 25, 3);
-                        }
+                        if (MOD.outlineStack)
+                            if (block % 8 != 0 && block != 10)
+                            {
+                                if (i > 0)
+                                    if (gameField[i - 1][j] == 0)//left
+                                        drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.White)), x + 25 * i, y + height - (j * 25), 3, 25);
+                                if (i < 9)
+                                    if (gameField[i + 1][j] == 0)//right
+                                        drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.White)), x + 25 * i + 22, y + height - (j * 25), 3, 25);
+                                if (j > 0)
+                                    if (gameField[i][j - 1] == 0)//down
+                                        drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.White)), x + 25 * i, y + height + 22 - (j * 25), 25, 3);
+                                if (j < gameField[0].Count - 1)
+                                    if (gameField[i][j + 1] == 0)//up
+                                        drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.White)), x + 25 * i, y + height - (j * 25), 25, 3);
+                            }
                     }
                 }
             }

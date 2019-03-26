@@ -93,6 +93,8 @@
     <Compile Include="G_ARS2.cs" />
     <Compile Include="G_ARS3Easy.cs" />
     <Compile Include="G_ARS3.cs" />
+    <Compile Include="G_ARSSEasy.cs" />
+    <Compile Include="G_ARSSNormal.cs" />
     <Compile Include="G_SEGA.cs" />
     <Compile Include="Login.cs" />
     <Compile Include="LoopStream.cs" />
@@ -110,6 +112,7 @@
     <Compile Include="M_Miner.cs" />
     <Compile Include="M_Plus.cs" />
     <Compile Include="M_SegaBlox.cs" />
+    <Compile Include="M_SegaFlash.cs" />
     <Compile Include="M_SegaTet.cs" />
     <Compile Include="M_Shirase.cs" />
     <Compile Include="M_Training.cs" />
@@ -180,6 +183,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Res\Audio\results.ogg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Res\Boards\test1.brd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Res\Maestro.ttf">
@@ -324,6 +330,12 @@
     <Content Include="Res\GFX\medals.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Res\GFX\o8.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Res\GFX\o9.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Res\GFX\s1.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -396,6 +408,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

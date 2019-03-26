@@ -19,14 +19,9 @@ namespace TGMsim
         public int rotation = 0; //TGM, TGM3, SEGA, SRS
         public int generator = 0; //dummy, TGM1, TGM2, TGM3, ACE, 
         public enum Rots { ARS1 = 0, ARS3, SEGA};
-        public enum Gens { dummy = 0, TGM1, TGM2, TGM3, ACE, SEGA, EZ};
+        public enum Gens { dummy = 0, TGM1, TGM2, TGM3, ACE, SEGA, EZ, CCSEZ, CCS};
         public enum Games { SEGA = 0, TGM1, TGM2, TAP, TGM3, ACE, GMX, EXTRA, GUIDELINE}
-
-        //public int baseARE = 30;
-        //public int baseARELine = 30;
-        //public int baseDAS = 14;
-        //public int baseLock = 30;
-        //public int baseLineClear = 41;
+        
         public int gravType = 0; //b256, b65536, frames
         public int baseGrav = 4;
 
@@ -40,12 +35,7 @@ namespace TGMsim
         public double FPS = 60.00;
         public int lag = 0;
 
-        //public bool showGrade = true;
-        //public int initialGrade = 0;
-        //public int variant = 0;
-
         public string GameName = "error";
-        //public string ModeName = "error";
 
         public Mode mod;
 
@@ -58,40 +48,15 @@ namespace TGMsim
         public List<int> gravTable = new List<int>();//TODO: grav table set plz
         public List<int> gravLevels = new List<int>() { 0, 30, 35, 40, 50, 60, 70, 80, 90, 100, 120, 140, 160, 170, 200, 220, 230, 233, 236, 239, 243, 247, 251, 300, 330, 360, 400, 420, 450, 500 };
         public List<List<int>> delayTable = new List<List<int>>();
-
-        //public List<int> gradePointsTGM1 = new List<int> { 0, 400, 800, 1400, 2000, 3500, 5500, 8000, 12000, 16000, 22000, 30000, 40000, 52000, 66000, 82000, 100000, 120000 };
+        
 
         public List<string> grades = new List<string> { "9", "8", "7", "6", "5", "4", "3", "2", "1", "S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "S9", "M1", "M2", "M3", "M4", "M5", "M6", "M7", "M8", "M9", "M", "MK", "MV", "MO", "MM", "GM" };
 
         public List<int> gradeIntTGM2 = new List<int> { 0, 1, 2, 3, 4, 5, 5, 6, 6, 7, 7, 7, 8, 8, 8, 9, 9, 9, 10, 11, 12, 12, 12, 13, 13, 14, 14, 15, 15, 16, 16, 17 };
-
-        //public List<int> secCools = new List<int> { 52000, 52000, 49000, 45000, 45000, 42000, 42000, 38000, 38000 };
-        //public List<int> secRegrets = new List<int> { 90000, 75000, 75000, 68000, 60000, 60000, 50000, 50000, 50000, 50000 };
-
-        /*public struct Gimmick
-        {
-            public int type; //fading, vanishing, copygarbage, bones, ice, big, random garbage, preset garbage
-            public int startLvl;
-            public int endLvl;
-            public int parameter;
-        }*/
-
-        //public int id = 0;
-        //public int endLevel = 999;
-        //public List<int> sections = new List<int>();
-        //public bool bigmode = false;
-        //public bool g20 = false;
-        //public bool shiraseGrades = false;
+        
         public int exam = -1;
-        //public int lvlBonus = 0;
-        //public int gradedBy = 0; //points, grade points, level, bravo, time
-        //public int limitType = 0; //none, line, level, time, bravo
-        //public int limit = 0;
         public bool mute = false;
-        //public List<Gimmick> gimList = new List<Gimmick>();
         public int bigMove = 1;
-
-        //public Color border = Color.LightGray;
 
         public GameRules()
         {
@@ -128,11 +93,6 @@ namespace TGMsim
                     generator = (int)Gens.SEGA;
                     lockType = 0;
                     bigMove = 1;
-                    //baseARE = 25;
-                    //baseARELine = 25;
-                    //baseDAS = 14;
-                    //baseLock = 30;
-                    //baseLineClear = 40;
                     gravType = 2;
                     baseGrav = 256;
                     genAttps = 6;
@@ -154,17 +114,12 @@ namespace TGMsim
                     lag = 2;
                     lockType = 0;
                     bigMove = 1;
-                    //baseARE = 30;
-                    //baseDAS = 14;
-                    //baseLock = 30;
-                    //baseLineClear = 41;
                     gravType = 0;
                     baseGrav = 4;
                     genAttps = 4;
                     fieldW = 10;
                     fieldH = 22;
                     creditsLength = 2968; //taken from nullpomino, though estimates place it around 2961. still need to verify
-                    //showGrade = true;
                     gravTable = new List<int> { 4, 6, 8, 10, 12, 16, 32, 48, 64, 80, 96, 112, 128, 144, 4, 32, 64, 96, 128, 160, 192, 224, 256, 512, 768, 1024, 1280, 1024, 768, 5120 };
                     break;
                 case Games.TGM2: //TGM2
@@ -216,11 +171,6 @@ namespace TGMsim
                     lag = 3;
                     lockType = 0;
                     bigMove = 2;
-                    //baseARE = 25;
-                    //baseARELine = 25;
-                    //baseDAS = 14;
-                    //baseLock = 30;
-                    //baseLineClear = 40;
                     gravType = 1;
                     baseGrav = 1024;
                     genAttps = 6;
@@ -241,11 +191,6 @@ namespace TGMsim
                     lag = 3;
                     lockType = 0;
                     bigMove = 2;
-                    //baseARE = 25;
-                    //baseARELine = 25;
-                    //baseDAS = 14;
-                    //baseLock = 30;
-                    //baseLineClear = 40;
                     gravType = 1;
                     baseGrav = 1024;
                     genAttps = 6;
@@ -264,11 +209,6 @@ namespace TGMsim
                     generator = (int)Gens.TGM3;
                     lockType = 0;
                     bigMove = 2;
-                    //baseARE = 25;
-                    //baseARELine = 25;
-                    //baseDAS = 14;
-                    //baseLock = 30;
-                    //baseLineClear = 40;
                     gravType = 0;
                     baseGrav = 256;
                     genAttps = 6;
@@ -330,15 +270,6 @@ namespace TGMsim
                     break;
                 case Mode.ModeType.GARBAGE://garbage clear
                     mod = new M_Garbo();
-                    /*gradedBy = 4;
-                    limitType = 4;
-                    limit = 1;
-                    sections.Add(999);
-                    delayTable.Add(new List<int> { 30 });
-                    delayTable.Add(new List<int> { 30 });
-                    delayTable.Add(new List<int> { 16 });
-                    delayTable.Add(new List<int> { 30 });
-                    delayTable.Add(new List<int> { 41 });*/
                     break;
                 case Mode.ModeType.ROUNDS://rounds
                     mod = new M_IcyShirase();
@@ -355,17 +286,6 @@ namespace TGMsim
                     break;
                 case Mode.ModeType.MINER: //miner
                     mod = new M_Miner(vari);
-                    /*ModeName = "MINER";
-                    sections.Add(100);
-                    sections.Add(200);
-                    sections.Add(300);
-                    sections.Add(400);
-                    endLevel = 500;
-                    delayTable.Add(new List<int> { 27 });
-                    delayTable.Add(new List<int> { 27 });
-                    delayTable.Add(new List<int> { 14 });
-                    delayTable.Add(new List<int> { 30 });
-                    delayTable.Add(new List<int> { 40 });*/
                     break;
                 case Mode.ModeType.DYNAMO: //dynamo
                     mod = new M_Dynamo(vari);
@@ -378,6 +298,9 @@ namespace TGMsim
                     break;
                 case Mode.ModeType.PLUS: //tgm+
                     mod = new M_Plus();
+                    break;
+                case Mode.ModeType.FLASH: //flash point
+                    mod = new M_SegaFlash();
                     break;
             }
             mod.modeID = mode;  

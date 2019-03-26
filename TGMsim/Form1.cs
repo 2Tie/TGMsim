@@ -493,31 +493,6 @@ namespace TGMsim
         {
             Audio.stopMusic();
             rules = new GameRules();
-            /*if (mSel.game == 3 && mSel.selection == 1)//tgm+
-                rules.setup(GameRules.Games.TAP, Mode.ModeType.PLUS, 0);
-            else if (mSel.game == 3 && mSel.selection == 2)//death
-                rules.setup(GameRules.Games.TAP, Mode.ModeType.DEATH, 0);
-            else if (mSel.game == 4 && mSel.selection == 1)//shirase
-                rules.setup(GameRules.Games.TGM3, Mode.ModeType.SHIRASE, 0);
-            else if (mSel.game == 0 && mSel.selection == 0)//segatet
-                rules.setup(GameRules.Games.SEGA, Mode.ModeType.SEGA, 0);
-            else if (mSel.game == 0 && mSel.selection == 1)//bloxeed
-                rules.setup(GameRules.Games.SEGA, Mode.ModeType.BLOX, 0);
-            else if (mSel.game == 6 && mSel.selection == 0)//dynamo
-                rules.setup(GameRules.Games.GMX, Mode.ModeType.DYNAMO, mSel.variant);
-            else if (mSel.game == 7 && mSel.selection == 1)//miner
-                rules.setup(GameRules.Games.EXTRA, Mode.ModeType.MINER, mSel.variant);
-            else if (mSel.game == 7 && mSel.selection == 2)//garbage
-                rules.setup(GameRules.Games.EXTRA, Mode.ModeType.GARBAGE, 0);
-            else if (mSel.game == 7 && mSel.selection == 3)//20G
-                rules.setup(GameRules.Games.EXTRA, Mode.ModeType.TRAINING, 0);
-            else if (mSel.game == 7 && mSel.selection == 4)//icy
-                rules.setup(GameRules.Games.GUIDELINE, Mode.ModeType.ROUNDS, 0);
-            else if (mSel.game == 7 && mSel.selection == 5)//big bravo
-                rules.setup(GameRules.Games.GUIDELINE, Mode.ModeType.KONOHA, 0);
-            else
-                rules.setup((GameRules.Games)mSel.game, (Mode.ModeType)mSel.selection, 0);*/
-
             rules.setup((GameRules.Games)mSel.game, mSel.modes[mSel.game][mSel.selection].id, mSel.variant);
 
             //m.mute = prefs.muted;

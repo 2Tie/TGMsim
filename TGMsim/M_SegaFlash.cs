@@ -7,20 +7,22 @@ using System.Threading.Tasks;
 
 namespace TGMsim
 {
-    class M_SegaTet : Mode
+    class M_SegaFlash : Mode
     {
         public List<int> levelUpTimes = new List<int> { 3480, 2320, 2320, 2320, 2320, 2320, 2320, 2320, 2320, 3480, 3480, 1740, 1740, 1740, 1740, 3480 };
         public int timeCounter = 0;
         public int lineCounter = 0;
         List<int> linePoints = new List<int> { 100, 400, 900, 2000 };
 
-        public M_SegaTet()
+        public M_SegaFlash()
         {
-            ModeName = "TETRIS";
+            ModeName = "FLASH POINT";
             showGrade = false;
             drawSec = false;
+            presetBoards = true;
             shadeStack = false;
             outlineStack = false;
+            boardsFile = "test1";
             sections.Add(2);
             sections.Add(4);
             sections.Add(6);
@@ -68,7 +70,7 @@ namespace TGMsim
 
             timeCounter = 0;
             lineCounter += lines;
-            if(lineCounter >= 4)
+            if (lineCounter >= 4)
             {
                 level++;
                 lineCounter = 0;

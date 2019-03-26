@@ -18,7 +18,7 @@ namespace TGMsim
             public int parameter;
         }
 
-        public enum ModeType { MASTER, DEATH, SHIRASE, SPRINT, GARBAGE, ROUNDS,  KONOHA, TRAINING, SEGA, MINER, DYNAMO, ENDURA, BLOX, PLUS }; //for the ID stuff //Master, Death, shirase, sprint, garbage clear, rounds, konoha, grav training, miner, dynamo, endura
+        public enum ModeType { MASTER, DEATH, SHIRASE, SPRINT, GARBAGE, ROUNDS,  KONOHA, TRAINING, SEGA, MINER, DYNAMO, ENDURA, BLOX, PLUS, FLASH }; //for the ID stuff //Master, Death, shirase, sprint, garbage clear, rounds, konoha, grav training, miner, dynamo, endura, flash point
 
         public enum GarbType { FIXED, COPY, RANDOM } ;
 
@@ -46,6 +46,9 @@ namespace TGMsim
         public int initialGrade = 0;
         public int variant = 0;
 
+        public bool complete = false; //if true, field will end game or play credits
+        public bool restartOnComplete = false; //if true, re-init mode and game when above bool is true (flash point, sakura, ACE)
+
         public bool comboing = false;
         public bool inCredits = false;
         public bool torikan = false;
@@ -64,6 +67,9 @@ namespace TGMsim
         public bool autoGarbage = false;
         public bool startEnd = false;
         public bool keepFieldSafe = false;
+        public bool presetBoards = false;
+        public string boardsFile = "";
+        public int boardsProgress = 0;
 
         public int tetrises = 0;
         public List<int> secTet = new List<int>();
@@ -80,6 +86,8 @@ namespace TGMsim
         public int baseLineClear = 41;
 
         public Color border = Color.LightGray;
+        public bool shadeStack = true;
+        public bool outlineStack = true;
 
         public bool firstPiece = true;
 
