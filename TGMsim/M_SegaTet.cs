@@ -21,6 +21,7 @@ namespace TGMsim
             drawSec = false;
             shadeStack = false;
             outlineStack = false;
+            showGhost = false;
             sections.Add(2);
             sections.Add(4);
             sections.Add(6);

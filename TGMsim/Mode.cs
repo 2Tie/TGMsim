@@ -70,6 +70,7 @@ namespace TGMsim
         public bool presetBoards = false;
         public string boardsFile = "";
         public int boardsProgress = 0;
+        public bool showGhost = true;
 
         public int tetrises = 0;
         public List<int> secTet = new List<int>();

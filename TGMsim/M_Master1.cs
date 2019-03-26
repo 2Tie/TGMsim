@@ -100,6 +100,7 @@ namespace TGMsim
             if (level >= sections[curSection])
             {
                 curSection++;
+                showGhost = false;
                 secTet.Add(0);
                 //GM FLAGS
                 if (GMflags.Count == 0 && level >= 300)

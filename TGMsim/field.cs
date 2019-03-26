@@ -414,9 +414,8 @@ namespace TGMsim
                 big = 2;
 
             //draw the ghost piece
-            if (MOD.level < 100 && ghostPiece != null && activeTet.id == ghostPiece.id)
+            if (ghostPiece != null && activeTet.id == ghostPiece.id && MOD.showGhost)
             {
-
                 for (int i = 0; i < activeTet.bits.Count; i++)
                 {
                     if (ghostPiece.bits[i].y < 20)

@@ -22,7 +22,9 @@ namespace TGMsim
             presetBoards = true;
             shadeStack = false;
             outlineStack = false;
+            showGhost = false;
             boardsFile = "test1";
+            boardsProgress = 0;
             sections.Add(2);
             sections.Add(4);
             sections.Add(6);

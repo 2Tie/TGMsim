@@ -27,6 +27,7 @@ namespace TGMsim
             ModeName = "SHIRASE";
             toriCredits = false;
             shiragrades = true;
+            showGhost = false;
             endLevel = 1300;
             sections.Add(100);
             sections.Add(200);

@@ -17,6 +17,7 @@ namespace TGMsim
             g20 = true;
             gradedBy = 4;
             showGrade = false;
+            showGhost = false;
             sections.Add(200);
             delayTable.Add(new List<int> { 27 });
             delayTable.Add(new List<int> { 27 });

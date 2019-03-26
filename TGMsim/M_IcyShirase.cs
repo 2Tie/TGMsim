@@ -55,6 +55,7 @@ namespace TGMsim
             gL.endLvl = 1200;
             gimList.Add(gL);
             border = Color.DarkRed;
+            showGhost = false;
 
             delayTable.Add(new List<int> { 12, 12, 12, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6 });
             delayTable.Add(new List<int> { 8, 7, 6, 6, 5, 5, 5, 5, 5, 5, 5, 5, 6 });

@@ -36,6 +36,7 @@ namespace TGMsim
             border = Color.DarkRed;
             g20 = true;
             showGrade = true;
+            showGhost = false;
             initialGrade = -1;
             delayTable.Add(new List<int> { 18, 14, 14, 8, 7, 6 });
             delayTable.Add(new List<int> { 14, 8, 8, 8, 7, 6 });

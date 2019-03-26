@@ -161,6 +161,7 @@ namespace TGMsim
             if (level >= sections[curSection])
             {
                 curSection++;
+                showGhost = false;
                 //MUSIC
                 updateMusic();
 

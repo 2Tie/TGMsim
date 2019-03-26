@@ -100,6 +100,7 @@ namespace TGMsim
             delayTable[2][0] = 12;
             delayTable[4][0] = 40;
             ModeName = "BLOXEED";
+            showGhost = false;
         }
 
         public override void onTick(long time)
