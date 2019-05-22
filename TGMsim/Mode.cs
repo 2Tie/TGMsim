@@ -112,6 +112,11 @@ namespace TGMsim
 
         }
 
+        public virtual void onTick(long time, Field.timerType type)
+        {
+            onTick(time);
+        }
+
         public virtual void onSoft()
         {
 

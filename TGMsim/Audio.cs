@@ -61,8 +61,8 @@ namespace TGMsim
             addSound(s_Tet6, @"/Res/Audio/SE/SEB_mino6.wav");
             addSound(s_Tet7, @"/Res/Audio/SE/SEB_mino7.wav");
             addSound(s_PreRot, @"/Res/Audio/SE/SEB_prerotate.wav");
-            addSound(s_Contact, @"/Res/Audio/SE/SEB_fixa.wav");
-            addSound(s_Lock, @"/Res/Audio/SE/SEB_instal.wav");
+            addSound(s_Contact, @"/Res/Audio/SE/SEB_instal.wav");
+            addSound(s_Lock, @"/Res/Audio/SE/SEB_fixa.wav");
             addSound(s_Clear, @"/Res/Audio/SE/SEB_disappear.wav");
             addSound(s_Impact, @"/Res/Audio/SE/SEB_fall.wav");
             addSound(s_Grade, @"/Res/Audio/SE/SEP_levelchange.wav");

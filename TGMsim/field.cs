@@ -917,7 +917,7 @@ namespace TGMsim
                             creditsProgress += 3;
                     }
 
-                    MOD.onTick(timer.count);
+                    MOD.onTick(timer.count, currentTimer);
 
                     //GAME LOGIC
 
@@ -1044,9 +1044,9 @@ namespace TGMsim
                     if (activeTet.id != 0)//else, check collision below
                     {
 
-                        activeTet.floored = false;
+                        //activeTet.floored = false;
                         activeTet.life++;
-
+                        bool f = false;
                         if (activeTet.id != 0)
                         {
                             int big = 0;
@@ -1058,16 +1058,20 @@ namespace TGMsim
                                     continue;
                                 if (activeTet.bits[i].y - big - 1 <= -1)
                                 {
-                                    activeTet.floored = true;
+                                    f = true;
                                     break;
                                 }
                                 else if (gameField[activeTet.bits[i].x][activeTet.bits[i].y - big - 1] != 0)
                                 {
-                                    activeTet.floored = true;
+                                    f = true;
                                     break;
                                 }
                             }
                         }
+
+                        if (!activeTet.floored && f)
+                            Audio.playSound(Audio.s_Contact);
+                        activeTet.floored = f;
 
                         if (activeTet.floored == true)
                         {
@@ -1080,11 +1084,12 @@ namespace TGMsim
 
                                     safelock = true;
 
+                                    Audio.playSound(Audio.s_Lock);
                                     //GIMMICKS
 
                                     //garbage is handled in mode
 
-                                    
+
                                     if (inCredits == true && creditsProgress >= ruleset.creditsLength)
                                     {
                                         endGame();
@@ -1394,7 +1399,6 @@ namespace TGMsim
                                         MOD.garbTimer = 0;
                                     }
 
-                                    Audio.playSound(Audio.s_Contact);
                                     return;
 
                                 }
@@ -1407,11 +1411,10 @@ namespace TGMsim
                             else
                             {
                                 currentTimer = timerType.LockDelay;
-                                Audio.playSound(Audio.s_Lock);
                             }
                         }
-                        else
-                            currentTimer = timerType.ARE;
+                        //else
+                            //currentTimer = timerType.ARE;
 
 
 
@@ -1700,6 +1703,7 @@ namespace TGMsim
             }
 
             justSpawned = true;
+            currentTimer = timerType.LockDelay;
         }
 
         private void hold()
@@ -1719,7 +1723,6 @@ namespace TGMsim
                 swappedHeld = 1;
                 heldPiece = activeTet.clone(false, false);
                 spawnPiece();
-                currentTimer = (int)Field.timerType.ARE;
                 timerCount = MOD.baseARE;
             }
         }

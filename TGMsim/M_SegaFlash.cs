@@ -13,6 +13,8 @@ namespace TGMsim
         public int timeCounter = 0;
         public int lineCounter = 0;
         List<int> linePoints = new List<int> { 100, 400, 900, 2000 };
+        int bonusP = 1000;
+        byte bonusF = 0;
 
         public M_SegaFlash()
         {
@@ -60,9 +62,16 @@ namespace TGMsim
                 score += Math.Min(4, level / 2) + 1;
         }
 
-        public override void onTick(long time)
+        public override void onTick(long time, Field.timerType type)
         {
             timeCounter++;
+            if (type == Field.timerType.LockDelay)
+            {
+                ++bonusF;
+                if (bonusF % 4 == 0)
+                    --bonusP;
+            }
+            if (bonusP < 0) bonusP = 0;
         }
 
         public override void onClear(int lines, Tetromino tet, long time, bool bravo)
@@ -81,9 +90,14 @@ namespace TGMsim
             if (boardGems == 0)
             {
                 modeClear = true;
+                score += bonusP;
                 boardsProgress++;
                 if (boardsProgress < 2)
+                {
                     continueMode = true;
+                    bonusP = ((boardsProgress / 4) + 1) * 1000;
+                    level -= (level > 0) ? 1 : 0;
+                }
             }
         }
 
@@ -91,6 +105,7 @@ namespace TGMsim
         {
             Brush tb = new SolidBrush(Color.White);
             drawBuffer.DrawString(boardGems.ToString(), f, tb, 20, 300);
+            drawBuffer.DrawString(bonusP.ToString(), f, tb, 20, 324);
             drawBuffer.DrawString(levelUpTimes[level > 15 ? 15 : level].ToString(), f, tb, 20, 312);
         }
     }
