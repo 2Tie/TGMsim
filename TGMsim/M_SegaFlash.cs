@@ -24,6 +24,7 @@ namespace TGMsim
             outlineStack = false;
             showGhost = false;
             boardsFile = "test1";
+            boardsExtraFile = "";
             boardsProgress = 0;
             sections.Add(2);
             sections.Add(4);
@@ -77,12 +78,19 @@ namespace TGMsim
                 level++;
                 lineCounter = 0;
             }
+            if (boardGems == 0)
+            {
+                modeClear = true;
+                boardsProgress++;
+                if (boardsProgress < 2)
+                    continueMode = true;
+            }
         }
 
         public override void draw(Graphics drawBuffer, Font f, bool replay)
         {
             Brush tb = new SolidBrush(Color.White);
-            drawBuffer.DrawString(timeCounter.ToString(), f, tb, 20, 300);
+            drawBuffer.DrawString(boardGems.ToString(), f, tb, 20, 300);
             drawBuffer.DrawString(levelUpTimes[level > 15 ? 15 : level].ToString(), f, tb, 20, 312);
         }
     }

@@ -237,6 +237,7 @@ namespace TGMsim
                     level = 500;
                     torikan = true;
                     torDef = t - 420000;
+                    inCredits = true; //TODO: make this work better?
                     //endGame();
                 }
                 //MUSIC
@@ -302,8 +303,11 @@ namespace TGMsim
                 secTimer = new FrameTimer();
 
                 //BACKGROUND
-                if (level > endLevel && endLevel != 0)
+                if (level >= endLevel && endLevel != 0)
+                {
                     level = endLevel;
+                    inCredits = true;
+                }
             }
             
             //MEDALS

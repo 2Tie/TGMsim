@@ -201,8 +201,11 @@ namespace TGMsim
                     }
                 }
             }
-            if (level > endLevel && endLevel != 0)
+            if (level >= endLevel && endLevel != 0)
+            {
                 level = endLevel;
+                inCredits = true;
+            }
         }
 
         public override void draw(Graphics drawBuffer, Font f, bool replay)

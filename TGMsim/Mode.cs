@@ -51,6 +51,8 @@ namespace TGMsim
 
         public bool comboing = false;
         public bool inCredits = false;
+        public bool modeClear = false;
+        public bool continueMode = false; //if true, do something such as load another board in sakura when modeClear is true
         public bool torikan = false;
         public long torDef = 0;
         public bool toriCredits = true;
@@ -69,7 +71,10 @@ namespace TGMsim
         public bool keepFieldSafe = false;
         public bool presetBoards = false;
         public string boardsFile = "";
+        public string boardsExtraFile = "";
         public int boardsProgress = 0;
+        public int boardsExtraProgress = 0;
+        public int boardGems = 0;
         public bool showGhost = true;
 
         public int tetrises = 0;

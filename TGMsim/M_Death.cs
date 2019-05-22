@@ -174,10 +174,13 @@ namespace TGMsim
                         tetCount = 0;
                         Audio.playSound(Audio.s_Medal);
                     }
-                
-                
-                if (level > endLevel && endLevel != 0)
+
+
+                if (level >= endLevel && endLevel != 0)
+                {
                     level = endLevel;
+                    inCredits = true;
+                }
             }
             //MEDALS
             //AC

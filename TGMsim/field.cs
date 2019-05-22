@@ -241,20 +241,13 @@ namespace TGMsim
             MOD.grade = MOD.initialGrade;
 
 
-            MOD.baseARE = MOD.delayTable[0][0];
-            MOD.baseARELine = MOD.delayTable[1][0];
-            MOD.baseDAS = MOD.delayTable[2][0];
-            MOD.baseLock = MOD.delayTable[3][0];
-            MOD.baseLineClear = MOD.delayTable[4][0];
-
+            
             frameColour = MOD.border;
 
             if (ruleset.exam != -1)
                 frameColour = Color.Gold;
 
-            gameRunning = true;
-            starting = 1;
-
+            
             
             while (gravLevel < gravTable.Count - 1) //update gravity
             {
@@ -267,8 +260,7 @@ namespace TGMsim
             if ((MOD.g20 == true || gravTable[gravLevel] == Math.Pow(256, ruleset.gravType + 1) * 20) && (int)ruleset.gameRules < 4)
                 textBrush = new SolidBrush(Color.Gold);
             
-            startTime.tick();
-            sectionTime.tick();
+            
             //secTet.Add(0);
 
             for (int i = 0; i < ruleset.fieldW; i++)
@@ -281,28 +273,27 @@ namespace TGMsim
                 gameField.Add(tempList);
             }
 
-            if(MOD.presetBoards)
+            resetField();
+            
+        }
+
+        public void resetField()
+        {
+            MOD.baseARE = MOD.delayTable[0][0];
+            MOD.baseARELine = MOD.delayTable[1][0];
+            MOD.baseDAS = MOD.delayTable[2][0];
+            MOD.baseLock = MOD.delayTable[3][0];
+            MOD.baseLineClear = MOD.delayTable[4][0];
+
+            gameRunning = true;
+            starting = 1;
+
+            startTime.tick();
+            sectionTime.tick();
+
+            if (MOD.presetBoards)
             {
-                string b = "RES/Boards/" + MOD.boardsFile + ".brd";
-                using (FileStream fs = new FileStream(b, FileMode.Open))
-                using (BinaryReader br = new BinaryReader(fs))
-                {
-                    br.BaseStream.Position += MOD.boardsProgress * 100;
-                    byte temp;
-                    int p;
-                    for (int i = 0; i < 100; i++)
-                    {
-                        temp = br.ReadByte();
-                        p = (temp >> 4) & 0xF;
-                        if (p > 7)
-                            p += 1;//shift gem blocks into field index
-                        gameField[(i * 2) % 10][(int)((i * 2) / 10)] = p;
-                        p = temp & 0xF;
-                        if (p > 7)
-                            p += 1;//shift gem blocks into field index
-                        gameField[((i * 2) % 10) + 1][(int)((i * 2) / 10)] = p;
-                    }
-                }
+                loadBoard();
             }
 
             if (w4)
@@ -316,8 +307,12 @@ namespace TGMsim
 
             if (MOD.startWithRandField)
                 randomize();
-            
-        }
+
+            currentTimer = 0;
+            timerCount = 0;
+
+            flashList = new List<flashPip>();
+    }
 
         public void randomize()
         {
@@ -326,6 +321,36 @@ namespace TGMsim
             {
                 gameField[rng.Next(10)][rng.Next(16)] = 9;
                 
+            }
+        }
+
+        public void loadBoard()
+        {
+            string b = "RES/Boards/" + MOD.boardsFile + ".brd";
+            using (FileStream fs = new FileStream(b, FileMode.Open))
+            using (BinaryReader br = new BinaryReader(fs))
+            {
+                br.BaseStream.Position += MOD.boardsProgress * 100;
+                byte temp;
+                int p;
+                for (int i = 0; i < 100; i++)
+                {
+                    temp = br.ReadByte();
+                    p = (temp >> 4) & 0xF;
+                    if (p > 7)
+                    {
+                        p += 1;//shift gem blocks into field index
+                        MOD.boardGems++;
+                    }
+                    gameField[(i * 2) % 10][(int)((i * 2) / 10)] = p;
+                    p = temp & 0xF;
+                    if (p > 7)
+                    {
+                        p += 1;//shift gem blocks into field index
+                        MOD.boardGems++;
+                    }
+                    gameField[((i * 2) % 10) + 1][(int)((i * 2) / 10)] = p;
+                }
             }
         }
 
@@ -1185,7 +1210,11 @@ namespace TGMsim
                                         for (int i = 0; i < full.Count; i++)
                                         {
                                             for (int j = 0; j < 10; j++)
+                                            {
+                                                if (gameField[j][full[i]] > 8)
+                                                    --MOD.boardGems;
                                                 gameField[j][full[i]] = 0;
+                                            }
                                         }
                                         
                                         MOD.onPut(activeTet, true);
@@ -1197,10 +1226,10 @@ namespace TGMsim
                                         //section stuff used to be here
 
                                         //check finish condition
-                                        if (MOD.endLevel != 0 && MOD.level >= MOD.endLevel && inCredits == false)
+                                        /*if (MOD.endLevel != 0 && MOD.level >= MOD.endLevel && inCredits == false)
                                         {
                                             triggerCredits();
-                                        }
+                                        }*/
 
                                         //start timer
                                         currentTimer = timerType.LineClear;
@@ -1216,7 +1245,20 @@ namespace TGMsim
                                         MOD.onPut(activeTet, false);
                                     }
 
-                                    if (MOD.sections.Count != curSection)//update section
+                                    if (MOD.inCredits && !inCredits)
+                                        triggerCredits();
+
+                                    if (MOD.modeClear)
+                                        if (MOD.continueMode)
+                                        {
+                                            resetField();
+                                            MOD.modeClear = false;
+                                            MOD.continueMode = false;
+                                        }
+                                        else
+                                            endGame();
+
+                                    /*if (MOD.sections.Count != curSection)//update section
                                         if (MOD.level >= MOD.sections[curSection])
                                         {
                                             curSection++;
@@ -1238,7 +1280,7 @@ namespace TGMsim
 
                                             //UPDATE BACKGROUND
                                             bgtimer = 1;
-                                        }
+                                        }*/
 
                                     //update gimmicks
                                     bool thaw = false;
@@ -1315,7 +1357,7 @@ namespace TGMsim
 
                                     }//end section check
 
-                                    checkFade();
+                                    //checkFade();
 
                                     while (gravLevel < gravTable.Count - 1)
                                     {
@@ -2267,13 +2309,9 @@ namespace TGMsim
             }
         }*/
 
-        private void checkFade()
+        /*private void checkFade()
         {
             int cools = 0;
-            /*foreach (int i in secCools)
-            {
-                if (i == 1) cools++;
-            }*/
             int section = curSection + cools;
 
             if (MOD.modeID == Mode.ModeType.MASTER)//master
@@ -2295,6 +2333,6 @@ namespace TGMsim
                 if (curSection == 9 && MOD.level % 100 > 84) Audio.stopMusic();
                 if (curSection == 13 && MOD.level % 100 > 84) Audio.stopMusic();
             }
-        }
+        }*/
     }
 }

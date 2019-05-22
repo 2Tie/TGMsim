@@ -205,6 +205,7 @@ namespace TGMsim
                     level = 500;
                     torikan = true;
                     torDef = t - 148000;
+                    inCredits = true; //TODO: end game better
                     //endGame();
                 }
                 if (curSection == 10 && t > 296000)
@@ -212,6 +213,7 @@ namespace TGMsim
                     level = 1000;
                     torikan = true;
                     torDef = t - 296000;
+                    inCredits = true; //TODO: end game better
                     //endGame();
                 }
                 //MUSIC
@@ -267,8 +269,11 @@ namespace TGMsim
 
 
                 //BACKGROUND
-                if (level > endLevel && endLevel != 0)
+                if (level >= endLevel && endLevel != 0)
+                {
                     level = endLevel;
+                    inCredits = true;
+                }
             }
             //MEDALS
             //AC

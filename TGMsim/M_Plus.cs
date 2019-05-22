@@ -165,8 +165,11 @@ namespace TGMsim
                 //MUSIC
                 updateMusic();
 
-                if (level > endLevel && endLevel != 0)
+                if (level >= endLevel && endLevel != 0)
+                {
                     level = endLevel;
+                    inCredits = true;
+                }
             }
         }
     }

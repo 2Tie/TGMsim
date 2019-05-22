@@ -32,15 +32,18 @@ namespace TGMsim
             {
                 firstPiece = false;
             }
-            else if (level < endLevel)
+            else if (level < endLevel-1)
                 level += 1;
         }
 
         public override void onClear(int lines, Tetromino tet, long time, bool bravo)
         {
             level += lines;
-            if (level > endLevel && endLevel != 0)
+            if (level >= endLevel && endLevel != 0)
+            {
                 level = endLevel;
+                inCredits = true;
+            }
         }
     }
 }
