@@ -25,7 +25,7 @@ namespace TGMsim
             shadeStack = false;
             outlineStack = false;
             showGhost = false;
-            boardsFile = "test1";
+            boardsFile = "flash";
             boardsExtraFile = "";
             boardsProgress = 0;
             sections.Add(2);
@@ -92,7 +92,7 @@ namespace TGMsim
                 modeClear = true;
                 score += bonusP;
                 boardsProgress++;
-                if (boardsProgress < 2)
+                if (boardsProgress < 100)
                 {
                     continueMode = true;
                     bonusP = ((boardsProgress / 4) + 1) * 1000;

@@ -339,14 +339,14 @@ namespace TGMsim
                     p = (temp >> 4) & 0xF;
                     if (p > 7)
                     {
-                        p += 1;//shift gem blocks into field index
+                        p += 3;//shift gem blocks into field index
                         MOD.boardGems++;
                     }
                     gameField[(i * 2) % 10][(int)((i * 2) / 10)] = p;
                     p = temp & 0xF;
                     if (p > 7)
                     {
-                        p += 1;//shift gem blocks into field index
+                        p += 3;//shift gem blocks into field index
                         MOD.boardGems++;
                     }
                     gameField[((i * 2) % 10) + 1][(int)((i * 2) / 10)] = p;
@@ -390,22 +390,19 @@ namespace TGMsim
                     {
 
                         int block = gameField[i][j];
-                        if (block == 9)//garbage
+                        if (block == 8 || block == 0) //empty or invis, don't draw
+                            ;
+                        else if (block < 11)//garbage or bone
                             drawBuffer.DrawImageUnscaled(tetImgs[block], x + 25 * i, y + height - (j * 25), 25, 25);
-                        else if (block % 8 != 0)
+                        else if (block == 11)//colourless gem
+                            drawBuffer.DrawImageUnscaled(tetGem, x + 25 * i, y + height - (j * 25), 25, 25);
+                        else if (block < 19) //gem block
                         {
-                            int o = 0;
-                            if (block > 9 && block < 17) //gem block
-                                o = 9;
-                            drawBuffer.DrawImageUnscaled(tetImgs[block - o], x + 25 * i, y + height - (j * 25), 25, 25);
-                            if (MOD.shadeStack)
-                                drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(130, Color.Black)), x + 25 * i, y + height - (j * 25), 25, 25);
-                            if(o == 9) //gem block
-                            {
-                                //drawBuffer.FillEllipse(new SolidBrush(Color.FromArgb(130, Color.White)), x + 25 * i, y + height - (j * 25), 25, 25);
-                                drawBuffer.DrawImageUnscaled(tetGem, x + 25 * i, y + height - (j * 25), 25, 25);
-                            }
+                            //drawBuffer.FillEllipse(new SolidBrush(Color.FromArgb(130, Color.White)), x + 25 * i, y + height - (j * 25), 25, 25);
+                            drawBuffer.DrawImageUnscaled(tetGem, x + 25 * i, y + height - (j * 25), 25, 25);
                         }
+                        if (MOD.shadeStack && block != 8)
+                            drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(130, Color.Black)), x + 25 * i, y + height - (j * 25), 25, 25);
 
                         //outline
                         if (MOD.outlineStack)
