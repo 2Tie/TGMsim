@@ -84,7 +84,7 @@ namespace TGMsim
         public int creditGrades = 0;//TODO: migrate out
         
         public GameRules ruleset;
-        int curSection;
+        int curSection = 0;
 
         public GameResult results;
         public int seed = 0;
@@ -1106,14 +1106,14 @@ namespace TGMsim
                                         if (MOD.bigmode)
                                             big = 1;
 
-                                        for (int j = 0; j < (big % 2) + 1; j++ )
+                                        for (int j = 0; j < (big % 2) + 1; j++)
                                         {
                                             for (int k = 0; k < (big % 2) + 1; k++)
                                             {
                                                 if (activeTet.bits[i].y - k < 0)
                                                     continue;
                                                 if (checkGimmick(1) || MOD.creditsType == 2)
-                                                    gameField[activeTet.bits[i].x  + j][activeTet.bits[i].y - k] = 8;
+                                                    gameField[activeTet.bits[i].x + j][activeTet.bits[i].y - k] = 8;
                                                 else if (activeTet.bone == true)
                                                     gameField[activeTet.bits[i].x + j][activeTet.bits[i].y - k] = 10;
                                                 else
@@ -1157,7 +1157,7 @@ namespace TGMsim
 
                                     int tetCount = 0;
 
-                                    for (int i = gameField[0].Count-1; i >= 0; i--)
+                                    for (int i = gameField[0].Count - 1; i >= 0; i--)
                                     {
                                         int columnCount = 0;
                                         for (int j = 0; j < 10; j++)
@@ -1183,7 +1183,7 @@ namespace TGMsim
                                                         remcell.Add(count);
                                                     count++;
                                                 }
-                                                for (int c = 0; c < remcell.Count; c++ )
+                                                for (int c = 0; c < remcell.Count; c++)
                                                 {
                                                     vanList.RemoveAt(remcell[remcell.Count - c - 1]);
                                                 }
@@ -1218,10 +1218,10 @@ namespace TGMsim
                                                 gameField[j][full[i]] = 0;
                                             }
                                         }
-                                        
+
                                         MOD.onPut(activeTet, true);
 
-                                        MOD.onClear(bigFull, activeTet, timer.count, tetCount==0);
+                                        MOD.onClear(bigFull, activeTet, timer.count, tetCount == 0);
 
                                         //garbage is handled per mode
 
@@ -1280,9 +1280,14 @@ namespace TGMsim
                                                 return;
                                             }
 
-                                            //UPDATE BACKGROUND
-                                            bgtimer = 1;
+                                            
                                         }*/
+                                    if (curSection != MOD.curSection)
+                                    {
+                                        curSection = MOD.curSection;
+                                        //UPDATE BACKGROUND
+                                        bgtimer = 1;
+                                    }
 
                                     //update gimmicks
                                     bool thaw = false;
