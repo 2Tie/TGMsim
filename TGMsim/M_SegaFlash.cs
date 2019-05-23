@@ -96,7 +96,13 @@ namespace TGMsim
                 {
                     continueMode = true;
                     bonusP = ((boardsProgress / 4) + 1) * 1000;
-                    level -= (level > 0) ? 1 : 0;
+                    if (lineCounter == 0)
+                    {
+                        lineCounter = 3;
+                        level -= (level > 0) ? 1 : 0;
+                    }
+                    else
+                        --lineCounter;
                 }
             }
         }
