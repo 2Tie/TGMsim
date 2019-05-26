@@ -8,15 +8,19 @@ TGM1 Master (has visual errors - lock flash is mistimed)
 
 TGM2 Master
 
+TAP Normal (missing powerups)  
 TAP Master  
 TAP TGM+  
 TAP Death
 
+TGM3 Easy (missing hanabi)  
 TGM3 Master  
+TGM3 Sakura  
 TGM3 Shirase
 
 SEGA Tetris  
 SEGA Bloxeed (missing powerups)  
+SEGA Flash Point (missing vertical DAS)  
 
 New Dynamo Mode (heavily WIP)
 
