@@ -261,6 +261,7 @@ namespace TGMsim
             tet.sonic = sonic;
             tet.life = life;
             tet.rotations = rotations;
+            tet.floored = floored;
             return tet;
         }
     }

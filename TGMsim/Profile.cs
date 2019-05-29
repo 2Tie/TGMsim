@@ -9,7 +9,7 @@ namespace TGMsim
 {
     class Profile
     {
-        public String name;
+        public string name = "   ";
         public int decoration = 0;
         public int globalDecoration = 0;
         public bool displayGlobal = false;

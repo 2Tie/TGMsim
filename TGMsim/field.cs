@@ -67,11 +67,11 @@ namespace TGMsim
         public int timerCount = 0;
         public int gravCounter = 0;
         public int gravLevel = 0;
-        public int score = 0;
-        public int combo = 1;
-        public int gradePoints = 0;
-        public int gradeLevel = 0;
-        public int gradeTime = 0;
+        //public int score = 0;
+        //public int combo = 1;
+        //public int gradePoints = 0;
+        //public int gradeLevel = 0;
+        //public int gradeTime = 0;
         List<int> gravTable;
 
         public int starting = 1;
@@ -291,6 +291,20 @@ namespace TGMsim
             startTime.tick();
             sectionTime.tick();
 
+            if(MOD.clearField)
+            {
+                gameField = new List<List<int>>();
+                for (int i = 0; i < ruleset.fieldW; i++)
+                {
+                    List<int> tempList = new List<int>();
+                    for (int j = 0; j < ruleset.fieldH; j++)
+                    {
+                        tempList.Add(0); // at least nine types; seven tetrominoes, invisible, and garbage
+                    }
+                    gameField.Add(tempList);
+                }
+            }
+
             if (MOD.presetBoards)
             {
                 loadBoard();
@@ -308,7 +322,7 @@ namespace TGMsim
             if (MOD.startWithRandField)
                 randomize();
 
-            currentTimer = 0;
+            currentTimer = timerType.ARE;
             timerCount = 0;
 
             flashList = new List<flashPip>();
@@ -333,7 +347,36 @@ namespace TGMsim
                 br.BaseStream.Position += MOD.boardsProgress * 100;
                 byte temp;
                 int p;
-                for (int i = 0; i < 100; i++)
+
+                if (MOD.garbLine > 0) //if garbLine is nonzero on start, then populate the garbTemplate with everything hidden
+                {
+                    for (int i = 0; i < 20-MOD.garbLine; i++)
+                    {
+                        List<int> tar = new List<int>();
+                        for (int j = 0; j < 5; j++)
+                        {
+                            temp = br.ReadByte();
+                            int t = (temp >> 4) & 0xF;
+                            if (t > 7)
+                            {
+                                t += 3;//shift gem blocks into field index
+                                MOD.boardGems++;
+                            }
+                            tar.Add(t);
+                            t = temp & 0xF;
+                            if (t > 7)
+                            {
+                                t += 3;//shift gem blocks into field index
+                                MOD.boardGems++;
+                            }
+                            tar.Add(t);
+                        }
+                        MOD.garbTemplate.Add(tar);
+                    }
+                    MOD.garbTemplate.Reverse(); // since they were added bottom up but need to be read top down
+                }
+
+                for (int i = 0; i < MOD.garbLine*5; i++)
                 {
                     temp = br.ReadByte();
                     p = (temp >> 4) & 0xF;
@@ -351,6 +394,8 @@ namespace TGMsim
                     }
                     gameField[((i * 2) % 10) + 1][(int)((i * 2) / 10)] = p;
                 }
+
+                MOD.garbLine = 0;
             }
         }
 
@@ -363,13 +408,20 @@ namespace TGMsim
             if (bgs[bg] != null) drawBuffer.DrawImage(bgs[bg], 0, 0, 800, 600);
             if (bgtimer > 0) drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(255 - (25*Math.Abs(bgtimer-10)), Color.Black)), 0, 0, 800, 600);
 
-            //draw the field
+            //draw the field bg
             drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(bgAlpha, Color.Black)), x, y + 25, width, height);
 
             //TODO: credits text?
 
             //draw the info bg
             drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(bgAlpha, Color.Black)), x + 275, y + 20, 100, height + 10);
+
+            //draw field targets
+            for (int i = 0; i < MOD.targets.Count; i++)
+            {
+                drawBuffer.FillRectangle(new SolidBrush(Color.Red), x, y + height + 4 - (MOD.targets[i] * 25), 250, 17);
+                drawBuffer.FillRectangle(new SolidBrush(Color.DarkRed), x, y + height + 5 - (MOD.targets[i] * 25), 250, 15);
+            }
 
             //draw the pieces
             for (int i = 0; i < 10; i++)
@@ -406,7 +458,7 @@ namespace TGMsim
 
                         //outline
                         if (MOD.outlineStack)
-                            if (block % 8 != 0 && block != 10)
+                            if (block != 0 && block != 8 && block != 10)
                             {
                                 if (i > 0)
                                     if (gameField[i - 1][j] == 0)//left
@@ -558,7 +610,7 @@ namespace TGMsim
             }
 
             //draw ice
-            if (checkGimmick(4))
+            if (checkGimmick(Mode.Gimmick.Type.ICE))
                 drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(100, Color.Blue)), x, y + 275, width, 250);
 
 
@@ -680,9 +732,9 @@ namespace TGMsim
                 }
 
             //garbage meter
-            if(MOD.garbMeter && checkGimmick(2))
+            if(MOD.garbMeter && checkGimmick(Mode.Gimmick.Type.GARBAGE))
             {
-                int segment = getActiveGimmickParameter(2) / 6;
+                int segment = getActiveGimmickParameter(Mode.Gimmick.Type.GARBAGE) / 6;
                 int n = (MOD.garbTimer / segment) - 1;
                 drawBuffer.DrawString(n.ToString(), f_Maestro, textBrush, 20, 400);
                 if (n > 6)
@@ -811,6 +863,9 @@ namespace TGMsim
                 MOD.updateMusic();
             }
 
+            if (bgtimer > 0) bgtimer += 1;
+            if (bgtimer == 21) bgtimer = 0;
+
             if (starting == 0)
             {
 
@@ -829,9 +884,6 @@ namespace TGMsim
                     long temptimeVAR = (long)(timer.count * ruleset.FPS / 60);
                     
 
-
-                    if (bgtimer > 0) bgtimer += 1;
-                    if (bgtimer == 21) bgtimer = 0;
 
                     if (bravoTime.count > 1000)
                     {
@@ -935,6 +987,7 @@ namespace TGMsim
                                         raiseGarbage(true);
                                         break;
                                     case Mode.GarbType.FIXED:
+                                    case Mode.GarbType.HIDDEN:
                                         raiseGarbageSlice();
                                         break;
                                 }
@@ -1112,7 +1165,7 @@ namespace TGMsim
                                             {
                                                 if (activeTet.bits[i].y - k < 0)
                                                     continue;
-                                                if (checkGimmick(1) || MOD.creditsType == 2)
+                                                if (checkGimmick(Mode.Gimmick.Type.INVIS) || MOD.creditsType == 2)
                                                     gameField[activeTet.bits[i].x + j][activeTet.bits[i].y - k] = 8;
                                                 else if (activeTet.bone == true)
                                                     gameField[activeTet.bits[i].x + j][activeTet.bits[i].y - k] = 10;
@@ -1170,7 +1223,7 @@ namespace TGMsim
                                         }
                                         if (columnCount == 10)
                                         {
-                                            if (!checkGimmick(4) || i > 9)
+                                            if (!checkGimmick(Mode.Gimmick.Type.ICE) || i > 9)
                                             {
                                                 full.Add(i);
                                                 tetCount -= 10;
@@ -1217,6 +1270,9 @@ namespace TGMsim
                                                     --MOD.boardGems;
                                                 gameField[j][full[i]] = 0;
                                             }
+                                            //remove from target list
+                                            if (MOD.targets.Contains(full[i]))
+                                                MOD.targets.Remove(full[i]);
                                         }
 
                                         MOD.onPut(activeTet, true);
@@ -1301,9 +1357,9 @@ namespace TGMsim
                                             }
                                         for (int i = 0; i < activeGim.Count; i++)
                                         {
-                                            if (MOD.gimList[gimIndex - activeGim.Count + i].endLvl <= MOD.level)
+                                            if (MOD.gimList[gimIndex - activeGim.Count + i].endLvl != 0 && MOD.gimList[gimIndex - activeGim.Count + i].endLvl <= MOD.level)
                                             {
-                                                if (MOD.gimList[gimIndex - activeGim.Count + i].type == 4)
+                                                if (MOD.gimList[gimIndex - activeGim.Count + i].type == Mode.Gimmick.Type.ICE)
                                                     thaw = true;
                                                 activeGim.RemoveAt(i);
 
@@ -1311,7 +1367,7 @@ namespace TGMsim
                                         }
                                     }
 
-                                    if (checkGimmick(5))
+                                    if (checkGimmick(Mode.Gimmick.Type.BIG))
                                         MOD.bigmode = true;
 
                                     //thaw ice
@@ -1325,7 +1381,7 @@ namespace TGMsim
                                                     columnCount++;
                                             if (columnCount == 10)
                                             {
-                                                if (!checkGimmick(4) || i < 11)
+                                                if (!checkGimmick(Mode.Gimmick.Type.ICE) || i < 11)
                                                 {
                                                     full.Add(i);
                                                     //clear these from vanishing list
@@ -1378,7 +1434,7 @@ namespace TGMsim
                                         textBrush = new SolidBrush(Color.Gold);
 
                                     //garbage
-                                    if (checkGimmick(2) && MOD.garbTimer >= getActiveGimmickParameter(2) && (MOD.raiseGarbOnClear == true || full.Count == 0))
+                                    if (checkGimmick(Mode.Gimmick.Type.GARBAGE) && MOD.garbTimer >= getActiveGimmickParameter(Mode.Gimmick.Type.GARBAGE) && (MOD.raiseGarbOnClear == true || full.Count == 0))
                                     {
                                         bool check = true;
                                         if (MOD.garbSafeLine != 0)
@@ -1758,7 +1814,7 @@ namespace TGMsim
                         {
                             if (activeTet.bits[i].y - k < 0)
                                 continue;
-                            if (checkGimmick(1) || MOD.creditsType == 2)
+                            if (checkGimmick(Mode.Gimmick.Type.INVIS) || MOD.creditsType == 2)
                                 gameField[activeTet.bits[i].x + j][activeTet.bits[i].y - k] = 8;
                             else if (activeTet.bone == true)
                                 gameField[activeTet.bits[i].x + j][activeTet.bits[i].y - k] = 10;
@@ -1830,7 +1886,7 @@ namespace TGMsim
                 results.game = (int)ruleset.gameRules;
                 results.username = "CHEATS";
                 results.grade = MOD.grade;
-                results.score = score;
+                results.score = MOD.score;
                 if (ruleset.gameRules == GameRules.Games.TGM1)
                     results.time = (long)((masterTime * ruleset.FPS) / 60);
                 else
@@ -1885,13 +1941,13 @@ namespace TGMsim
             int tempID = GEN.pull() + 1;
 
             Tetromino tempTet = new Tetromino(tempID, false);//force non-big here so they're not stretched out in the queue
-            if (checkGimmick(3))
+            if (checkGimmick(Mode.Gimmick.Type.BONES))
                 tempTet.bone = true;
             
             return tempTet;
         }
 
-        private bool checkGimmick(int gim)
+        private bool checkGimmick(Mode.Gimmick.Type gim)
         {
             for (int i = 0; i < activeGim.Count; i++)
             {
@@ -1901,7 +1957,7 @@ namespace TGMsim
             return false;
         }
 
-        private int getActiveGimmickParameter(int gim)
+        private int getActiveGimmickParameter(Mode.Gimmick.Type gim)
         {
             for(int i = 0; i < activeGim.Count; i++)
             {
@@ -1953,22 +2009,30 @@ namespace TGMsim
 
         private void raiseGarbageSlice()
         {
+            if (MOD.garbType == Mode.GarbType.HIDDEN && MOD.garbLine == MOD.garbTemplate.Count)
+                return;
             if (MOD.garbTemplate.Count > 0)
             {
-                    for (int j = 0; j < 10; j++)//skim the top
-                        gameField[j][gameField[0].Count - 1] = 0;
+                for (int j = 0; j < 10; j++)//skim the top
+                    gameField[j][gameField[0].Count - 1] = 0;
                 for (int i = gameField[0].Count - 1; i > 0; i--)
                 {
                     for (int j = 0; j < 10; j++)
                     {
-                        gameField[j][i] = gameField[j][i-1];
+                        gameField[j][i] = gameField[j][i - 1];
                     }
                 }
                 for (int j = 0; j < 10; j++)
                     gameField[j][0] = MOD.garbTemplate[MOD.garbLine][j];
                 MOD.garbLine++;
+                //raise the cleared lines
+                for (int i = 0; i < full.Count; i++)
+                    full[i] += 1;
                 if (MOD.garbLine >= MOD.garbTemplate.Count)
-                    MOD.garbLine = 0;
+                    if (MOD.garbType == Mode.GarbType.HIDDEN)
+                        MOD.garbDelay = 0;
+                    else
+                        MOD.garbLine = 0;
             }
             else
                 throw new Exception("Tried to use empty garbage template");

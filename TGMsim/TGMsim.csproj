@@ -104,6 +104,7 @@
     <Compile Include="M_Death.cs" />
     <Compile Include="M_Dynamo.cs" />
     <Compile Include="M_Garbo.cs" />
+    <Compile Include="M_HellMarch.cs" />
     <Compile Include="M_IcyShirase.cs" />
     <Compile Include="M_Master2.cs" />
     <Compile Include="M_Master1.cs" />
@@ -201,21 +202,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Res\Maestro.ttf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Sav\gm1.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Sav\gm2.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Sav\gm3.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Sav\gm4.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Sav\prefs.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

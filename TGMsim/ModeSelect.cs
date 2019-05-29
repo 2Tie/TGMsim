@@ -15,7 +15,7 @@ namespace TGMsim
         int dInputV;
         int dInputH;
 
-        public int variant = 0;
+        public List<int> variant = new List<int>();
 
         public struct ModeSelObj
         {
@@ -47,7 +47,7 @@ namespace TGMsim
             List<ModeSelObj> tmp = new List<ModeSelObj>();//sega
             tmp.Add(new ModeSelObj(new List<string> { "Tetris" }, Mode.ModeType.SEGA, true));
             tmp.Add(new ModeSelObj(new List<string> { "Bloxeed" }, Mode.ModeType.BLOX, true));
-            tmp.Add(new ModeSelObj(new List<string> { "Flash Point" }, Mode.ModeType.FLASH, true)); //TODO
+            tmp.Add(new ModeSelObj(new List<string> { "Flash Point" }, Mode.ModeType.FLASH, true));
             modes.Add(tmp);
             tmp = new List<ModeSelObj>();//tgm1
             tmp.Add(new ModeSelObj(new List<string> { "Master" }, Mode.ModeType.MASTER, true));
@@ -89,6 +89,7 @@ namespace TGMsim
             tmp = new List<ModeSelObj>(); //GMX
             tmp.Add(new ModeSelObj(new List<string> { "Dynamo", "Dynamo+", "Dynamo++", "Dynamo+++", "Dynamo*" }, Mode.ModeType.DYNAMO, true));
             tmp.Add(new ModeSelObj(new List<string> { "Endura" }, Mode.ModeType.ENDURA, false));
+            tmp.Add(new ModeSelObj(new List<string> { "Hell March" }, Mode.ModeType.MARCH, true));
             modes.Add(tmp);
             tmp = new List<ModeSelObj>(); //bonus
             tmp.Add(new ModeSelObj(new List<string> { "Custom" }, Mode.ModeType.SEGA, false));
@@ -99,7 +100,8 @@ namespace TGMsim
             tmp.Add(new ModeSelObj(new List<string> { "Big Bravo Mania" }, Mode.ModeType.KONOHA, true));
             modes.Add(tmp);
 
-
+            for (int i = 0; i < modes[g].Count; i++)
+                variant.Add(0);
         }
         public void logic(Controller pad)
         {
@@ -114,11 +116,11 @@ namespace TGMsim
                 dInputH = pad.inputH;
                 if (modes[game][selection].names.Count > 1)
                 {
-                    variant += pad.inputH;
-                    if (variant < 0)
-                        variant = modes[game][selection].names.Count - 1;
-                    if (variant >= modes[game][selection].names.Count)
-                        variant = 0;
+                    variant[selection] += pad.inputH;
+                    if (variant[selection] < 0)
+                        variant[selection] = modes[game][selection].names.Count - 1;
+                    if (variant[selection] >= modes[game][selection].names.Count)
+                        variant[selection] = 0;
                 }
             }
             if (selection < 0)
@@ -137,7 +139,7 @@ namespace TGMsim
             for(int i = 0; i < modes[game].Count; i++)
             {
                 ModeSelObj m = modes[game][i];
-                drawBuffer.DrawString(m.names.Count > 1 ? m.names[variant] : m.names[0], SystemFonts.DefaultFont, m.enabled ? active : locked, 300, 300 + 12*i);
+                drawBuffer.DrawString(m.names.Count > 1 ? m.names[variant[i]] : m.names[0], SystemFonts.DefaultFont, m.enabled ? active : locked, 300, 300 + 12*i);
             }
             drawBuffer.DrawString("→", SystemFonts.DefaultFont, new SolidBrush(Color.White), 285, 300 + 12 * selection);
         }

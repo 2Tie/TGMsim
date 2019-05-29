@@ -26,7 +26,6 @@ namespace TGMsim
             outlineStack = false;
             showGhost = false;
             boardsFile = "flash";
-            boardsExtraFile = "";
             boardsProgress = 0;
             sections.Add(2);
             sections.Add(4);

@@ -50,7 +50,7 @@ namespace TGMsim
         public List<List<int>> delayTable = new List<List<int>>();
         
 
-        public List<string> grades = new List<string> { "9", "8", "7", "6", "5", "4", "3", "2", "1", "S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "S9", "M1", "M2", "M3", "M4", "M5", "M6", "M7", "M8", "M9", "M", "MK", "MV", "MO", "MM", "GM" };
+        public List<string> grades = new List<string> { "9", "8", "7", "6", "5", "4", "3", "2", "1", "S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "S9", "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9", "M", "MK", "MV", "MO", "MM", "GM", "TM", "SM" };
 
         public List<int> gradeIntTGM2 = new List<int> { 0, 1, 2, 3, 4, 5, 5, 6, 6, 7, 7, 7, 8, 8, 8, 9, 9, 9, 10, 11, 12, 12, 12, 13, 13, 14, 14, 15, 15, 16, 16, 17 };
         
@@ -202,8 +202,8 @@ namespace TGMsim
                 case Games.GMX: //GMX?
                     GameName = "XTREME";
                     FPS = 60.00;
-                    nextNum = 1;
-                    hold = false;
+                    nextNum = 3;
+                    hold = true;
                     hardDrop = 1;
                     rotation = (int)Rots.ARS3;
                     generator = (int)Gens.TGM3;
@@ -301,6 +301,12 @@ namespace TGMsim
                     break;
                 case Mode.ModeType.FLASH: //flash point
                     mod = new M_SegaFlash();
+                    break;
+                case Mode.ModeType.MARCH:
+                    mod = new M_HellMarch(vari);
+                    break;
+                default:
+                    throw new Exception("unknown mode");
                     break;
             }
             mod.modeID = mode;  

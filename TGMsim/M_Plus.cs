@@ -29,91 +29,93 @@ namespace TGMsim
             delayTable.Add(new List<int> { 30 });//LOCK
             delayTable.Add(new List<int> { 40 });//LINE CLEAR
             var gL = new Gimmick();
-            gL.type = 2;
+            gL.type = Gimmick.Type.GARBAGE;
             gL.startLvl = 0;
             gL.endLvl = 100;
             gL.parameter = 13;
             gimList.Add(gL);
             gL = new Gimmick();
-            gL.type = 2;
+            gL.type = Gimmick.Type.GARBAGE;
             gL.startLvl = 100;
             gL.endLvl = 200;
             gL.parameter = 12;
             gimList.Add(gL);
             gL = new Gimmick();
-            gL.type = 2;
+            gL.type = Gimmick.Type.GARBAGE;
             gL.startLvl = 200;
             gL.endLvl = 300;
             gL.parameter = 11;
             gimList.Add(gL);
             gL = new Gimmick();
-            gL.type = 2;
+            gL.type = Gimmick.Type.GARBAGE;
             gL.startLvl = 300;
             gL.endLvl = 400;
             gL.parameter = 10;
             gimList.Add(gL);
             gL = new Gimmick();
-            gL.type = 2;
+            gL.type = Gimmick.Type.GARBAGE;
             gL.startLvl = 400;
             gL.endLvl = 500;
             gL.parameter = 9;
             gimList.Add(gL);
             gL = new Gimmick();
-            gL.type = 2;
+            gL.type = Gimmick.Type.GARBAGE;
             gL.startLvl = 500;
             gL.endLvl = 600;
             gL.parameter = 8;
             gimList.Add(gL);
             gL = new Gimmick();
-            gL.type = 2;
+            gL.type = Gimmick.Type.GARBAGE;
             gL.startLvl = 600;
             gL.endLvl = 700;
             gL.parameter = 7;
             gimList.Add(gL);
             gL = new Gimmick();
-            gL.type = 2;
+            gL.type = Gimmick.Type.GARBAGE;
             gL.startLvl = 700;
             gL.endLvl = 800;
             gL.parameter = 6;
             gimList.Add(gL);
             gL = new Gimmick();
-            gL.type = 2;
+            gL.type = Gimmick.Type.GARBAGE;
             gL.startLvl = 800;
             gL.endLvl = 900;
             gL.parameter = 5;
             gimList.Add(gL);
             gL = new Gimmick();
-            gL.type = 2;
+            gL.type = Gimmick.Type.GARBAGE;
             gL.startLvl = 900;
             gL.endLvl = 999;
             gL.parameter = 4;
             gimList.Add(gL);
             garbType = GarbType.FIXED;
-            garbTemplate = new List<List<int>>();
-            garbTemplate.Add(new List<int> { 0, 9, 9, 9, 9, 9, 9, 9, 9, 9 });
-            garbTemplate.Add(new List<int> { 0, 9, 9, 9, 9, 9, 9, 9, 9, 9 });
-            garbTemplate.Add(new List<int> { 0, 9, 9, 9, 9, 9, 9, 9, 9, 9 });
-            garbTemplate.Add(new List<int> { 0, 9, 9, 9, 9, 9, 9, 9, 9, 9 });
-            garbTemplate.Add(new List<int> { 9, 9, 9, 9, 9, 9, 9, 9, 9, 0 });
-            garbTemplate.Add(new List<int> { 9, 9, 9, 9, 9, 9, 9, 9, 9, 0 });
-            garbTemplate.Add(new List<int> { 9, 9, 9, 9, 9, 9, 9, 9, 9, 0 });
-            garbTemplate.Add(new List<int> { 9, 9, 9, 9, 9, 9, 9, 9, 9, 0 });
-            garbTemplate.Add(new List<int> { 0, 0, 9, 9, 9, 9, 9, 9, 9, 9 });
-            garbTemplate.Add(new List<int> { 0, 9, 9, 9, 9, 9, 9, 9, 9, 9 });
-            garbTemplate.Add(new List<int> { 0, 9, 9, 9, 9, 9, 9, 9, 9, 9 });
-            garbTemplate.Add(new List<int> { 9, 9, 9, 9, 9, 9, 9, 9, 0, 0 });
-            garbTemplate.Add(new List<int> { 9, 9, 9, 9, 9, 9, 9, 9, 9, 0 });
-            garbTemplate.Add(new List<int> { 9, 9, 9, 9, 9, 9, 9, 9, 9, 0 });
-            garbTemplate.Add(new List<int> { 9, 9, 0, 9, 9, 9, 9, 9, 9, 9 });
-            garbTemplate.Add(new List<int> { 9, 0, 0, 9, 9, 9, 9, 9, 9, 9 });
-            garbTemplate.Add(new List<int> { 9, 0, 9, 9, 9, 9, 9, 9, 9, 9 });
-            garbTemplate.Add(new List<int> { 9, 9, 9, 9, 9, 9, 9, 0, 9, 9 });
-            garbTemplate.Add(new List<int> { 9, 9, 9, 9, 9, 9, 9, 0, 0, 9 });
-            garbTemplate.Add(new List<int> { 9, 9, 9, 9, 9, 9, 9, 9, 0, 9 });
-            garbTemplate.Add(new List<int> { 9, 9, 9, 9, 0, 0, 9, 9, 9, 9 });
-            garbTemplate.Add(new List<int> { 9, 9, 9, 9, 0, 0, 9, 9, 9, 9 });
-            garbTemplate.Add(new List<int> { 9, 9, 9, 9, 0, 9, 9, 9, 9, 9 });
-            garbTemplate.Add(new List<int> { 9, 9, 9, 0, 0, 0, 9, 9, 9, 9 });
+            garbTemplate = new List<List<int>>
+            {
+                new List<int> { 0, 9, 9, 9, 9, 9, 9, 9, 9, 9 },
+                new List<int> { 0, 9, 9, 9, 9, 9, 9, 9, 9, 9 },
+                new List<int> { 0, 9, 9, 9, 9, 9, 9, 9, 9, 9 },
+                new List<int> { 0, 9, 9, 9, 9, 9, 9, 9, 9, 9 },
+                new List<int> { 9, 9, 9, 9, 9, 9, 9, 9, 9, 0 },
+                new List<int> { 9, 9, 9, 9, 9, 9, 9, 9, 9, 0 },
+                new List<int> { 9, 9, 9, 9, 9, 9, 9, 9, 9, 0 },
+                new List<int> { 9, 9, 9, 9, 9, 9, 9, 9, 9, 0 },
+                new List<int> { 0, 0, 9, 9, 9, 9, 9, 9, 9, 9 },
+                new List<int> { 0, 9, 9, 9, 9, 9, 9, 9, 9, 9 },
+                new List<int> { 0, 9, 9, 9, 9, 9, 9, 9, 9, 9 },
+                new List<int> { 9, 9, 9, 9, 9, 9, 9, 9, 0, 0 },
+                new List<int> { 9, 9, 9, 9, 9, 9, 9, 9, 9, 0 },
+                new List<int> { 9, 9, 9, 9, 9, 9, 9, 9, 9, 0 },
+                new List<int> { 9, 9, 0, 9, 9, 9, 9, 9, 9, 9 },
+                new List<int> { 9, 0, 0, 9, 9, 9, 9, 9, 9, 9 },
+                new List<int> { 9, 0, 9, 9, 9, 9, 9, 9, 9, 9 },
+                new List<int> { 9, 9, 9, 9, 9, 9, 9, 0, 9, 9 },
+                new List<int> { 9, 9, 9, 9, 9, 9, 9, 0, 0, 9 },
+                new List<int> { 9, 9, 9, 9, 9, 9, 9, 9, 0, 9 },
+                new List<int> { 9, 9, 9, 9, 0, 0, 9, 9, 9, 9 },
+                new List<int> { 9, 9, 9, 9, 0, 0, 9, 9, 9, 9 },
+                new List<int> { 9, 9, 9, 9, 0, 9, 9, 9, 9, 9 },
+                new List<int> { 9, 9, 9, 0, 0, 0, 9, 9, 9, 9 }
+            };
         }
 
         public override void onSpawn()

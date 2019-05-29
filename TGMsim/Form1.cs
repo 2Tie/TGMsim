@@ -383,7 +383,7 @@ namespace TGMsim
             switch (menuState)
             {
                 case 0:
-                    drawBuffer.DrawString("TGM sim title screen thingy", DefaultFont, new SolidBrush(Color.White), 325, 250);
+                    drawBuffer.DrawString("GARBAGE SIM", DefaultFont, new SolidBrush(Color.White), 325, 250);
                     if( Audio.loadedTally < Audio.loadedWaiting)
                         drawBuffer.DrawString("LOADING", f_Maestro, new SolidBrush(Color.White), 360, 500);
                     else
@@ -493,7 +493,7 @@ namespace TGMsim
         {
             Audio.stopMusic();
             rules = new GameRules();
-            rules.setup((GameRules.Games)mSel.game, mSel.modes[mSel.game][mSel.selection].id, mSel.variant);
+            rules.setup((GameRules.Games)mSel.game, mSel.modes[mSel.game][mSel.selection].id, mSel.variant[mSel.selection]);
 
             //m.mute = prefs.muted;
 
@@ -969,22 +969,38 @@ namespace TGMsim
 
         private void readPrefs()
         {
-            BinaryReader prf = new BinaryReader(File.OpenRead("Sav/prefs.dat"));
-            prefs.delay = prf.ReadBoolean();
-            prefs.nPad.keyUp = (Key)prf.ReadByte();
-            prefs.nPad.keyDown = (Key)prf.ReadByte();
-            prefs.nPad.keyLeft = (Key)prf.ReadByte();
-            prefs.nPad.keyRight = (Key)prf.ReadByte();
-            prefs.nPad.keyRot1 = (Key)prf.ReadByte();
-            prefs.nPad.keyRot2 = (Key)prf.ReadByte();
-            prefs.nPad.keyRot3 = (Key)prf.ReadByte();
-            prefs.nPad.keyHold = (Key)prf.ReadByte();
-            prefs.nPad.keyStart = (Key)prf.ReadByte();
-            byte temp = prf.ReadByte();
-            Audio.musVol = (temp >> 4) & 0x0F;
-            Audio.sfxVol = temp & 0x0F;
-            player.name = prf.ReadString();
-            prf.Close();
+            try
+            {
+                BinaryReader prf = new BinaryReader(File.OpenRead("Sav/prefs.dat"));
+                prefs.delay = prf.ReadBoolean();
+                prefs.nPad.keyUp = (Key)prf.ReadByte();
+                prefs.nPad.keyDown = (Key)prf.ReadByte();
+                prefs.nPad.keyLeft = (Key)prf.ReadByte();
+                prefs.nPad.keyRight = (Key)prf.ReadByte();
+                prefs.nPad.keyRot1 = (Key)prf.ReadByte();
+                prefs.nPad.keyRot2 = (Key)prf.ReadByte();
+                prefs.nPad.keyRot3 = (Key)prf.ReadByte();
+                prefs.nPad.keyHold = (Key)prf.ReadByte();
+                prefs.nPad.keyStart = (Key)prf.ReadByte();
+                byte temp = prf.ReadByte();
+                Audio.musVol = (temp >> 4) & 0x0F;
+                Audio.sfxVol = temp & 0x0F;
+                player.name = prf.ReadString();
+                prf.Close();
+            }
+            catch (DirectoryNotFoundException e)
+            {
+                createSavFolder();
+            }
+            catch (FileNotFoundException e)
+            {
+                savePrefs();
+            }
+        }
+
+        private void createSavFolder()
+        {
+            Directory.CreateDirectory("Sav/");
         }
     }
 }

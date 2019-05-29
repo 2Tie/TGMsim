@@ -12,15 +12,16 @@ namespace TGMsim
         public List<int> gradePointsTGM1 = new List<int> { 0, 400, 800, 1400, 2000, 3500, 5500, 8000, 12000, 16000, 22000, 30000, 40000, 52000, 66000, 82000, 100000, 120000 };
         public struct Gimmick
         {
-            public int type; //fading, vanishing, copygarbage, bones, ice, big, random garbage, preset garbage
+            public Type type; 
             public int startLvl;
             public int endLvl;
             public int parameter;
+            public enum Type { FADING, INVIS, GARBAGE, BONES, ICE, BIG };
         }
 
-        public enum ModeType { MASTER, DEATH, SHIRASE, SPRINT, GARBAGE, ROUNDS,  KONOHA, TRAINING, SEGA, MINER, DYNAMO, ENDURA, BLOX, PLUS, FLASH }; //for the ID stuff //Master, Death, shirase, sprint, garbage clear, rounds, konoha, grav training, miner, dynamo, endura, flash point
+        public enum ModeType { MASTER, DEATH, SHIRASE, SPRINT, GARBAGE, ROUNDS,  KONOHA, TRAINING, SEGA, MINER, DYNAMO, ENDURA, BLOX, PLUS, FLASH, MARCH }; //for the ID stuff
 
-        public enum GarbType { FIXED, COPY, RANDOM } ;
+        public enum GarbType { FIXED, COPY, RANDOM, HIDDEN } ;
 
         public string ModeName = "DUMMY";
         public ModeType modeID = 0;
@@ -46,13 +47,11 @@ namespace TGMsim
         public int initialGrade = 0;
         public int variant = 0;
 
-        public bool complete = false; //if true, field will end game or play credits
-        public bool restartOnComplete = false; //if true, re-init mode and game when above bool is true (flash point, sakura, ACE)
-
         public bool comboing = false;
         public bool inCredits = false;
         public bool modeClear = false;
         public bool continueMode = false; //if true, do something such as load another board in sakura when modeClear is true
+        public bool clearField = true;
         public bool torikan = false;
         public long torDef = 0;
         public bool toriCredits = true;
@@ -71,10 +70,9 @@ namespace TGMsim
         public bool keepFieldSafe = false;
         public bool presetBoards = false;
         public string boardsFile = "";
-        public string boardsExtraFile = "";
         public int boardsProgress = 0;
-        public int boardsExtraProgress = 0;
         public int boardGems = 0;
+        public List<int> targets = new List<int>();
         public bool showGhost = true;
 
         public int tetrises = 0;
