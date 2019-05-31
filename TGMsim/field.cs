@@ -1525,13 +1525,8 @@ namespace TGMsim
                         {
                             hold();
                         }
-
-                        int rot;
-                        if (ruleset.gameRules != GameRules.Games.TGM3)
-                            rot = (pad.inputRot1 | pad.inputRot3) - pad.inputRot2;
-                        else
-                            rot = pad.inputRot1 - pad.inputRot2;
-
+                        
+                        int rot = (pad.inputRot1 | pad.inputRot3) - pad.inputRot2;
                         if (rot != 0)
                         {
                             //if (activeTet.kicked != 0)

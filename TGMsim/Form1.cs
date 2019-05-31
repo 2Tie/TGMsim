@@ -383,7 +383,7 @@ namespace TGMsim
             switch (menuState)
             {
                 case 0:
-                    drawBuffer.DrawString("GARBAGE SIM", DefaultFont, new SolidBrush(Color.White), 325, 250);
+                    drawBuffer.DrawString("TGM sim title screen thingy", DefaultFont, new SolidBrush(Color.White), 325, 250);
                     if( Audio.loadedTally < Audio.loadedWaiting)
                         drawBuffer.DrawString("LOADING", f_Maestro, new SolidBrush(Color.White), 360, 500);
                     else
