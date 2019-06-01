@@ -326,6 +326,10 @@ namespace TGMsim
             timerCount = 0;
 
             flashList = new List<flashPip>();
+            activeGim = new List<Mode.Gimmick>();
+            gimIndex = 0;
+
+            updateGimmicks();
     }
 
         public void randomize()
@@ -453,7 +457,7 @@ namespace TGMsim
                             //drawBuffer.FillEllipse(new SolidBrush(Color.FromArgb(130, Color.White)), x + 25 * i, y + height - (j * 25), 25, 25);
                             drawBuffer.DrawImageUnscaled(tetGem, x + 25 * i, y + height - (j * 25), 25, 25);
                         }
-                        if (MOD.shadeStack && block != 8)
+                        if (MOD.shadeStack && block != 8 && block != 0)
                             drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(130, Color.Black)), x + 25 * i, y + height - (j * 25), 25, 25);
 
                         //outline
@@ -1346,79 +1350,9 @@ namespace TGMsim
                                     }
 
                                     //update gimmicks
-                                    bool thaw = false;
-                                    if (MOD.gimList.Count > 0)
-                                    {
-                                        if (MOD.gimList.Count > gimIndex)
-                                            if (MOD.gimList[gimIndex].startLvl <= MOD.level)
-                                            {
-                                                activeGim.Add(MOD.gimList[gimIndex]);
-                                                gimIndex++;
-                                            }
-                                        for (int i = 0; i < activeGim.Count; i++)
-                                        {
-                                            if (MOD.gimList[gimIndex - activeGim.Count + i].endLvl != 0 && MOD.gimList[gimIndex - activeGim.Count + i].endLvl <= MOD.level)
-                                            {
-                                                if (MOD.gimList[gimIndex - activeGim.Count + i].type == Mode.Gimmick.Type.ICE)
-                                                    thaw = true;
-                                                activeGim.RemoveAt(i);
-
-                                            }
-                                        }
-                                    }
-
-                                    if (checkGimmick(Mode.Gimmick.Type.BIG))
-                                        MOD.bigmode = true;
-
-                                    //thaw ice
-                                    if (thaw)
-                                    {
-                                        for (int i = 0; i < 22; i++)
-                                        {
-                                            int columnCount = 0;
-                                            for (int j = 0; j < 10; j++)
-                                                if (gameField[j][i] != 0)
-                                                    columnCount++;
-                                            if (columnCount == 10)
-                                            {
-                                                if (!checkGimmick(Mode.Gimmick.Type.ICE) || i < 11)
-                                                {
-                                                    full.Add(i);
-                                                    //clear these from vanishing list
-                                                    int count = 0;
-                                                    List<int> remcell = new List<int>();
-                                                    foreach (var vP in vanList)
-                                                    {
-                                                        if (vP.y == i)
-                                                            remcell.Add(count);
-                                                        count++;
-                                                    }
-                                                    for (int c = 0; c < remcell.Count; c++)
-                                                    {
-                                                        vanList.RemoveAt(remcell[remcell.Count - c - 1]);
-                                                    }
-
-                                                    remcell = new List<int>();
-                                                    foreach (var vP in flashList)
-                                                    {
-                                                        if (vP.y == i)
-                                                            remcell.Add(count);
-                                                        count++;
-                                                    }
-                                                    for (int c = 0; c < remcell.Count; c++)
-                                                    {
-                                                        flashList.RemoveAt(remcell[remcell.Count - c - 1]);
-                                                    }
-                                                }
-                                            }
-                                        }
-                                        for (int i = 0; i < full.Count; i++)
-                                        {
-                                            for (int j = 0; j < 10; j++)
-                                                gameField[j][full[i]] = 0;
-                                        }
-
-                                    }//end section check
+                                    updateGimmicks();
+                                    
+                                    //end section check
 
                                     //checkFade();
 
@@ -2160,7 +2094,82 @@ namespace TGMsim
             return string.Format("{0,2:00}:{1,2:00}:{2,2:00}", min, sec, msec10);
         }
 
-        
+        private void updateGimmicks()
+        {
+            bool thaw = false;
+            if (MOD.gimList.Count > 0)
+            {
+                if (MOD.gimList.Count > gimIndex)
+                    if (MOD.gimList[gimIndex].startLvl <= MOD.level)
+                    {
+                        activeGim.Add(MOD.gimList[gimIndex]);
+                        gimIndex++;
+                    }
+                for (int i = 0; i < activeGim.Count; i++)
+                {
+                    if (MOD.gimList[gimIndex - activeGim.Count + i].endLvl != 0 && MOD.gimList[gimIndex - activeGim.Count + i].endLvl <= MOD.level)
+                    {
+                        if (MOD.gimList[gimIndex - activeGim.Count + i].type == Mode.Gimmick.Type.ICE)
+                            thaw = true;
+                        activeGim.RemoveAt(i);
+
+                    }
+                }
+            }
+
+            if (checkGimmick(Mode.Gimmick.Type.BIG))
+                MOD.bigmode = true;
+
+            //thaw ice
+            if (thaw)
+            {
+                for (int i = 0; i < 22; i++)
+                {
+                    int columnCount = 0;
+                    for (int j = 0; j < 10; j++)
+                        if (gameField[j][i] != 0)
+                            columnCount++;
+                    if (columnCount == 10)
+                    {
+                        if (!checkGimmick(Mode.Gimmick.Type.ICE) || i < 11)
+                        {
+                            full.Add(i);
+                            //clear these from vanishing list
+                            int count = 0;
+                            List<int> remcell = new List<int>();
+                            foreach (var vP in vanList)
+                            {
+                                if (vP.y == i)
+                                    remcell.Add(count);
+                                count++;
+                            }
+                            for (int c = 0; c < remcell.Count; c++)
+                            {
+                                vanList.RemoveAt(remcell[remcell.Count - c - 1]);
+                            }
+
+                            remcell = new List<int>();
+                            foreach (var vP in flashList)
+                            {
+                                if (vP.y == i)
+                                    remcell.Add(count);
+                                count++;
+                            }
+                            for (int c = 0; c < remcell.Count; c++)
+                            {
+                                flashList.RemoveAt(remcell[remcell.Count - c - 1]);
+                            }
+                        }
+                    }
+                }
+                for (int i = 0; i < full.Count; i++)
+                {
+                    for (int j = 0; j < 10; j++)
+                        gameField[j][full[i]] = 0;
+                }
+
+            }
+        }
 
         private void clearField()
         {
