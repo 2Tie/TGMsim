@@ -56,6 +56,8 @@ namespace TGMsim
         System.Windows.Media.MediaPlayer s_Login = new System.Windows.Media.MediaPlayer();
         System.Windows.Media.MediaPlayer s_GSel = new System.Windows.Media.MediaPlayer();
 
+        int firstrunProgress = 0;
+
         public Form1()
         {
             InitializeComponent();
@@ -120,7 +122,7 @@ namespace TGMsim
         {
 
             switch (newMenu) //activate the new menu
-            {  //title, login, game select, mode select, ingame, results, hiscore roll, custom game, settings, cheats
+            {  //title, login, game select, mode select, ingame, results, hiscore roll, custom game, settings, cheats, firstrun setup
                 case 0:
                     menuState = 0;
                     FPS = 60.00;
@@ -167,6 +169,9 @@ namespace TGMsim
                     break;
                 case 9:
                     menuState = 9;
+                    break;
+                case 10:
+                    menuState = 10;
                     break;
             }
 
@@ -336,6 +341,16 @@ namespace TGMsim
                         changeMenu(2);
                     cMen.logic(pad1);
                     break;
+
+                case 10://firstrun
+                    if (prefs.assignKey(firstrunProgress))
+                        firstrunProgress++;
+                    if (firstrunProgress == 9)
+                    {
+                        changeMenu(0);
+                        savePrefs();
+                    }
+                    break;
             }
         }
 
@@ -446,6 +461,40 @@ namespace TGMsim
                     drawBuffer.DrawString("cheats", DefaultFont, new SolidBrush(Color.White), 5, 5);
                     cMen.render(drawBuffer);
                     break;
+                case 10:
+                    drawBuffer.DrawString("firstrun", DefaultFont, new SolidBrush(Color.White), 5, 5);
+                    drawBuffer.DrawString("INPUT KEY FOR:", SystemFonts.DefaultFont, new SolidBrush(Color.White), 100, 100);
+                    switch (firstrunProgress)
+                    {
+                        case 0://prompt for up
+                            drawBuffer.DrawString("UP", SystemFonts.DefaultFont, new SolidBrush(Color.White), 100, 160);
+                            break;
+                        case 1://prompt for down
+                            drawBuffer.DrawString("DOWN", SystemFonts.DefaultFont, new SolidBrush(Color.White), 100, 160);
+                            break;
+                        case 2://prompt for left
+                            drawBuffer.DrawString("LEFT", SystemFonts.DefaultFont, new SolidBrush(Color.White), 100, 160);
+                            break;
+                        case 3://prompt for right
+                            drawBuffer.DrawString("RIGHT", SystemFonts.DefaultFont, new SolidBrush(Color.White), 100, 160);
+                            break;
+                        case 4://prompt for rot1/select
+                            drawBuffer.DrawString("ROTATION 1 / SELECT", SystemFonts.DefaultFont, new SolidBrush(Color.White), 100, 160);
+                            break;
+                        case 5://prompt for rot2/back
+                            drawBuffer.DrawString("ROTATION 2 / BACK", SystemFonts.DefaultFont, new SolidBrush(Color.White), 100, 160);
+                            break;
+                        case 6://prompt for alt rot1
+                            drawBuffer.DrawString("ALTERNATE ROTATION 1", SystemFonts.DefaultFont, new SolidBrush(Color.White), 100, 160);
+                            break;
+                        case 7://prompt for hold
+                            drawBuffer.DrawString("HOLD", SystemFonts.DefaultFont, new SolidBrush(Color.White), 100, 160);
+                            break;
+                        case 8://prompt for start
+                            drawBuffer.DrawString("START", SystemFonts.DefaultFont, new SolidBrush(Color.White), 100, 160);
+                            break;
+                    }
+                    break;
             }
             if (menuState > 1)
                 drawBuffer.DrawString(player.name, f_Maestro, new SolidBrush(Color.White), 765, 5);
@@ -508,6 +557,7 @@ namespace TGMsim
 
             if (prefs.delay)
                 pad1.setLag(rules.lag);
+            pad1.southpaw = prefs.southpaw;
             FPS = rules.FPS;
 
             field1 = new Field(pad1, rules, -1);
@@ -964,6 +1014,7 @@ namespace TGMsim
                 byte temp = (byte)(((Audio.musVol & 0xF) << 4) + (Audio.sfxVol & 0xF));
                 sw.Write(temp);
                 sw.Write(player.name);
+                sw.Write(prefs.southpaw);
             }
         }
 
@@ -986,6 +1037,7 @@ namespace TGMsim
                 Audio.musVol = (temp >> 4) & 0x0F;
                 Audio.sfxVol = temp & 0x0F;
                 player.name = prf.ReadString();
+                prefs.southpaw = prf.ReadBoolean();
                 prf.Close();
             }
             catch (DirectoryNotFoundException e)
@@ -994,7 +1046,7 @@ namespace TGMsim
             }
             catch (FileNotFoundException e)
             {
-                savePrefs();
+                changeMenu(10);
             }
         }
 

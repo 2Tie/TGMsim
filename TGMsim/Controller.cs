@@ -17,6 +17,7 @@ namespace TGMsim
         public bool inputPressedRot1 = false, inputPressedRot2 = false, inputPressedRot3 = false, inputPressedHold = false, superStart = false;
         List<short> inputHistory = new List<short> {0,0,0,0,0,0}; //up, down, left, right, rot1, rot2, rot3, hold, start, 7 bits for frame length (unused for lag, used for replays).
         public int lag = 0;
+        public bool southpaw = false;
         public bool recording = false;
         public bool playback = false;
         public List<short> replay = new List<short>();

@@ -303,7 +303,7 @@ namespace TGMsim
                     mod = new M_SegaFlash();
                     break;
                 case Mode.ModeType.MARCH:
-                    mod = new M_HellMarch(vari);
+                    mod = new M_HellMarch();
                     break;
                 default:
                     throw new Exception("unknown mode");

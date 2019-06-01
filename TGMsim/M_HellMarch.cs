@@ -13,10 +13,9 @@ namespace TGMsim
         private int teteri = 0;
         private bool brav = false;
 
-        public M_HellMarch(int v)
+        public M_HellMarch()
         {
-            variant = v;
-            ModeName = "HM TESTING " + (v+3).ToString();
+            ModeName = "HELL MARCH";
             border = Color.DarkTurquoise;
             showGrade = false;
             boardsProgress = 0;

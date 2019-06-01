@@ -12,8 +12,10 @@ namespace TGMsim
     {
 
         bool inputting = false;
+        Key lastPressed;
         public bool delay = true;
         public Controller nPad = new Controller();
+        public bool southpaw = false;
         public int menuState = 0;//main, input change
         int selection = 0;
 
@@ -30,7 +32,7 @@ namespace TGMsim
         {
             if (inputting)
             {
-                assignKey();
+                inputting = !assignKey(selection);
                 return;
             }
 
@@ -97,9 +99,12 @@ namespace TGMsim
                 if (selection == 1)
                 {
                     if (hInput != nPad.inputH)
+                    {
                         Audio.sfxVol += nPad.inputH;
-                    if (Audio.sfxVol > 10) Audio.sfxVol = 10;
-                    if (Audio.sfxVol < 0) Audio.sfxVol = 0;
+                        if (Audio.sfxVol > 10) Audio.sfxVol = 10;
+                        if (Audio.sfxVol < 0) Audio.sfxVol = 0;
+                        Audio.playSound(Audio.s_Contact);
+                    }
                 }
                 if (selection == 2)
                     delay = !delay;
@@ -143,46 +148,48 @@ namespace TGMsim
 
         }
 
-        public void assignKey()
+        public bool assignKey(int key)
         {
             for (int i = 1; i < 70; i++)
-                if (Keyboard.IsKeyDown((Key)i) && Keyboard.IsKeyToggled((Key)i) && Keyboard.IsKeyDown((Key)i))
+                if (Keyboard.IsKeyDown((Key)i) && Keyboard.IsKeyToggled((Key)i) && Keyboard.IsKeyDown((Key)i) && (Key)i != lastPressed)
                 {
                     if ((Key)i != nPad.keyUp && (Key)i != nPad.keyDown && (Key)i != nPad.keyLeft && (Key)i != nPad.keyRight && (Key)i != nPad.keyRot1 && (Key)i != nPad.keyRot2 && (Key)i != nPad.keyRot3 && (Key)i != nPad.keyHold && (Key)i != nPad.keyStart)
-                    switch(selection)
-                    {
-                        case 0://up
-                            nPad.keyUp = (Key)i;
-                            break;
-                        case 1://down
-                            nPad.keyDown = (Key)i;
-                            break;
-                        case 2://left
-                            nPad.keyLeft = (Key)i;
-                            break;
-                        case 3://right
-                            nPad.keyRight = (Key)i;
-                            break;
-                        case 4://a
-                            nPad.keyRot1 = (Key)i;
-                            break;
-                        case 5://b
-                            nPad.keyRot2 = (Key)i;
-                            break;
-                        case 6://c
-                            nPad.keyRot3 = (Key)i;
-                            break;
-                        case 7://hold
-                            nPad.keyHold = (Key)i;
-                            break;
-                        case 8://start
-                            nPad.keyStart = (Key)i;
-                            break;
+                        switch (key)
+                        {
+                            case 0://up
+                                nPad.keyUp = (Key)i;
+                                break;
+                            case 1://down
+                                nPad.keyDown = (Key)i;
+                                break;
+                            case 2://left
+                                nPad.keyLeft = (Key)i;
+                                break;
+                            case 3://right
+                                nPad.keyRight = (Key)i;
+                                break;
+                            case 4://a
+                                nPad.keyRot1 = (Key)i;
+                                break;
+                            case 5://b
+                                nPad.keyRot2 = (Key)i;
+                                break;
+                            case 6://c
+                                nPad.keyRot3 = (Key)i;
+                                break;
+                            case 7://hold
+                                nPad.keyHold = (Key)i;
+                                break;
+                            case 8://start
+                                nPad.keyStart = (Key)i;
+                                break;
                         }
+                    lastPressed = (Key)i;
                     nPad.poll();
                     vInput = nPad.inputV;
-                    inputting = false;
+                    return true;
                 }
+            return false;
         }
 
     }

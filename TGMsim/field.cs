@@ -1858,6 +1858,8 @@ namespace TGMsim
         {
             bool success = true;
             tet.rotations++;
+            if (pad.southpaw)
+                p = 0 - p;
             Tetromino tmptet = RSYS.rotate(tet, p, gameField, (int)ruleset.gameRules, MOD.bigmode, spawn);
             if (activeTet == tmptet)
                 success = false;
