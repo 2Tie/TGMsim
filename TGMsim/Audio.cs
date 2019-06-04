@@ -36,6 +36,7 @@ namespace TGMsim
         static public System.Windows.Media.MediaPlayer s_Section = new System.Windows.Media.MediaPlayer();
         static public System.Windows.Media.MediaPlayer s_Tetris = new System.Windows.Media.MediaPlayer();
         static public System.Windows.Media.MediaPlayer s_Combo = new System.Windows.Media.MediaPlayer();
+        static public System.Windows.Media.MediaPlayer s_Gem = new System.Windows.Media.MediaPlayer();
         static public System.Windows.Media.MediaPlayer s_Medal = new System.Windows.Media.MediaPlayer();
         static public System.Windows.Media.MediaPlayer s_Bell = new System.Windows.Media.MediaPlayer();
 
@@ -73,7 +74,7 @@ namespace TGMsim
             addSound(s_Section, @"/Res/Audio/SE/SEP_lankup.wav");
             addSound(s_Combo, @"/Res/Audio/SE/SEP_combo.wav");
             addSound(s_Tetris, @"/Res/Audio/SE/SEP_tetris.wav");
-            addSound(s_Medal, @"/Res/Audio/SE/SEB_platinum.wav");
+            addSound(s_Gem, @"/Res/Audio/SE/SEB_platinum.wav");
             addSound(s_Bell, @"/Res/Audio/SE/bell.wav");
         }
 
@@ -92,6 +93,7 @@ namespace TGMsim
 
         static public void playSound(System.Windows.Media.MediaPlayer snd)
         {
+            if (!snd.HasAudio) return;
             snd.IsMuted = false;
             snd.Volume = (double)sfxVol/10;
             snd.Position = new TimeSpan(0);

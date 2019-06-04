@@ -86,7 +86,7 @@ namespace TGMsim
             int oldLvl = level;
             level += lines;
 
-            if (level >= endLevel && endLevel != 0)
+            if (level >= endLevel)
             {
                 level = endLevel;
                 inCredits = true;
@@ -129,59 +129,59 @@ namespace TGMsim
 
             comboing = true;
             //section handling
-
-            if (level >= sections[curSection] && level < endLevel)
-            {
-                curSection++;
-                secTet.Add(0);
-                //GM FLAGS
-                if (level >= 999)
-                    grade = 32;
-                //TORIKAN
-                if (curSection == 5)
+            if (curSection < sections.Count())
+                if (level >= sections[curSection])
                 {
-                    if (t > 205000)
+                    curSection++;
+                    secTet.Add(0);
+                    //GM FLAGS
+                    if (level >= 999)
+                        grade = 32;
+                    //TORIKAN
+                    if (curSection == 5)
                     {
-                        toriLevel = 500;
-                        torikan = true;
-                        torDef = t - 205000;
-                        //triggerCredits();
+                        if (t > 205000)
+                        {
+                            toriLevel = 500;
+                            torikan = true;
+                            torDef = t - 205000;
+                            //triggerCredits();
+                        }
+                        else
+                            grade = 27;
                     }
-                    else
-                        grade = 27;
-                }
-                //MUSIC
-                updateMusic();
-                //DELAYS
-                int num = curSection;
-                if (num < 6)
-                {
-                    baseARE = delayTable[0][num];
-                    baseARELine = delayTable[1][num];
-                    baseDAS = delayTable[2][num];
-                    baseLock = delayTable[3][num];
-                    baseLineClear = delayTable[4][num];
-                }
-                //MEDALS
-                //RO
-                if (curSection == 3)
-                    if ((rotCount * 5) / (tetCount * 6) >= 1)
+                    //MUSIC
+                    updateMusic();
+                    //DELAYS
+                    int num = curSection;
+                    if (num < 6)
                     {
-                        medals[1] = 1;
-                        rotCount = 0;
-                        tetCount = 0;
-                        Audio.playSound(Audio.s_Medal);
+                        baseARE = delayTable[0][num];
+                        baseARELine = delayTable[1][num];
+                        baseDAS = delayTable[2][num];
+                        baseLock = delayTable[3][num];
+                        baseLineClear = delayTable[4][num];
                     }
-                if (curSection == 7)
-                    if ((rotCount * 5) / (tetCount * 6) >= 1)
-                    {
-                        medals[1] = 2;
-                        rotCount = 0;
-                        tetCount = 0;
-                        Audio.playSound(Audio.s_Medal);
-                    }
+                    //MEDALS
+                    //RO
+                    if (curSection == 3)
+                        if ((rotCount * 5) / (tetCount * 6) >= 1)
+                        {
+                            medals[1] = 1;
+                            rotCount = 0;
+                            tetCount = 0;
+                            Audio.playSound(Audio.s_Medal);
+                        }
+                    if (curSection == 7)
+                        if ((rotCount * 5) / (tetCount * 6) >= 1)
+                        {
+                            medals[1] = 2;
+                            rotCount = 0;
+                            tetCount = 0;
+                            Audio.playSound(Audio.s_Medal);
+                        }
 
-            }
+                }
             //MEDALS
             //AC
             if (bravos == 1 && medals[0] == 0)

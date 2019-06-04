@@ -147,6 +147,12 @@ namespace TGMsim
             int oldLvl = level;
             level += lines;
 
+            if (level >= endLevel && endLevel != 0)
+            {
+                level = endLevel;
+                inCredits = true;
+            }
+
             //bravo handling
             int b = 1;
             if (bravo)
@@ -160,19 +166,14 @@ namespace TGMsim
             if (sped < 0) sped = 0;
             score += ((int)Math.Ceiling((double)(oldLvl + lines) / 4) + tet.soft + (2 * tet.sonic)) * lines * combo * b + (int)(Math.Ceiling((double)level / 2)) + (sped * 7);
 
-            if (level >= sections[curSection])
-            {
-                curSection++;
-                showGhost = false;
-                //MUSIC
-                updateMusic();
-
-                if (level >= endLevel && endLevel != 0)
+            if (curSection < sections.Count())
+                if (level >= sections[curSection])
                 {
-                    level = endLevel;
-                    inCredits = true;
+                    curSection++;
+                    showGhost = false;
+                    //MUSIC
+                    updateMusic();
                 }
-            }
         }
     }
 }

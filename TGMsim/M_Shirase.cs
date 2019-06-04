@@ -192,88 +192,88 @@ namespace TGMsim
 
             comboing = true;
             //section handling
-
-            if (level >= sections[curSection] && level < endLevel)
-            {
-                curSection++;
-                secTet.Add(0);
-                grade += 1;
-                //GM FLAGS
-                if (secTimer.count > 60000)
+            if (curSection < sections.Count())
+                if (level >= sections[curSection])
                 {
-                    Audio.playSound(Audio.s_Regret);
-                    grade -= 1;
-                    coolTime.tick();
-                }
-                //TORIKAN
-                if (curSection == 5 && t > 148000)
-                {
-                    level = 500;
-                    torikan = true;
-                    torDef = t - 148000;
-                    //inCredits = true; //TODO: end game better
-                    //endGame();
-                }
-                if (curSection == 10 && t > 296000)
-                {
-                    level = 1000;
-                    torikan = true;
-                    torDef = t - 296000;
-                    //inCredits = true; //TODO: end game better
-                    //endGame();
-                }
-                //MUSIC
-                updateMusic();
-                //DELAYS
-                //int num = curSection;
-                //if (num < 6)
-                //{
+                    curSection++;
+                    secTet.Add(0);
+                    grade += 1;
+                    //GM FLAGS
+                    if (secTimer.count > 60000)
+                    {
+                        Audio.playSound(Audio.s_Regret);
+                        grade -= 1;
+                        coolTime.tick();
+                    }
+                    //TORIKAN
+                    if (curSection == 5 && t > 148000)
+                    {
+                        level = 500;
+                        torikan = true;
+                        torDef = t - 148000;
+                        //inCredits = true; //TODO: end game better
+                        //endGame();
+                    }
+                    if (curSection == 10 && t > 296000)
+                    {
+                        level = 1000;
+                        torikan = true;
+                        torDef = t - 296000;
+                        //inCredits = true; //TODO: end game better
+                        //endGame();
+                    }
+                    //MUSIC
+                    updateMusic();
+                    //DELAYS
+                    //int num = curSection;
+                    //if (num < 6)
+                    //{
                     baseARE = delayTable[0][curSection];
                     baseARELine = delayTable[1][curSection];
                     baseDAS = delayTable[2][curSection];
                     baseLock = delayTable[3][curSection];
                     baseLineClear = delayTable[4][curSection];
-                //}
-                //MEDALS
-                //RO
-                if (curSection == 3)
-                    if ((rotCount * 5) / (tetCount * 6) >= 1)
+                    //}
+                    //MEDALS
+                    //RO
+                    if (curSection == 3)
+                        if ((rotCount * 5) / (tetCount * 6) >= 1)
+                        {
+                            medals[1] = 1;
+                            rotCount = 0;
+                            tetCount = 0;
+                            Audio.playSound(Audio.s_Medal);
+                        }
+                    if (curSection == 7)
+                        if ((rotCount * 5) / (tetCount * 6) >= 1)
+                        {
+                            medals[1] = 2;
+                            rotCount = 0;
+                            tetCount = 0;
+                            Audio.playSound(Audio.s_Medal);
+                        }
+                    //ST
+                    secTimes.Add(secTimer.count);
+                    int st = 90000;
+                    if (secTimer.count < st - 10000 && medals[2] < 1)
                     {
-                        medals[1] = 1;
-                        rotCount = 0;
-                        tetCount = 0;
+                        medals[2] = 1;
                         Audio.playSound(Audio.s_Medal);
                     }
-                if (curSection == 7)
-                    if ((rotCount * 5) / (tetCount * 6) >= 1)
+                    if (secTimer.count < st - 5000 && medals[2] < 2)
                     {
-                        medals[1] = 2;
-                        rotCount = 0;
-                        tetCount = 0;
+                        medals[2] = 2;
                         Audio.playSound(Audio.s_Medal);
                     }
-                //ST
-                secTimes.Add(secTimer.count);
-                int st = 90000;
-                if (secTimer.count < st - 10000 && medals[2] < 1)
-                {
-                    medals[2] = 1;
-                    Audio.playSound(Audio.s_Medal);
-                }
-                if (secTimer.count < st - 5000 && medals[2] < 2)
-                {
-                    medals[2] = 2;
-                    Audio.playSound(Audio.s_Medal);
-                }
-                if (secTimer.count < st && medals[2] < 3)
-                {
-                    medals[2] = 3;
-                    Audio.playSound(Audio.s_Medal);
-                }
+                    if (secTimer.count < st && medals[2] < 3)
+                    {
+                        medals[2] = 3;
+                        Audio.playSound(Audio.s_Medal);
+                    }
 
-                secTimer.count = 0;
-                
-            }
+                    secTimer.count = 0;
+
+                }
             //MEDALS
             //AC
             if (bravos == 1 && medals[0] == 0)

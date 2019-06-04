@@ -83,6 +83,8 @@ namespace TGMsim
             int oldLvl = level;
             level += lines;
 
+            if (level > endLevel && endLevel != 0)
+                level = endLevel;
             //check for tetris
             if (lines == 4)
             {
@@ -92,19 +94,17 @@ namespace TGMsim
             }
 
             //section handling
-
-            if (level >= sections[curSection])
-            {
-                curSection++;
-                secTet.Add(0);
-                //GM FLAGS
-                //MUSIC
-                updateMusic();
-                //DELAYS
-                //BACKGROUND
-                if (level > endLevel && endLevel != 0)
-                    level = endLevel;
-            }
+            if (curSection < sections.Count())
+                if (level >= sections[curSection])
+                {
+                    curSection++;
+                    secTet.Add(0);
+                    //GM FLAGS
+                    //MUSIC
+                    updateMusic();
+                    //DELAYS
+                    //BACKGROUND
+                }
         }
     }
 }

@@ -114,6 +114,12 @@ namespace TGMsim
             int oldLvl = level;
             level += lines;
 
+            if (level >= endLevel && endLevel != 0)
+            {
+                level = endLevel;
+                inCredits = true;
+            }
+
             //check for tetris
             if (lines == 4)
             {
@@ -174,6 +180,7 @@ namespace TGMsim
             comboing = true;
             //section handling
 
+            if(curSection < sections.Count())
             if (level >= sections[curSection])
             {
                 curSection++;
@@ -316,11 +323,7 @@ namespace TGMsim
 
 
                 //BACKGROUND
-                if (level >= endLevel && endLevel != 0)
-                {
-                    level = endLevel;
-                    inCredits = true;
-                }
+                
             }
             //MEDALS
             //AC

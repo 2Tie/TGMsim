@@ -104,7 +104,7 @@ namespace TGMsim
                         case 4://J
                         case 5://L
                             //test other center
-                            if (tet.rotation % 2 == 0 && gameField[tetX][tetY - 1] != 0)
+                            if (tet.rotation % 2 == 0 && gameField[tetX][tetY + 1] != 0)
                             {
                                 if (gameField[tetX + (((tet.id - 4) * -2) + 1)][tetY + ((tet.rotation / 2) + 1)] != 0 && tet.rotation + ((((tet.id - 4) * 2) - 1) * p) == -1)
                                     return true;

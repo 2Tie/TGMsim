@@ -21,6 +21,12 @@ namespace TGMsim
             int oldLvl = level;
             level += lines;
 
+            if (level >= endLevel && endLevel != 0)
+            {
+                level = endLevel;
+                inCredits = true;
+            }
+
             //check for tetris
             if (lines == 4)
             {
@@ -83,149 +89,145 @@ namespace TGMsim
             comboing = true;
             //section handling
 
-            if (level >= sections[curSection])
-            {
-                curSection++;
-                showGhost = false;
-                secTet.Add(0);
-                //GM FLAGS
-                if (GMflags.Count == 0 && level >= 100)
+            if (curSection < sections.Count())
+                if (level >= sections[curSection])
                 {
-                    if (secTet[0] > 1 && secTimes[0] <= 65000)
-                        GMflags.Add(true);
-                    else
-                        GMflags.Add(false);
-                }
-                else if (GMflags.Count == 1 && level >= 200)
-                {
-                    if (secTet[1] > 1 && secTimes[1] <= 65000)
-                        GMflags.Add(true);
-                    else
-                        GMflags.Add(false);
-                }
-                else if (GMflags.Count == 2 && level >= 300)
-                {
-                    if (secTet[2] > 1 && secTimes[2] <= 65000)
-                        GMflags.Add(true);
-                    else
-                        GMflags.Add(false);
-                }
-                else if (GMflags.Count == 3 && level >= 400)
-                {
-                    if (secTet[3] > 1 && secTimes[3] <= 65000)
-                        GMflags.Add(true);
-                    else
-                        GMflags.Add(false);
-                }
-                else if (GMflags.Count == 4 && level >= 500)
-                {
-                    if (secTet[4] > 1 && secTimes[4] <= 65000)
-                        GMflags.Add(true);
-                    else
-                        GMflags.Add(false);
-                }
-                else if (GMflags.Count == 5 && level >= 600)
-                {
-                    if (secTet[5] > 0 && secTimes[5] <= ((secTimes[0] + secTimes[1] + secTimes[2] + secTimes[3] + secTimes[4]) / 5) + 2000)
-                        GMflags.Add(true);
-                    else
-                        GMflags.Add(false);
-                }
-                else if (GMflags.Count == 6 && level >= 700)
-                {
-                    if (secTet[6] > 0 && secTimes[6] <= secTimes[5] + 2000)
-                        GMflags.Add(true);
-                    else
-                        GMflags.Add(false);
-                }
-                else if (GMflags.Count == 7 && level >= 800)
-                {
-                    if (secTet[7] > 0 && secTimes[7] <= secTimes[6] + 2000)
-                        GMflags.Add(true);
-                    else
-                        GMflags.Add(false);
-                }
-                else if (GMflags.Count == 8 && level >= 900)
-                {
-                    if (secTet[8] > 0 && secTimes[8] <= secTimes[7] + 2000)
-                        GMflags.Add(true);
-                    else
-                        GMflags.Add(false);
-                }
-                else if (GMflags.Count == 9 && level >= 999)
-                {
-                    if (t <= 525000 && secTimes[9] <= secTimes[8] + 2000 && grade == 17)
-                        GMflags.Add(true);
-                    else
-                        GMflags.Add(false);
-
-                    bool gm = true;
-                    foreach (bool flag in GMflags)
+                    curSection++;
+                    showGhost = false;
+                    secTet.Add(0);
+                    
+                    //MUSIC
+                    updateMusic();
+                    //DELAYS
+                    int num = curSection - 4;
+                    if (num > 0)
                     {
-                        if (flag == false)
-                            gm = false;
+                        baseARE = delayTable[0][num];
+                        baseARELine = delayTable[1][num];
+                        baseDAS = delayTable[2][num];
+                        baseLock = delayTable[3][num];
+                        baseLineClear = delayTable[4][num];
                     }
-                    if (gm)
-                        grade = 32;
-                }
-                //MUSIC
-                updateMusic();
-                //DELAYS
-                int num = curSection - 4;
-                if (num > 0)
-                {
-                    baseARE = delayTable[0][num];
-                    baseARELine = delayTable[1][num];
-                    baseDAS = delayTable[2][num];
-                    baseLock = delayTable[3][num];
-                    baseLineClear = delayTable[4][num];
-                }
-                //MEDALS
-                //RO
-                if (curSection == 3)
-                    if ((rotCount * 5) / (tetCount * 6) >= 1)
+                    //MEDALS
+                    //RO
+                    if (curSection == 3)
+                        if ((rotCount * 5) / (tetCount * 6) >= 1)
+                        {
+                            medals[1] = 1;
+                            rotCount = 0;
+                            tetCount = 0;
+                            Audio.playSound(Audio.s_Medal);
+                        }
+                    if (curSection == 7)
+                        if ((rotCount * 5) / (tetCount * 6) >= 1)
+                        {
+                            medals[1] = 2;
+                            rotCount = 0;
+                            tetCount = 0;
+                            Audio.playSound(Audio.s_Medal);
+                        }
+                    //ST
+                    secTimes.Add(secTimer.count);
+                    secTimer = new FrameTimer();
+                    int st = 90000;
+                    if (secTimer.count < st - 10000 && medals[2] < 1)
                     {
-                        medals[1] = 1;
-                        rotCount = 0;
-                        tetCount = 0;
+                        medals[2] = 1;
                         Audio.playSound(Audio.s_Medal);
                     }
-                if (curSection == 7)
-                    if ((rotCount * 5) / (tetCount * 6) >= 1)
+                    if (secTimer.count < st - 5000 && medals[2] < 2)
                     {
-                        medals[1] = 2;
-                        rotCount = 0;
-                        tetCount = 0;
+                        medals[2] = 2;
                         Audio.playSound(Audio.s_Medal);
                     }
-                //ST
-                secTimes.Add(secTimer.count);
-                secTimer = new FrameTimer();
-                int st = 90000;
-                if (secTimer.count < st - 10000 && medals[2] < 1)
-                {
-                    medals[2] = 1;
-                    Audio.playSound(Audio.s_Medal);
-                }
-                if (secTimer.count < st - 5000 && medals[2] < 2)
-                {
-                    medals[2] = 2;
-                    Audio.playSound(Audio.s_Medal);
-                }
-                if (secTimer.count < st && medals[2] < 3)
-                {
-                    medals[2] = 3;
-                    Audio.playSound(Audio.s_Medal);
-                }
+                    if (secTimer.count < st && medals[2] < 3)
+                    {
+                        medals[2] = 3;
+                        Audio.playSound(Audio.s_Medal);
+                    }
 
+                    //GM FLAGS
+                    if (GMflags.Count == 0 && level >= 100)
+                    {
+                        if (secTet[0] > 1 && secTimes[0] <= 65000)
+                            GMflags.Add(true);
+                        else
+                            GMflags.Add(false);
+                    }
+                    else if (GMflags.Count == 1 && level >= 200)
+                    {
+                        if (secTet[1] > 1 && secTimes[1] <= 65000)
+                            GMflags.Add(true);
+                        else
+                            GMflags.Add(false);
+                    }
+                    else if (GMflags.Count == 2 && level >= 300)
+                    {
+                        if (secTet[2] > 1 && secTimes[2] <= 65000)
+                            GMflags.Add(true);
+                        else
+                            GMflags.Add(false);
+                    }
+                    else if (GMflags.Count == 3 && level >= 400)
+                    {
+                        if (secTet[3] > 1 && secTimes[3] <= 65000)
+                            GMflags.Add(true);
+                        else
+                            GMflags.Add(false);
+                    }
+                    else if (GMflags.Count == 4 && level >= 500)
+                    {
+                        if (secTet[4] > 1 && secTimes[4] <= 65000)
+                            GMflags.Add(true);
+                        else
+                            GMflags.Add(false);
+                    }
+                    else if (GMflags.Count == 5 && level >= 600)
+                    {
+                        if (secTet[5] > 0 && secTimes[5] <= ((secTimes[0] + secTimes[1] + secTimes[2] + secTimes[3] + secTimes[4]) / 5) + 2000)
+                            GMflags.Add(true);
+                        else
+                            GMflags.Add(false);
+                    }
+                    else if (GMflags.Count == 6 && level >= 700)
+                    {
+                        if (secTet[6] > 0 && secTimes[6] <= secTimes[5] + 2000)
+                            GMflags.Add(true);
+                        else
+                            GMflags.Add(false);
+                    }
+                    else if (GMflags.Count == 7 && level >= 800)
+                    {
+                        if (secTet[7] > 0 && secTimes[7] <= secTimes[6] + 2000)
+                            GMflags.Add(true);
+                        else
+                            GMflags.Add(false);
+                    }
+                    else if (GMflags.Count == 8 && level >= 900)
+                    {
+                        if (secTet[8] > 0 && secTimes[8] <= secTimes[7] + 2000)
+                            GMflags.Add(true);
+                        else
+                            GMflags.Add(false);
+                    }
+                    else if (GMflags.Count == 9 && level >= 999)
+                    {
+                        if (t <= 525000 && secTimes[9] <= secTimes[8] + 2000 && grade == 17)
+                            GMflags.Add(true);
+                        else
+                            GMflags.Add(false);
 
-                //BACKGROUND
-                if (level >= endLevel && endLevel != 0)
-                {
-                    level = endLevel;
-                    inCredits = true;
+                        bool gm = true;
+                        foreach (bool flag in GMflags)
+                        {
+                            if (flag == false)
+                                gm = false;
+                        }
+                        if (gm)
+                            grade = 32;
+                    }
+                    //BACKGROUND
                 }
-            }
             //MEDALS
             //AC
             if (bravos == 1 && medals[0] == 0)

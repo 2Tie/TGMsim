@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -56,6 +57,12 @@ namespace TGMsim
             int oldLvl = level;
             level += lines;
 
+            if (level >= endLevel && endLevel != 0)
+            {
+                level = endLevel;
+                inCredits = true;
+            }
+
             //check for tetris
             if (lines == 4)
             {
@@ -97,49 +104,47 @@ namespace TGMsim
             }
             //section handling
 
-            if (level >= sections[curSection])
+            if (curSection < sections.Count())
             {
-                curSection++;
-                showGhost = false;
-                secTet.Add(0);
-                //GM FLAGS
-                if (GMflags.Count == 0 && level >= 300)
+                if (level >= sections[curSection])
                 {
-                    if (score >= 12000 && t <= 255000)
-                        GMflags.Add(true);
-                    else
-                        GMflags.Add(false);
-                }
-                else if (GMflags.Count == 1 && level >= 500)
-                {
-                    if (score >= 40000 && t <= 450000)
-                        GMflags.Add(true);
-                    else
-                        GMflags.Add(false);
-                }
-                else if (GMflags.Count == 2 && level >= endLevel)
-                {
-                    level = 999;
-                    if (score >= 126000 && t <= 810000)
-                        GMflags.Add(true);
-                    else
-                        GMflags.Add(false);
-
-
-                    //check for awarding GM
-                    if (GMflags[0] && GMflags[1] && GMflags[2])
+                    curSection++;
+                    showGhost = false;
+                    secTet.Add(0);
+                    //GM FLAGS
+                    if (GMflags.Count == 0 && level >= 300)
                     {
-                        grade = 32;
+                        if (score >= 12000 && t <= 255000)
+                            GMflags.Add(true);
+                        else
+                            GMflags.Add(false);
                     }
-                }
-                //MUSIC
-                updateMusic();
-                //DELAYS
-                //BACKGROUND
-                if (level >= endLevel && endLevel != 0)
-                {
-                    level = endLevel;
-                    inCredits = true;
+                    else if (GMflags.Count == 1 && level >= 500)
+                    {
+                        if (score >= 40000 && t <= 450000)
+                            GMflags.Add(true);
+                        else
+                            GMflags.Add(false);
+                    }
+                    else if (GMflags.Count == 2 && level >= endLevel)
+                    {
+                        level = 999;
+                        if (score >= 126000 && t <= 810000)
+                            GMflags.Add(true);
+                        else
+                            GMflags.Add(false);
+
+
+                        //check for awarding GM
+                        if (GMflags[0] && GMflags[1] && GMflags[2])
+                        {
+                            grade = 32;
+                        }
+                    }
+                    //MUSIC
+                    updateMusic();
+                    //DELAYS
+                    //BACKGROUND
                 }
             }
         }
@@ -158,6 +163,11 @@ namespace TGMsim
                 Audio.playMusic("Level 1");
                 return;
             }
+        }
+
+        public override void draw(Graphics drawBuffer, Font f_Maestro, bool replay)
+        {
+            drawBuffer.DrawString(curSection.ToString(), f_Maestro, new SolidBrush(Color.White), 40, 80);
         }
     }
 }

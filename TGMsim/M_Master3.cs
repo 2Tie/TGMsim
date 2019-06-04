@@ -231,86 +231,87 @@ namespace TGMsim
             comboing = true;
             //section handling
 
-            if (level >= sections[curSection] && level < endLevel)
-            {
-                curSection++;
-                showGhost = false;
-                secTet.Add(0);
-                //GM FLAGS
-                //TORIKAN
-                if (curSection == 5 && t > 420000)// && exam == -1)
+            if (curSection < sections.Count())
+                if (level >= sections[curSection])
                 {
-                    level = 500;
-                    torikan = true;
-                    torDef = t - 420000;
-                    //inCredits = true; //TODO: make this work better?
-                    //endGame();
-                }
-                //MUSIC
-                updateMusic();
-                //DELAYS
-                int num = curSection + cools - 4;
-                if (num > 0 && num < 9)
-                {
-                    baseARE = delayTable[0][num];
-                    baseARELine = delayTable[1][num];
-                    baseDAS = delayTable[2][num];
-                    baseLock = delayTable[3][num];
-                    baseLineClear = delayTable[4][num];
-                }
-                //MEDALS
-                //RO
-                if (curSection == 3)
-                    if ((rotCount * 5) / (tetCount * 6) >= 1)
+                    curSection++;
+                    showGhost = false;
+                    secTet.Add(0);
+                    //GM FLAGS
+                    //TORIKAN
+                    if (curSection == 5 && t > 420000)// && exam == -1)
                     {
-                        medals[1] = 1;
-                        rotCount = 0;
-                        tetCount = 0;
+                        level = 500;
+                        torikan = true;
+                        torDef = t - 420000;
+                        //inCredits = true; //TODO: make this work better?
+                        //endGame();
+                    }
+                    //MUSIC
+                    updateMusic();
+                    //DELAYS
+                    int num = curSection + cools - 4;
+                    if (num > 0 && num < 9)
+                    {
+                        baseARE = delayTable[0][num];
+                        baseARELine = delayTable[1][num];
+                        baseDAS = delayTable[2][num];
+                        baseLock = delayTable[3][num];
+                        baseLineClear = delayTable[4][num];
+                    }
+                    //MEDALS
+                    //RO
+                    if (curSection == 3)
+                        if ((rotCount * 5) / (tetCount * 6) >= 1)
+                        {
+                            medals[1] = 1;
+                            rotCount = 0;
+                            tetCount = 0;
+                            Audio.playSound(Audio.s_Medal);
+                        }
+                    if (curSection == 7)
+                        if ((rotCount * 5) / (tetCount * 6) >= 1)
+                        {
+                            medals[1] = 2;
+                            rotCount = 0;
+                            tetCount = 0;
+                            Audio.playSound(Audio.s_Medal);
+                        }
+                    //ST
+                    secTimes.Add(secTimer.count);
+                    int st = 90000;
+                    if (secTimer.count < st - 10000 && medals[2] < 1)
+                    {
+                        medals[2] = 1;
                         Audio.playSound(Audio.s_Medal);
                     }
-                if (curSection == 7)
-                    if ((rotCount * 5) / (tetCount * 6) >= 1)
+                    if (secTimer.count < st - 5000 && medals[2] < 2)
                     {
-                        medals[1] = 2;
-                        rotCount = 0;
-                        tetCount = 0;
+                        medals[2] = 2;
                         Audio.playSound(Audio.s_Medal);
                     }
-                //ST
-                secTimes.Add(secTimer.count);
-                int st = 90000;
-                if (secTimer.count < st - 10000 && medals[2] < 1)
-                {
-                    medals[2] = 1;
-                    Audio.playSound(Audio.s_Medal);
-                }
-                if (secTimer.count < st - 5000 && medals[2] < 2)
-                {
-                    medals[2] = 2;
-                    Audio.playSound(Audio.s_Medal);
-                }
-                if (secTimer.count < st && medals[2] < 3)
-                {
-                    medals[2] = 3;
-                    Audio.playSound(Audio.s_Medal);
-                }
-                //REGRET
-                if (secTimer.count > secRegrets[curSection - 1])
-                {
-                    if (curSection != 9)
-                        coolCounter[curSection - 1] = -1;
-                    else
-                        coolCounter.Add(-1);
+                    if (secTimer.count < st && medals[2] < 3)
+                    {
+                        medals[2] = 3;
+                        Audio.playSound(Audio.s_Medal);
+                    }
+                    //REGRET
+                    if (secTimer.count > secRegrets[curSection - 1])
+                    {
+                        if (curSection != 9)
+                            coolCounter[curSection - 1] = -1;
+                        else
+                            coolCounter.Add(-1);
 
-                    Audio.playSound(Audio.s_Regret);
-                    coolTime.tick();
+                        Audio.playSound(Audio.s_Regret);
+                        coolTime.tick();
+                    }
+
+                    secTimer = new FrameTimer();
+
+                    //BACKGROUND
+
                 }
-
-                secTimer = new FrameTimer();
-
-                //BACKGROUND
-                
-            }
             
             //MEDALS
             //AC

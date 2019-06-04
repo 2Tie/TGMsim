@@ -689,7 +689,7 @@ namespace TGMsim
                 drawBuffer.DrawString("PUT THE BLOCK !!", f_Maestro, textBrush, 260, 585);
 
             //debug stuff
-            //drawBuffer.DrawString(gradePoints.ToString(), SystemFonts.DefaultFont, textBrush, 20, 280);
+            //drawBuffer.DrawString(creditsProgress.ToString(), SystemFonts.DefaultFont, textBrush, 20, 280);
             //drawBuffer.DrawString(ruleset.baseLineClear.ToString(), SystemFonts.DefaultFont, textBrush, 20, 290);
 
             /*string cTex = "REGRET!";
@@ -963,7 +963,7 @@ namespace TGMsim
                             Audio.playMusic("crdtinvis");
                     }
 
-                    if (inCredits && (((int)ruleset.gameRules > 1) == (creditsPause.count >= 3000) || MOD.modeID == Mode.ModeType.DEATH))
+                    if (inCredits && (((int)ruleset.gameRules > 1) == (creditsPause.count >= 3000) || MOD.modeID == Mode.ModeType.DEATH || creditsProgress != 0))
                     {
                         creditsProgress++;
                         if (pad.inputStart == 1 && ruleset.gameRules == GameRules.Games.TGM1)
