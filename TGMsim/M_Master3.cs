@@ -127,7 +127,7 @@ namespace TGMsim
             //COOLS
             if (level % 100 > 69)
             {
-                if (coolCounter.Count <= curSection && curSection != 9)
+                if (coolCounter.Count <= curSection && curSection != 10)
                 {
                     if (curSection != 0)
                     {
@@ -162,6 +162,12 @@ namespace TGMsim
 
             int oldLvl = level;
             level += lines;
+
+            if (level >= endLevel && endLevel != 0)
+            {
+                level = endLevel;
+                inCredits = true;
+            }
 
             //check for tetris
             if (lines == 4)
@@ -225,7 +231,7 @@ namespace TGMsim
             comboing = true;
             //section handling
 
-            if (level >= sections[curSection])
+            if (level >= sections[curSection] && level < endLevel)
             {
                 curSection++;
                 showGhost = false;
@@ -237,7 +243,7 @@ namespace TGMsim
                     level = 500;
                     torikan = true;
                     torDef = t - 420000;
-                    inCredits = true; //TODO: make this work better?
+                    //inCredits = true; //TODO: make this work better?
                     //endGame();
                 }
                 //MUSIC
@@ -303,11 +309,7 @@ namespace TGMsim
                 secTimer = new FrameTimer();
 
                 //BACKGROUND
-                if (level >= endLevel && endLevel != 0)
-                {
-                    level = endLevel;
-                    inCredits = true;
-                }
+                
             }
             
             //MEDALS

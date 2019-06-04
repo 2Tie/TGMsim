@@ -677,7 +677,8 @@ namespace TGMsim
             using (BinaryWriter sw = new BinaryWriter(fsStream, Encoding.UTF8))
             {
                 sw.Write(player.name);
-                sw.Write((byte)1);
+                byte temp = (byte)(1 + ((prefs.southpaw ? 1 : 0) << 7));//if i don't explicitly store this in a byte,
+                sw.Write(temp); //this stores an int instead of a byte, breaking compat
                 sw.Write(pad1.replay.Count);
                 sw.Write((int)rules.gameRules);
                 sw.Write((int)(rules.mod.modeID) + (rules.mod.variant << 13));
@@ -711,7 +712,9 @@ namespace TGMsim
             BinaryReader sr = new BinaryReader(fs);
             pad1.replay = new List<short>();
             repNam = sr.ReadString();
-            byte ver = sr.ReadByte();
+            byte temp = sr.ReadByte();
+            byte ver = (byte)(temp & 0x7F);
+            pad1.southpaw = ((temp >> 7) & 0x1) == 1;
             int length = sr.ReadInt32();
             int gam = sr.ReadInt32();
             int t = sr.ReadInt32();

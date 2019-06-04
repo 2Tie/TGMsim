@@ -1319,7 +1319,19 @@ namespace TGMsim
                                         }
                                         else
                                             endGame();
-
+                                    if (MOD.torikan && !toriless && !inCredits)
+                                    {
+                                        currentTimer = timerType.LineClear;
+                                        timerCount = MOD.baseLineClear;
+                                        Audio.playSound(Audio.s_Clear);
+                                        if (MOD.toriCredits)
+                                            triggerCredits();
+                                        else
+                                            endGame();
+                                        return;
+                                    }
+                                    else if (MOD.torikan && toriless)
+                                        MOD.torikan = false;
                                     /*if (MOD.sections.Count != curSection)//update section
                                         if (MOD.level >= MOD.sections[curSection])
                                         {
@@ -1328,17 +1340,7 @@ namespace TGMsim
                                             if ((int)ruleset.gameRules > 3)
                                                 Audio.playSound(Audio.s_Section);
 
-                                            if (MOD.torikan && !toriless)
-                                            {
-                                                currentTimer = timerType.LineClear;
-                                                timerCount = MOD.baseLineClear;
-                                                Audio.playSound(Audio.s_Clear);
-                                                if (MOD.toriCredits)
-                                                    triggerCredits();
-                                                else
-                                                    endGame();
-                                                return;
-                                            }
+                                            
 
                                             
                                         }*/

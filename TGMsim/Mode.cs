@@ -55,6 +55,7 @@ namespace TGMsim
         public bool torikan = false;
         public long torDef = 0;
         public bool toriCredits = true;
+        public int toriLevel = 0;
 
         public int creditsType = 0;//normal, vanishing, invisible
 

@@ -145,6 +145,12 @@ namespace TGMsim
             int oldLvl = level;
             level += lines;
 
+            if (level >= endLevel && endLevel != 0)
+            {
+                level = endLevel;
+                inCredits = true;
+            }
+
             garbTimer -= lines;
             if (garbTimer < 0)
                 garbTimer = 0;
@@ -187,7 +193,7 @@ namespace TGMsim
             comboing = true;
             //section handling
 
-            if (level >= sections[curSection])
+            if (level >= sections[curSection] && level < endLevel)
             {
                 curSection++;
                 secTet.Add(0);
@@ -205,7 +211,7 @@ namespace TGMsim
                     level = 500;
                     torikan = true;
                     torDef = t - 148000;
-                    inCredits = true; //TODO: end game better
+                    //inCredits = true; //TODO: end game better
                     //endGame();
                 }
                 if (curSection == 10 && t > 296000)
@@ -213,7 +219,7 @@ namespace TGMsim
                     level = 1000;
                     torikan = true;
                     torDef = t - 296000;
-                    inCredits = true; //TODO: end game better
+                    //inCredits = true; //TODO: end game better
                     //endGame();
                 }
                 //MUSIC
@@ -266,14 +272,7 @@ namespace TGMsim
                 }
 
                 secTimer.count = 0;
-
-
-                //BACKGROUND
-                if (level >= endLevel && endLevel != 0)
-                {
-                    level = endLevel;
-                    inCredits = true;
-                }
+                
             }
             //MEDALS
             //AC

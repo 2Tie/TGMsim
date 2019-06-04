@@ -59,7 +59,7 @@ namespace TGMsim
             }
             else if (level < endLevel)
             {
-                if (level < sections[curSection] - 1)
+                if (level < sections[curSection] - 1 && !torikan)
                     level += 1;
                 tetCount++;
             }
@@ -85,6 +85,12 @@ namespace TGMsim
 
             int oldLvl = level;
             level += lines;
+
+            if (level >= endLevel && endLevel != 0)
+            {
+                level = endLevel;
+                inCredits = true;
+            }
 
             //check for tetris
             if (lines == 4)
@@ -124,7 +130,7 @@ namespace TGMsim
             comboing = true;
             //section handling
 
-            if (level >= sections[curSection])
+            if (level >= sections[curSection] && level < endLevel)
             {
                 curSection++;
                 secTet.Add(0);
@@ -136,7 +142,7 @@ namespace TGMsim
                 {
                     if (t > 205000)
                     {
-                        level = 500;
+                        toriLevel = 500;
                         torikan = true;
                         torDef = t - 205000;
                         //triggerCredits();
@@ -175,12 +181,6 @@ namespace TGMsim
                         Audio.playSound(Audio.s_Medal);
                     }
 
-
-                if (level >= endLevel && endLevel != 0)
-                {
-                    level = endLevel;
-                    inCredits = true;
-                }
             }
             //MEDALS
             //AC
@@ -255,6 +255,9 @@ namespace TGMsim
                 medals[5] = 3;
                 Audio.playSound(Audio.s_Medal);
             }
+
+            if (torikan && level > toriLevel)
+                level = toriLevel;
         }
 
         public override void updateMusic()
