@@ -444,15 +444,17 @@ namespace TGMsim
             }
         }
 
-        public override void draw(Graphics drawBuffer, Font f, bool replay)
+        public override void draw(Graphics drawBuffer, Font f, SolidBrush b, bool replay)
         {
-            SolidBrush tb = new SolidBrush(Color.White);
-            drawBuffer.DrawString(grade.ToString(), f, tb, 20, 300);
-            drawBuffer.DrawString(intGrade.ToString(), f, tb, 20, 312);
-            drawBuffer.DrawString(gradePoints.ToString(), f, tb, 20, 324);
+            if (replay)
+            {
+                drawBuffer.DrawString(grade.ToString(), f, b, 20, 300);
+                drawBuffer.DrawString(intGrade.ToString(), f, b, 20, 312);
+                drawBuffer.DrawString(gradePoints.ToString(), f, b, 20, 324);
 
-            for (int i = 0; i < GMflags.Count; i++)
-                drawBuffer.DrawString(GMflags[i] ? "+" : "-", f, tb, 20 + 10 * i, 336);
+                for (int i = 0; i < GMflags.Count; i++)
+                    drawBuffer.DrawString(GMflags[i] ? "+" : "-", f, b, 20 + 10 * i, 336);
+            }
         }
     }
 }

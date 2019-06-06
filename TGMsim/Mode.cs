@@ -143,7 +143,7 @@ namespace TGMsim
 
         }
 
-        public virtual void draw(Graphics drawBuffer, Font f_Maestro, bool replay)
+        public virtual void draw(Graphics drawBuffer, Font f_Maestro, SolidBrush textBrush, bool replay)
         {
             
         }

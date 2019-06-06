@@ -87,31 +87,22 @@ namespace TGMsim
                 return true;
 
 
-            //universal center-testing (two up from bottom center will never kick)
+            //universal center-testing (two up from bottom center will never kick, even when considering the exception below)
             if (tet.bits[1].x > -1 && tet.bits[1].y + ((1 + (tet.rotation / 2)) * (3 - big)) < 22)
                 if (gameField[tet.bits[1].x][tet.bits[1].y + ((1 + (tet.rotation / 2)) * (3 - big))] != 0)
                     return false;
 
-            for (int i = 0; i < 4; i++)
+            if (tet.id == 4 || tet.id == 5)//J or L
             {
-                int tetX, tetY;
-                tetX = tet.bits[i].x * (2 / big) - (4 % (6 - big));
-                tetY = tet.bits[i].y * (2 / big) - (lowY * ((2 / big) - 1));
-
-                if (i == 1)
-                    switch (tet.id)
+                if (tet.rotation % 2 == 0)
+                {
+                    if (gameField[tet.bits[1].x][tet.bits[1].y - 1 + (tet.rotation / 2 * (3 - big)) * 2] != 0)//if hooked
                     {
-                        case 4://J
-                        case 5://L
-                            //test other center
-                            if (tet.rotation % 2 == 0 && gameField[tetX][tetY + 1] != 0)
-                            {
-                                if (gameField[tetX + (((tet.id - 4) * -2) + 1)][tetY + ((tet.rotation / 2) + 1)] != 0 && tet.rotation + ((((tet.id - 4) * 2) - 1) * p) == -1)
-                                    return true;
-                                return false;
-                            }
-                            continue;
+                        if (gameField[tet.bits[1].x + ((tet.id - 4) * -2) + 1][tet.bits[1].y + (tet.rotation / 2) + 1] != 0 && tet.rotation - ((((tet.id - 4) * 2) - 1) * p) == 1)//if exception blocked
+                            return true;
+                        return false;
                     }
+                }
             }
             return true;
         }

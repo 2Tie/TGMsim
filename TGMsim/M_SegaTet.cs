@@ -86,11 +86,10 @@ namespace TGMsim
             }
         }
 
-        public override void draw(Graphics drawBuffer, Font f, bool replay)
+        public override void draw(Graphics drawBuffer, Font f, SolidBrush b, bool replay)
         {
-            Brush tb = new SolidBrush(Color.White);
-            drawBuffer.DrawString(timeCounter.ToString(), f, tb, 20, 300);
-            drawBuffer.DrawString(levelUpTimes[level > 15 ? 15 : level].ToString(), f, tb, 20, 312);
+            drawBuffer.DrawString(timeCounter.ToString(), f, b, 20, 300);
+            drawBuffer.DrawString(levelUpTimes[level > 15 ? 15 : level].ToString(), f, b, 20, 312);
         }
     }
 }

@@ -13,9 +13,10 @@ namespace TGMsim
 
         bool inputting = false;
         Key lastPressed;
-        public bool delay = true;
+        public bool delay = false;
         public Controller nPad = new Controller();
         public bool southpaw = false;
+        public bool flashing = true;
         public int menuState = 0;//main, input change
         int selection = 0;
 
@@ -50,9 +51,9 @@ namespace TGMsim
             if (menuState == 0)
             {
                 if (selection >= 0)
-                    selection = selection % 4;
+                    selection = selection % 5;
                 else
-                    selection = 3;
+                    selection = 4;
             }
             if (menuState == 1)
             {
@@ -67,7 +68,7 @@ namespace TGMsim
             {
                 if (menuState == 0)
                 {
-                    if (selection == 3)
+                    if (selection == 4)
                     {
                         menuState = 1;
                         selection = 0;
@@ -107,44 +108,50 @@ namespace TGMsim
                     }
                 }
                 if (selection == 2)
-                    delay = !delay;
+                    if (hInput != nPad.inputH)
+                        delay = !delay;
+                if (selection == 3)
+                    if (hInput != nPad.inputH)
+                        flashing = !flashing;
             }
             hInput = nPad.inputH;
 
             if (nPad.inputRot2 == 1 && menuState == 1)
             {
                 menuState = 0;
-                selection = 1;
+                selection = 4;
             }
         }
 
         public void render(Graphics drawBuffer)
         {
+            SolidBrush tb = new SolidBrush(Color.White);
             if (menuState == 0)
             {
-                drawBuffer.DrawString("Music Volume: " + Audio.musVol*10 + "%", SystemFonts.DefaultFont, new SolidBrush(Color.White), 100, 100);
-                drawBuffer.DrawString("SFX Volume: " + Audio.sfxVol*10 + "%", SystemFonts.DefaultFont, new SolidBrush(Color.White), 100, 120);
-                drawBuffer.DrawString("Emulate Input Lag: " + delay, SystemFonts.DefaultFont, new SolidBrush(Color.White), 100, 140);
-                drawBuffer.DrawString("Rebind keys", SystemFonts.DefaultFont, new SolidBrush(Color.White), 100, 160);
+                drawBuffer.DrawString("Music Volume: " + Audio.musVol*10 + "%", SystemFonts.DefaultFont, tb, 100, 100);
+                drawBuffer.DrawString("SFX Volume: " + Audio.sfxVol*10 + "%", SystemFonts.DefaultFont, tb, 100, 120);
+                drawBuffer.DrawString("Replicate Emulation Input Lag: " + delay, SystemFonts.DefaultFont, tb, 100, 140);
+                drawBuffer.DrawString("20G Gold Flashing: " + flashing, SystemFonts.DefaultFont, tb, 100, 160);
+                drawBuffer.DrawString("Rebind keys", SystemFonts.DefaultFont, tb, 100, 180);
             }
             if (menuState == 1)
             {
-                drawBuffer.DrawString("UP: " + nPad.keyUp.ToString(), SystemFonts.DefaultFont, new SolidBrush(Color.White), 100, 100);
-                drawBuffer.DrawString("DOWN: " + nPad.keyDown.ToString(), SystemFonts.DefaultFont, new SolidBrush(Color.White), 100, 120);
-                drawBuffer.DrawString("LEFT: " + nPad.keyLeft.ToString(), SystemFonts.DefaultFont, new SolidBrush(Color.White), 100, 140);
-                drawBuffer.DrawString("RIGHT: " + nPad.keyRight.ToString(), SystemFonts.DefaultFont, new SolidBrush(Color.White), 100, 160);
-                drawBuffer.DrawString("ROTATE CCW: " + nPad.keyRot1.ToString(), SystemFonts.DefaultFont, new SolidBrush(Color.White), 100, 180);
-                drawBuffer.DrawString("ROTATE CW: " + nPad.keyRot2.ToString(), SystemFonts.DefaultFont, new SolidBrush(Color.White), 100, 200);
-                drawBuffer.DrawString("ROTATE CCW 2/SPEED: " + nPad.keyRot3.ToString(), SystemFonts.DefaultFont, new SolidBrush(Color.White), 100, 220);
-                drawBuffer.DrawString("HOLD: " + nPad.keyHold.ToString(), SystemFonts.DefaultFont, new SolidBrush(Color.White), 100, 240);
-                drawBuffer.DrawString("START: " + nPad.keyStart.ToString(), SystemFonts.DefaultFont, new SolidBrush(Color.White), 100, 260);
-                drawBuffer.DrawString("Back", SystemFonts.DefaultFont, new SolidBrush(Color.White), 100, 280);
+                drawBuffer.DrawString("UP: " + nPad.keyUp.ToString(), SystemFonts.DefaultFont, tb, 100, 100);
+                drawBuffer.DrawString("DOWN: " + nPad.keyDown.ToString(), SystemFonts.DefaultFont, tb, 100, 120);
+                drawBuffer.DrawString("LEFT: " + nPad.keyLeft.ToString(), SystemFonts.DefaultFont, tb, 100, 140);
+                drawBuffer.DrawString("RIGHT: " + nPad.keyRight.ToString(), SystemFonts.DefaultFont, tb, 100, 160);
+                drawBuffer.DrawString("ROTATE CCW: " + nPad.keyRot1.ToString(), SystemFonts.DefaultFont, tb, 100, 180);
+                drawBuffer.DrawString("ROTATE CW: " + nPad.keyRot2.ToString(), SystemFonts.DefaultFont, tb, 100, 200);
+                drawBuffer.DrawString("ROTATE CCW 2/SPEED: " + nPad.keyRot3.ToString(), SystemFonts.DefaultFont, tb, 100, 220);
+                drawBuffer.DrawString("HOLD: " + nPad.keyHold.ToString(), SystemFonts.DefaultFont, tb, 100, 240);
+                drawBuffer.DrawString("START: " + nPad.keyStart.ToString(), SystemFonts.DefaultFont, tb, 100, 260);
+                drawBuffer.DrawString("Back", SystemFonts.DefaultFont, tb, 100, 280);
             }
 
-            drawBuffer.DrawString(">", SystemFonts.DefaultFont, new SolidBrush(Color.White), 92, 100 + (20*selection));
+            drawBuffer.DrawString(">", SystemFonts.DefaultFont, tb, 92, 100 + (20*selection));
             
             if (inputting)
-                drawBuffer.DrawString("INPUT YOUR NEW KEY", SystemFonts.DefaultFont, new SolidBrush(Color.White), 200, 300);
+                drawBuffer.DrawString("INPUT YOUR NEW KEY", SystemFonts.DefaultFont, tb, 200, 300);
 
         }
 

@@ -208,7 +208,7 @@ namespace TGMsim
             }
         }
 
-        public override void draw(Graphics drawBuffer, Font f, bool replay)
+        public override void draw(Graphics drawBuffer, Font f, SolidBrush b, bool replay)
         {
             Brush tb = new SolidBrush(Color.White);
             for (int i = 0; i < variant; i++)

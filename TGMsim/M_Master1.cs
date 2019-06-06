@@ -167,14 +167,14 @@ namespace TGMsim
             }
         }
 
-        public override void draw(Graphics drawBuffer, Font f_Maestro, bool replay)
+        public override void draw(Graphics drawBuffer, Font f_Maestro, SolidBrush b, bool replay)
         {
             //drawBuffer.DrawString(curSection.ToString(), f_Maestro, new SolidBrush(Color.White), 40, 80);
-            drawBuffer.DrawString("NEXT GRADE:", f_Maestro, new SolidBrush(Color.White), 480, 140);
+            drawBuffer.DrawString("NEXT GRADE:", f_Maestro, b, 480, 140);
             if (grade != 18)
-                drawBuffer.DrawString(gradePoints[grade + 1].ToString(), f_Maestro, new SolidBrush(Color.White), 480, 160);
+                drawBuffer.DrawString(gradePoints[grade + 1].ToString(), f_Maestro, b, 480, 160);
             else
-                drawBuffer.DrawString("??????", f_Maestro, new SolidBrush(Color.White), 480, 160);
+                drawBuffer.DrawString("??????", f_Maestro, b, 480, 160);
         }
     }
 }

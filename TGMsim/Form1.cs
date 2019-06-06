@@ -575,6 +575,7 @@ namespace TGMsim
                 if (cMen.cheats[6])
                     field1.toriless = true;
             }
+            field1.disableGoldFlash = !prefs.flashing;
             saved = false;
         }
 
@@ -1018,7 +1019,7 @@ namespace TGMsim
                 byte temp = (byte)(((Audio.musVol & 0xF) << 4) + (Audio.sfxVol & 0xF));
                 sw.Write(temp);
                 sw.Write(player.name);
-                sw.Write(prefs.southpaw);
+                sw.Write((prefs.southpaw?1:0)+(prefs.flashing?2:0));
             }
         }
 
@@ -1041,7 +1042,9 @@ namespace TGMsim
                 Audio.musVol = (temp >> 4) & 0x0F;
                 Audio.sfxVol = temp & 0x0F;
                 player.name = prf.ReadString();
-                prefs.southpaw = prf.ReadBoolean();
+                temp = prf.ReadByte();
+                prefs.southpaw = (temp & 0x01) == 1 ? true : false;
+                prefs.flashing = (temp & 0x02) == 2 ? true : false;
                 prf.Close();
             }
             catch (DirectoryNotFoundException e)

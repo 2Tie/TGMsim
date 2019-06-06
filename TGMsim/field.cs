@@ -109,6 +109,8 @@ namespace TGMsim
         Image gradeImg;
         Color frameColour;
         SolidBrush textBrush = new SolidBrush(Color.White);
+        bool goldFlash = false;
+        public bool disableGoldFlash = false;
         int bgAlpha = 180;//120
 
         PrivateFontCollection fonts = new PrivateFontCollection();
@@ -248,8 +250,8 @@ namespace TGMsim
                     break;
             }
 
-            if ((MOD.g20 == true || gravTable[gravLevel] == Math.Pow(256, ruleset.gravType + 1) * 20) && (int)ruleset.gameRules < 4)
-                textBrush = new SolidBrush(Color.Gold);
+            //if ((MOD.g20 == true || gravTable[gravLevel] == Math.Pow(256, ruleset.gravType + 1) * 20) && (int)ruleset.gameRules < 4)
+                //textBrush = new SolidBrush(Color.Gold);
             
             
             //secTet.Add(0);
@@ -812,7 +814,7 @@ namespace TGMsim
                 //drawBuffer.DrawString("combo: " + MOD.gradeCombo, SystemFonts.DefaultFont, textBrush, 20, 260);
                 //drawBuffer.DrawString("internal grade: " + MOD.gm2grade, SystemFonts.DefaultFont, textBrush, 20, 280);
             }
-            MOD.draw(drawBuffer, f_Maestro, isPlayback);
+            MOD.draw(drawBuffer, f_Maestro, textBrush, isPlayback);
             
         }
 
@@ -843,6 +845,17 @@ namespace TGMsim
 
             if (bgtimer > 0) bgtimer += 1;
             if (bgtimer == 21) bgtimer = 0;
+
+            if ((MOD.g20 == true || gravTable[gravLevel] == Math.Pow(256, ruleset.gravType + 1) * 20) && ruleset.gameRules != GameRules.Games.TGM3 && ruleset.gameRules != GameRules.Games.ACE)
+                if (disableGoldFlash)
+                    goldFlash = true;
+                else
+                    goldFlash = !goldFlash;
+
+            if (goldFlash)
+                textBrush.Color = Color.Gold;
+            else
+                textBrush.Color = Color.White;
 
             if (starting == 0)
             {
@@ -1324,8 +1337,8 @@ namespace TGMsim
                                             break;
                                     }
 
-                                    if ((MOD.g20 == true || gravTable[gravLevel] == Math.Pow(256, ruleset.gravType + 1) * 20) && (int)ruleset.gameRules < 4 && (int)ruleset.gameRules > 0)
-                                        textBrush = new SolidBrush(Color.Gold);
+                                    //if ((MOD.g20 == true || gravTable[gravLevel] == Math.Pow(256, ruleset.gravType + 1) * 20) && (int)ruleset.gameRules < 4 && (int)ruleset.gameRules > 0)
+                                        //textBrush = new SolidBrush(Color.Gold);
 
                                     //garbage
                                     if (checkGimmick(Mode.Gimmick.Type.GARBAGE) && MOD.garbTimer >= getActiveGimmickParameter(Mode.Gimmick.Type.GARBAGE) && (MOD.raiseGarbOnClear == true || full.Count == 0))
