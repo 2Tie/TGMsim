@@ -24,9 +24,9 @@ namespace TGMsim
 
         public M_Shirase()
         {
+            grades = new List<string> { "", "S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "S9", "S10", "S11", "S12", "S13" };
             ModeName = "SHIRASE";
             toriCredits = false;
-            shiragrades = true;
             showGhost = false;
             endLevel = 1300;
             sections.Add(100);
@@ -205,22 +205,19 @@ namespace TGMsim
                         grade -= 1;
                         coolTime.tick();
                     }
+
                     //TORIKAN
                     if (curSection == 5 && t > 148000)
                     {
                         level = 500;
                         torikan = true;
                         torDef = t - 148000;
-                        //inCredits = true; //TODO: end game better
-                        //endGame();
                     }
                     if (curSection == 10 && t > 296000)
                     {
                         level = 1000;
                         torikan = true;
                         torDef = t - 296000;
-                        //inCredits = true; //TODO: end game better
-                        //endGame();
                     }
                     //MUSIC
                     updateMusic();

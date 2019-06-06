@@ -26,7 +26,6 @@ namespace TGMsim
         public long t = 0;
 
         public List<int> coolCounter = new List<int>();
-        //public List<int> secCools = new List<int> { 52000, 52000, 49000, 45000, 45000, 42000, 42000, 38000, 38000 }; //TODO: REDO THIS TABLE
 
         public M_Dynamo(int v)
         {
@@ -119,6 +118,7 @@ namespace TGMsim
             if(variant == 4)
             {
                 //TODO: super curve, cools don't affect it
+                //update delays
 
             }
 

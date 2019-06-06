@@ -12,6 +12,7 @@ namespace TGMsim
         public List<int> levelUpTimes = new List<int> { 3480, 2320, 2320, 2320, 2320, 2320, 2320, 2320, 2320, 3480, 3480, 1740, 1740, 1740, 1740, 3480 };
         public int timeCounter = 0;
         public int lineCounter = 0;
+        int lines = 0;
         List<int> linePoints = new List<int> { 100, 400, 900, 2000 };
 
         public M_SegaTet()
@@ -46,6 +47,8 @@ namespace TGMsim
                 level++;
                 timeCounter = 0;
                 lineCounter = 0;
+                if (level > 99)
+                    level = 99;
             }
         }
 
@@ -66,13 +69,20 @@ namespace TGMsim
             //add points
             int scorelevel = Math.Min(4, level / 2) + 1;
             score += scorelevel * linePoints[lines - 1] * (bravo ? 10 : 1);
+            if (score > 999999)
+                score = 999999;
 
             timeCounter = 0;
             lineCounter += lines;
+            this.lines = lines;
+            if (lines > 999)
+                lines = 999;
             if(lineCounter >= 4)
             {
                 level++;
                 lineCounter = 0;
+                if (level > 99)
+                    level = 99;
             }
         }
 

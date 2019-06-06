@@ -185,7 +185,7 @@ namespace TGMsim
                                 break;
                         }
                     lastPressed = (Key)i;
-                    nPad.poll();
+                    nPad.poll(true);
                     vInput = nPad.inputV;
                     return true;
                 }

@@ -67,11 +67,6 @@ namespace TGMsim
         public int timerCount = 0;
         public int gravCounter = 0;
         public int gravLevel = 0;
-        //public int score = 0;
-        //public int combo = 1;
-        //public int gradePoints = 0;
-        //public int gradeLevel = 0;
-        //public int gradeTime = 0;
         List<int> gravTable;
 
         public int starting = 1;
@@ -80,8 +75,6 @@ namespace TGMsim
         public bool newHiscore = false;
 
         public int bgtimer = 0;
-        
-        //public int creditGrades = 0;//TODO: migrate out
         
         public GameRules ruleset;
         int curSection = 0;
@@ -234,8 +227,6 @@ namespace TGMsim
                 }
             }
 
-            g20 = MOD.g20;
-
             gravTable = ruleset.gravTable;
 
             MOD.grade = MOD.initialGrade;
@@ -328,6 +319,8 @@ namespace TGMsim
             flashList = new List<flashPip>();
             activeGim = new List<Mode.Gimmick>();
             gimIndex = 0;
+
+            g20 = MOD.g20;
 
             updateGimmicks();
     }
@@ -663,14 +656,6 @@ namespace TGMsim
             }
             //score
             drawBuffer.DrawString(MOD.score.ToString(), f_Maestro, textBrush, x + 280, 280);
-            if (ruleset.gameRules == GameRules.Games.TGM1 && MOD.modeID == Mode.ModeType.MASTER)
-            {
-                drawBuffer.DrawString("NEXT GRADE:", f_Maestro, textBrush, x + 280, 140);
-                if (MOD.grade != 18)
-                    drawBuffer.DrawString(MOD.gradePointsTGM1[MOD.grade + 1].ToString(), f_Maestro, textBrush, x + 280, 160);
-                else
-                    drawBuffer.DrawString("??????", f_Maestro, textBrush, x + 280, 160);
-            }
 
             if (godmode)
                 drawBuffer.DrawString("GODMODE", f_Maestro, new SolidBrush(Color.Orange), 10, 530);
@@ -709,17 +694,11 @@ namespace TGMsim
                 drawBuffer.DrawString(convertTime((long)(timer.count * ruleset.FPS / 60)), SystemFonts.DefaultFont, textBrush, x + 290, 550);
 
             //GRADE TEXT
-            if (MOD.shiragrades == false)
-            {
-                if (MOD.showGrade && MOD.grade != -1)
-                    drawGrade(drawBuffer, ruleset.grades[MOD.grade]);
-            }
-            else
-                if (MOD.grade != 0)
-                    drawGrade(drawBuffer, "S" + MOD.grade);
+            if (MOD.showGrade && MOD.grade != -1)
+                drawGrade(drawBuffer, MOD.grades[MOD.grade]);
 
             if (ruleset.exam != -1)
-                drawBuffer.DrawString("EXAM: " + ruleset.grades[ruleset.exam].ToString(), f_Maestro, textBrush, x + 280, 100);
+                drawBuffer.DrawString("EXAM: " + MOD.grades[ruleset.exam].ToString(), f_Maestro, textBrush, x + 280, 100);
 
 
             //DRAW MEDALS
@@ -762,7 +741,7 @@ namespace TGMsim
             {
                 if (MOD.modeID == Mode.ModeType.MASTER)
                 {
-                    drawBuffer.DrawString("Grade: " + ruleset.grades[results.grade], SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 200);
+                    drawBuffer.DrawString("Grade: " + MOD.grades[results.grade], SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 200);
                 }
                 drawBuffer.DrawString("Score: " + results.score, SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 210);
                 drawBuffer.DrawString("Time: " + convertTime(results.time), SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 220);
@@ -1303,7 +1282,12 @@ namespace TGMsim
                                             MOD.continueMode = false;
                                         }
                                         else
-                                            endGame(true);//TODO: add optional credits
+                                        {
+                                            if (MOD.hasCredits)
+                                                triggerCredits();
+                                            else
+                                                endGame(true);
+                                        }
                                     if (MOD.torikan && !toriless && !inCredits)
                                     {
                                         currentTimer = timerType.LineClear;

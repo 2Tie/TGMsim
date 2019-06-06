@@ -15,9 +15,9 @@ namespace TGMsim
 
         public M_HellMarch()
         {
+            grades = new List<string> { "", "S", "M", "Mm", "MM", "SM" };
             ModeName = "HELL MARCH";
             border = Color.DarkTurquoise;
-            showGrade = false;
             boardsProgress = 0;
             endLevel = 0;
             drawSec = false;
@@ -46,10 +46,12 @@ namespace TGMsim
                 brav = brav || bravo;
                 if(teteri == 10)
                 {
-                    grade = 31;
+                    grade = 3;
                     if (brav)
-                        grade = 34;
+                        grade = 4;
                     modeClear = true;
+                    inCredits = true;
+                    g20 = true;
                 }
             }
             if (roadProgress == 1 && boardGems == 0)
@@ -65,7 +67,7 @@ namespace TGMsim
                     type = Gimmick.Type.INVIS
                 };
                 gimList.Add(g);
-                grade = 27;
+                grade = 2;
                 showGrade = true;
                 curSection = 2;
                 continueMode = true;
@@ -96,8 +98,18 @@ namespace TGMsim
                 curSection = 1;
                 continueMode = true;
                 roadProgress = 1;
+                grade = 1;
             }
             level += lines;
+        }
+
+        public override void onGameOver()
+        {
+            if (inCredits && creditsClear)
+            {
+                if (grade == 4)
+                    grade = 5;
+            }
         }
     }
 }

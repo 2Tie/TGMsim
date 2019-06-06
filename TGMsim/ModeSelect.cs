@@ -54,7 +54,7 @@ namespace TGMsim
             modes.Add(tmp);
             tmp = new List<ModeSelObj>();//tgm2
             tmp.Add(new ModeSelObj(new List<string> { "Master" }, Mode.ModeType.MASTER, true));
-            tmp.Add(new ModeSelObj(new List<string> { "Cardcaptor Sakura" }, Mode.ModeType.MASTER, false)); //TODO
+            tmp.Add(new ModeSelObj(new List<string> { "Cardcaptor Sakura Easy", "Cardcaptor Sakura Normal" }, Mode.ModeType.MASTER, false)); //TODO
             modes.Add(tmp);
             tmp = new List<ModeSelObj>();//tap
             tmp.Add(new ModeSelObj(new List<string> { "Normal" }, Mode.ModeType.SEGA, false));

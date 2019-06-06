@@ -9,7 +9,6 @@ namespace TGMsim
 {
     class Mode
     {
-        public List<int> gradePointsTGM1 = new List<int> { 0, 400, 800, 1400, 2000, 3500, 5500, 8000, 12000, 16000, 22000, 30000, 40000, 52000, 66000, 82000, 100000, 120000 };
         public struct Gimmick
         {
             public Type type; 
@@ -22,6 +21,9 @@ namespace TGMsim
         public enum ModeType { MASTER, DEATH, SHIRASE, SPRINT, GARBAGE, ROUNDS,  KONOHA, TRAINING, SEGA, MINER, DYNAMO, ENDURA, BLOX, PLUS, FLASH, MARCH }; //for the ID stuff
 
         public enum GarbType { FIXED, COPY, RANDOM, HIDDEN } ;
+
+        public List<string> grades = new List<string> { "9", "8", "7", "6", "5", "4", "3", "2", "1", "S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "S9", "GM" };
+        //public List<string> grades = new List<string> { "9", "8", "7", "6", "5", "4", "3", "2", "1", "S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "S9", "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9", "M", "MK", "MV", "MO", "MM", "GM", "TM" };
 
         public string ModeName = "DUMMY";
         public ModeType modeID = 0;
@@ -50,6 +52,7 @@ namespace TGMsim
         public bool comboing = false;
         public bool inCredits = false;
         public bool modeClear = false;
+        public bool hasCredits = true;
         public bool creditsClear = false;
         public bool continueMode = false; //if true, do something such as load another board in sakura when modeClear is true
         public bool clearField = true;
@@ -63,9 +66,7 @@ namespace TGMsim
         public int score = 0;
         public int combo = 1;
         public int grade = 0;
-        public bool shiragrades = false;
         public bool drawSec = true;
-        //public int gm2grade = 0;
         public bool startWithRandField = false;
         public bool autoGarbage = false;
         public bool startEnd = false;

@@ -9,7 +9,7 @@ namespace TGMsim
 {
     class M_Master3 : Mode
     {
-        //TODO: add section cool regret stuff
+        new List<string> grades = new List<string> { "9", "8", "7", "6", "5", "4", "3", "2", "1", "S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "S9", "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9", "M", "MK", "MV", "MO", "MM", "GM" };
 
         public List<List<double>> comboTable = new List<List<double>>();
         public List<int> gradeIntTGM2 = new List<int> { 0, 1, 2, 3, 4, 5, 5, 6, 6, 7, 7, 7, 8, 8, 8, 9, 9, 9, 10, 11, 12, 12, 12, 13, 13, 14, 14, 15, 15, 16, 16, 17 };
@@ -258,8 +258,6 @@ namespace TGMsim
                         level = 500;
                         torikan = true;
                         torDef = t - 420000;
-                        //inCredits = true; //TODO: make this work better?
-                        //endGame();
                     }
                     //MUSIC
                     updateMusic();

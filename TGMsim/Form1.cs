@@ -180,7 +180,8 @@ namespace TGMsim
 
         void gameLogic()
         {
-            pad1.poll();
+            //if(Focused)
+            pad1.poll(Focused);
 
             //deal with game logic
             switch (menuState)
@@ -434,7 +435,7 @@ namespace TGMsim
                         }
                         drawBuffer.DrawString(hiscoreTable[i].username, DefaultFont, new SolidBrush(Color.White), 250, 100 + 30 * i);
                         drawBuffer.DrawString(hiscoreTable[i].level.ToString(), DefaultFont, new SolidBrush(Color.White), 290, 100 + 30 * i);
-                        drawBuffer.DrawString(rules.grades[hiscoreTable[i].grade], DefaultFont, new SolidBrush(Color.White), 330, 100 + 30 * i);
+                        drawBuffer.DrawString(rules.mod.grades[hiscoreTable[i].grade], DefaultFont, new SolidBrush(Color.White), 330, 100 + 30 * i);
                         var temptimeVAR = hiscoreTable[i].time;
                         var min = (int)Math.Floor((double)temptimeVAR / 60000);
                         temptimeVAR -= min * 60000;

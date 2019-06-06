@@ -45,12 +45,12 @@ namespace TGMsim
         public List<int> decayRate = new List<int>() { 125, 80, 80, 50, 45, 45, 45, 40, 40, 40, 40, 40, 30, 30, 30, 20, 20, 20, 20, 20, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 10 };
         public List<List<int>> baseGradePts = new List<List<int>>();
 
-        public List<int> gravTable = new List<int>();//TODO: grav table set plz
+        public List<int> gravTable = new List<int>();
         public List<int> gravLevels = new List<int>() { 0, 30, 35, 40, 50, 60, 70, 80, 90, 100, 120, 140, 160, 170, 200, 220, 230, 233, 236, 239, 243, 247, 251, 300, 330, 360, 400, 420, 450, 500 };
         public List<List<int>> delayTable = new List<List<int>>();
         
 
-        public List<string> grades = new List<string> { "9", "8", "7", "6", "5", "4", "3", "2", "1", "S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "S9", "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9", "M", "MK", "MV", "MO", "MM", "GM", "TM", "SM" };
+        //public List<string> grades = new List<string> { "9", "8", "7", "6", "5", "4", "3", "2", "1", "S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "S9", "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9", "M", "MK", "MV", "MO", "MM", "GM", "TM" };
 
         public List<int> gradeIntTGM2 = new List<int> { 0, 1, 2, 3, 4, 5, 5, 6, 6, 7, 7, 7, 8, 8, 8, 9, 9, 9, 10, 11, 12, 12, 12, 13, 13, 14, 14, 15, 15, 16, 16, 17 };
         
@@ -240,7 +240,7 @@ namespace TGMsim
             
             switch (mode)//Master, Death, shirase, sprint, garbage clear, rounds, konoha, grav training, miner, dynamo, endura
             {
-                case Mode.ModeType.MASTER: //Master //TODO:replace with the enum constants
+                case Mode.ModeType.MASTER: //Master
                     switch (game)
                     {
                         case Games.TGM1:

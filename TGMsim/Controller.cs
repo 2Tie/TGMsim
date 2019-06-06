@@ -36,7 +36,7 @@ namespace TGMsim
             keyStart = Key.Enter;
         }
 
-        public void poll() 
+        public void poll(bool focused) 
         {
             //reset inputs
             inputH = inputV = inputStart = inputRot1 = inputRot2 = inputRot3 = inputHold = 0;
@@ -49,7 +49,7 @@ namespace TGMsim
             }
             inputHistory[5] = 0;
 
-            if (ApplicationIsActivated())
+            if (focused)
             {
                 if (playback == false)
                 {
@@ -211,30 +211,7 @@ namespace TGMsim
             recording = false;
             playback = true;
             progress = 0;
-            //TODO: load the playback at some point so that file can be loaded and field can be set to playback and seed set??
         }
-
-        public static bool ApplicationIsActivated()
-        {
-            var activatedHandle = GetForegroundWindow();
-            if (activatedHandle == IntPtr.Zero)
-            {
-                return false;       // No window is currently activated
-            }
-
-            var procId = Process.GetCurrentProcess().Id;
-            int activeProcId;
-            GetWindowThreadProcessId(activatedHandle, out activeProcId);
-
-            return activeProcId == procId;
-        }
-
-
-        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
-        private static extern IntPtr GetForegroundWindow();
-
-        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        private static extern int GetWindowThreadProcessId(IntPtr handle, out int processId);
     
     }
 }

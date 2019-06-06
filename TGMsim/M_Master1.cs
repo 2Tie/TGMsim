@@ -12,6 +12,7 @@ namespace TGMsim
 
         public long t = 0;
         public List<bool> GMflags = new List<bool>();
+        List<int> gradePoints = new List<int> { 0, 400, 800, 1400, 2000, 3500, 5500, 8000, 12000, 16000, 22000, 30000, 40000, 52000, 66000, 82000, 100000, 120000 };
 
         public M_Master1()
         {
@@ -80,6 +81,7 @@ namespace TGMsim
 
             combo = combo + (2 * lines) - 2;
 
+            if(!inCredits)
             score += ((int)Math.Ceiling((double)(level) / 4) + tet.soft) * lines * combo * b;
 
             //update grade
@@ -87,9 +89,9 @@ namespace TGMsim
             while (checking == true)
             {
 
-                if (grade < gradePointsTGM1.Count - 1)
+                if (grade < gradePoints.Count - 1)
                 {
-                    if (score >= gradePointsTGM1[grade + 1])
+                    if (score >= gradePoints[grade + 1])
                     {
                         grade++;
                         Audio.playSound(Audio.s_Grade);
@@ -138,7 +140,7 @@ namespace TGMsim
                         //check for awarding GM
                         if (GMflags[0] && GMflags[1] && GMflags[2])
                         {
-                            grade = 32;
+                            grade = grades.Count - 1;
                         }
                     }
                     //MUSIC
@@ -167,7 +169,12 @@ namespace TGMsim
 
         public override void draw(Graphics drawBuffer, Font f_Maestro, bool replay)
         {
-            drawBuffer.DrawString(curSection.ToString(), f_Maestro, new SolidBrush(Color.White), 40, 80);
+            //drawBuffer.DrawString(curSection.ToString(), f_Maestro, new SolidBrush(Color.White), 40, 80);
+            drawBuffer.DrawString("NEXT GRADE:", f_Maestro, new SolidBrush(Color.White), 480, 140);
+            if (grade != 18)
+                drawBuffer.DrawString(gradePoints[grade + 1].ToString(), f_Maestro, new SolidBrush(Color.White), 480, 160);
+            else
+                drawBuffer.DrawString("??????", f_Maestro, new SolidBrush(Color.White), 480, 160);
         }
     }
 }
