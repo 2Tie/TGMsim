@@ -8,10 +8,19 @@ namespace TGMsim
 {
     class M_Master2Plus : M_Master2
     {
+        bool master = false;
         public M_Master2Plus() : base()
         {
             delayTable[1] = new List<int> { 27, 27, 18, 14, 8, 8 };//line ARE
             ModeName = "MASTER 2+";
+        }
+
+        public override void onGameOver()
+        {
+            if (inCredits && master)
+                grade = 27;//award M for reaching credits
+            if (creditsClear && master)
+                grade = 32;//award GM for clearing
         }
 
         public override void onClear(int lines, Tetromino tet, long time, bool bravo)
@@ -24,6 +33,11 @@ namespace TGMsim
             if (level >= endLevel && endLevel != 0)
             {
                 level = endLevel;
+                if (!inCredits) //test for invis roll
+                {
+                    if (grade == 27)
+                        creditsType = 2;
+                }
                 inCredits = true;
             }
 
@@ -66,7 +80,8 @@ namespace TGMsim
             {
                 gradeCombo++;
             }
-            gradePoints += newPts;
+            if (!inCredits)
+                gradePoints += newPts;
             //update grade
             if (gradePoints > 99)
             {
@@ -217,14 +232,15 @@ namespace TGMsim
                         else
                             GMflags.Add(false);
 
-                        bool gm = true;
+                        master = true;
                         foreach (bool flag in GMflags)
                         {
                             if (flag == false)
-                                gm = false;
+                            {
+                                master = false;
+                                break;
+                            }
                         }
-                        if (gm)
-                            grade = 32;
                     }
                     //BACKGROUND
                 }

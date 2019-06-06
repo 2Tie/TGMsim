@@ -63,6 +63,7 @@ namespace TGMsim
                 baseGradePts[3].Add(30);
             }
             secTet.Add(0);
+            creditsType = 1;
         }
 
         public override void onSpawn()
@@ -107,6 +108,12 @@ namespace TGMsim
             }
         }
 
+        public override void onGameOver()
+        {
+            if (creditsClear && grade == 27)
+                grade = 32;//award GM
+        }
+
         public override void onClear(int lines, Tetromino tet, long time, bool bravo)
         {
             pipCount -= 10*lines;
@@ -117,6 +124,11 @@ namespace TGMsim
             if (level >= endLevel && endLevel != 0)
             {
                 level = endLevel;
+                if(!inCredits) //test for invis roll
+                {
+                    if (grade == 27)
+                        creditsType = 2;
+                }
                 inCredits = true;
             }
 
@@ -157,7 +169,8 @@ namespace TGMsim
             {
                 gradeCombo++;
             }
-            gradePoints += newPts;
+            if (!inCredits)
+                gradePoints += newPts;
             //update grade
             if (gradePoints > 99)
             {
@@ -263,13 +276,16 @@ namespace TGMsim
                         GMflags.Add(false);
 
                     bool gm = true;
-                    foreach (bool flag in GMflags)
-                    {
-                        if (flag == false)
-                            gm = false;
-                    }
+                        foreach (bool flag in GMflags)
+                        {
+                            if (flag == false)
+                            {
+                                gm = false;
+                                break;
+                            }
+                        }
                     if (gm)
-                        grade = 32;
+                        grade = 27;
                 }
                 //MUSIC
                 updateMusic();

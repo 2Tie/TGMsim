@@ -32,10 +32,14 @@ namespace TGMsim
         public int cools = 0;
         public long t = 0;
 
+        int creditGrades = 0;
+
         public List<int> coolCounter = new List<int>();
 
         public List<int> secCools = new List<int> { 52000, 52000, 49000, 45000, 45000, 42000, 42000, 38000, 38000 };
         public List<int> secRegrets = new List<int> { 90000, 75000, 75000, 68000, 60000, 60000, 50000, 50000, 50000, 50000 };
+
+        List<List<int>> creditGradePoints = new List<List<int>> { new List<int>{ 4, 8, 12, 26 }, new List<int>{ 10, 20, 30, 100 } };
 
 
         public M_Master3()
@@ -166,6 +170,13 @@ namespace TGMsim
             if (level >= endLevel && endLevel != 0)
             {
                 level = endLevel;
+                if (!inCredits)//set credits type once at the start
+                {
+                    if (grade > 26 && secCools.Sum() == 8)
+                        creditsType = 2;
+                    else
+                        creditsType = 1;
+                }
                 inCredits = true;
             }
 
@@ -209,7 +220,10 @@ namespace TGMsim
             {
                 gradeCombo++;
             }
-            gradePoints += newPts;
+            if (!inCredits)
+                gradePoints += newPts;
+            else
+                creditGrades += creditGradePoints[creditsType - 1][lines];
             //update grade
             if (gradePoints > 99)
             {
@@ -386,6 +400,23 @@ namespace TGMsim
                 medals[5] = 3;
                 Audio.playSound(Audio.s_Medal);
             }
+        }
+
+        public override void onGameOver()
+        {
+            if (creditsType == 1)
+                creditGrades += 50;
+            if (creditsType == 2)
+                creditGrades += 160;
+
+            for (; creditGrades > 100; creditGrades -= 100)
+            {
+                grade++;
+            }
+            if (grade < 0)
+                grade = 0; //9
+            if (grade > 32)
+                grade = 32; //GM?
         }
 
         public override void updateMusic()

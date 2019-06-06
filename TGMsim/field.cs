@@ -81,7 +81,7 @@ namespace TGMsim
 
         public int bgtimer = 0;
         
-        public int creditGrades = 0;//TODO: migrate out
+        //public int creditGrades = 0;//TODO: migrate out
         
         public GameRules ruleset;
         int curSection = 0;
@@ -623,13 +623,18 @@ namespace TGMsim
             switch (ruleset.gameRules)
             {
                 case GameRules.Games.TGM1:
-                    gravColor = Color.White;
-                    gravMeter = Color.Teal;
-                    break;
                 case GameRules.Games.TGM2:
+                case GameRules.Games.TAP:
+                    gravColor = Color.White;
+                    gravMeter = Color.Green;
+                    break;
                 case GameRules.Games.TGM3:
                     gravColor = Color.Green;
-                    gravMeter = Color.Orange;
+                    gravMeter = Color.Red;
+                    break;
+                case GameRules.Games.ACE:
+                    gravColor = Color.Green;
+                    gravMeter = Color.Green;
                     break;
                 default:
                     gravColor = Color.White;
@@ -643,7 +648,7 @@ namespace TGMsim
                 drawBuffer.FillRectangle(new SolidBrush(gravColor), x + 280, 505, 60, 8);
                 drawBuffer.FillRectangle(new SolidBrush(gravMeter), x + 280, 505, (int)Math.Round(((double)gravTable[gravLevel] * 60) / ((Math.Pow(256, ruleset.gravType + 1) * 20))), 8);
                 if (MOD.g20 == true || gravTable[gravLevel] == Math.Pow(256, ruleset.gravType + 1) * 20)
-                    drawBuffer.FillRectangle(new SolidBrush(Color.Red), x + 280, 505, 60, 8);
+                    drawBuffer.FillRectangle(new SolidBrush(gravMeter), x + 280, 505, 60, 8);
             }
 
             //SMALL TEXT
@@ -692,16 +697,6 @@ namespace TGMsim
             //drawBuffer.DrawString(creditsProgress.ToString(), SystemFonts.DefaultFont, textBrush, 20, 280);
             //drawBuffer.DrawString(ruleset.baseLineClear.ToString(), SystemFonts.DefaultFont, textBrush, 20, 290);
 
-            /*string cTex = "REGRET!";
-            if (ruleset.gameRules == 4 && coolTime.count > 0)
-            {
-                if (MOD.level % 100 >= 70)//cool
-                {
-                    cTex = "COOL!";
-                }
-                drawBuffer.DrawString(cTex, SystemFonts.DefaultFont, textBrush, x + 300, 350);
-            }*/
-
             //if (bravoTime.count > 0)
                 //drawBuffer.DrawString("BRAVO! X" + bravoCounter, SystemFonts.DefaultFont, textBrush, x + 280, 400);
 
@@ -732,7 +727,7 @@ namespace TGMsim
                 for (int i = 0; i < 6; i++)
                 {
                     if (MOD.medals[i] != 0)
-                        drawBuffer.DrawImage(medalImg, new Rectangle(x + 280 + (i % 3) * 20, 190 + (30 * (int)(Math.Floor((double)i / 3))), 25, 15), i * 26, (MOD.medals[i] - 1) * 16, 25, 16, GraphicsUnit.Pixel);
+                        drawBuffer.DrawImage(medalImg, new Rectangle(x + 280 + (i % 3) * 30, 190 + (20 * (int)(Math.Floor((double)i / 3))), 25, 15), i * 26, (MOD.medals[i] - 1) * 16, 25, 16, GraphicsUnit.Pixel);
                 }
 
             //garbage meter
@@ -895,7 +890,7 @@ namespace TGMsim
                     }
                     justSpawned = false;
                     if (MOD.limit - timer.count <= 0 && MOD.limitType == 3)
-                        endGame();
+                        endGame(false);
 
                     //vanishing logic
                     int vpcount = 0;
@@ -1146,7 +1141,7 @@ namespace TGMsim
 
                                     if (inCredits == true && creditsProgress >= ruleset.creditsLength)
                                     {
-                                        endGame();
+                                        endGame(true);
                                         return;
                                     }
 
@@ -1283,16 +1278,6 @@ namespace TGMsim
 
                                         MOD.onClear(bigFull, activeTet, timer.count, tetCount == 0);
 
-                                        //garbage is handled per mode
-
-                                        //section stuff used to be here
-
-                                        //check finish condition
-                                        /*if (MOD.endLevel != 0 && MOD.level >= MOD.endLevel && inCredits == false)
-                                        {
-                                            triggerCredits();
-                                        }*/
-
                                         //start timer
                                         currentTimer = timerType.LineClear;
                                         timerCount = MOD.baseLineClear;
@@ -1318,7 +1303,7 @@ namespace TGMsim
                                             MOD.continueMode = false;
                                         }
                                         else
-                                            endGame();
+                                            endGame(true);//TODO: add optional credits
                                     if (MOD.torikan && !toriless && !inCredits)
                                     {
                                         currentTimer = timerType.LineClear;
@@ -1327,23 +1312,12 @@ namespace TGMsim
                                         if (MOD.toriCredits)
                                             triggerCredits();
                                         else
-                                            endGame();
+                                            endGame(false);
                                         return;
                                     }
                                     else if (MOD.torikan && toriless)
                                         MOD.torikan = false;
-                                    /*if (MOD.sections.Count != curSection)//update section
-                                        if (MOD.level >= MOD.sections[curSection])
-                                        {
-                                            curSection++;
 
-                                            if ((int)ruleset.gameRules > 3)
-                                                Audio.playSound(Audio.s_Section);
-
-                                            
-
-                                            
-                                        }*/
                                     if (curSection != MOD.curSection)
                                     {
                                         curSection = MOD.curSection;
@@ -1420,10 +1394,10 @@ namespace TGMsim
                         bool son = false;
 
                         if (pad.inputStart == 1 && MOD.startEnd)
-                            endGame();
+                            endGame(true);
 
                         if (isPlayback == true && pad.superStart)
-                            endGame();
+                            endGame(false);
 
                         if (pad.inputV == 1 && ruleset.hardDrop == 1)
                         {
@@ -1450,12 +1424,6 @@ namespace TGMsim
                         {
                             safelock = false;
                         }
-
-                        /*if (ruleset.gameRules == 6 && ruleset.hardDrop == 1 && pad.inputV == 1 && pad.inputPressedRot3 == true) //gm4 leftovers
-                        {
-                            gravCounter = 0;
-                            activeTet.groundTimer = 0;
-                        }*/
 
                         if (pad.inputHold == 1 && ruleset.hold == true && swappedHeld == 0)
                         {
@@ -1673,13 +1641,7 @@ namespace TGMsim
             }
 
             gravCounter = 0;
-
-            /*if (level % 100 != 99 && level != (ruleset.endLevel - 1) && inCredits == false && ruleset.id != 9)
-            {
-                level++;
-                if (level % 100 == 99 || level == (ruleset.endLevel - 1))
-                    Audio.playSound(s_Bell);
-            }*/
+            
             MOD.onSpawn();
 
             bool blocked = false;
@@ -1688,7 +1650,7 @@ namespace TGMsim
 
             if (blocked)
             {
-                endGame();
+                endGame(inCredits);//if in credits, you still cleared the mode, just not with line
             }
 
             justSpawned = true;
@@ -1716,7 +1678,7 @@ namespace TGMsim
             }
         }
 
-        private void endGame()
+        private void endGame(bool cleared)
         {
             if (godmode == true && !inCredits && (!MOD.torikan || toriless))
             {
@@ -1725,7 +1687,9 @@ namespace TGMsim
             else
             {
                 gameRunning = false;
+                MOD.creditsClear = cleared;
 
+                //place last piece
                 int lowY = 22;
                 for (int i = 0; i < activeTet.bits.Count; i++)
                 {
@@ -1757,60 +1721,14 @@ namespace TGMsim
                 }
                 activeTet.id = 0;
 
+                MOD.onGameOver();
+
                 results = new GameResult();
 
                 if (inCredits)
                 {
                     if (creditsProgress >= ruleset.creditsLength)//cleared credits
-                    {
                         results.lineC = 1;
-
-                        if (ruleset.gameRules == GameRules.Games.TGM3)
-                        {
-                            if (MOD.creditsType == 1)
-                                creditGrades += 50;
-                            if (MOD.creditsType == 2)
-                                creditGrades += 160;
-                        }
-
-                        //check credits line clears, award orange line if applicable
-                        //play game clear jingle?
-                    }
-                    else//topped out in credits
-                    {
-                        //if ((ruleset.gameRules == 2 || ruleset.gameRules == 3) && isGM == true)
-                            //MOD.grade = 27;
-                    }
-                }
-
-                for (; creditGrades > 100; creditGrades -= 100)
-                {
-                    MOD.grade++;
-                }
-
-                //handle TGM3 section modifyers
-                if (ruleset.gameRules == GameRules.Games.TGM3)
-                {
-                    if (MOD.modeID == Mode.ModeType.MASTER)
-                    {
-                        /*foreach (int i in secCools)
-                        {
-                            MOD.grade += i;
-                        }*/
-
-                        if (MOD.grade < 0)
-                            MOD.grade = 0;
-                        if (MOD.grade > 32)
-                            MOD.grade = 32;
-                    }
-                    /*if(ruleset.id == 2)
-                    {
-                        MOD.grade += secCools.Count + 1;
-                        foreach (int i in secCools)
-                        {
-                            MOD.grade += i;
-                        }
-                    }*/
                 }
                 
                 Audio.stopMusic();
@@ -1830,7 +1748,6 @@ namespace TGMsim
 
         private void triggerCredits()
         {
-            
             inCredits = true;
             Audio.stopMusic();
             if (ruleset.gameRules == GameRules.Games.TGM1 || MOD.modeID == Mode.ModeType.DEATH)
@@ -1839,20 +1756,6 @@ namespace TGMsim
             {
                 Audio.playSound(Audio.s_GameClear); //allclear
                 clearField();
-            }
-
-            if (MOD.modeID == Mode.ModeType.MASTER)
-            {
-                if ((ruleset.gameRules == GameRules.Games.TGM2 || ruleset.gameRules == GameRules.Games.TAP) && MOD.grade == 32) //tgm2 always has invisible
-                    MOD.creditsType = 2;
-
-                /*if (ruleset.gameRules == 4)
-                {
-                    if (MOD.grade > 26 && secCools.Sum() == 8)
-                        MOD.creditsType = 2;
-                    else
-                        MOD.creditsType = 1;
-                }*/
             }
         }
 

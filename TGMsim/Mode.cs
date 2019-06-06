@@ -50,6 +50,7 @@ namespace TGMsim
         public bool comboing = false;
         public bool inCredits = false;
         public bool modeClear = false;
+        public bool creditsClear = false;
         public bool continueMode = false; //if true, do something such as load another board in sakura when modeClear is true
         public bool clearField = true;
         public bool torikan = false;
@@ -127,6 +128,11 @@ namespace TGMsim
         }
 
         public virtual void onClear(int lines, Tetromino tet, long time, bool bravo)
+        {
+
+        }
+
+        public virtual void onGameOver()
         {
 
         }
