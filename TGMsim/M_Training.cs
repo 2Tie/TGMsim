@@ -18,6 +18,7 @@ namespace TGMsim
             gradedBy = 4;
             showGrade = false;
             showGhost = false;
+            creditsSong = "crdtcas";
             sections.Add(200);
             delayTable.Add(new List<int> { 27 });
             delayTable.Add(new List<int> { 27 });

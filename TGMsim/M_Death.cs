@@ -44,6 +44,7 @@ namespace TGMsim
             delayTable.Add(new List<int> { 30, 26, 22, 18, 15, 15 });
             delayTable.Add(new List<int> { 12, 6, 6, 6, 5, 4 });
             secTet.Add(0);
+            hasCreditsPause = false;
         }
 
         public override void onTick(long time)

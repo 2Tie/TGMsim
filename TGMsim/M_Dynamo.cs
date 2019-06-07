@@ -46,7 +46,13 @@ namespace TGMsim
             if (v < 4)
                 lvlBonus = v * 10;
             //if v == 4, final mode
-            
+            if (v == 0)
+                creditsSong = "crdtcas";
+            else if (v == 4)
+                creditsSong = "crdtinvis";
+            else
+                creditsSong = "crdtvanish";
+
             //ADD SHIRASE
             delayTable.Add(new List<int> { 27, 27, 27, 18, 14, 14, 12, 12, 12, 8,  7,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6 });//ARE
             delayTable.Add(new List<int> { 27, 27, 18, 14, 8,  8,  8,  7,  6,  6,  6,  6,  6,  5,  5,  5,  5,  5,  5,  5,  5,  5 });//LINE ARE
@@ -224,31 +230,43 @@ namespace TGMsim
         public override void updateMusic()
         {
             int section = curSection + cools + variant * 5;
-            if (section >= 20 && Audio.song != "Level 5")
+            if (section >= 20)
             {
-                Audio.stopMusic();
-                Audio.playMusic("Level 5");
-                return;
+                if (Audio.song != "Level 5")
+                {
+                    Audio.stopMusic();
+                    Audio.playMusic("Level 5");
+                    return;
+                }
             }
-            else if (section >= 15 && Audio.song != "Level 4")
+            else if (section >= 15)
             {
-                Audio.stopMusic();
-                Audio.playMusic("Level 4");
-                return;
+                if (Audio.song != "Level 4")
+                {
+                    Audio.stopMusic();
+                    Audio.playMusic("Level 4");
+                    return;
+                }
             }
-            else if (section >= 10 && Audio.song != "Level 3")
+            else if (section >= 10)
             {
-                Audio.stopMusic();
-                Audio.playMusic("Level 3");
-                return;
+                if (Audio.song != "Level 3")
+                {
+                    Audio.stopMusic();
+                    Audio.playMusic("Level 3");
+                    return;
+                }
             }
-            else if (section >= 5 && Audio.song != "Level 2")
+            else if (section >= 5)
             {
-                Audio.stopMusic();
-                Audio.playMusic("Level 2");
-                return;
+                if (Audio.song != "Level 2")
+                {
+                    Audio.stopMusic();
+                    Audio.playMusic("Level 2");
+                    return;
+                }
             }
-            else if (section >= 0 && Audio.song != "Level 1")
+            else if (section == 0 && Audio.song != "Level 1")
             {
                 Audio.stopMusic();
                 Audio.playMusic("Level 1");

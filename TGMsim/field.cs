@@ -938,21 +938,25 @@ namespace TGMsim
 
                     inputDelayDir = pad.inputH;
 
-                    if(creditsProgress == 0 &&(((int)ruleset.gameRules > 1) == (creditsPause.count >= 3000) || MOD.modeID == Mode.ModeType.DEATH) && inCredits)
+                    //if (inCredits && (((int)ruleset.gameRules > 1) == (creditsPause.count >= 3000) || MOD.modeID == Mode.ModeType.DEATH || creditsProgress != 0))
+                    if (inCredits && creditsProgress != 0)
                     {
-                        if (MOD.modeID == Mode.ModeType.TRAINING || MOD.modeID == Mode.ModeType.MINER || (MOD.modeID == Mode.ModeType.DYNAMO && MOD.variant == 0))
+                        creditsProgress++;
+                        if (pad.inputStart == 1 && MOD.speedUpCredits)
+                            creditsProgress += 3;
+                    }
+
+                    //if(creditsProgress == 0 &&(((int)ruleset.gameRules > 1) == (creditsPause.count >= 3000) || MOD.modeID == Mode.ModeType.DEATH) && inCredits)
+                    if (inCredits && creditsProgress == 0 && (!MOD.hasCreditsPause || creditsPause.count >= 3000))//if no pause, or if pause over
+                    {
+                        /*if (MOD.modeID == Mode.ModeType.TRAINING || MOD.modeID == Mode.ModeType.MINER || (MOD.modeID == Mode.ModeType.DYNAMO && MOD.variant == 0))
                             Audio.playMusic("crdtcas");
                         else if (MOD.creditsType < 2)
                             Audio.playMusic("crdtvanish");
                         else
-                            Audio.playMusic("crdtinvis");
-                    }
-
-                    if (inCredits && (((int)ruleset.gameRules > 1) == (creditsPause.count >= 3000) || MOD.modeID == Mode.ModeType.DEATH || creditsProgress != 0))
-                    {
+                            Audio.playMusic("crdtinvis");*/
+                        Audio.playMusic(MOD.creditsSong);
                         creditsProgress++;
-                        if (pad.inputStart == 1 && ruleset.gameRules == GameRules.Games.TGM1)
-                            creditsProgress += 3;
                     }
 
                     MOD.onTick(timer.count, currentTimer);
@@ -1161,7 +1165,7 @@ namespace TGMsim
                                                 else
                                                     gameField[activeTet.bits[i].x + j][activeTet.bits[i].y - k] = activeTet.id;
 
-                                                if (MOD.creditsType == 1)//vanishing?
+                                                if (MOD.creditsType == 1 && inCredits)//vanishing?
                                                 {
                                                     vanPip vP = new vanPip();
                                                     vP.time = creditsProgress;
@@ -1229,7 +1233,7 @@ namespace TGMsim
                                                 {
                                                     vanList.RemoveAt(remcell[remcell.Count - c - 1]);
                                                 }
-
+                                                count = 0;
                                                 remcell = new List<int>();
                                                 foreach (var vP in flashList)
                                                 {

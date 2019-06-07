@@ -33,6 +33,8 @@ namespace TGMsim
             delayTable.Add(new List<int> { 30 });
             delayTable.Add(new List<int> { 41 });
             secTet.Add(0);
+            hasCreditsPause = false;
+            speedUpCredits = true;
         }
 
         public override void onSpawn()
@@ -153,13 +155,13 @@ namespace TGMsim
 
         public override void updateMusic()
         {
-            if (curSection >= 5 && Audio.song != "Level 2")
+            if (curSection == 5 && Audio.song != "Level 2")
             {
                 Audio.stopMusic();
                 Audio.playMusic("Level 2");
                 return;
             }
-            if (curSection >= 0 && Audio.song != "Level 1")
+            if (curSection == 0 && Audio.song != "Level 1")
             {
                 Audio.stopMusic();
                 Audio.playMusic("Level 1");

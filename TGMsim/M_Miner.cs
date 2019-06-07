@@ -22,6 +22,7 @@ namespace TGMsim
             sections.Add(400);
             endLevel = 500;
             autoGarbage = true;
+            creditsSong = "crdtcas";
             delayTable.Add(new List<int> { 30 });
             delayTable.Add(new List<int> { 30 });
             delayTable.Add(new List<int> { 16 });

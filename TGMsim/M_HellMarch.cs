@@ -21,6 +21,7 @@ namespace TGMsim
             boardsProgress = 0;
             endLevel = 0;
             drawSec = false;
+            creditsSong = "crdtinvis";
 
             for (int i = 0; i < 18; i++)
                 targets.Add(i);
@@ -51,6 +52,7 @@ namespace TGMsim
                         grade = 4;
                     modeClear = true;
                     inCredits = true;
+                    creditsType = 2;
                     g20 = true;
                 }
             }
@@ -72,6 +74,7 @@ namespace TGMsim
                 curSection = 2;
                 continueMode = true;
                 roadProgress = 2;
+                updateMusic();
             }
             else if (roadProgress == 0 && targets.Count == 0)
             {
@@ -99,6 +102,7 @@ namespace TGMsim
                 continueMode = true;
                 roadProgress = 1;
                 grade = 1;
+                updateMusic();
             }
             level += lines;
         }
@@ -109,6 +113,28 @@ namespace TGMsim
             {
                 if (grade == 4)
                     grade = 5;
+            }
+        }
+
+        public override void updateMusic()
+        {
+            if (roadProgress == 2 && Audio.song != "Level 5")
+            {
+                Audio.stopMusic();
+                Audio.playMusic("Level 5");
+                return;
+            }
+            else if (roadProgress == 1 && Audio.song != "Casual 2")
+            {
+                Audio.stopMusic();
+                Audio.playMusic("Casual 2");
+                return;
+            }
+            else if (roadProgress == 0 && Audio.song != "Casual 1")
+            {
+                Audio.stopMusic();
+                Audio.playMusic("Casual 1");
+                return;
             }
         }
     }

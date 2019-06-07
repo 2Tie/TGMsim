@@ -53,7 +53,10 @@ namespace TGMsim
         public bool inCredits = false;
         public bool modeClear = false;
         public bool hasCredits = true;
+        public bool hasCreditsPause = true;
+        public string creditsSong = "crdtvanish";
         public bool creditsClear = false;
+        public bool speedUpCredits = false;
         public bool continueMode = false; //if true, do something such as load another board in sakura when modeClear is true
         public bool clearField = true;
         public bool torikan = false;

@@ -42,11 +42,11 @@ namespace TGMsim
             sections.Add(800);
             sections.Add(900);
             sections.Add(999);
-            delayTable.Add(new List<int> { 27, 27, 27, 18, 14, 14 });//ARE
-            delayTable.Add(new List<int> { 27, 27, 27, 27, 27, 27 });//line ARE
-            delayTable.Add(new List<int> { 14, 8, 8, 8, 8, 6 });//DAS
-            delayTable.Add(new List<int> { 30, 30, 30, 30, 30, 17 });//LOCK
-            delayTable.Add(new List<int> { 40, 25, 16, 12, 6, 6 });//LINE CLEAR
+            delayTable.Add(new List<int> { 27, 27, 27, 18, 14, 14, 14 });//ARE
+            delayTable.Add(new List<int> { 27, 27, 27, 27, 27, 27, 27 });//line ARE
+            delayTable.Add(new List<int> { 14, 8, 8, 8, 8, 6, 6 });//DAS
+            delayTable.Add(new List<int> { 30, 30, 30, 30, 30, 17, 17 });//LOCK
+            delayTable.Add(new List<int> { 40, 25, 16, 12, 6, 6, 6 });//LINE CLEAR
             comboTable.Add(new List<double>() { 1.0, 1.2, 1.2, 1.4, 1.4, 1.4, 1.4, 1.5, 1.5, 2.0 });
             comboTable.Add(new List<double>() { 1.0, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2.5 });
             comboTable.Add(new List<double>() { 1.0, 1.5, 1.8, 2.0, 2.2, 2.3, 2.4, 2.5, 2.6, 3.0 });
@@ -419,25 +419,25 @@ namespace TGMsim
 
         public override void updateMusic()
         {
-            if (curSection >= 9 && Audio.song != "Level 4")
+            if (curSection == 9 && Audio.song != "Level 4")
             {
                 Audio.stopMusic();
                 Audio.playMusic("Level 4");
                 return;
             }
-            if (curSection >= 7 && Audio.song != "Level 3")
+            else if (curSection == 7 && Audio.song != "Level 3")
             {
                 Audio.stopMusic();
                 Audio.playMusic("Level 3");
                 return;
             }
-            if (curSection >= 5 && Audio.song != "Level 2")
+            else if (curSection == 5 && Audio.song != "Level 2")
             {
                 Audio.stopMusic();
                 Audio.playMusic("Level 2");
                 return;
             }
-            if (curSection >= 0 && Audio.song != "Level 1")
+            else if (curSection == 0 && Audio.song != "Level 1")
             {
                 Audio.stopMusic();
                 Audio.playMusic("Level 1");

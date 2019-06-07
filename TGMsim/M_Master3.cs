@@ -175,7 +175,10 @@ namespace TGMsim
                 if (!inCredits)//set credits type once at the start
                 {
                     if (grade > 26 && secCools.Sum() == 8)
+                    {
                         creditsType = 2;
+                        creditsSong = "crdtinvis";
+                    }
                     else
                         creditsType = 1;
                 }
@@ -421,17 +424,23 @@ namespace TGMsim
 
         public override void updateMusic()
         {
-            if (curSection >= 8 && Audio.song != "Level 3")
+            if (curSection >= 8)
             {
-                Audio.stopMusic();
-                Audio.playMusic("Level 3");
-                return;
+                if (Audio.song != "Level 3")
+                {
+                    Audio.stopMusic();
+                    Audio.playMusic("Level 3");
+                    return;
+                }
             }
-            else if (curSection >= 5 && Audio.song != "Level 2")
+            else if (curSection >= 5)
             {
-                Audio.stopMusic();
-                Audio.playMusic("Level 2");
-                return;
+                if (Audio.song != "Level 2")
+                {
+                    Audio.stopMusic();
+                    Audio.playMusic("Level 2");
+                    return;
+                }
             }
             else if (curSection >= 0 && Audio.song != "Level 1")
             {
