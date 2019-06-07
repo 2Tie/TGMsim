@@ -62,7 +62,7 @@ namespace TGMsim
                 if (gameField[tet.bits[1].x][tet.bits[1].y + ((1 + (tet.rotation / 2)) * (3 - big))] != 0)
                     return false;
 
-            if(tet.id == 4 || tet.id == 5)//J or L
+            if (tet.id == (int)Tetromino.Piece.J || tet.id == (int)Tetromino.Piece.L)
             {
                 if (tet.rotation % 2 == 0)
                 {

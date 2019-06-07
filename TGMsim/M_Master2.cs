@@ -106,6 +106,7 @@ namespace TGMsim
                 gradeCombo = 0;
                 comboing = false;
             }
+            checkAudioFadeout();
         }
 
         public override void onGameOver()
@@ -442,6 +443,13 @@ namespace TGMsim
                 Audio.playMusic("Level 1");
                 return;
             }
+        }
+
+        void checkAudioFadeout()
+        {
+            if (curSection == 4 && level % 100 > 84) Audio.stopMusic();
+            if (curSection == 6 && level % 100 > 84) Audio.stopMusic();
+            if (curSection == 8 && level % 100 > 84) Audio.stopMusic();
         }
 
         public override void draw(Graphics drawBuffer, Font f, SolidBrush b, bool replay)

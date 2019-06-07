@@ -77,6 +77,7 @@ namespace TGMsim
                 gradeCombo = 0;
                 comboing = false;
             }
+            checkAudioFadeout();
         }
 
         public override void onClear(int lines, Tetromino tet, long time, bool bravo)
@@ -280,6 +281,12 @@ namespace TGMsim
                 Audio.playMusic("Level 4");
                 return;
             }
+        }
+
+        void checkAudioFadeout()
+        {
+            if (curSection == 2 && level % 100 > 84) Audio.stopMusic();
+            if (curSection == 4 && level % 100 > 84) Audio.stopMusic();
         }
     }
 }

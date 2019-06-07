@@ -60,7 +60,7 @@ namespace TGMsim
 
             
 
-            if (tet.id == 2 && tet.floored && !checkUnder(testTet, gameField, large, spawn) && (tet.rotation + p + 4) % 4 == 2)//test T floorkicks
+            if (tet.id == 7 && tet.floored && !checkUnder(testTet, gameField, large, spawn) && (tet.rotation + p + 4) % 4 == 2)//test T floorkicks
             {
                 testTet.move(bigOffset, bigOffset);
             }
@@ -83,7 +83,7 @@ namespace TGMsim
                     lowY = tet.bits[q].y;
             }
 
-            if (tet.id == 1 || tet.id > 4)//I, S, Z, and O have no kick restrictions
+            if (tet.id < 4 || tet.id == 6)//I, S, Z, and O have no kick restrictions
                 return true;
 
 
@@ -92,7 +92,7 @@ namespace TGMsim
                 if (gameField[tet.bits[1].x][tet.bits[1].y + ((1 + (tet.rotation / 2)) * (3 - big))] != 0)
                     return false;
 
-            if (tet.id == 4 || tet.id == 5)//J or L
+            if (tet.id == (int)Tetromino.Piece.J || tet.id == (int)Tetromino.Piece.L)
             {
                 if (tet.rotation % 2 == 0)
                 {

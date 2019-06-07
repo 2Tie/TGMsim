@@ -158,6 +158,8 @@ namespace TGMsim
                     }
                 }
             }
+
+            checkAudioFade();
         }
 
         public override void onClear(int lines, Tetromino tet, long time, bool bravo)
@@ -425,18 +427,24 @@ namespace TGMsim
                 Audio.playMusic("Level 3");
                 return;
             }
-            if (curSection >= 5 && Audio.song != "Level 2")
+            else if (curSection >= 5 && Audio.song != "Level 2")
             {
                 Audio.stopMusic();
                 Audio.playMusic("Level 2");
                 return;
             }
-            if (curSection >= 0 && Audio.song != "Level 1")
+            else if (curSection >= 0 && Audio.song != "Level 1")
             {
                 Audio.stopMusic();
                 Audio.playMusic("Level 1");
                 return;
             }
+        }
+
+        void checkAudioFade()
+        {
+            if (curSection + cools > 3 && level % 100 > 84 && Audio.song == "Level 1") Audio.stopMusic();
+            if (curSection + cools > 6 && level % 100 > 84 && Audio.song == "Level 2") Audio.stopMusic();
         }
 
         public override void draw(Graphics drawBuffer, Font f, SolidBrush b, bool replay)

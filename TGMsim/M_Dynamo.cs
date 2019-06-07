@@ -220,5 +220,40 @@ namespace TGMsim
                 drawBuffer.DrawString("-", f, tb, 20 + 10 * i, 348);
             }
         }
+
+        public override void updateMusic()
+        {
+            int section = curSection + cools + variant * 5;
+            if (section >= 20 && Audio.song != "Level 5")
+            {
+                Audio.stopMusic();
+                Audio.playMusic("Level 5");
+                return;
+            }
+            else if (section >= 15 && Audio.song != "Level 4")
+            {
+                Audio.stopMusic();
+                Audio.playMusic("Level 4");
+                return;
+            }
+            else if (section >= 10 && Audio.song != "Level 3")
+            {
+                Audio.stopMusic();
+                Audio.playMusic("Level 3");
+                return;
+            }
+            else if (section >= 5 && Audio.song != "Level 2")
+            {
+                Audio.stopMusic();
+                Audio.playMusic("Level 2");
+                return;
+            }
+            else if (section >= 0 && Audio.song != "Level 1")
+            {
+                Audio.stopMusic();
+                Audio.playMusic("Level 1");
+                return;
+            }
+        }
     }
 }

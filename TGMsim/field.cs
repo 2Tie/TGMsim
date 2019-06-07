@@ -922,10 +922,8 @@ namespace TGMsim
                     }
 
 
-                        //check inputs and handle logic pertaining to them
-
-                    //if (ruleset.gameRules == 6 && pad.inputPressedRot3 == true)//gm4 leftover
-                        //inputDelayH = 0;
+                    //check inputs and handle logic pertaining to them
+                        
                     if (pad.inputH == 1 || pad.inputH == -1)
                     {
                         if (inputDelayH > 0)
@@ -1325,9 +1323,6 @@ namespace TGMsim
                                     //update gimmicks
                                     updateGimmicks();
                                     
-                                    //end section check
-
-                                    //checkFade();
 
                                     while (gravLevel < gravTable.Count - 1)
                                     {
@@ -1336,9 +1331,6 @@ namespace TGMsim
                                         else
                                             break;
                                     }
-
-                                    //if ((MOD.g20 == true || gravTable[gravLevel] == Math.Pow(256, ruleset.gravType + 1) * 20) && (int)ruleset.gameRules < 4 && (int)ruleset.gameRules > 0)
-                                        //textBrush = new SolidBrush(Color.Gold);
 
                                     //garbage
                                     if (checkGimmick(Mode.Gimmick.Type.GARBAGE) && MOD.garbTimer >= getActiveGimmickParameter(Mode.Gimmick.Type.GARBAGE) && (MOD.raiseGarbOnClear == true || full.Count == 0))
@@ -1747,7 +1739,7 @@ namespace TGMsim
         {
             inCredits = true;
             Audio.stopMusic();
-            if (ruleset.gameRules == GameRules.Games.TGM1 || MOD.modeID == Mode.ModeType.DEATH)
+            if (ruleset.gameRules == GameRules.Games.TGM1 || MOD.modeID == Mode.ModeType.DEATH) //delayless, no field clear
                 Audio.playMusic("crdtvanish");
             else
             {
@@ -2135,181 +2127,5 @@ namespace TGMsim
                 drawBuffer.DrawImage(gradeImg, new Rectangle(x + 280 + i * 26, 70, 25, 25), new Rectangle(1 + (dex % 6) * 26, 1 + (int)Math.Floor((double)dex / 6) * 26 + gold, 25, 25), GraphicsUnit.Pixel);
             }
         }
-
-        
-
-        /*private void updateMusic()
-        {
-            int cools = 0;
-            foreach (int i in secCools)
-            {
-                if (i == 1) cools++;
-            }
-            int section = curSection + cools;
-
-            if(ruleset.id == 0)
-            {
-                if (ruleset.gameRules == 4)
-                {
-                    if (section >= 8 && Audio.song != "Level 3")
-                    {
-                        Audio.stopMusic();
-                        Audio.playMusic("Level 3");
-                        return;
-                    }
-                }
-                if (ruleset.gameRules == 2 || ruleset.gameRules == 3)
-                {
-                    if (section >= 9 && Audio.song != "Level 4")
-                    {
-                        Audio.stopMusic();
-                        Audio.playMusic("Level 4");
-                        return;
-                    }
-                    if (section >= 7 && Audio.song != "Level 3")
-                    {
-                        Audio.stopMusic();
-                        Audio.playMusic("Level 3");
-                        return;
-                    }
-                }
-                if (section >= 5 && Audio.song != "Level 2")
-                {
-                    Audio.stopMusic();
-                    Audio.playMusic("Level 2");
-                    return;
-                }
-                if (section >= 0 && Audio.song != "Level 1")
-                {
-                    Audio.stopMusic();
-                    Audio.playMusic("Level 1");
-                    return;
-                }
-            }
-
-            else if (ruleset.id == 1)//death
-            {
-                if (curSection == 0)
-                {
-                    Audio.stopMusic();
-                    Audio.playMusic("Level 2");
-                    return;
-                }
-                if (curSection == 3)
-                {
-                    Audio.stopMusic();
-                    Audio.playMusic("Level 3");
-                    return;
-                }
-                if (curSection == 5)
-                {
-                    Audio.stopMusic();
-                    Audio.playMusic("Level 4");
-                    return;
-                }
-            }
-            else if (ruleset.id == 2)//shirase
-            {
-                if (curSection == 0)
-                {
-                    Audio.stopMusic();
-                    Audio.playMusic("Level 3");
-                    return;
-                }
-                if (curSection == 5)
-                {
-                    Audio.stopMusic();
-                    Audio.playMusic("Level 4");
-                    return;
-                }
-                if (curSection == 7)
-                {
-                    Audio.stopMusic();
-                    Audio.playMusic("Level 5");
-                    return;
-                }
-                if (curSection == 10)
-                {
-                    Audio.stopMusic();
-                    Audio.playMusic("Level 6");
-                    return;
-                }
-                if (curSection == 14)
-                {
-                    Audio.stopMusic();
-                    Audio.playMusic("Shirase");
-                    return;
-                }
-            }
-            else if (ruleset.id == 10) //dynamo
-            {
-                section += MOD.variant*5;
-                if (section >= 20 && Audio.song != "Level 5")
-                {
-                    Audio.stopMusic();
-                    Audio.playMusic("Level 5");
-                    return;
-                }
-                if (section >= 15 && Audio.song != "Level 4")
-                {
-                    Audio.stopMusic();
-                    Audio.playMusic("Level 4");
-                    return;
-                }
-                if (section >= 10 && Audio.song != "Level 3")
-                {
-                    Audio.stopMusic();
-                    Audio.playMusic("Level 3");
-                    return;
-                }
-                if(section >= 5 && Audio.song != "Level 2")
-                {
-                    Audio.stopMusic();
-                    Audio.playMusic("Level 2");
-                    return;
-                }
-                if(section >= 0 && Audio.song != "Level 1")
-                {
-                    Audio.stopMusic();
-                    Audio.playMusic("Level 1");
-                    return;
-                }
-            }
-            else
-            {
-                if(curSection == 0)
-                {
-                    Audio.stopMusic();
-                    Audio.playMusic("Casual 1");
-                    return;
-                }
-            }
-        }*/
-
-        /*private void checkFade()
-        {
-            int cools = 0;
-            int section = curSection + cools;
-
-            if (MOD.modeID == Mode.ModeType.MASTER)//master
-            {
-                if (section == 4 && MOD.level % 100 > 84) Audio.stopMusic();
-                if ((ruleset.gameRules == GameRules.Games.TGM2 || ruleset.gameRules == GameRules.Games.TAP) && section == 6 && MOD.level % 100 > 84) Audio.stopMusic();
-                if ((ruleset.gameRules == GameRules.Games.TGM2 || ruleset.gameRules == GameRules.Games.TAP) && section == 8 && MOD.level % 100 > 84) Audio.stopMusic();
-                if (ruleset.gameRules == GameRules.Games.TGM3 && section == 7 && MOD.level % 100 > 84) Audio.stopMusic();
-            }
-            if(MOD.modeID == Mode.ModeType.DEATH)//death
-            {
-                if (curSection == 2 && MOD.level % 100 > 84) Audio.stopMusic();
-                if (curSection == 4 && MOD.level % 100 > 84) Audio.stopMusic();
-            }
-            if (MOD.modeID == Mode.ModeType.SHIRASE)//shirase
-            {
-                if (curSection == 4 && MOD.level % 100 > 84) Audio.stopMusic();
-                if (curSection == 6 && MOD.level % 100 > 84) Audio.stopMusic();
-                if (curSection == 9 && MOD.level % 100 > 84) Audio.stopMusic();
-                if (curSection == 13 && MOD.level % 100 > 84) Audio.stopMusic();
-            }
-        }*/
     }
 }

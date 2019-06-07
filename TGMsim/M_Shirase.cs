@@ -136,6 +136,7 @@ namespace TGMsim
             }
             if (level > 499 && level < 1000)
                 garbTimer++;
+            checkAudioFadeout();
         }
 
         public override void onClear(int lines, Tetromino tet, long time, bool bravo)
@@ -388,6 +389,14 @@ namespace TGMsim
                 Audio.playMusic("Shirase");
                 return;
             }
+        }
+
+        void checkAudioFadeout()
+        {
+            if (curSection == 4 && level % 100 > 84) Audio.stopMusic();
+            if (curSection == 6 && level % 100 > 84) Audio.stopMusic();
+            if (curSection == 9 && level % 100 > 84) Audio.stopMusic();
+            if (curSection == 13 && level % 100 > 84) Audio.stopMusic();
         }
     }
 }

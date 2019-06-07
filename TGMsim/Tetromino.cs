@@ -8,7 +8,7 @@ namespace TGMsim
 {
     public class Tetromino
     {
-        enum piece { I = 1, Z, S, J, L, O, T };
+        public enum Piece { I = 1, Z, S, J, L, O, T };
 
         public int id = 0;
         public int rotation = 0;
@@ -28,7 +28,7 @@ namespace TGMsim
         public int life = 0;
         public int rotations = 0;
 
-        public enum itemType { none, freefall, deleven };
+        public enum ItemType { none, freefall, deleven };
 
         public List<BlockBit> bits = new List<BlockBit>(); //first four will always be the "small" version
 

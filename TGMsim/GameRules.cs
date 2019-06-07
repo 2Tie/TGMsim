@@ -12,7 +12,7 @@ namespace TGMsim
         public Games gameRules;
         public int nextNum = 1;
         public bool hold = false;
-        public int hardDrop = 0; //no, sonic, firm
+        public int hardDrop = 0; //none, sonic, firm
 
         public int genAttps = 4;
 
@@ -27,7 +27,7 @@ namespace TGMsim
 
         public int lockType = 0; //step-reset, move-reset
 
-        public int creditsLength = 2968;//3238??
+        public int creditsLength = 3238;
 
         public int fieldW = 10;
         public int fieldH = 22;
@@ -98,7 +98,6 @@ namespace TGMsim
                     genAttps = 6;
                     fieldW = 10;
                     fieldH = 20;
-                    //showGrade = false;
                     //gravTable = new List<int> { 5.3, 10.6, 14.2, 17.06, 21.3, 25.6, 32, 42.6, 64, 128, 25.6, 32, 42.6, 64, 128, 256 }; //actual. all final decimal places repeat.
                     gravTable = new List<int> { 48, 24, 18, 15, 12, 10, 8, 6, 4, 2, 10,  8, 6, 4, 2, 1 };
                     gravLevels = new List<int> { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
@@ -119,7 +118,7 @@ namespace TGMsim
                     genAttps = 4;
                     fieldW = 10;
                     fieldH = 22;
-                    creditsLength = 2968; //taken from nullpomino, though estimates place it around 2961. still need to verify
+                    creditsLength = 2968; //taken from nullpomino, though estimates place it around 2961. still need to verify. this also cuts off credits song!
                     gravTable = new List<int> { 4, 6, 8, 10, 12, 16, 32, 48, 64, 80, 96, 112, 128, 144, 4, 32, 64, 96, 128, 160, 192, 224, 256, 512, 768, 1024, 1280, 1024, 768, 5120 };
                     break;
                 case Games.TGM2: //TGM2
@@ -138,7 +137,6 @@ namespace TGMsim
                     genAttps = 6;
                     fieldW = 10;
                     fieldH = 22;
-                    creditsLength = 3238;
                     gravTable = new List<int> { 4, 6, 8, 10, 12, 16, 32, 48, 64, 80, 96, 112, 128, 144, 4, 32, 64, 96, 128, 160, 192, 224, 256, 512, 768, 1024, 1280, 1024, 768, 5120 };
                     break;
                 case Games.TAP: //TAP
@@ -157,7 +155,6 @@ namespace TGMsim
                     genAttps = 6;
                     fieldW = 10;
                     fieldH = 22;
-                    creditsLength = 3238;
                     gravTable = new List<int> { 4, 6, 8, 10, 12, 16, 32, 48, 64, 80, 96, 112, 128, 144, 4, 32, 64, 96, 128, 160, 192, 224, 256, 512, 768, 1024, 1280, 1024, 768, 5120 };
                     break;
                 case Games.TGM3: //TI and ACE
@@ -176,7 +173,6 @@ namespace TGMsim
                     genAttps = 6;
                     fieldW = 10;
                     fieldH = 22;
-                    //showGrade = false;
                     gravTable = new List<int> { 1024, 1536, 2048, 2560, 3072, 4096, 8192, 12288, 16384, 20480, 24576, 28672, 32768, 36864, 1024, 8192, 16348, 24576, 32768, 40960, 49152, 57344, 65536, 131072, 196608, 262144, 327680, 262144, 196608, 1310720 };
                     break;
                 case Games.ACE:
@@ -196,7 +192,6 @@ namespace TGMsim
                     genAttps = 6;
                     fieldW = 10;
                     fieldH = 22;
-                    //showGrade = false;
                     gravTable = new List<int> { 1024, 1536, 2048, 2560, 3072, 4096, 8192, 12288, 16384, 20480, 24576, 28672, 32768, 36864, 1024, 8192, 16348, 24576, 32768, 40960, 49152, 57344, 65536, 131072, 196608, 262144, 327680, 262144, 196608, 1310720 };
                     break;
                 case Games.GMX: //GMX?
@@ -214,18 +209,17 @@ namespace TGMsim
                     genAttps = 6;
                     fieldW = 10;
                     fieldH = 22;
-                    //showGrade = false;
                     gravLevels = new List<int>() { 0, 25, 50, 75, 100, 125, 150, 175, 200, 225, 250, 275, 300, 325, 350, 375, 400, 425, 450, 475, 500, 600, 700,  800,  900, 1000};
                     gravTable = new List<int>    { 4, 11, 19, 26,  34,  41,  49,  56,  64,  72,  80,  88,  96, 104, 112, 120, 128, 160, 192, 224, 256, 512, 768, 1024, 1280, 5120};
                     break;
-                case Games.GUIDELINE://step reset
-                    GameName = "BONUS?";
+                case Games.GUIDELINE: //henk plz
+                    GameName = "GUIDELINE";
                     FPS = 60.0;
                     nextNum = 4;
                     hold = true;
                     hardDrop = 1;
-                    rotation = (int)Rots.ARS3;
-                    generator = (int)Gens.TGM3;
+                    /*rotation = (int)Rots.Guideline;
+                    generator = (int)Gens.Guideline;*/ //these aren't in scope, but others are free to contribute ;)
                     lockType = 1;
                     bigMove = 2;
                     gravType = 1;
@@ -233,12 +227,11 @@ namespace TGMsim
                     genAttps = 6;
                     fieldW = 10;
                     fieldH = 24;
-                    //showGrade = false;
                     gravTable = new List<int> { 1024, 1536, 2048, 2560, 3072, 4096, 8192, 12288, 16384, 20480, 24576, 28672, 32768, 36864, 1024, 8192, 16348, 24576, 32768, 40960, 49152, 57344, 65536, 131072, 196608, 262144, 327680, 262144, 196608, 1310720 };
                     break;
             }
             
-            switch (mode)//Master, Death, shirase, sprint, garbage clear, rounds, konoha, grav training, miner, dynamo, endura
+            switch (mode)
             {
                 case Mode.ModeType.MASTER: //Master
                     switch (game)
@@ -302,7 +295,7 @@ namespace TGMsim
                 case Mode.ModeType.FLASH: //flash point
                     mod = new M_SegaFlash();
                     break;
-                case Mode.ModeType.MARCH:
+                case Mode.ModeType.MARCH: //hell march
                     mod = new M_HellMarch();
                     break;
                 default:
