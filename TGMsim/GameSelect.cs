@@ -17,12 +17,17 @@ namespace TGMsim
         int vInput = 0;
         Rectangle curBox, destBox;
 
+        float tempX = 0;
+        float tempY = 150;
+        float tempW = 200;
+        float tempH = 299;
+
         System.Windows.Media.MediaPlayer s_Select = new System.Windows.Media.MediaPlayer();
 
 
         public GameSelect()
         {
-            destBox = new Rectangle(0, 150, 200, 300);
+            destBox = new Rectangle(0, 150, 200, 299);
             curBox = destBox;
 
             Audio.addSound(s_Select, "/Res/Audio/SE/SEI_roll.wav");
@@ -153,16 +158,16 @@ namespace TGMsim
             }
 
             //box logic
-            int bhite = 450;
+            int bhite = 449;
             if (menuSelection == 0 || menuSelection == 2 || menuSelection == 5)
-                bhite = 150;
+                bhite = 149;
             if (menuSelection == 1 || menuSelection == 3 || menuSelection == 4)
-                bhite = 300;
+                bhite = 299;
             if (menuSelection > 6)
-                bhite = 120;
-            int bwith = 200;
+                bhite = 119;
+            int bwith = 199;
             if (menuSelection > 6)
-                bwith = 400;
+                bwith = 399;
             int bX = 200 * (menuSelection-1);
             if (menuSelection == 0)
                 bX += 200;
@@ -180,16 +185,18 @@ namespace TGMsim
             if (menuSelection > 6)
                 bY = 450;
             destBox = new Rectangle(bX, bY, bwith, bhite);
-            curBox.X += (destBox.X - curBox.X) / 2;
-            curBox.Y += (destBox.Y - curBox.Y) / 2;
-            curBox.Width += (destBox.Width - curBox.Width) / 2;
-            curBox.Height += (destBox.Height - curBox.Height) / 2;
+            tempX += (float)(destBox.X - curBox.X) / 2;
+            tempY += (float)(destBox.Y - curBox.Y) / 2;
+            tempW += (float)(destBox.Width - curBox.Width) / 2;
+            tempH += (float)(destBox.Height - curBox.Height) / 2;
+
+            curBox = new Rectangle((int)tempX, (int)tempY, (int)tempW, (int)tempH);
 
 
         }
         public void render(Graphics drawBuffer)
         {
-
+            drawBuffer.DrawImageUnscaled(Image.FromFile("Res/GFX/menus/bg0.png"), 0, 0);
             //placeholder until i get arts or something
             drawBuffer.DrawString("SEGA", SystemFonts.DefaultFont, new SolidBrush(Color.White), 100, 100);
             drawBuffer.DrawString("TGM", SystemFonts.DefaultFont, new SolidBrush(Color.White), 100, 200);
@@ -201,6 +208,8 @@ namespace TGMsim
             drawBuffer.DrawString("Bonus", SystemFonts.DefaultFont, new SolidBrush(Color.White), 200, 500);
             drawBuffer.DrawString("Preferences", SystemFonts.DefaultFont, new SolidBrush(Color.White), 600, 500);
             drawBuffer.DrawString("Press Hold to load a replay!", SystemFonts.DefaultFont, new SolidBrush(Color.White), 330, 580);
+
+            drawBuffer.DrawString(curBox.X.ToString(), SystemFonts.DefaultFont, new SolidBrush(Color.White), 330, 588);
 
 
             //selection box
