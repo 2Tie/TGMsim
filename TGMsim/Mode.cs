@@ -40,9 +40,9 @@ namespace TGMsim
         public int garbLine = 0;
         public bool garbMeter = false;
         public int garbDelay = 0;
-        public int lvlBonus = 0;
+        public int secBonus = 0;
         public int level = 0;
-        public int gradedBy = 0; //points, grade points, level, bravo, time
+        //public int gradedBy = 0; //points, grade points, level, bravo, time //handled in-mode now
         public int limitType = 0; //none, line, level, time, bravo
         public int limit = 0;
         public bool showGrade = true;

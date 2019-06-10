@@ -12,8 +12,8 @@ namespace TGMsim
         public M_BigBravoMania()
         {
             ModeName = "BIG BRAVO MANIA";
+            showGrade = false;
             endLevel = 1200;
-            gradedBy = 3;
             limitType = 3;
             limit = 180000;//three minutes
             bigmode = true;

@@ -14,11 +14,11 @@ namespace TGMsim
         {
             ModeName = "GARBAGE CLEAR";
             border = Color.DarkGreen;
-            gradedBy = 4;
             limitType = 4;
             limit = 1;
-            sections.Add(999);
+            drawSec = false;
             startWithRandField = true;
+            hasCredits = false;
             delayTable.Add(new List<int> { 30 });
             delayTable.Add(new List<int> { 30 });
             delayTable.Add(new List<int> { 16 });
@@ -26,5 +26,20 @@ namespace TGMsim
             delayTable.Add(new List<int> { 41 });
         }
 
+        public override void onClear(int lines, Tetromino tet, long time, bool bravo)
+        {
+            level += lines;
+            if(bravo)
+            {
+                level = endLevel;
+                inCredits = true;
+            }
+        }
+
+        public override void updateMusic()
+        {
+            if (Audio.song != "Casual 1")
+                Audio.playMusic("Casual 1");
+        }
     }
 }

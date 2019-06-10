@@ -244,7 +244,7 @@ namespace TGMsim
             
             while (gravLevel < gravTable.Count - 1) //update gravity
             {
-                if (MOD.level + (MOD.lvlBonus * 100) >= ruleset.gravLevels[gravLevel + 1])
+                if (MOD.level + (MOD.secBonus * 100) >= ruleset.gravLevels[gravLevel + 1])
                     gravLevel++;
                 else
                     break;
@@ -332,8 +332,12 @@ namespace TGMsim
             Random rng = new Random();
             for (int i = 0; i < 80; i++)
             {
-                gameField[rng.Next(10)][rng.Next(16)] = 9;
-                
+                int px = rng.Next(10);
+                int py = rng.Next(16);
+                if (gameField[px][py] == 0)
+                    gameField[px][py] = 9;
+                else
+                    --i;
             }
         }
 
@@ -1330,7 +1334,7 @@ namespace TGMsim
 
                                     while (gravLevel < gravTable.Count - 1)
                                     {
-                                        if (MOD.level + (MOD.lvlBonus * 100) >= ruleset.gravLevels[gravLevel + 1])
+                                        if (MOD.level + (MOD.secBonus * 100) >= ruleset.gravLevels[gravLevel + 1])
                                             gravLevel++;
                                         else
                                             break;

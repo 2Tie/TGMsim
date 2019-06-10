@@ -267,6 +267,7 @@ namespace TGMsim
                     //MUSIC
                     updateMusic();
                     //DELAYS
+                    secBonus = cools;
                     int num = curSection + cools - 4;
                     if (num > 0 && num < 9)
                     {

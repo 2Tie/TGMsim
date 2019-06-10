@@ -44,7 +44,7 @@ namespace TGMsim
             showGrade = false;
             variant = v;
             if (v < 4)
-                lvlBonus = v * 10;
+                secBonus = v * 10;
             //if v == 4, final mode
             if (v == 0)
                 creditsSong = "crdtcas";
@@ -192,9 +192,9 @@ namespace TGMsim
                     if (coolCounter.Count(p => p == 1) > cools)
                     {
                         cools++;
-                        lvlBonus += 1;
+                        secBonus += 1;
 
-                        int num = (curSection + lvlBonus) / 2 - 4;
+                        int num = (curSection + secBonus) / 2 - 4;
                         if (num > 0 && variant < 4)
                         {
                             //update delays

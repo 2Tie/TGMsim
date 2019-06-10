@@ -31,8 +31,6 @@ namespace TGMsim
             sections.Add(800);
             sections.Add(900);
             sections.Add(999);
-            lvlBonus = 5;
-            gradedBy = 2;
             border = Color.DarkRed;
             g20 = true;
             showGrade = true;

@@ -15,7 +15,6 @@ namespace TGMsim
             border = Color.DarkGreen;
             endLevel = 200;
             g20 = true;
-            gradedBy = 4;
             showGrade = false;
             showGhost = false;
             creditsSong = "crdtcas";
@@ -45,6 +44,12 @@ namespace TGMsim
                 level = endLevel;
                 inCredits = true;
             }
+        }
+
+        public override void updateMusic()
+        {
+            if (Audio.song != "Casual 2")
+                Audio.playMusic("Casual 2");
         }
     }
 }

@@ -12,8 +12,7 @@ namespace TGMsim
         public M_IcyShirase()
         {
             ModeName = "ICY SHIRASE";
-            gradedBy = 2;
-            lvlBonus = 5;
+            showGrade = false;
             endLevel = 1200;
             sections.Add(100);
             sections.Add(200);

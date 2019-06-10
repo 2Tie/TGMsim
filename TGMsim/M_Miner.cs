@@ -13,7 +13,6 @@ namespace TGMsim
         {
             ModeName = "MINER";
             border = Color.DarkGreen;
-            gradedBy = 4;
             limitType = 4;
             limit = 1;
             sections.Add(100);
@@ -36,6 +35,27 @@ namespace TGMsim
                 startEnd = true;
                 keepFieldSafe = true;
             }
+        }
+
+        public override void onClear(int lines, Tetromino tet, long time, bool bravo)
+        {
+            level += lines;
+            if (level >= endLevel && endLevel != 0)
+            {
+                level = endLevel;
+                inCredits = true;
+            }
+            if (curSection < sections.Count)
+                if (level >= sections[curSection])
+                {
+                    curSection++;
+                }
+        }
+
+        public override void updateMusic()
+        {
+            if (Audio.song != "Casual 1")
+                Audio.playMusic("Casual 1");
         }
     }
 }

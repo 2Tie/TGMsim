@@ -42,7 +42,6 @@ namespace TGMsim
             sections.Add(1100);
             sections.Add(1200);
             sections.Add(1300);
-            lvlBonus = 5;
             var gL = new Gimmick();
             gL.type = Gimmick.Type.GARBAGE;
             gL.startLvl = 500;
@@ -84,7 +83,6 @@ namespace TGMsim
             gL.endLvl = 1301;
             gimList.Add(gL);
             garbType = GarbType.COPY;
-            gradedBy = 2;
             border = Color.DarkRed;
             g20 = true;
             initialGrade = 0;
