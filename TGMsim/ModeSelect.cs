@@ -139,9 +139,9 @@ namespace TGMsim
             for(int i = 0; i < modes[game].Count; i++)
             {
                 ModeSelObj m = modes[game][i];
-                drawBuffer.DrawString(m.names.Count > 1 ? m.names[variant[i]] : m.names[0], SystemFonts.DefaultFont, m.enabled ? active : locked, 300, 300 + 12*i);
+                drawBuffer.DrawString(m.names.Count > 1 ? m.names[variant[i]] : m.names[0], SystemFonts.DefaultFont, m.enabled ? active : locked, 150, 250 + 12*i);
             }
-            drawBuffer.DrawString("→", SystemFonts.DefaultFont, new SolidBrush(Color.White), 285, 300 + 12 * selection);
+            drawBuffer.DrawString("→", SystemFonts.DefaultFont, new SolidBrush(Color.White), 135, 250 + 12 * selection);
         }
     }
 }

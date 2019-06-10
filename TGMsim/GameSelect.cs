@@ -209,8 +209,6 @@ namespace TGMsim
             drawBuffer.DrawString("Preferences", SystemFonts.DefaultFont, new SolidBrush(Color.White), 600, 500);
             drawBuffer.DrawString("Press Hold to load a replay!", SystemFonts.DefaultFont, new SolidBrush(Color.White), 330, 580);
 
-            drawBuffer.DrawString(curBox.X.ToString(), SystemFonts.DefaultFont, new SolidBrush(Color.White), 330, 588);
-
 
             //selection box
             drawBuffer.DrawRectangle(new Pen(new SolidBrush(Color.White)), curBox);

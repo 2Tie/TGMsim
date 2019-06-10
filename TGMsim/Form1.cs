@@ -149,6 +149,11 @@ namespace TGMsim
                     //if (gSel.menuSelection != 5 && gSel.menuSelection != 0 && gSel.menuSelection != 7)
                         //loadHiscores(gSel.menuSelection);
                     mSel = new ModeSelect(gSel.menuSelection);
+                    if (mSel.modes[mSel.game][mSel.selection].enabled)
+                    {
+                        rules.setup((GameRules.Games)mSel.game, mSel.modes[mSel.game][mSel.selection].id, mSel.variant[mSel.selection]);
+                        loadHiscores(gSel.menuSelection, 1);
+                    }
                     break;
                 case 4:
                     saved = false;
@@ -243,6 +248,11 @@ namespace TGMsim
                     break;
                 case 3: //mode select
                     mSel.logic(pad1);
+                    if (pad1.inputV != 0 && mSel.modes[mSel.game][mSel.selection].enabled)
+                    {
+                        rules.setup((GameRules.Games)mSel.game, mSel.modes[mSel.game][mSel.selection].id, mSel.variant[mSel.selection]);
+                        loadHiscores(gSel.menuSelection, mSel.selection + 1);
+                    }
                     if ((pad1.inputRot1 | pad1.inputRot3) == 1)
                     {
                         if (!mSel.modes[mSel.game][mSel.selection].enabled)
@@ -253,9 +263,9 @@ namespace TGMsim
                             changeMenu(4); //load mode
                     }
                     if (pad1.inputRot2 == 1)
-                        changeMenu(2);
-                    if (pad1.inputHold == 1)
-                        changeMenu(6);//hiscores for mode, TODO: make this part of mode select
+                        changeMenu(2); //go back
+                    //if (pad1.inputHold == 1)
+                        //changeMenu(6);//hiscores for mode, TODO: make this part of mode select
                     break;
                 case 4: //ingame
                     field1.logic();
@@ -320,10 +330,10 @@ namespace TGMsim
                         else
                             field1.record = false;
                     break;
-                case 6://hiscores
+                /*case 6://hiscores
                     if (pad1.inputPressedRot2)
                         changeMenu(3);
-                    break;
+                    break;*/
                 case 7://custom game
                     if (pad1.inputPressedRot2)
                         changeMenu(2);
@@ -410,50 +420,48 @@ namespace TGMsim
                     login.render(drawBuffer);
                     break;
                 case 2:
-                    drawBuffer.DrawString("game select", DefaultFont, new SolidBrush(Color.White), 5, 5);
+                    //drawBuffer.DrawString("game select", DefaultFont, new SolidBrush(Color.White), 5, 5);
                     gSel.render(drawBuffer);
                     break;
                 case 3:
                     drawBuffer.DrawString("mode select", DefaultFont, new SolidBrush(Color.White), 5, 5);
                     mSel.render(drawBuffer);
+                    if (mSel.modes[mSel.game][mSel.selection].enabled) //draw hiscores
+                        for (int i = 0; i < 6; i++)
+                        {
+                            int hX = 300;
+                            int hY = 200;
+                            if (hiscoreTable[i].lineC == 1)
+                            {
+                                drawBuffer.DrawLine(new Pen(Color.LimeGreen), hX - 10, hY + 11 + 30 * i, hX + 160, hY + 11 + 30 * i);
+                            }
+                            if (hiscoreTable[i].lineC == 2)
+                            {
+                                drawBuffer.DrawLine(new Pen(Color.Orange), hX - 10, hY + 11 + 30 * i, hX + 300, hY + 11 + 30 * i);
+                            }
+                            drawBuffer.DrawString(hiscoreTable[i].username, DefaultFont, new SolidBrush(Color.White), hX, hY + 30 * i);
+                            drawBuffer.DrawString(hiscoreTable[i].level.ToString(), DefaultFont, new SolidBrush(Color.White), hX + 40, hY + 30 * i);
+                            drawBuffer.DrawString(rules.mod.grades[hiscoreTable[i].grade], DefaultFont, new SolidBrush(Color.White), hX + 80, hY + 30 * i);
+                            var temptimeVAR = hiscoreTable[i].time;
+                            var min = (int)Math.Floor((double)temptimeVAR / 60000);
+                            temptimeVAR -= min * 60000;
+                            var sec = (int)Math.Floor((double)temptimeVAR / 1000);
+                            temptimeVAR -= sec * 1000;
+                            var msec = (int)temptimeVAR;
+                            var msec10 = (int)(msec / 10);
+                            drawBuffer.DrawString(string.Format("{0,2:00}:{1,2:00}:{2,2:00}", min, sec, msec10), DefaultFont, new SolidBrush(Color.White), hX + 110, hY + 30 * i);
+                            if (mSel.game > 1)
+                            {
+                                for (int j = 0; j < 6; j++)
+                                {
+                                    drawBuffer.DrawString(hiscoreTable[i].medals[j].ToString(), DefaultFont, new SolidBrush(Color.White), hX + 170 + 10 * j, hY + 30 * i);
+                                }
+                            }
+                        }
                     break;
                 case 4:
                     field1.draw(drawBuffer);
                     break;
-                case 6:
-                    drawBuffer.DrawString("hiscores", DefaultFont, new SolidBrush(Color.White), 5, 5);
-                    int gam = mSel.game - 1;
-                    for (int i = 0; i < 6; i++ )
-                    {
-                        if (hiscoreTable[i].lineC == 1)
-                        {
-                            drawBuffer.DrawLine(new Pen(Color.LimeGreen), 240, 111 + 30 * i, 550, 111 + 30 * i);
-                        }
-                        if (hiscoreTable[i].lineC == 2)
-                        {
-                            drawBuffer.DrawLine(new Pen(Color.Orange), 240, 111 + 30 * i, 550, 111 + 30 * i);
-                        }
-                        drawBuffer.DrawString(hiscoreTable[i].username, DefaultFont, new SolidBrush(Color.White), 250, 100 + 30 * i);
-                        drawBuffer.DrawString(hiscoreTable[i].level.ToString(), DefaultFont, new SolidBrush(Color.White), 290, 100 + 30 * i);
-                        drawBuffer.DrawString(rules.mod.grades[hiscoreTable[i].grade], DefaultFont, new SolidBrush(Color.White), 330, 100 + 30 * i);
-                        var temptimeVAR = hiscoreTable[i].time;
-                        var min = (int)Math.Floor((double)temptimeVAR / 60000);
-                        temptimeVAR -= min * 60000;
-                        var sec = (int)Math.Floor((double)temptimeVAR / 1000);
-                        temptimeVAR -= sec * 1000;
-                        var msec = (int)temptimeVAR;
-                        var msec10 = (int)(msec / 10);
-                        drawBuffer.DrawString(string.Format("{0,2:00}:{1,2:00}:{2,2:00}", min, sec, msec10), DefaultFont, new SolidBrush(Color.White), 360, 100 + 30 * i);
-                        if (gam != 0)
-                        {
-                            for (int j = 0; j < 6; j++)
-                            {
-                                drawBuffer.DrawString(hiscoreTable[i].medals[j].ToString(), DefaultFont, new SolidBrush(Color.White), 420 + 10*j, 100 + 30 * i);
-                            }
-                        }
-                    }
-
-                        break;
                 case 8:
                     drawBuffer.DrawString("preferences", DefaultFont, new SolidBrush(Color.White), 5, 5);
                     prefs.render(drawBuffer);
@@ -565,11 +573,10 @@ namespace TGMsim
             if (player.name == "   ")
             {
                 field1.godmode = cMen.cheats[0];
+                field1.cheating = true;
                 if (cMen.cheats[1])
                     field1.g20 = cMen.cheats[1];
                 field1.g0 = cMen.cheats[2];
-                if (field1.godmode || field1.g0)
-                    field1.cheating = true;
                 if (cMen.cheats[5])
                     field1.w4 = true;
                 if (cMen.cheats[6])
@@ -769,9 +776,9 @@ namespace TGMsim
                     defaultTGMScores();
                 else if (game == 2 && mode == 1)
                     defaultTGM2Scores();
-                else if (game == 3 && mode == 1)
+                else if (game == 3 && mode == 2)
                     defaultTAPScores();
-                else if (game == 4 && mode == 1)
+                else if (game == 4 && mode == 2)
                     defaultTGM3Scores();
                 else
                     defaultGenericScores(game, mode);
@@ -895,7 +902,7 @@ namespace TGMsim
 
         public bool defaultTAPScores()
         {
-            using (FileStream fsStream = new FileStream("Sav/gm31.hst", FileMode.Create))
+            using (FileStream fsStream = new FileStream("Sav/gm32.hst", FileMode.Create))
             using (BinaryWriter sw = new BinaryWriter(fsStream, Encoding.UTF8))
             {
                 long temptime;
@@ -940,7 +947,7 @@ namespace TGMsim
         }
         public bool defaultTGM3Scores()
         {
-            using (FileStream fsStream = new FileStream("Sav/gm41.hst", FileMode.Create))
+            using (FileStream fsStream = new FileStream("Sav/gm42.hst", FileMode.Create))
             using (BinaryWriter sw = new BinaryWriter(fsStream, Encoding.UTF8))
             {
                 long temptime;
@@ -986,7 +993,7 @@ namespace TGMsim
 
         public bool defaultGenericScores(int game, int mode)
         {
-            using (FileStream fsStream = new FileStream("Sav/gm" + game + mode + ".hst", FileMode.Create))
+            using (FileStream fsStream = new FileStream("Sav/gm" + game.ToString() + mode.ToString() + ".hst", FileMode.Create))
             using (BinaryWriter sw = new BinaryWriter(fsStream, Encoding.UTF8))
             {
                 for (int i = 0; i < 6; i++)

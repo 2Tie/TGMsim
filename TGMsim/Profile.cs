@@ -17,8 +17,9 @@ namespace TGMsim
         public bool passProtected = false;
         public int TIGrade = 0;
         public List<int> TIHistory = new List<int>{0,0,0,0,0,0,0};
-        public List<bool> certs = new List<bool>{false, false, false, false, false, false, false, false, false, false}; //Official GM certifications (1, 2, tap, tap death, 3, 3 shirase, ACE TM, 4 world, 4 rounds, 4 konoha)
+        public List<bool> certs = new List<bool>();
         public int dynamoProgress = 0;
+        public List<bool> aceUnlocks = new List<bool> { false, false, false, false, false };
 
         public bool createUser()
         {
@@ -46,11 +47,10 @@ namespace TGMsim
                 }*/
                 sw.Write(new byte[4]);//global points
                 sw.Write(new byte[4]);//TGM3 points
-                sw.Write(new byte[2]);//Official GM certifications (1, 2, tap, tap death, 3, 3 shirase, ACE TM, 4 world, 4 rounds, 4 konoha)
-                sw.Write(new byte[2]);//endless shirase hiscore?
+                sw.Write(new byte[4]);//GMs and mode clears
                 sw.Write(new byte[6]);//current TI grade + previous seven rankings
                 sw.Write(new byte[1]);//ACE grade
-                sw.Write(new byte[1]);//unused
+                sw.Write(new byte[1]);//dynamo progress and ACE unlocks
             }
             return false;
         }
@@ -107,14 +107,12 @@ namespace TGMsim
             globalDecoration = file.ReadInt32();
             //tgm3 points
             decoration = file.ReadInt32();
-            //GM certs
-            ushort certB = file.ReadUInt16();
-            for (int i = 0; i < 10; i++ )
+            //clear certs
+            int certB = file.ReadInt32();
+            for (int i = 0; i < 27; i++ )
             {
-                certs.Add(((certB >> (10 - i)) & 0x1) == 1);
+                certs.Add(((certB >> (26 - i)) & 0x1) == 1);
             }
-            //shirase
-            file.ReadBytes(2);
             //TI grade data
             byte[] tempbyte = new byte[6];
             tempbyte = file.ReadBytes(6);
@@ -132,9 +130,13 @@ namespace TGMsim
 
             //ACE grade data
             file.ReadByte();
-            //future use, three bits used by dynamo
+            //three bits used by dynamo, five bits used by ACE modes
             byte t = file.ReadByte();
             dynamoProgress = (int)(t & 0x7);
+            for(int i = 0; i < 5; i++)
+            {
+                aceUnlocks[i] = ((t >> (7 - i)) & 0x1) == 1;
+            }
             return true;
         }
 
@@ -165,14 +167,13 @@ namespace TGMsim
                 sw.Write(globalDecoration);//global points
                 sw.Write(decoration);//TGM3 points
 
-                UInt16 certB = new ushort();
-                for (int i = 0; i < 10; i++ )
+                int certB = new ushort();
+                for (int i = 0; i < 27; i++ )
                 {
                     if (certs[i])
-                        certB += (ushort)(0x1 << (10 - i));
+                        certB += (ushort)(0x1 << (26 - i));
                 }
-                sw.Write(certB);//Official GM certifications (1, 2, tap, tap death, 3, 3 shirase, ACE TM, 4 world, 4 rounds, 4 konoha)
-                sw.Write(new byte[2]);//endless shirase hiscore?
+                sw.Write(certB);//Official GM/mode clear certifications (FP, 1, 2, CCS EZ, CCS N, normal, tap, TGM+, death, easy, 3, sakura, shirase, 10 ACE modes, ACE TM, Dynamo, Endura, Hell March)
 
                 byte[] tempbyte = new byte[6];
                 tempbyte[0] = (byte)((TIGrade << 2) + ((TIHistory[0] & 0x30) >> 4));
@@ -184,7 +185,12 @@ namespace TGMsim
 
                 sw.Write(tempbyte);//current TI grade + previous seven rankings
                 sw.Write(new byte[1]);//ACE grade
-                sw.Write((byte)(dynamoProgress));//unused
+                byte temp = (byte)dynamoProgress;
+                for (int i = 0; i < 5; i++)
+                {
+                    temp += (byte)(((aceUnlocks[i]?1:0) << (7 - i)) & 0x1);
+                }
+                sw.Write(temp);//dynamo progress and ACE mode unlocks
             }
             return true;
         }
