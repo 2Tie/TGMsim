@@ -275,7 +275,7 @@ namespace TGMsim
                         if (saved == false && field1.isPlayback == false)
                         {
                             field1.results.username = player.name;
-                            if (rules.gameRules == GameRules.Games.TGM3 && field1.MOD.ModeName == "MASTER" && player.name != "   ")
+                            if (rules.gameRules == GameRules.Games.TGM3 && field1.MOD.modeID == Mode.ModeType.MASTER && player.name != "   ")
                             {
                                 //add result to history
                                 for (int i = 0; i < 6; i++)
@@ -462,6 +462,8 @@ namespace TGMsim
                     {
                         List<string> gm3grades = new List<string> { "9", "8", "7", "6", "5", "4", "3", "2", "1", "S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "S9", "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9", "M", "MK", "MV", "MO", "MM", "GM" };
                         drawBuffer.DrawString("Qualified Grade: " + gm3grades[player.TIGrade], DefaultFont, new SolidBrush(Color.White), 200, 5);
+                        for (int i = 0; i < player.TIHistory.Count; i++)
+                            drawBuffer.DrawString(gm3grades[player.TIHistory[i]], DefaultFont, new SolidBrush(Color.White), 200 + 10*i, 15);
                     }
                     break;
                 case 4:
@@ -566,7 +568,7 @@ namespace TGMsim
                     rules.mod.bigmode = cMen.cheats[3];
                 Audio.muted = cMen.cheats[4];
             }
-            else if (mSel.game == 4 && mSel.selection == 0)
+            else if (mSel.game == 4 && mSel.selection == 1)
                 rules.exam = checkExam();
 
             if (prefs.delay)
