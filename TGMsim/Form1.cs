@@ -458,6 +458,11 @@ namespace TGMsim
                                 }
                             }
                         }
+                    if(mSel.game == (int)GameRules.Games.TGM3)
+                    {
+                        List<string> gm3grades = new List<string> { "9", "8", "7", "6", "5", "4", "3", "2", "1", "S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "S9", "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9", "M", "MK", "MV", "MO", "MM", "GM" };
+                        drawBuffer.DrawString("Qualified Grade: " + gm3grades[player.TIGrade], DefaultFont, new SolidBrush(Color.White), 200, 5);
+                    }
                     break;
                 case 4:
                     field1.draw(drawBuffer);

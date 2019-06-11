@@ -9,8 +9,6 @@ namespace TGMsim
 {
     class M_Master3 : Mode
     {
-        new List<string> grades = new List<string> { "9", "8", "7", "6", "5", "4", "3", "2", "1", "S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "S9", "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9", "M", "MK", "MV", "MO", "MM", "GM" };
-
         public List<List<double>> comboTable = new List<List<double>>();
         public List<int> gradeIntTGM2 = new List<int> { 0, 1, 2, 3, 4, 5, 5, 6, 6, 7, 7, 7, 8, 8, 8, 9, 9, 9, 10, 11, 12, 12, 12, 13, 13, 14, 14, 15, 15, 16, 16, 17 };
         public List<int> decayRate = new List<int>() { 125, 80, 80, 50, 45, 45, 45, 40, 40, 40, 40, 40, 30, 30, 30, 20, 20, 20, 20, 20, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 10 };
@@ -45,7 +43,8 @@ namespace TGMsim
         public M_Master3()
         {
             ModeName = "MASTER 3";
-            border = Color.Silver;
+            border = Color.Blue;
+            grades = new List<string> { "9", "8", "7", "6", "5", "4", "3", "2", "1", "S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "S9", "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9", "M", "MK", "MV", "MO", "MM", "GM" };
             showGrade = false;
             toriCredits = false;
             sections.Add(100);
@@ -168,6 +167,8 @@ namespace TGMsim
 
             int oldLvl = level;
             level += lines;
+            if (lines > 2) level++;
+            if (lines > 3) level++;
 
             if (level >= endLevel && endLevel != 0)
             {
@@ -408,10 +409,16 @@ namespace TGMsim
 
         public override void onGameOver()
         {
-            if (creditsType == 1)
-                creditGrades += 50;
-            if (creditsType == 2)
-                creditGrades += 160;
+            if (creditsClear)
+            {
+                if (creditsType == 1)
+                    creditGrades += 50;
+                if (creditsType == 2)
+                    creditGrades += 160;
+            }
+
+            for (int i = 0; i < coolCounter.Count; i++)
+                grade += coolCounter[i];
 
             for (; creditGrades > 100; creditGrades -= 100)
             {
