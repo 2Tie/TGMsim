@@ -9,6 +9,8 @@ namespace TGMsim
     class M_Master2Plus : M_Master2
     {
         bool master = false;
+        int creditLines = 0;
+
         public M_Master2Plus() : base()
         {
             delayTable[1] = new List<int> { 27, 27, 18, 14, 8, 8 };//line ARE
@@ -21,6 +23,9 @@ namespace TGMsim
                 grade = 27;//award M for reaching credits
             if (creditsClear && master)
                 grade = 32;//award GM for clearing
+
+            if (creditsClear && ((!master) || creditLines >= 32))//just clearing if below M gives orange, clearing with 32+ lines with M/GM awards orange
+                orangeLine = true;
         }
 
         public override void onClear(int lines, Tetromino tet, long time, bool bravo)
@@ -29,6 +34,8 @@ namespace TGMsim
 
             int oldLvl = level;
             level += lines;
+            if (inCredits)
+                creditLines += lines;
 
             if (level >= endLevel && endLevel != 0)
             {

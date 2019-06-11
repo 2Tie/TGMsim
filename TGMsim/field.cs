@@ -1724,8 +1724,9 @@ namespace TGMsim
 
                 if (inCredits)
                 {
-                    if (creditsProgress >= ruleset.creditsLength)//cleared credits
-                        results.lineC = 1; //todo: orange line obtainable
+                    results.lineC = 1; //line awarded on mode clear
+                    if (MOD.orangeLine)
+                        results.lineC = 2;
                 }
                 
                 Audio.stopMusic();

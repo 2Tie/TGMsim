@@ -108,6 +108,12 @@ namespace TGMsim
             }
         }
 
+        public override void onGameOver()
+        {
+            if (creditsClear)
+                orangeLine = true;
+        }
+
         public override void onTick(long time)
         {
             t = time;

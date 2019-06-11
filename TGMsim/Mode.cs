@@ -80,6 +80,7 @@ namespace TGMsim
         public int boardGems = 0;
         public List<int> targets = new List<int>();
         public bool showGhost = true;
+        public bool orangeLine = false;
 
         public int tetrises = 0;
         public List<int> secTet = new List<int>();

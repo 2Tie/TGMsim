@@ -89,7 +89,11 @@ namespace TGMsim
             else if (level < endLevel)
             {
                 if (level < sections[curSection] - 1)
+                {
                     level += 1;
+                    if (level == sections[curSection] - 1)
+                        Audio.playSound(Audio.s_Bell);
+                }
                 tetCount++;
             }
         }
@@ -415,6 +419,7 @@ namespace TGMsim
                     creditGrades += 50;
                 if (creditsType == 2)
                     creditGrades += 160;
+                orangeLine = true;
             }
 
             for (int i = 0; i < coolCounter.Count; i++)
@@ -486,6 +491,7 @@ namespace TGMsim
                 }
                 drawBuffer.DrawString(cTex, SystemFonts.DefaultFont, tb, 200 + 300, 350);
             }
+            drawBuffer.DrawString(secTimer.count.ToString(), f, tb, 20, 400);
         }
     }
 }
