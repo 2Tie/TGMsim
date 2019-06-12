@@ -143,7 +143,7 @@ namespace TGMsim
 
         string getLetter(int i)
         {
-            return "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!.#$%&ß ".Substring(i, 1);
+            return "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!.[& ".Substring(i, 1);
         }
 
         private void addSound(System.Windows.Media.MediaPlayer plr, string uri)

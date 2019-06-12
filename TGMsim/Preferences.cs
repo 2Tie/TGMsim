@@ -26,7 +26,7 @@ namespace TGMsim
         public Preferences(Profile prof, Controller pad)
         {
             nPad = pad;
-
+            
         }
 
         public void logic()
@@ -152,7 +152,7 @@ namespace TGMsim
             
             if (inputting)
                 drawBuffer.DrawString("INPUT YOUR NEW KEY", SystemFonts.DefaultFont, tb, 200, 300);
-
+                
         }
 
         public bool assignKey(int key)

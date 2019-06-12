@@ -275,6 +275,8 @@ namespace TGMsim
                         if (saved == false && field1.isPlayback == false)
                         {
                             field1.results.username = player.name;
+                            if (field1.ruleset.gameRules == GameRules.Games.TAP)
+                                field1.results.calcCode();
                             if (rules.gameRules == GameRules.Games.TGM3 && field1.MOD.modeID == Mode.ModeType.MASTER && player.name != "   ")
                             {
                                 //add result to history

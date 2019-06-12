@@ -245,6 +245,7 @@ namespace TGMsim
                     if (gradeIntTGM2[intGrade] != grade)
                     {
                         grade++;
+                        masteringTime.count = time;
                     }
                 }
             }

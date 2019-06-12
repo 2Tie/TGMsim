@@ -22,7 +22,7 @@ namespace TGMsim
 
         public enum GarbType { FIXED, COPY, RANDOM, HIDDEN } ;
 
-        public List<string> grades = new List<string> { "9", "8", "7", "6", "5", "4", "3", "2", "1", "S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "S9", "GM" };
+        public List<string> grades = new List<string> { "9", "8", "7", "6", "5", "4", "3", "2", "1", "S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "S9", "M", "GM" };
         //public List<string> grades = new List<string> { "9", "8", "7", "6", "5", "4", "3", "2", "1", "S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "S9", "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9", "M", "MK", "MV", "MO", "MM", "GM", "TM" };
 
         public string ModeName = "DUMMY";
@@ -81,6 +81,8 @@ namespace TGMsim
         public List<int> targets = new List<int>();
         public bool showGhost = true;
         public bool orangeLine = false;
+
+        public FrameTimer masteringTime = new FrameTimer();
 
         public int tetrises = 0;
         public List<int> secTet = new List<int>();

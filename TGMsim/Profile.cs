@@ -17,7 +17,7 @@ namespace TGMsim
         public bool passProtected = false;
         public int TIGrade = 0;
         public List<int> TIHistory = new List<int>{0,0,0,0,0,0,0};
-        public List<bool> certs = new List<bool>();
+        public List<bool> certs = new List<bool> { false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false };
         public int dynamoProgress = 0;
         public List<bool> aceUnlocks = new List<bool> { false, false, false, false, false };
 

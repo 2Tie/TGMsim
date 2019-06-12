@@ -97,7 +97,7 @@ namespace TGMsim
                     {
                         grade++;
                         Audio.playSound(Audio.s_Grade);
-                        //masterTime = timer.count;
+                        masteringTime.count = time;
                     }
                     else
                         checking = false;

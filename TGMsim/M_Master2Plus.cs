@@ -20,9 +20,9 @@ namespace TGMsim
         public override void onGameOver()
         {
             if (inCredits && master)
-                grade = 27;//award M for reaching credits
+                grade = 18;//award M for reaching credits
             if (creditsClear && master)
-                grade = 32;//award GM for clearing
+                grade = 19;//award GM for clearing
 
             if (creditsClear && ((!master) || creditLines >= 32))//just clearing if below M gives orange, clearing with 32+ lines with M/GM awards orange
                 orangeLine = true;
@@ -101,6 +101,7 @@ namespace TGMsim
                     {
                         grade++;
                         Audio.playSound(Audio.s_Grade);
+                        masteringTime.count = time;
                     }
                 }
             }

@@ -55,7 +55,6 @@ namespace TGMsim
         public FrameTimer sectionTime = new FrameTimer();
         public FrameTimer creditsPause = new FrameTimer();
         public FrameTimer bravoTime = new FrameTimer();
-        public long masterTime = 0;
 
         public int swappedHeld;
         bool justSpawned;
@@ -745,7 +744,7 @@ namespace TGMsim
             //endgame stats
             if (gameRunning == false && fadeout == 92)
             {
-                if (MOD.modeID == Mode.ModeType.MASTER)
+                if (MOD.modeID == Mode.ModeType.MASTER || MOD.showGrade && results.grade > -1)
                 {
                     drawBuffer.DrawString("Grade: " + MOD.grades[results.grade], SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 200);
                 }
@@ -786,8 +785,8 @@ namespace TGMsim
                         drawBuffer.DrawString("Replay recorded!", SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 340);
                 }
 
-                if (MOD.modeID == Mode.ModeType.SHIRASE && MOD.grade != 0)
-                    drawGrade(drawBuffer, "S" + (MOD.grade));
+                drawBuffer.DrawString(results.code.Substring(0,8), SystemFonts.DefaultFont, new SolidBrush(Color.White), x+80, 460);
+                drawBuffer.DrawString(results.code.Substring(8, 8), SystemFonts.DefaultFont, new SolidBrush(Color.White), x+80, 470);
             }
 
             //replay stuff
@@ -1733,11 +1732,19 @@ namespace TGMsim
                 results.game = (int)ruleset.gameRules;
                 results.username = "CHEATS";
                 results.grade = MOD.grade;
+                results.mode = (int)MOD.modeID;
                 results.score = MOD.score;
-                if (ruleset.gameRules == GameRules.Games.TGM1)
-                    results.time = (long)((masterTime * ruleset.FPS) / 60);
+                if (MOD.modeID == Mode.ModeType.MASTER)
+                {
+                    results.time = MOD.masteringTime.count;
+                    MOD.masteringTime.calcRaw();
+                    results.rawTime = MOD.masteringTime.rawCount;
+                }
                 else
-                    results.time = (long)((timer.count * ruleset.FPS) / 60);
+                {
+                    results.time = timer.count;
+                    results.rawTime = timer.rawCount;
+                }
                 results.level = MOD.level;
                 results.medals = MOD.medals;
                 results.delay = pad.lag != 0;

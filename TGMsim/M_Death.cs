@@ -35,7 +35,6 @@ namespace TGMsim
             g20 = true;
             showGrade = true;
             showGhost = false;
-            initialGrade = -1;
             delayTable.Add(new List<int> { 18, 14, 14, 8, 7, 6 });
             delayTable.Add(new List<int> { 14, 8, 8, 8, 7, 6 });
             delayTable.Add(new List<int> { 10, 10, 9, 8, 6, 6 });
@@ -136,7 +135,7 @@ namespace TGMsim
                     secTet.Add(0);
                     //GM FLAGS
                     if (level >= 999)
-                        grade = 32;
+                        grade = 19;
                     //TORIKAN
                     if (curSection == 5)
                     {
@@ -148,7 +147,7 @@ namespace TGMsim
                             //triggerCredits();
                         }
                         else
-                            grade = 27;
+                            grade = 18;
                     }
                     //MUSIC
                     updateMusic();

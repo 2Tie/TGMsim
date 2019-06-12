@@ -111,8 +111,12 @@ namespace TGMsim
 
         public override void onGameOver()
         {
-            if (creditsClear && grade == 27)
-                grade = 32;//award GM
+            if (creditsClear)
+            {
+                if(grade == 18)
+                    grade = 19;//award GM
+                orangeLine = true;
+            }
         }
 
         public override void onClear(int lines, Tetromino tet, long time, bool bravo)
@@ -125,9 +129,9 @@ namespace TGMsim
             if (level >= endLevel && endLevel != 0)
             {
                 level = endLevel;
-                if(!inCredits) //test for invis roll
+                if(!inCredits) //test for invis roll - if M
                 {
-                    if (grade == 27)
+                    if (grade == 18)
                         creditsType = 2;
                 }
                 inCredits = true;
@@ -184,6 +188,7 @@ namespace TGMsim
                     {
                         grade++;
                         Audio.playSound(Audio.s_Grade);
+                        masteringTime.count = time;
                     }
                 }
             }
@@ -286,7 +291,7 @@ namespace TGMsim
                             }
                         }
                     if (gm)
-                        grade = 27;
+                        grade = 18;
                 }
                 //MUSIC
                 updateMusic();
