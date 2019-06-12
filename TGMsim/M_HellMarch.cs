@@ -15,7 +15,7 @@ namespace TGMsim
 
         public M_HellMarch()
         {
-            grades = new List<string> { "", "S", "M", "Mm", "MM", "SM" };
+            grades = new List<string> { "", "S", "M", "MM", "SM" };
             ModeName = "HELL MARCH";
             border = Color.DarkTurquoise;
             boardsProgress = 0;
@@ -41,15 +41,17 @@ namespace TGMsim
 
         public override void onClear(int lines, Tetromino tet, long time, bool bravo)
         {
+            if(inCredits)
+            {
+                if (bravo)
+                    brav = true;
+            }
             if (roadProgress == 2 && lines == 4)
             {
                 teteri++;
-                brav = brav || bravo;
                 if(teteri == 10)
                 {
                     grade = 3;
-                    if (brav)
-                        grade = 4;
                     modeClear = true;
                     inCredits = true;
                     creditsType = 2;
@@ -111,8 +113,9 @@ namespace TGMsim
         {
             if (inCredits && creditsClear)
             {
-                if (grade == 4)
-                    grade = 5;
+                grade = 4;
+                if (brav)
+                    orangeLine = true;
             }
         }
 

@@ -63,6 +63,12 @@ namespace TGMsim
             }
         }
 
+        public override void onGameOver()
+        {
+            if (creditsClear)
+                orangeLine = true;
+        }
+
         public override void onPut(Tetromino tet, bool clear)
         {
             pipCount += 4;

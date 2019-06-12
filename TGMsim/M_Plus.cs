@@ -175,5 +175,11 @@ namespace TGMsim
                     updateMusic();
                 }
         }
+
+        public override void onGameOver()
+        {
+            if (creditsClear)
+                orangeLine = true;
+        }
     }
 }
