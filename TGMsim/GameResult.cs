@@ -10,7 +10,7 @@ namespace TGMsim
     {
         
         public int game;
-        public int mode;
+        public Mode.ModeType mode;
         public int score;
         public long time;
         public long rawTime;
@@ -35,16 +35,16 @@ namespace TGMsim
             ushort m;
             switch (mode)
             {
-                case (int)Mode.ModeType.SEGA://normal
+                case Mode.ModeType.SEGA://normal //TODO: make this NORMAL
                     m = 0;
                     break;
-                case (int)Mode.ModeType.MASTER: //master
+                case Mode.ModeType.MASTER: //master
                     m = 1;
                     break;
-                case (int)Mode.ModeType.PLUS: //plus
+                case Mode.ModeType.PLUS: //plus
                     m = 2;
                     break;
-                case (int)Mode.ModeType.DEATH: //death
+                case Mode.ModeType.DEATH: //death
                     m = 3;
                     break;
                 default:

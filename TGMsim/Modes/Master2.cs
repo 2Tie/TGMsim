@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TGMsim
+namespace TGMsim.Modes
 {
-    class M_Master2 : Mode
+    class Master2 : Mode
     {
         public List<List<double>> comboTable = new List<List<double>>();
         public List<int> gradeIntTGM2 = new List<int> { 0, 1, 2, 3, 4, 5, 5, 6, 6, 7, 7, 7, 8, 8, 8, 9, 9, 9, 10, 11, 12, 12, 12, 13, 13, 14, 14, 15, 15, 16, 16, 17 };
@@ -29,7 +29,7 @@ namespace TGMsim
         public long t = 0;
         public List<bool> GMflags = new List<bool>();
 
-        public M_Master2()
+        public Master2()
         {
             ModeName = "MASTER 2";
             sections.Add(100);

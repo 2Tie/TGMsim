@@ -94,10 +94,10 @@ namespace TGMsim
             {
                 if (pad1.inputH != 0)
                 {
-                    username[menuSelection] = (username[menuSelection] + pad1.inputH) % 44; //increase the currently selected letter by input direction
+                    username[menuSelection] = (username[menuSelection] + pad1.inputH) % 41; //increase the currently selected letter by input direction
                     if (username[menuSelection] == -1)
                     {
-                        username[menuSelection] = 43;
+                        username[menuSelection] = 40;
                     }
                     delaytimer = 10;
                     pSound(s_Roll);

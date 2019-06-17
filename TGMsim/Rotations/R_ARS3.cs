@@ -22,7 +22,7 @@ namespace TGMsim
             if (large)
                 bigOffset = 2;
 
-            if (tet.id == 1)//test I floorkicks
+            if (tet.id == Tetromino.Piece.I)//test I floorkicks
             {
                 if (tet.rotation % 2 == 0 && tet.floored && !checkUnder(testTet, gameField, large, spawn))
                 {
@@ -54,13 +54,13 @@ namespace TGMsim
                             testTet.move(-2*bigOffset, 0);
                     }
                 }
-                if (tet.id == 1 && tet.rotation%2 == 1 && !checkUnder(testTet, gameField, large, spawn))//final I wallkick
+                if (tet.id == Tetromino.Piece.I && tet.rotation%2 == 1 && !checkUnder(testTet, gameField, large, spawn))//final I wallkick
                     testTet.move(3 * bigOffset, 0);
             }
 
             
 
-            if (tet.id == 7 && tet.floored && !checkUnder(testTet, gameField, large, spawn) && (tet.rotation + p + 4) % 4 == 2)//test T floorkicks
+            if (tet.id == Tetromino.Piece.T && tet.floored && !checkUnder(testTet, gameField, large, spawn) && (tet.rotation + p + 4) % 4 == 2)//test T floorkicks
             {
                 testTet.move(bigOffset, bigOffset);
             }
@@ -83,7 +83,7 @@ namespace TGMsim
                     lowY = tet.bits[q].y;
             }
 
-            if (tet.id < 4 || tet.id == 6)//I, S, Z, and O have no kick restrictions
+            if ((int)tet.id < 4 || tet.id == Tetromino.Piece.O)//I, S, Z, and O have no kick restrictions
                 return true;
 
 
@@ -92,13 +92,13 @@ namespace TGMsim
                 if (gameField[tet.bits[1].x][tet.bits[1].y + ((1 + (tet.rotation / 2)) * (3 - big))] != 0)
                     return false;
 
-            if (tet.id == (int)Tetromino.Piece.J || tet.id == (int)Tetromino.Piece.L)
+            if (tet.id == Tetromino.Piece.J || tet.id == Tetromino.Piece.L)
             {
                 if (tet.rotation % 2 == 0)
                 {
                     if (gameField[tet.bits[1].x][tet.bits[1].y - 1 + (tet.rotation / 2 * (3 - big)) * 2] != 0)//if hooked
                     {
-                        if (gameField[tet.bits[1].x + ((tet.id - 4) * -2) + 1][tet.bits[1].y + (tet.rotation / 2) + 1] != 0 && tet.rotation - ((((tet.id - 4) * 2) - 1) * p) == 1)//if exception blocked
+                        if (gameField[tet.bits[1].x + (((int)tet.id - 4) * -2) + 1][tet.bits[1].y + (tet.rotation / 2) + 1] != 0 && tet.rotation - (((((int)tet.id - 4) * 2) - 1) * p) == 1)//if exception blocked
                             return true;
                         return false;
                     }

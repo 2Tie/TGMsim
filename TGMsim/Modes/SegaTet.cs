@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TGMsim
+namespace TGMsim.Modes
 {
-    class M_SegaTet : Mode
+    class SegaTet : Mode
     {
         public List<int> levelUpTimes = new List<int> { 3480, 2320, 2320, 2320, 2320, 2320, 2320, 2320, 2320, 3480, 3480, 1740, 1740, 1740, 1740, 3480 };
         public int timeCounter = 0;
@@ -15,7 +15,7 @@ namespace TGMsim
         int lines = 0;
         List<int> linePoints = new List<int> { 100, 400, 900, 2000 };
 
-        public M_SegaTet()
+        public SegaTet()
         {
             ModeName = "TETRIS";
             showGrade = false;

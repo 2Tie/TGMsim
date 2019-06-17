@@ -84,7 +84,7 @@ namespace TGMsim
         public bool cheating = false;
         public bool godmode = false;
         public bool bigmode = false;
-        public bool g20 = false;
+        //public bool g20 = false;
         public bool g0 = false;
         public bool w4 = false;
         public bool toriless = false;
@@ -321,7 +321,7 @@ namespace TGMsim
             activeGim = new List<Mode.Gimmick>();
             gimIndex = 0;
 
-            g20 = MOD.g20;
+            //g20 = MOD.g20;
 
             updateGimmicks();
     }
@@ -496,7 +496,7 @@ namespace TGMsim
                 {
                     if (ghostPiece.bits[i].y < 20)
                     {
-                        drawBuffer.DrawImage(tetImgs[ghostPiece.id], x + 25 * ghostPiece.bits[i].x, y + height - (25 * (ghostPiece.bits[i].y)), 25 * big, 25 * big);
+                        drawBuffer.DrawImage(tetImgs[(int)ghostPiece.id], x + 25 * ghostPiece.bits[i].x, y + height - (25 * (ghostPiece.bits[i].y)), 25 * big, 25 * big);
                         drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(130, Color.Black)), x + 25 * ghostPiece.bits[i].x, y + height - (25 * (ghostPiece.bits[i].y)), 25 * big, 25 * big);
                     }
                 }
@@ -514,7 +514,7 @@ namespace TGMsim
                     {
                         if (activeTet.groundTimer > 0)
                         {
-                            drawBuffer.DrawImage(tetImgs[activeTet.id], x + 25 * activeTet.bits[i].x, y + height - (25 * activeTet.bits[i].y), 25 * big, 25 * big);
+                            drawBuffer.DrawImage(tetImgs[(int)activeTet.id], x + 25 * activeTet.bits[i].x, y + height - (25 * activeTet.bits[i].y), 25 * big, 25 * big);
                             drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb((MOD.baseLock - activeTet.groundTimer) * 127 / MOD.baseLock, Color.Black)), x + 25 * activeTet.bits[i].x, y + height - (25 * activeTet.bits[i].y), 25 * big, 25 * big);
                         }
                         //else
@@ -582,7 +582,7 @@ namespace TGMsim
                                 drawBuffer.DrawImage(tetImgs[10], x + 25 * nextTet[i].bits[j].x, y - 95 + 25 * (21- nextTet[i].bits[j].y), 25, 25);
                                 //drawBuffer.DrawImageUnscaled(tetImgs[10], x + i * 70 + 16 * nextTet[i].bits[j].x + 40, y + 16 * nextTet[i].bits[j].y - 75);
                             else
-                                drawBuffer.DrawImage(tetImgs[nextTet[i].id], x + 25 * nextTet[i].bits[j].x, y - 95 + 25 * (21-nextTet[i].bits[j].y), 25, 25);
+                                drawBuffer.DrawImage(tetImgs[(int)nextTet[i].id], x + 25 * nextTet[i].bits[j].x, y - 95 + 25 * (21-nextTet[i].bits[j].y), 25, 25);
                                 //drawBuffer.DrawImageUnscaled(tetImgs[nextTet[i].id], x + i * 70 + 16 * nextTet[i].bits[j].x + 40, y + 16 * nextTet[i].bits[j].y - 75);
                         }
                         else
@@ -590,7 +590,7 @@ namespace TGMsim
                             if (nextTet[i].bone == true)
                                 drawBuffer.DrawImageUnscaled(tetSImgs[10], x + i * 80 + 16 * nextTet[i].bits[j].x + 65, y + 16 * (21-nextTet[i].bits[j].y) - 75);
                             else
-                                drawBuffer.DrawImageUnscaled(tetSImgs[nextTet[i].id], x + i * 80 + 16 * nextTet[i].bits[j].x + 65, y + 16 * (21-nextTet[i].bits[j].y) - 75);
+                                drawBuffer.DrawImageUnscaled(tetSImgs[(int)nextTet[i].id], x + i * 80 + 16 * nextTet[i].bits[j].x + 65, y + 16 * (21-nextTet[i].bits[j].y) - 75);
                         }
                     }
                 }
@@ -607,7 +607,7 @@ namespace TGMsim
                         if (swappedHeld != 0)
                             drawBuffer.DrawImageUnscaled(tetSImgs[9], x - 75 + 16 * heldPiece.bits[i].x, y - 50 + 16 * (21-heldPiece.bits[i].y));
                         else
-                            drawBuffer.DrawImageUnscaled(tetSImgs[heldPiece.id], x - 75 + 16 * heldPiece.bits[i].x, y - 50 + 16 * (21-heldPiece.bits[i].y));
+                            drawBuffer.DrawImageUnscaled(tetSImgs[(int)heldPiece.id], x - 75 + 16 * heldPiece.bits[i].x, y - 50 + 16 * (21-heldPiece.bits[i].y));
                 }
             }
 
@@ -785,8 +785,11 @@ namespace TGMsim
                         drawBuffer.DrawString("Replay recorded!", SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 340);
                 }
 
-                drawBuffer.DrawString(results.code.Substring(0,8), SystemFonts.DefaultFont, new SolidBrush(Color.White), x+80, 460);
-                drawBuffer.DrawString(results.code.Substring(8, 8), SystemFonts.DefaultFont, new SolidBrush(Color.White), x+80, 470);
+                if (ruleset.gameRules == GameRules.Games.TAP)
+                {
+                    drawBuffer.DrawString(results.code.Substring(0, 8), SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 460);
+                    drawBuffer.DrawString(results.code.Substring(8, 8), SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 470);
+                }
             }
 
             //replay stuff
@@ -1166,7 +1169,7 @@ namespace TGMsim
                                                 else if (activeTet.bone == true)
                                                     gameField[activeTet.bits[i].x + j][activeTet.bits[i].y - k] = 10;
                                                 else
-                                                    gameField[activeTet.bits[i].x + j][activeTet.bits[i].y - k] = activeTet.id;
+                                                    gameField[activeTet.bits[i].x + j][activeTet.bits[i].y - k] = (int)activeTet.id;
 
                                                 if (MOD.creditsType == 1 && inCredits)//vanishing?
                                                 {
@@ -1273,7 +1276,19 @@ namespace TGMsim
 
                                         MOD.onPut(activeTet, true);
 
-                                        MOD.onClear(bigFull, activeTet, timer.count, tetCount == 0);
+                                        bool split = false;
+                                        if(full.Count==2)
+                                        {
+                                            if (full[0] > full[1] + 1) //populated from top down (bigger number first
+                                                split = true;
+                                        }
+                                        else if (full.Count==3)
+                                        {
+                                            if (full[0] > full[1] + 1 || full[1] > full[2] + 1)
+                                                split = true;
+                                        }
+
+                                        MOD.onClear(bigFull, activeTet, timer.count, tetCount == 0, split);
 
                                         //start timer
                                         currentTimer = timerType.LineClear;
@@ -1517,7 +1532,7 @@ namespace TGMsim
                             }
                         }
 
-                        if (g20 || (gravTable[gravLevel] == Math.Pow(256, ruleset.gravType + 1) * 20))
+                        if (MOD.g20 || (gravTable[gravLevel] == Math.Pow(256, ruleset.gravType + 1) * 20))
                         {
                             blockDrop = 19;
                         }
@@ -1600,25 +1615,25 @@ namespace TGMsim
                 {
                     switch (nextTet[nextTet.Count - 1].id)
                     {
-                        case 1:
+                        case Tetromino.Piece.I:
                             Audio.playSound(Audio.s_Tet1);
                             break;
-                        case 2:
+                        case Tetromino.Piece.Z:
                             Audio.playSound(Audio.s_Tet2);
                             break;
-                        case 3:
+                        case Tetromino.Piece.S:
                             Audio.playSound(Audio.s_Tet3);
                             break;
-                        case 4:
+                        case Tetromino.Piece.J:
                             Audio.playSound(Audio.s_Tet4);
                             break;
-                        case 5:
+                        case Tetromino.Piece.L:
                             Audio.playSound(Audio.s_Tet5);
                             break;
-                        case 6:
+                        case Tetromino.Piece.O:
                             Audio.playSound(Audio.s_Tet6);
                             break;
-                        case 7:
+                        case Tetromino.Piece.T:
                             Audio.playSound(Audio.s_Tet7);
                             break;
                     }
@@ -1710,7 +1725,7 @@ namespace TGMsim
                             else if (activeTet.bone == true)
                                 gameField[activeTet.bits[i].x + j][activeTet.bits[i].y - k] = 10;
                             else
-                                gameField[activeTet.bits[i].x + j][activeTet.bits[i].y - k] = activeTet.id;
+                                gameField[activeTet.bits[i].x + j][activeTet.bits[i].y - k] = (int)activeTet.id;
 
                         }
                     }
@@ -1732,7 +1747,7 @@ namespace TGMsim
                 results.game = (int)ruleset.gameRules;
                 results.username = "CHEATS";
                 results.grade = MOD.grade;
-                results.mode = (int)MOD.modeID;
+                results.mode = MOD.modeID;
                 results.score = MOD.score;
                 if (MOD.modeID == Mode.ModeType.MASTER)
                 {
@@ -1773,6 +1788,7 @@ namespace TGMsim
             Tetromino tmptet = RSYS.rotate(tet, p, gameField, (int)ruleset.gameRules, MOD.bigmode, spawn);
             if (activeTet == tmptet)
                 success = false;
+            tmptet.spun = true;
             activeTet = tmptet;
             return success;
         }
@@ -1781,7 +1797,7 @@ namespace TGMsim
         {
             int tempID = GEN.pull() + 1;
 
-            Tetromino tempTet = new Tetromino(tempID, false);//force non-big here so they're not stretched out in the queue
+            Tetromino tempTet = new Tetromino((Tetromino.Piece)tempID, false);//force non-big here so they're not stretched out in the queue
             if (checkGimmick(Mode.Gimmick.Type.BONES))
                 tempTet.bone = true;
             
@@ -1990,7 +2006,7 @@ namespace TGMsim
             if (g != 0 && ghost == false && activeTet.kicked == 0 && ruleset.lockType == 0)
                 activeTet.groundTimer = MOD.baseLock;
 
-            if (i == 19 && g20 == false && g > activeTet.sonic && sonic)
+            if (i == 19 && MOD.g20 == false && g > activeTet.sonic && sonic)
                 activeTet.sonic = g;
         }
 

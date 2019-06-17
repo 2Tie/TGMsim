@@ -5,11 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TGMsim
+namespace TGMsim.Modes
 {
-    class M_Plus : Mode
+    class Plus : Mode
     {
-        public M_Plus() : base()
+        public Plus() : base()
         {
             ModeName = "TGM+";
             border = Color.DarkBlue;

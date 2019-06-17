@@ -18,12 +18,12 @@ namespace TGMsim
             public enum Type { FADING, INVIS, GARBAGE, BONES, ICE, BIG };
         }
 
-        public enum ModeType { MASTER, DEATH, SHIRASE, SPRINT, GARBAGE, ROUNDS,  KONOHA, TRAINING, SEGA, MINER, DYNAMO, ENDURA, BLOX, PLUS, FLASH, MARCH }; //for the ID stuff
+        public enum ModeType { MASTER, DEATH, SHIRASE, SPRINT, GARBAGE, ROUNDS,  KONOHA, TRAINING, SEGA, MINER, DYNAMO, ENDURA, BLOX, PLUS, FLASH, MARCH, EASY }; //for the ID stuff
 
         public enum GarbType { FIXED, COPY, RANDOM, HIDDEN } ;
 
         public List<string> grades = new List<string> { "9", "8", "7", "6", "5", "4", "3", "2", "1", "S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "S9", "M", "GM" };
-        //public List<string> grades = new List<string> { "9", "8", "7", "6", "5", "4", "3", "2", "1", "S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "S9", "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9", "M", "MK", "MV", "MO", "MM", "GM", "TM" };
+        //public List<string> grades = new List<string> { "9", "8", "7", "6", "5", "4", "3", "2", "1", "S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "S9", "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9", "M", "MK", "MV", "MO", "MM", "GM", "TM" }; //the old master list, just in case
 
         public string ModeName = "DUMMY";
         public ModeType modeID = 0;
@@ -134,6 +134,11 @@ namespace TGMsim
 
         }
 
+        public virtual void onClear(int lines, Tetromino tet, long time, bool bravo, bool split)
+        {
+            onClear(lines, tet, time, bravo);
+        }
+
         public virtual void onClear(int lines, Tetromino tet, long time, bool bravo)
         {
 
@@ -149,7 +154,7 @@ namespace TGMsim
 
         }
 
-        public virtual void draw(Graphics drawBuffer, Font f_Maestro, SolidBrush textBrush, bool replay)
+        public virtual void draw(Graphics drawBuffer, Font f, SolidBrush textBrush, bool replay)
         {
             
         }

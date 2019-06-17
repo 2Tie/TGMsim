@@ -5,16 +5,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TGMsim
+namespace TGMsim.Modes
 {
-    class M_Master1 : Mode
+    class Master1 : Mode
     {
 
         public long t = 0;
         public List<bool> GMflags = new List<bool>();
         List<int> gradePoints = new List<int> { 0, 400, 800, 1400, 2000, 3500, 5500, 8000, 12000, 16000, 22000, 30000, 40000, 52000, 66000, 82000, 100000, 120000 };
 
-        public M_Master1()
+        public Master1()
         {
             ModeName = "MASTER 1";
             sections.Add(100);

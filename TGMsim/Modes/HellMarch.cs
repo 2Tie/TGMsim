@@ -5,15 +5,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TGMsim
+namespace TGMsim.Modes
 {
-    class M_HellMarch : Mode
+    class HellMarch : Mode
     {
         private int roadProgress = 0;
         private int teteri = 0;
         private bool brav = false;
 
-        public M_HellMarch()
+        public HellMarch()
         {
             grades = new List<string> { "", "S", "M", "MM", "SM" };
             ModeName = "HELL MARCH";

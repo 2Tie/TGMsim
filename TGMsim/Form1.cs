@@ -37,6 +37,7 @@ namespace TGMsim
 
         PrivateFontCollection fonts = new PrivateFontCollection();
         Font f_Maestro;
+        Image medalImg;
 
         int menuState = 0; //title, login, game select, mode select, ingame, results, hiscore roll, custom game, settings
 
@@ -49,6 +50,7 @@ namespace TGMsim
         List<GameResult> hiscoreTable = new List<GameResult>();
         bool saved;
         string repNam;
+        bool tasAdvance = true;
         
         NAudio.Wave.WaveOutEvent songPlayer = new NAudio.Wave.WaveOutEvent();
         
@@ -71,9 +73,10 @@ namespace TGMsim
             //interval = (long)TimeSpan.FromSeconds(1.0 / FPS).TotalMilliseconds;
             fonts.AddFontFile(@"Res\Maestro.ttf");
             FontFamily fontFam = fonts.Families[0];
-            f_Maestro = new System.Drawing.Font(fontFam, 16, GraphicsUnit.Pixel);
+            f_Maestro = new Font(fontFam, 16, GraphicsUnit.Pixel);
+            medalImg = Image.FromFile("Res/GFX/medals.png");
 
-            imgBuffer = (Image)new Bitmap(this.ClientSize.Width, this.ClientSize.Height);
+            imgBuffer = new Bitmap(this.ClientSize.Width, this.ClientSize.Height);
 
             // hiscoreTable.Add(new List<GameResult>());
 
@@ -185,8 +188,8 @@ namespace TGMsim
 
         void gameLogic()
         {
-            //if(Focused)
-            pad1.poll(Focused);
+            if (player.name != "TAS" || menuState != 4)//limit this so it only logs relevant inputs while TASing
+                pad1.poll(Focused);
 
             //deal with game logic
             switch (menuState)
@@ -268,7 +271,29 @@ namespace TGMsim
                         //changeMenu(6);//hiscores for mode, TODO: make this part of mode select
                     break;
                 case 4: //ingame
-                    field1.logic();
+                    if (player.name == "TAS")//if this is a TAS, perform frameadvance
+                    {
+                        if (!field1.isPlayback)//if not playback, record
+                        {
+                            if (Keyboard.IsKeyDown(Key.F))
+                            {
+                                if (tasAdvance)
+                                {
+                                    pad1.poll(Focused);
+                                    field1.logic();
+                                    tasAdvance = false;
+                                }
+                            }
+                            else
+                                tasAdvance = true;
+                        }
+                        else //otherwise advance the replay
+                        {
+                            pad1.poll(Focused);
+                            field1.logic();
+                        }
+                    }
+                    else field1.logic();
                     if (field1.gameRunning == false)
                     {
                         //test and save a hiscore ONCE
@@ -277,7 +302,7 @@ namespace TGMsim
                             field1.results.username = player.name;
                             if (field1.ruleset.gameRules == GameRules.Games.TAP)
                                 field1.results.calcCode();
-                            if (rules.gameRules == GameRules.Games.TGM3 && field1.MOD.modeID == Mode.ModeType.MASTER && player.name != "   ")
+                            if (rules.gameRules == GameRules.Games.TGM3 && field1.MOD.modeID == Mode.ModeType.MASTER && player.name != "   " && player.name != "TAS")
                             {
                                 //add result to history
                                 for (int i = 0; i < 6; i++)
@@ -302,9 +327,9 @@ namespace TGMsim
                                 }
                             }
 
-                            if (!field1.cheating && field1.ruleset.exam == -1)
+                            if (!field1.cheating && field1.ruleset.exam == -1 && player.name != "TAS")//don't save cheat, exam, or TAS hiscores
                                 field1.newHiscore = testHiscore(field1.results);
-                            if (player.name != "   ")
+                            if (player.name != "   " && player.name != "TAS")//don't update cheat or TAS profile
                                 player.updateUser();
                             if (field1.MOD.modeID == Mode.ModeType.DYNAMO && field1.MOD.level == 999 && player.dynamoProgress == field1.MOD.variant && player.dynamoProgress != 4)
                                 player.dynamoProgress = field1.MOD.variant + 1;
@@ -327,7 +352,7 @@ namespace TGMsim
                     if (field1.exit == true)
                         changeMenu(2);
                     if (field1.record == true)
-                        if (player.name != "   ")
+                        if (player.name != "   ")//allow saving of TAS replays but not cheat replays
                             writeReplay();
                         else
                             field1.record = false;
@@ -443,7 +468,10 @@ namespace TGMsim
                             }
                             drawBuffer.DrawString(hiscoreTable[i].username, DefaultFont, new SolidBrush(Color.White), hX, hY + 30 * i);
                             drawBuffer.DrawString(hiscoreTable[i].level.ToString(), DefaultFont, new SolidBrush(Color.White), hX + 40, hY + 30 * i);
-                            drawBuffer.DrawString(rules.mod.grades[hiscoreTable[i].grade], DefaultFont, new SolidBrush(Color.White), hX + 80, hY + 30 * i);
+                            if (mSel.modes[mSel.game][mSel.selection].id == Mode.ModeType.EASY)
+                                drawBuffer.DrawString(hiscoreTable[i].score.ToString(), DefaultFont, new SolidBrush(Color.White), hX + 80, hY + 30 * i);
+                            else
+                                drawBuffer.DrawString(rules.mod.grades[hiscoreTable[i].grade], DefaultFont, new SolidBrush(Color.White), hX + 80, hY + 30 * i);
                             var temptimeVAR = hiscoreTable[i].time;
                             var min = (int)Math.Floor((double)temptimeVAR / 60000);
                             temptimeVAR -= min * 60000;
@@ -456,7 +484,9 @@ namespace TGMsim
                             {
                                 for (int j = 0; j < 6; j++)
                                 {
-                                    drawBuffer.DrawString(hiscoreTable[i].medals[j].ToString(), DefaultFont, new SolidBrush(Color.White), hX + 170 + 10 * j, hY + 30 * i);
+                                    if (hiscoreTable[i].medals[j] > 0)
+                                        drawBuffer.DrawImage(medalImg, new Rectangle(hX + 170 + 26 * j, hY + 30 * i, 25, 15), j * 26, (hiscoreTable[i].medals[j] - 1) * 16, 25, 16, GraphicsUnit.Pixel);
+                                    //drawBuffer.DrawString(hiscoreTable[i].medals[j].ToString(), DefaultFont, new SolidBrush(Color.White), hX + 170 + 10 * j, hY + 30 * i);
                                 }
                             }
                         }
@@ -584,7 +614,7 @@ namespace TGMsim
                 field1.godmode = cMen.cheats[0];
                 field1.cheating = true;
                 if (cMen.cheats[1])
-                    field1.g20 = cMen.cheats[1];
+                    field1.MOD.g20 = cMen.cheats[1];
                 field1.g0 = cMen.cheats[2];
                 if (cMen.cheats[5])
                     field1.w4 = true;
@@ -627,24 +657,51 @@ namespace TGMsim
                 case 4:
                     for (int i = 0; i < hiscoreTable.Count; i++)
                     {
-                        if (hiscoreTable[i].level < gameResult.level)
+                        if (gameResult.mode == Mode.ModeType.EASY) //rank by score
                         {
-                            saveHiscore(gameResult, gameResult.game, m, i);
-                            return true;
-                        }
-                        if (hiscoreTable[i].level == gameResult.level)
-                        {
-                            if (hiscoreTable[i].grade < gameResult.grade)
+                            if(hiscoreTable[i].score < gameResult.score)
                             {
-                                saveHiscore(gameResult, gameResult.game, m, i);
+                                saveHiscore(gameResult, m, i);
                                 return true;
                             }
-                            if (hiscoreTable[i].grade == gameResult.grade)
+                            if(hiscoreTable[i].score == gameResult.score)
                             {
-                                if (hiscoreTable[i].time > gameResult.time)
+                                if (hiscoreTable[i].lineC < gameResult.lineC)
                                 {
-                                    saveHiscore(gameResult, gameResult.game, m, i);
+                                    saveHiscore(gameResult, m, i);
                                     return true;
+                                }
+                                if(hiscoreTable[i].lineC == gameResult.lineC)
+                                {
+                                    if(hiscoreTable[i].time < gameResult.time)
+                                    {
+                                        saveHiscore(gameResult, m, i);
+                                        return true;
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (hiscoreTable[i].level < gameResult.level)
+                            {
+                                saveHiscore(gameResult, m, i);
+                                return true;
+                            }
+                            if (hiscoreTable[i].level == gameResult.level)
+                            {
+                                if (hiscoreTable[i].grade < gameResult.grade)
+                                {
+                                    saveHiscore(gameResult, m, i);
+                                    return true;
+                                }
+                                if (hiscoreTable[i].grade == gameResult.grade)
+                                {
+                                    if (hiscoreTable[i].time > gameResult.time)
+                                    {
+                                        saveHiscore(gameResult, m, i);
+                                        return true;
+                                    }
                                 }
                             }
                         }
@@ -656,7 +713,7 @@ namespace TGMsim
                     {
                         if (hiscoreTable[i].grade < gameResult.grade)
                         {
-                            saveHiscore(gameResult, gameResult.game, m, i);
+                            saveHiscore(gameResult, m, i);
                             return true;
                         }
                         else if (hiscoreTable[i].grade == gameResult.grade)
@@ -664,19 +721,19 @@ namespace TGMsim
                             //compare line
                             if (hiscoreTable[i].lineC < gameResult.lineC)
                             {
-                                saveHiscore(gameResult, gameResult.game, m, i);
+                                saveHiscore(gameResult, m, i);
                                 return true;
                             }
                             //compare time
                             if (hiscoreTable[i].time > gameResult.time)
                             {
-                                saveHiscore(gameResult, gameResult.game, m, i);
+                                saveHiscore(gameResult, m, i);
                                 return true;
                             }
                             //compare level
                             if (hiscoreTable[i].level < gameResult.level)
                             {
-                                saveHiscore(gameResult, gameResult.game, m, i);
+                                saveHiscore(gameResult, m, i);
                                 return true;
                             }
                         }
@@ -752,13 +809,13 @@ namespace TGMsim
             Audio.stopMusic();
         }
 
-        private void saveHiscore(GameResult gameResult, int g, int m, int place)
+        private void saveHiscore(GameResult gameResult, int m, int place)
         {
 
             hiscoreTable.Insert(place, gameResult);
             hiscoreTable.RemoveAt(hiscoreTable.Count - 1);
 
-            string hiFile = "Sav/gm" + g + m + ".hst";
+            string hiFile = "Sav/gm" + gameResult.game + m + ".hst";
             File.Delete(hiFile);
             using (FileStream fsStream = new FileStream(hiFile, FileMode.Create))
             using (BinaryWriter sw = new BinaryWriter(fsStream, Encoding.UTF8))
@@ -766,7 +823,10 @@ namespace TGMsim
                 for (int i = 0; i < hiscoreTable.Count; i++)
                 {
                     sw.Write(hiscoreTable[i].username);
-                    sw.Write(hiscoreTable[i].grade);
+                    if (gameResult.mode == Mode.ModeType.EASY)
+                        sw.Write(hiscoreTable[i].score);
+                    else
+                        sw.Write(hiscoreTable[i].grade);
                     sw.Write(hiscoreTable[i].time);
                     for (int j = 0; j < 6; j++)
                         sw.Write((byte)(hiscoreTable[i].medals[j] & 0xFF));
@@ -802,12 +862,15 @@ namespace TGMsim
                 GameResult tempRes = new GameResult();
 
                 tempRes.username = scores.ReadString();
-                tempRes.grade = scores.ReadInt32();
+                if (game == 4 && mode == 1) //ugh, easy check
+                    tempRes.score = scores.ReadInt32();
+                else
+                    tempRes.grade = scores.ReadInt32();
                 tempRes.time = scores.ReadInt64();
                 tempRes.medals = new List<int>();
                 for (int i = 0; i < 6; i++)
                 {
-                    tempRes.medals.Add((int)scores.ReadByte());
+                    tempRes.medals.Add(scores.ReadByte());
                 }
                 tempRes.lineC = scores.ReadByte();
                 tempRes.level = scores.ReadInt32();

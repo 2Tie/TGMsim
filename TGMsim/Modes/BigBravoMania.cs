@@ -5,11 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TGMsim
+namespace TGMsim.Modes
 {
-    class M_BigBravoMania : Mode
+    class BigBravoMania : Mode
     {
-        public M_BigBravoMania()
+        public BigBravoMania()
         {
             ModeName = "BIG BRAVO MANIA";
             showGrade = false;

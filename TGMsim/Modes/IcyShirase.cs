@@ -5,11 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TGMsim
+namespace TGMsim.Modes
 {
-    class M_IcyShirase : Mode
+    class IcyShirase : Mode
     {
-        public M_IcyShirase()
+        public IcyShirase()
         {
             ModeName = "ICY SHIRASE";
             showGrade = false;

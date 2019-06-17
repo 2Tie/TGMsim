@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TGMsim
+namespace TGMsim.Modes
 {
-    class M_SegaFlash : Mode
+    class SegaFlash : Mode
     {
         public List<int> levelUpTimes = new List<int> { 3480, 2320, 2320, 2320, 2320, 2320, 2320, 2320, 2320, 3480, 3480, 1740, 1740, 1740, 1740, 3480 };
         public int timeCounter = 0;
@@ -16,7 +16,7 @@ namespace TGMsim
         int bonusP = 1000;
         byte bonusF = 0;
 
-        public M_SegaFlash()
+        public SegaFlash()
         {
             ModeName = "FLASH POINT";
             showGrade = false;

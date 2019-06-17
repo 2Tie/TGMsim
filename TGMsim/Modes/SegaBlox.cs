@@ -5,11 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TGMsim
+namespace TGMsim.Modes
 {
-    class M_SegaBlox : M_SegaTet
+    class SegaBlox : SegaTet
     {
-        public M_SegaBlox() : base()
+        public SegaBlox() : base()
         {
             var gL = new Gimmick();
             gL.type = Gimmick.Type.GARBAGE;

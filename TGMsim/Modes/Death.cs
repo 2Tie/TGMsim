@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TGMsim
+namespace TGMsim.Modes
 {
-    class M_Death : Mode
+    class Death : Mode
     {
         public int gradeCombo = 0;
         public int pipCount = 0;
@@ -18,7 +18,7 @@ namespace TGMsim
         public int recoveries = 0;
         public long t = 0;
 
-        public M_Death()
+        public Death()
         {
             ModeName = "DEATH";
             sections.Add(100);

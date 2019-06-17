@@ -4,14 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TGMsim
+namespace TGMsim.Modes
 {
-    class M_Master2Plus : M_Master2
+    class Master2Plus : Master2
     {
         bool master = false;
         int creditLines = 0;
 
-        public M_Master2Plus() : base()
+        public Master2Plus() : base()
         {
             delayTable[1] = new List<int> { 27, 27, 18, 14, 8, 8 };//line ARE
             ModeName = "MASTER 2+";

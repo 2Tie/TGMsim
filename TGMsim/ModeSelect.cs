@@ -63,7 +63,7 @@ namespace TGMsim
             tmp.Add(new ModeSelObj(new List<string> { "Death" }, Mode.ModeType.DEATH, true));
             modes.Add(tmp);
             tmp = new List<ModeSelObj>();//tgm3
-            tmp.Add(new ModeSelObj(new List<string> { "Easy" }, Mode.ModeType.SEGA, false));
+            tmp.Add(new ModeSelObj(new List<string> { "Easy" }, Mode.ModeType.EASY, true));
             tmp.Add(new ModeSelObj(new List<string> { "Master" }, Mode.ModeType.MASTER, true));
             tmp.Add(new ModeSelObj(new List<string> { "Sakura" }, Mode.ModeType.SEGA, false)); //TODO
             tmp.Add(new ModeSelObj(new List<string> { "Shirase" }, Mode.ModeType.SHIRASE, true));

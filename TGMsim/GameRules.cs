@@ -237,24 +237,24 @@ namespace TGMsim
                     switch (game)
                     {
                         case Games.TGM1:
-                            mod = new M_Master1();
+                            mod = new Modes.Master1();
                             break;
                         case Games.TGM2://tgm2
-                            mod = new M_Master2();
+                            mod = new Modes.Master2();
                             break;
                         case Games.TAP://tap
-                            mod = new M_Master2Plus();
+                            mod = new Modes.Master2Plus();
                             break;
                         case Games.TGM3://tgm3
-                            mod = new M_Master3();
+                            mod = new Modes.Master3();
                             break;
                     }
                     break;
                 case Mode.ModeType.DEATH://death
-                    mod = new M_Death();
+                    mod = new Modes.Death();
                     break;
                 case Mode.ModeType.SHIRASE://shirase
-                    mod = new M_Shirase();
+                    mod = new Modes.Shirase();
                     break;
                 case Mode.ModeType.SPRINT://sprint
                     /*gradedBy = 4;
@@ -262,41 +262,44 @@ namespace TGMsim
                     border = Color.DarkGreen;*/
                     break;
                 case Mode.ModeType.GARBAGE://garbage clear
-                    mod = new M_Garbo();
+                    mod = new Modes.Garbo();
                     break;
                 case Mode.ModeType.ROUNDS://rounds
-                    mod = new M_IcyShirase();
+                    mod = new Modes.IcyShirase();
                     break;
                 case Mode.ModeType.KONOHA://konoha
                     generator = (int)Gens.EZ;
-                    mod = new M_BigBravoMania();
+                    mod = new Modes.BigBravoMania();
                     break;
                 case Mode.ModeType.TRAINING://20g training
-                    mod = new M_Training();
+                    mod = new Modes.Training();
                     break;
                 case Mode.ModeType.SEGA: //segatet
-                    mod = new M_SegaTet();
+                    mod = new Modes.SegaTet();
                     break;
                 case Mode.ModeType.MINER: //miner
-                    mod = new M_Miner(vari);
+                    mod = new Modes.Miner(vari);
                     break;
                 case Mode.ModeType.DYNAMO: //dynamo
-                    mod = new M_Dynamo(vari);
+                    mod = new Modes.Dynamo(vari);
                     break;
                 case Mode.ModeType.ENDURA: //endura
                     break;
                 case Mode.ModeType.BLOX: //bloxeed
-                    mod = new M_SegaBlox();
+                    mod = new Modes.SegaBlox();
                     gravTable = new List<int> { 16, 14, 12, 10, 8, 6, 4, 3, 2, 1, 10, 8, 6, 4, 2, 1 };
                     break;
                 case Mode.ModeType.PLUS: //tgm+
-                    mod = new M_Plus();
+                    mod = new Modes.Plus();
                     break;
                 case Mode.ModeType.FLASH: //flash point
-                    mod = new M_SegaFlash();
+                    mod = new Modes.SegaFlash();
                     break;
                 case Mode.ModeType.MARCH: //hell march
-                    mod = new M_HellMarch();
+                    mod = new Modes.HellMarch();
+                    break;
+                case Mode.ModeType.EASY: //easy
+                    mod = new Modes.Easy(); //uuuhhhhhhh?????
                     break;
                 default:
                     throw new Exception("unknown mode");

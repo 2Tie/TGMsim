@@ -5,11 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TGMsim
+namespace TGMsim.Modes
 {
-    class M_Training : Mode
+    class Training : Mode
     {
-        public M_Training()
+        public Training()
         {
             ModeName = "20G TRAINING";
             border = Color.DarkGreen;

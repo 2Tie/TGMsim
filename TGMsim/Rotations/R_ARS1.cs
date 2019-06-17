@@ -53,7 +53,7 @@ namespace TGMsim
                     lowY = tet.bits[q].y;
             }
 
-            if (tet.id == 1)//I doesn't kick
+            if (tet.id == Tetromino.Piece.I)//I doesn't kick
                 return false;
 
 
@@ -62,13 +62,13 @@ namespace TGMsim
                 if (gameField[tet.bits[1].x][tet.bits[1].y + ((1 + (tet.rotation / 2)) * (3 - big))] != 0)
                     return false;
 
-            if (tet.id == (int)Tetromino.Piece.J || tet.id == (int)Tetromino.Piece.L)
+            if (tet.id == Tetromino.Piece.J || tet.id == Tetromino.Piece.L)
             {
                 if (tet.rotation % 2 == 0)
                 {
                     if (gameField[tet.bits[1].x][tet.bits[1].y - 1 + (tet.rotation / 2 * (3 - big)) * 2] != 0)//if hooked
                     {
-                        if (gameField[tet.bits[1].x + ((tet.id - 4) * -2) + 1][tet.bits[1].y + (tet.rotation / 2) + 1] != 0 && tet.rotation - ((((tet.id - 4) * 2) - 1) * p) == 1)//if exception blocked
+                        if (gameField[tet.bits[1].x + (((int)tet.id - 4) * -2) + 1][tet.bits[1].y + (tet.rotation / 2) + 1] != 0 && tet.rotation - (((((int)tet.id - 4) * 2) - 1) * p) == 1)//if exception blocked
                             return true;
                         return false;
                     }

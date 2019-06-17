@@ -10,7 +10,7 @@ namespace TGMsim
     {
         public enum Piece { I = 1, Z, S, J, L, O, T };
 
-        public int id = 0;
+        public Piece id = 0;
         public int rotation = 0;
         public int x = 3;
         public int y = 20;
@@ -19,6 +19,7 @@ namespace TGMsim
         public bool big = false;
         public bool swapped = false;
         public bool floored = false;
+        public bool spun = false;
         public int groundTimer = 0;
         public int item = 0;
 
@@ -32,19 +33,19 @@ namespace TGMsim
 
         public List<BlockBit> bits = new List<BlockBit>(); //first four will always be the "small" version
 
-        public Tetromino(int i, bool nbig) : this(i, 0, 0, 0, nbig)
+        public Tetromino(Piece i, bool nbig) : this(i, 0, 0, 0, nbig)
         {
 
         }
 
-        public Tetromino(int i, int r, int nx, int ny, bool nbig)
+        public Tetromino(Piece i, int r, int nx, int ny, bool nbig)
         {
             id = i;
             rotation = r;
             big = nbig;
             switch (i)
             {
-                case 1://I
+                case Piece.I://I
                     switch (r)
                     {
                         case 0:
@@ -63,7 +64,7 @@ namespace TGMsim
                             break;
                     }
                     break;
-                case 2://Z
+                case Piece.Z://Z
                     switch (r)
                     {
                         case 0:
@@ -82,7 +83,7 @@ namespace TGMsim
                             break;
                     }
                     break;
-                case 3://S
+                case Piece.S://S
                     switch (r)
                     {
                         case 0:
@@ -101,7 +102,7 @@ namespace TGMsim
                             break;
                     }
                     break;
-                case 4://J
+                case Piece.J://J
                     switch (r)
                     {
                         case 0:
@@ -130,7 +131,7 @@ namespace TGMsim
                             break;
                     }
                     break;
-                case 5://L
+                case Piece.L://L
                     switch (r)
                     {
                         case 0:
@@ -159,7 +160,7 @@ namespace TGMsim
                             break;
                     }
                     break;
-                case 6://O
+                case Piece.O://O
                     switch (r)
                     {
                         case 0:
@@ -173,7 +174,7 @@ namespace TGMsim
                             break;
                     }
                     break;
-                case 7://T
+                case Piece.T://T
                     switch (r)
                     {
                         case 0:
@@ -224,7 +225,7 @@ namespace TGMsim
             }
             this.x += mx;
             this.y += my;
-
+            spun = false;
         }
 
         public Tetromino clone()
@@ -254,7 +255,7 @@ namespace TGMsim
 
         private Tetromino copyExtra(Tetromino tet)
         {
-            tet.bone = this.bone;
+            tet.bone = bone;
             tet.kicked = kicked;
             tet.groundTimer = groundTimer;
             tet.soft = soft;
@@ -262,6 +263,7 @@ namespace TGMsim
             tet.life = life;
             tet.rotations = rotations;
             tet.floored = floored;
+            tet.spun = spun;
             return tet;
         }
     }

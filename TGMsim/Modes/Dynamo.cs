@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TGMsim
+namespace TGMsim.Modes
 {
-    class M_Dynamo : Mode
+    class Dynamo : Mode
     {
 
         public List<List<double>> comboTable = new List<List<double>>();
@@ -27,7 +27,7 @@ namespace TGMsim
 
         public List<int> coolCounter = new List<int>();
 
-        public M_Dynamo(int v)
+        public Dynamo(int v)
         {
             ModeName = "DYNAMO";
             border = Color.MediumPurple;

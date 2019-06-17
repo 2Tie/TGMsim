@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TGMsim
+namespace TGMsim.Modes
 {
-    class M_Shirase : Mode
+    class Shirase : Mode
     {
         public int gradeCombo = 0;
         public int pipCount = 0;
@@ -22,7 +22,7 @@ namespace TGMsim
         public List<long> secTimes = new List<long>();
         public FrameTimer coolTime = new FrameTimer();
 
-        public M_Shirase()
+        public Shirase()
         {
             grades = new List<string> { "", "S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "S9", "S10", "S11", "S12", "S13" };
             ModeName = "SHIRASE";
