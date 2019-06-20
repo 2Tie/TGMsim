@@ -50,7 +50,10 @@ namespace TGMsim
                 sw.Write(new byte[4]);//GMs and mode clears
                 sw.Write(new byte[6]);//current TI grade + previous seven rankings
                 sw.Write(new byte[1]);//ACE grade
-                sw.Write(new byte[1]);//dynamo progress and ACE unlocks
+                if (name == "TAS" || name == "   ")
+                    sw.Write(new byte[1] { 0xFF });//dynamo progress and ACE unlocks; tas and cheater have all unlocked by default
+                else
+                    sw.Write(new byte[1]);
             }
             return false;
         }

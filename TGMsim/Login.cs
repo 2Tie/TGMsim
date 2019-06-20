@@ -71,6 +71,7 @@ namespace TGMsim
                     else
                     {
                         temp.createUser();
+                        temp.readUserData();
                         loginErr = 0;
                         menuSelection = 3;
                     }

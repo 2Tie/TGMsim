@@ -153,8 +153,8 @@ namespace TGMsim
                     menuState = 3;
                     //if (gSel.menuSelection != 5 && gSel.menuSelection != 0 && gSel.menuSelection != 7)
                         //loadHiscores(gSel.menuSelection);
-                    mSel = new ModeSelect(gSel.menuSelection);
-                    if (mSel.modes[mSel.game][mSel.selection].enabled)
+                    mSel = new ModeSelect(gSel.menuSelection, player);
+                    if (mSel.modes[mSel.game][mSel.selection].enabled[mSel.variant[mSel.selection]])
                     {
                         rules.setup((GameRules.Games)mSel.game, mSel.modes[mSel.game][mSel.selection].id, mSel.variant[mSel.selection]);
                         loadHiscores(gSel.menuSelection, 1);
@@ -253,14 +253,14 @@ namespace TGMsim
                     break;
                 case 3: //mode select
                     mSel.logic(pad1);
-                    if (pad1.inputV != 0 && mSel.modes[mSel.game][mSel.selection].enabled)
+                    if (pad1.inputV != 0 && mSel.modes[mSel.game][mSel.selection].enabled[mSel.variant[mSel.selection]])
                     {
                         rules.setup((GameRules.Games)mSel.game, mSel.modes[mSel.game][mSel.selection].id, mSel.variant[mSel.selection]);
                         loadHiscores(gSel.menuSelection, mSel.selection + 1);
                     }
                     if ((pad1.inputRot1 | pad1.inputRot3) == 1)
                     {
-                        if (!mSel.modes[mSel.game][mSel.selection].enabled)
+                        if (!mSel.modes[mSel.game][mSel.selection].enabled[mSel.variant[mSel.selection]])
                             return;
                         else if (mSel.game == 7 && mSel.selection == 0) //custom
                             changeMenu(7);
@@ -462,7 +462,7 @@ namespace TGMsim
                 case 3:
                     drawBuffer.DrawString("mode select", DefaultFont, new SolidBrush(Color.White), 5, 5);
                     mSel.render(drawBuffer);
-                    if (mSel.modes[mSel.game][mSel.selection].enabled) //draw hiscores
+                    if (mSel.modes[mSel.game][mSel.selection].enabled[0]) //draw hiscores //TODO: this check should be obsolete after all are playable
                         for (int i = 0; i < 6; i++)
                         {
                             int hX = 300;

@@ -1,0 +1,13 @@
+Bugs to fix:
+
+Additions for release:
+finish Dynamo
+backgrounds for game select and mode select
+
+
+Additions in the future:
+GM medals
+item blocks
+normal mode
+CCS modes
+ACE modes

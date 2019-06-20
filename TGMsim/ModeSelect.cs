@@ -21,9 +21,9 @@ namespace TGMsim
         {
             public List<string> names;
             public Mode.ModeType id;
-            public bool enabled;
+            public List<bool> enabled;
 
-            public ModeSelObj(List<string> n, Mode.ModeType t, bool e)
+            public ModeSelObj(List<string> n, Mode.ModeType t, List<bool> e)
             {
                 names = n;
                 id = t;
@@ -39,34 +39,34 @@ namespace TGMsim
 
         System.Windows.Media.MediaPlayer s_Roll = new System.Windows.Media.MediaPlayer();
 
-        public ModeSelect(int g)
+        public ModeSelect(int g, Profile p)
         {
             game = g;
             Audio.addSound(s_Roll, "/Res/Audio/SE/SEI_name_select.wav");
 
             List<ModeSelObj> tmp = new List<ModeSelObj>();//sega
-            tmp.Add(new ModeSelObj(new List<string> { "Tetris" }, Mode.ModeType.SEGA, true));
-            tmp.Add(new ModeSelObj(new List<string> { "Bloxeed" }, Mode.ModeType.BLOX, true));
-            tmp.Add(new ModeSelObj(new List<string> { "Flash Point" }, Mode.ModeType.FLASH, true));
+            tmp.Add(new ModeSelObj(new List<string> { "Tetris" }, Mode.ModeType.SEGA, new List<bool> { true }));
+            tmp.Add(new ModeSelObj(new List<string> { "Bloxeed" }, Mode.ModeType.BLOX, new List<bool> { true }));
+            tmp.Add(new ModeSelObj(new List<string> { "Flash Point" }, Mode.ModeType.FLASH, new List<bool> { true }));
             modes.Add(tmp);
             tmp = new List<ModeSelObj>();//tgm1
-            tmp.Add(new ModeSelObj(new List<string> { "Master" }, Mode.ModeType.MASTER, true));
+            tmp.Add(new ModeSelObj(new List<string> { "Master" }, Mode.ModeType.MASTER, new List<bool> { true }));
             modes.Add(tmp);
             tmp = new List<ModeSelObj>();//tgm2
-            tmp.Add(new ModeSelObj(new List<string> { "Master" }, Mode.ModeType.MASTER, true));
-            tmp.Add(new ModeSelObj(new List<string> { "Cardcaptor Sakura Easy", "Cardcaptor Sakura Normal" }, Mode.ModeType.MASTER, false)); //TODO
+            tmp.Add(new ModeSelObj(new List<string> { "Master" }, Mode.ModeType.MASTER, new List<bool> { true }));
+            tmp.Add(new ModeSelObj(new List<string> { "Cardcaptor Sakura Easy", "Cardcaptor Sakura Normal" }, Mode.ModeType.MASTER, new List<bool> { false, false })); //TODO
             modes.Add(tmp);
             tmp = new List<ModeSelObj>();//tap
-            tmp.Add(new ModeSelObj(new List<string> { "Normal" }, Mode.ModeType.SEGA, false));
-            tmp.Add(new ModeSelObj(new List<string> { "Master" }, Mode.ModeType.MASTER, true));
-            tmp.Add(new ModeSelObj(new List<string> { "TGM+" }, Mode.ModeType.PLUS, true));
-            tmp.Add(new ModeSelObj(new List<string> { "Death" }, Mode.ModeType.DEATH, true));
+            tmp.Add(new ModeSelObj(new List<string> { "Normal" }, Mode.ModeType.SEGA, new List<bool> { false })); //TODO
+            tmp.Add(new ModeSelObj(new List<string> { "Master" }, Mode.ModeType.MASTER, new List<bool> { true }));
+            tmp.Add(new ModeSelObj(new List<string> { "TGM+" }, Mode.ModeType.PLUS, new List<bool> { true }));
+            tmp.Add(new ModeSelObj(new List<string> { "Death" }, Mode.ModeType.DEATH, new List<bool> { true }));
             modes.Add(tmp);
             tmp = new List<ModeSelObj>();//tgm3
-            tmp.Add(new ModeSelObj(new List<string> { "Easy" }, Mode.ModeType.EASY, true));
-            tmp.Add(new ModeSelObj(new List<string> { "Master" }, Mode.ModeType.MASTER, true));
-            tmp.Add(new ModeSelObj(new List<string> { "Sakura" }, Mode.ModeType.SEGA, false)); //TODO
-            tmp.Add(new ModeSelObj(new List<string> { "Shirase" }, Mode.ModeType.SHIRASE, true));
+            tmp.Add(new ModeSelObj(new List<string> { "Easy" }, Mode.ModeType.EASY, new List<bool> { true }));
+            tmp.Add(new ModeSelObj(new List<string> { "Master" }, Mode.ModeType.MASTER, new List<bool> { true }));
+            tmp.Add(new ModeSelObj(new List<string> { "Sakura" }, Mode.ModeType.SEGA, new List<bool> { false })); //TODO
+            tmp.Add(new ModeSelObj(new List<string> { "Shirase" }, Mode.ModeType.SHIRASE, new List<bool> { true }));
             modes.Add(tmp);
             tmp = new List<ModeSelObj>();//ACE
             //Normal
@@ -83,21 +83,21 @@ namespace TGMsim
             //Level Star
             //Target
 
-            tmp.Add(new ModeSelObj(new List<string> { "Roads" }, Mode.ModeType.SEGA, false));
-            tmp.Add(new ModeSelObj(new List<string> { "Exam" }, Mode.ModeType.SEGA, false));
+            tmp.Add(new ModeSelObj(new List<string> { "Roads" }, Mode.ModeType.SEGA, new List<bool> { false }));
+            tmp.Add(new ModeSelObj(new List<string> { "Exam" }, Mode.ModeType.SEGA, new List<bool> { false }));
             modes.Add(tmp);
             tmp = new List<ModeSelObj>(); //GMX
-            tmp.Add(new ModeSelObj(new List<string> { "Dynamo", "Dynamo+", "Dynamo++", "Dynamo+++", "Dynamo*" }, Mode.ModeType.DYNAMO, true));
-            tmp.Add(new ModeSelObj(new List<string> { "Endura" }, Mode.ModeType.ENDURA, false));
-            tmp.Add(new ModeSelObj(new List<string> { "Hell March" }, Mode.ModeType.MARCH, true));
+            tmp.Add(new ModeSelObj(new List<string> { "Dynamo", "Dynamo+", "Dynamo++", "Dynamo+++", "Dynamo*" }, Mode.ModeType.DYNAMO, new List<bool> { true, p.dynamoProgress > 0, p.dynamoProgress > 1, p.dynamoProgress > 2, p.dynamoProgress > 3 }));
+            tmp.Add(new ModeSelObj(new List<string> { "Endura" }, Mode.ModeType.ENDURA, new List<bool> { false }));
+            tmp.Add(new ModeSelObj(new List<string> { "Hell March" }, Mode.ModeType.MARCH, new List<bool> { true }));
             modes.Add(tmp);
             tmp = new List<ModeSelObj>(); //bonus
-            tmp.Add(new ModeSelObj(new List<string> { "Custom" }, Mode.ModeType.SEGA, false));
-            tmp.Add(new ModeSelObj(new List<string> { "Miner", "Zen" }, Mode.ModeType.MINER, true));
-            tmp.Add(new ModeSelObj(new List<string> { "Garbage Clear" }, Mode.ModeType.GARBAGE, true));
-            tmp.Add(new ModeSelObj(new List<string> { "20G Practice" }, Mode.ModeType.TRAINING, true));
-            tmp.Add(new ModeSelObj(new List<string> { "Icy Shirase" }, Mode.ModeType.ROUNDS, true));
-            tmp.Add(new ModeSelObj(new List<string> { "Big Bravo Mania" }, Mode.ModeType.KONOHA, true));
+            tmp.Add(new ModeSelObj(new List<string> { "Custom" }, Mode.ModeType.SEGA, new List<bool> { false }));
+            tmp.Add(new ModeSelObj(new List<string> { "Miner", "Zen" }, Mode.ModeType.MINER, new List<bool> { true, true }));
+            tmp.Add(new ModeSelObj(new List<string> { "Garbage Clear" }, Mode.ModeType.GARBAGE, new List<bool> { true }));
+            tmp.Add(new ModeSelObj(new List<string> { "20G Practice" }, Mode.ModeType.TRAINING, new List<bool> { true }));
+            tmp.Add(new ModeSelObj(new List<string> { "Icy Shirase" }, Mode.ModeType.ROUNDS, new List<bool> { true }));
+            tmp.Add(new ModeSelObj(new List<string> { "Big Bravo Mania" }, Mode.ModeType.KONOHA, new List<bool> { true }));
             modes.Add(tmp);
 
             for (int i = 0; i < modes[g].Count; i++)
@@ -139,7 +139,7 @@ namespace TGMsim
             for(int i = 0; i < modes[game].Count; i++)
             {
                 ModeSelObj m = modes[game][i];
-                drawBuffer.DrawString(m.names.Count > 1 ? m.names[variant[i]] : m.names[0], SystemFonts.DefaultFont, m.enabled ? active : locked, 150, 250 + 12*i);
+                drawBuffer.DrawString(m.names[variant[i]], SystemFonts.DefaultFont, m.enabled[variant[i]] ? active : locked, 150, 250 + 12*i);
             }
             drawBuffer.DrawString("→", SystemFonts.DefaultFont, new SolidBrush(Color.White), 135, 250 + 12 * selection);
         }
