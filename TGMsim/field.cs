@@ -431,6 +431,7 @@ namespace TGMsim
                 for (int j = 0; j < 20; j++)
                 {
                     bool flashing = false;
+                    int block = gameField[i][j];
                     for (int k = 0; k < flashList.Count; k++)
                     {
                         if (i == flashList[k].x && j == flashList[k].y)
@@ -442,8 +443,6 @@ namespace TGMsim
                     }
                     else
                     {
-
-                        int block = gameField[i][j];
                         if (block == 8 || block == 0) //empty or invis, don't draw
                             ;
                         else if (block < 11)//garbage or bone
@@ -458,24 +457,25 @@ namespace TGMsim
                         if (MOD.shadeStack && block != 8 && block != 0)
                             drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(130, Color.Black)), x + 25 * i, y + height - (j * 25), 25, 25);
 
-                        //outline
-                        if (MOD.outlineStack)
-                            if (block != 0 && block != 8 && block != 10)
-                            {
-                                if (i > 0)
-                                    if (gameField[i - 1][j] == 0)//left
-                                        drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.White)), x + 25 * i, y + height - (j * 25), 3, 25);
-                                if (i < 9)
-                                    if (gameField[i + 1][j] == 0)//right
-                                        drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.White)), x + 25 * i + 22, y + height - (j * 25), 3, 25);
-                                if (j > 0)
-                                    if (gameField[i][j - 1] == 0)//down
-                                        drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.White)), x + 25 * i, y + height + 22 - (j * 25), 25, 3);
-                                if (j < gameField[0].Count - 1)
-                                    if (gameField[i][j + 1] == 0)//up
-                                        drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.White)), x + 25 * i, y + height - (j * 25), 25, 3);
-                            }
+                        
                     }
+                    //outline
+                    if (MOD.outlineStack)
+                        if (block != 0 && block != 8 && block != 10)//don't outline invis or bones
+                        {
+                            if (i > 0)
+                                if (gameField[i - 1][j] == 0)//left
+                                    drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.White)), x + 25 * i, y + height - (j * 25), 3, 25);
+                            if (i < 9)
+                                if (gameField[i + 1][j] == 0)//right
+                                    drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.White)), x + 25 * i + 22, y + height - (j * 25), 3, 25);
+                            if (j > 0)
+                                if (gameField[i][j - 1] == 0)//down
+                                    drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.White)), x + 25 * i, y + height + 22 - (j * 25), 25, 3);
+                            if (j < gameField[0].Count - 1)
+                                if (gameField[i][j + 1] == 0)//up
+                                    drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.White)), x + 25 * i, y + height - (j * 25), 25, 3);
+                        }
                 }
             }
 
@@ -783,12 +783,12 @@ namespace TGMsim
                     }
                     else
                         drawBuffer.DrawString("Replay recorded!", SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 340);
-                }
 
-                if (ruleset.gameRules == GameRules.Games.TAP)
-                {
-                    drawBuffer.DrawString(results.code.Substring(0, 8), SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 460);
-                    drawBuffer.DrawString(results.code.Substring(8, 8), SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 470);
+                    if (ruleset.gameRules == GameRules.Games.TAP && results.username != "TAS" && results.username != "   ")//don't draw a code for TAS or cheats, since one wasn't generated
+                    {
+                        drawBuffer.DrawString(results.code.Substring(0, 8), SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 460);
+                        drawBuffer.DrawString(results.code.Substring(8, 8), SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 470);
+                    }
                 }
             }
 
@@ -1062,10 +1062,7 @@ namespace TGMsim
                                 }
 
                                 currentTimer = timerType.ARE;
-                                if ((int)ruleset.gameRules >= 3)
-                                    timerCount = MOD.baseARELine;
-                                else
-                                    timerCount = MOD.baseARE;
+                                timerCount = MOD.baseARELine;
                                 Audio.playSound(Audio.s_Impact);
                             }
                             else
@@ -1090,312 +1087,14 @@ namespace TGMsim
                             }
                         }
                     }
-                    if (activeTet.id != 0)//else, check collision below
+                    if (activeTet.id != 0)//else, handle tet actions in order ROTATE -> MOVE -> GRAV -> LOCK
                     {
 
                         //activeTet.floored = false;
                         activeTet.life++;
-                        bool f = false;
-                        if (activeTet.id != 0)
-                        {
-                            int big = 0;
-                            if (MOD.bigmode)
-                                big = 1;
-                            for (int i = 0; i < activeTet.bits.Count; i++)
-                            {
-                                if (activeTet.bits[i].y < 0)
-                                    continue;
-                                if (activeTet.bits[i].y - big - 1 <= -1)
-                                {
-                                    f = true;
-                                    break;
-                                }
-                                else if (gameField[activeTet.bits[i].x][activeTet.bits[i].y - big - 1] != 0)
-                                {
-                                    f = true;
-                                    break;
-                                }
-                            }
-                        }
+                        checkGrounded();
 
-                        if (!activeTet.floored && f)
-                            Audio.playSound(Audio.s_Contact);
-                        activeTet.floored = f;
-
-                        if (activeTet.floored == true)
-                        {
-                            //check lock delay if grounded
-                            if (currentTimer == timerType.LockDelay)
-                            {
-                                //if lock delay up, place piece.
-                                if (activeTet.groundTimer == 0)
-                                {
-
-                                    safelock = true;
-
-                                    Audio.playSound(Audio.s_Lock);
-                                    //GIMMICKS
-
-                                    //garbage is handled in mode
-
-
-                                    if (inCredits == true && creditsProgress >= ruleset.creditsLength)
-                                    {
-                                        endGame(true);
-                                        return;
-                                    }
-
-                                    int lowY = 22;
-                                    for (int i = 0; i < activeTet.bits.Count; i++)
-                                    {
-                                        if (lowY > activeTet.bits[i].y)
-                                            lowY = activeTet.bits[i].y;
-                                    }
-
-                                    for (int i = 0; i < activeTet.bits.Count; i++) //SET THE PIECES
-                                    {
-                                        int big = 2;
-                                        if (MOD.bigmode)
-                                            big = 1;
-
-                                        for (int j = 0; j < (big % 2) + 1; j++)
-                                        {
-                                            for (int k = 0; k < (big % 2) + 1; k++)
-                                            {
-                                                if (activeTet.bits[i].y - k < 0)
-                                                    continue;
-                                                if (checkGimmick(Mode.Gimmick.Type.INVIS) || MOD.creditsType == 2)
-                                                    gameField[activeTet.bits[i].x + j][activeTet.bits[i].y - k] = 8;
-                                                else if (activeTet.bone == true)
-                                                    gameField[activeTet.bits[i].x + j][activeTet.bits[i].y - k] = 10;
-                                                else
-                                                    gameField[activeTet.bits[i].x + j][activeTet.bits[i].y - k] = (int)activeTet.id;
-
-                                                if (MOD.creditsType == 1 && inCredits)//vanishing?
-                                                {
-                                                    vanPip vP = new vanPip();
-                                                    vP.time = creditsProgress;
-                                                    vP.x = activeTet.bits[i].x + j;
-                                                    vP.y = activeTet.bits[i].y - k;
-                                                    vanList.Add(vP);
-                                                }
-
-                                                //add to flash, if not bone
-                                                if (!activeTet.bone)
-                                                {
-                                                    flashPip fP = new flashPip();
-                                                    fP.time = 2;
-                                                    fP.x = activeTet.bits[i].x + j;
-                                                    fP.y = activeTet.bits[i].y - k;
-                                                    flashList.Add(fP);
-                                                }
-                                            }
-                                        }
-                                    }
-                                    activeTet.id = 0;
-
-                                    if (MOD.keepFieldSafe)//drop the field
-                                    {
-                                        int drop = 0;
-                                        for (int d = 0; d < 4; d++)
-                                            for (int j = 0; j < 10; j++)
-                                                if (gameField[j][16 + d] != 0)
-                                                    drop = d;
-                                        if (drop > 0)
-                                            dropField(drop);
-                                    }
-
-                                    //check for full rows and screenclears
-
-                                    int tetCount = 0;
-
-                                    for (int i = gameField[0].Count - 1; i >= 0; i--)
-                                    {
-                                        int columnCount = 0;
-                                        for (int j = 0; j < 10; j++)
-                                        {
-                                            if (gameField[j][i] != 0)
-                                            {
-                                                columnCount++;
-                                                tetCount++;
-                                            }
-                                        }
-                                        if (columnCount == 10)
-                                        {
-                                            if (!checkGimmick(Mode.Gimmick.Type.ICE) || i > 9)
-                                            {
-                                                full.Add(i);
-                                                tetCount -= 10;
-                                                //clear these from vanishing list
-                                                int count = 0;
-                                                List<int> remcell = new List<int>();
-                                                foreach (var vP in vanList)
-                                                {
-                                                    if (vP.y == i)
-                                                        remcell.Add(count);
-                                                    count++;
-                                                }
-                                                for (int c = 0; c < remcell.Count; c++)
-                                                {
-                                                    vanList.RemoveAt(remcell[remcell.Count - c - 1]);
-                                                }
-                                                count = 0;
-                                                remcell = new List<int>();
-                                                foreach (var vP in flashList)
-                                                {
-                                                    if (vP.y == i)
-                                                        remcell.Add(count);
-                                                    count++;
-                                                }
-                                                for (int c = 0; c < remcell.Count; c++)
-                                                {
-                                                    flashList.RemoveAt(remcell[remcell.Count - c - 1]);
-                                                }
-                                            }
-                                        }
-                                    }
-
-                                    if (full.Count > 0)  //if full rows, clear the rows, start the line clear timer, give points
-                                    {
-                                        int bigFull = full.Count;
-                                        int oldLvl = MOD.level;
-                                        if (MOD.bigmode)
-                                            bigFull = bigFull / 2;
-                                        for (int i = 0; i < full.Count; i++)
-                                        {
-                                            for (int j = 0; j < 10; j++)
-                                            {
-                                                if (gameField[j][full[i]] > 8)
-                                                    --MOD.boardGems;
-                                                gameField[j][full[i]] = 0;
-                                            }
-                                            //remove from target list
-                                            if (MOD.targets.Contains(full[i]))
-                                                MOD.targets.Remove(full[i]);
-                                        }
-
-                                        MOD.onPut(activeTet, true);
-
-                                        bool split = false;
-                                        if(full.Count==2)
-                                        {
-                                            if (full[0] > full[1] + 1) //populated from top down (bigger number first
-                                                split = true;
-                                        }
-                                        else if (full.Count==3)
-                                        {
-                                            if (full[0] > full[1] + 1 || full[1] > full[2] + 1)
-                                                split = true;
-                                        }
-
-                                        MOD.onClear(bigFull, activeTet, timer.count, tetCount == 0, split);
-
-                                        //start timer
-                                        currentTimer = timerType.LineClear;
-                                        timerCount = MOD.baseLineClear;
-                                        Audio.playSound(Audio.s_Clear);
-
-                                    }
-                                    else //start the ARE, check if new grav level
-                                    {
-                                        currentTimer = timerType.ARE;
-                                        timerCount = MOD.baseARE;
-
-                                        MOD.onPut(activeTet, false);
-                                    }
-
-                                    if (MOD.inCredits && !inCredits)
-                                        triggerCredits();
-
-                                    if (MOD.modeClear)
-                                        if (MOD.continueMode)
-                                        {
-                                            resetField();
-                                            MOD.modeClear = false;
-                                            MOD.continueMode = false;
-                                        }
-                                        else
-                                        {
-                                            if (MOD.hasCredits)
-                                                triggerCredits();
-                                            else
-                                                endGame(true);
-                                        }
-                                    if (MOD.torikan && !toriless && !inCredits)
-                                    {
-                                        currentTimer = timerType.LineClear;
-                                        timerCount = MOD.baseLineClear;
-                                        Audio.playSound(Audio.s_Clear);
-                                        if (MOD.toriCredits)
-                                            triggerCredits();
-                                        else
-                                            endGame(false);
-                                        return;
-                                    }
-                                    else if (MOD.torikan && toriless)
-                                        MOD.torikan = false;
-
-                                    if (curSection != MOD.curSection)
-                                    {
-                                        curSection = MOD.curSection;
-                                        //UPDATE BACKGROUND
-                                        bgtimer = 1;
-                                    }
-
-                                    //update gimmicks
-                                    updateGimmicks();
-                                    
-
-                                    while (gravLevel < gravTable.Count - 1)
-                                    {
-                                        if (MOD.level + (MOD.secBonus * 100) >= ruleset.gravLevels[gravLevel + 1])
-                                            gravLevel++;
-                                        else
-                                            break;
-                                    }
-
-                                    //garbage
-                                    if (checkGimmick(Mode.Gimmick.Type.GARBAGE) && MOD.garbTimer >= getActiveGimmickParameter(Mode.Gimmick.Type.GARBAGE) && (MOD.raiseGarbOnClear == true || full.Count == 0))
-                                    {
-                                        bool check = true;
-                                        if (MOD.garbSafeLine != 0)
-                                            for (int i = 19; i > MOD.garbSafeLine; --i)
-                                            {
-                                                for (int x = 0; x < 10; x++)
-                                                    if (gameField[x][i] != 0)
-                                                    {
-                                                        check = false;
-                                                        break;
-                                                    }
-                                                if (!check)
-                                                    break;
-                                            }
-                                        if (check)
-                                        {
-                                            currentTimer = timerType.GarbageRaise;
-                                            timerCount = MOD.garbDelay;
-                                        }
-                                        MOD.garbTimer = 0;
-                                    }
-
-                                    return;
-
-                                }
-                                else
-                                {
-                                    gravCounter = 0;
-                                    activeTet.groundTimer--;
-                                }
-                            }
-                            else
-                            {
-                                currentTimer = timerType.LockDelay;
-                            }
-                        }
-                        //else
-                            //currentTimer = timerType.ARE;
-
-
+                        
 
                         int blockDrop = 0;// make it here so we can drop faster
 
@@ -1424,12 +1123,12 @@ namespace TGMsim
                                 activeTet.soft++;
                                 MOD.onSoft();
                             }
-                            else if (!safelock || !((int)ruleset.gameRules > 3 || MOD.modeID == Mode.ModeType.DEATH || ((int)ruleset.gameRules == 2 && MOD.level > 899) || ((int)ruleset.gameRules == 3 && MOD.level > 899)))
+                            /*else if (!safelock || !((int)ruleset.gameRules > 3 || MOD.modeID == Mode.ModeType.DEATH || ((int)ruleset.gameRules == 2 && MOD.level > 899) || ((int)ruleset.gameRules == 3 && MOD.level > 899)))
                             {
                                 if(activeTet.floored)
                                     gravCounter = 0;
                                 activeTet.groundTimer = 0;
-                            }
+                            }*/
                         }
                         else
                         {
@@ -1543,7 +1242,275 @@ namespace TGMsim
                             tetGrav(activeTet, blockDrop, false, son);
                         }
 
-                        
+                        checkGrounded();
+
+                        if (activeTet.floored == true)
+                        {
+                            //check lock delay if grounded
+                            if (currentTimer == timerType.LockDelay)
+                            {
+                                //if lock delay up, place piece.
+                                if (activeTet.groundTimer == 0 || pad.inputV == -1)
+                                {
+
+                                    safelock = true;
+
+                                    Audio.playSound(Audio.s_Lock);
+                                    //GIMMICKS
+
+                                    //garbage is handled in mode
+
+
+                                    if (inCredits == true && creditsProgress >= ruleset.creditsLength)
+                                    {
+                                        endGame(true);
+                                        return;
+                                    }
+
+                                    int lowY = 22;
+                                    for (int i = 0; i < activeTet.bits.Count; i++)
+                                    {
+                                        if (lowY > activeTet.bits[i].y)
+                                            lowY = activeTet.bits[i].y;
+                                    }
+
+                                    for (int i = 0; i < activeTet.bits.Count; i++) //SET THE PIECES
+                                    {
+                                        int big = 2;
+                                        if (MOD.bigmode)
+                                            big = 1;
+
+                                        for (int j = 0; j < (big % 2) + 1; j++)
+                                        {
+                                            for (int k = 0; k < (big % 2) + 1; k++)
+                                            {
+                                                if (activeTet.bits[i].y - k < 0)
+                                                    continue;
+                                                if (checkGimmick(Mode.Gimmick.Type.INVIS) || MOD.creditsType == 2)
+                                                    gameField[activeTet.bits[i].x + j][activeTet.bits[i].y - k] = 8;
+                                                else if (activeTet.bone == true)
+                                                    gameField[activeTet.bits[i].x + j][activeTet.bits[i].y - k] = 10;
+                                                else
+                                                    gameField[activeTet.bits[i].x + j][activeTet.bits[i].y - k] = (int)activeTet.id;
+
+                                                if (MOD.creditsType == 1 && inCredits)//vanishing?
+                                                {
+                                                    vanPip vP = new vanPip();
+                                                    vP.time = creditsProgress;
+                                                    vP.x = activeTet.bits[i].x + j;
+                                                    vP.y = activeTet.bits[i].y - k;
+                                                    vanList.Add(vP);
+                                                }
+
+                                                //add to flash, if not bone
+                                                if (!activeTet.bone && ruleset.flashLength != 0)
+                                                {
+                                                    flashPip fP = new flashPip();
+                                                    fP.time = ruleset.flashLength - 1;
+                                                    fP.x = activeTet.bits[i].x + j;
+                                                    fP.y = activeTet.bits[i].y - k;
+                                                    flashList.Add(fP);
+                                                }
+                                            }
+                                        }
+                                    }
+                                    activeTet.id = 0;
+
+                                    if (MOD.keepFieldSafe)//drop the field
+                                    {
+                                        int drop = 0;
+                                        for (int d = 0; d < 4; d++)
+                                            for (int j = 0; j < 10; j++)
+                                                if (gameField[j][16 + d] != 0)
+                                                    drop = d;
+                                        if (drop > 0)
+                                            dropField(drop);
+                                    }
+
+                                    //check for full rows and screenclears
+
+                                    int tetCount = 0;
+
+                                    for (int i = gameField[0].Count - 1; i >= 0; i--)
+                                    {
+                                        int columnCount = 0;
+                                        for (int j = 0; j < 10; j++)
+                                        {
+                                            if (gameField[j][i] != 0)
+                                            {
+                                                columnCount++;
+                                                tetCount++;
+                                            }
+                                        }
+                                        if (columnCount == 10)
+                                        {
+                                            if (!checkGimmick(Mode.Gimmick.Type.ICE) || i > 9)
+                                            {
+                                                full.Add(i);
+                                                tetCount -= 10;
+                                                //clear these from vanishing list
+                                                int count = 0;
+                                                List<int> remcell = new List<int>();
+                                                foreach (var vP in vanList)
+                                                {
+                                                    if (vP.y == i)
+                                                        remcell.Add(count);
+                                                    count++;
+                                                }
+                                                for (int c = 0; c < remcell.Count; c++)
+                                                {
+                                                    vanList.RemoveAt(remcell[remcell.Count - c - 1]);
+                                                }
+                                                count = 0;
+                                                remcell = new List<int>();
+                                                foreach (var vP in flashList)
+                                                {
+                                                    if (vP.y == i)
+                                                        remcell.Add(count);
+                                                    count++;
+                                                }
+                                                for (int c = 0; c < remcell.Count; c++)
+                                                {
+                                                    flashList.RemoveAt(remcell[remcell.Count - c - 1]);
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    if (full.Count > 0)  //if full rows, clear the rows, start the line clear timer, give points
+                                    {
+                                        int bigFull = full.Count;
+                                        int oldLvl = MOD.level;
+                                        if (MOD.bigmode)
+                                            bigFull = bigFull / 2;
+                                        for (int i = 0; i < full.Count; i++)
+                                        {
+                                            for (int j = 0; j < 10; j++)
+                                            {
+                                                if (gameField[j][full[i]] > 8)
+                                                    --MOD.boardGems;
+                                                gameField[j][full[i]] = 0;
+                                            }
+                                            //remove from target list
+                                            if (MOD.targets.Contains(full[i]))
+                                                MOD.targets.Remove(full[i]);
+                                        }
+
+                                        MOD.onPut(activeTet, true);
+
+                                        bool split = false;
+                                        if (full.Count == 2)
+                                        {
+                                            if (full[0] > full[1] + 1) //populated from top down (bigger number first
+                                                split = true;
+                                        }
+                                        else if (full.Count == 3)
+                                        {
+                                            if (full[0] > full[1] + 1 || full[1] > full[2] + 1)
+                                                split = true;
+                                        }
+
+                                        MOD.onClear(bigFull, activeTet, timer.count, tetCount == 0, split);
+
+                                        //start timer
+                                        currentTimer = timerType.LineClear;
+                                        timerCount = MOD.baseLineClear;
+                                        Audio.playSound(Audio.s_Clear);
+
+                                    }
+                                    else //start the ARE, check if new grav level
+                                    {
+                                        currentTimer = timerType.ARE;
+                                        timerCount = MOD.baseARE;
+
+                                        MOD.onPut(activeTet, false);
+                                    }
+
+                                    if (MOD.inCredits && !inCredits)
+                                        triggerCredits();
+
+                                    if (MOD.modeClear)
+                                        if (MOD.continueMode)
+                                        {
+                                            resetField();
+                                            MOD.modeClear = false;
+                                            MOD.continueMode = false;
+                                        }
+                                        else
+                                        {
+                                            if (MOD.hasCredits)
+                                                triggerCredits();
+                                            else
+                                                endGame(true);
+                                        }
+                                    if (MOD.torikan && !toriless && !inCredits)
+                                    {
+                                        currentTimer = timerType.LineClear;
+                                        timerCount = MOD.baseLineClear;
+                                        Audio.playSound(Audio.s_Clear);
+                                        if (MOD.toriCredits)
+                                            triggerCredits();
+                                        else
+                                            endGame(false);
+                                        return;
+                                    }
+                                    else if (MOD.torikan && toriless)
+                                        MOD.torikan = false;
+
+                                    if (curSection != MOD.curSection)
+                                    {
+                                        curSection = MOD.curSection;
+                                        //UPDATE BACKGROUND
+                                        bgtimer = 1;
+                                    }
+
+                                    //update gimmicks
+                                    updateGimmicks();
+
+
+                                    while (gravLevel < gravTable.Count - 1)
+                                    {
+                                        if (MOD.level + (MOD.secBonus * 100) >= ruleset.gravLevels[gravLevel + 1])
+                                            gravLevel++;
+                                        else
+                                            break;
+                                    }
+
+                                    //garbage
+                                    if (checkGimmick(Mode.Gimmick.Type.GARBAGE) && MOD.garbTimer >= getActiveGimmickParameter(Mode.Gimmick.Type.GARBAGE) && (MOD.raiseGarbOnClear == true || full.Count == 0))
+                                    {
+                                        bool check = true;
+                                        if (MOD.garbSafeLine != 0)
+                                            for (int i = 19; i > MOD.garbSafeLine; --i)
+                                            {
+                                                for (int x = 0; x < 10; x++)
+                                                    if (gameField[x][i] != 0)
+                                                    {
+                                                        check = false;
+                                                        break;
+                                                    }
+                                                if (!check)
+                                                    break;
+                                            }
+                                        if (check)
+                                        {
+                                            currentTimer = timerType.GarbageRaise;
+                                            timerCount = MOD.garbDelay;
+                                        }
+                                        MOD.garbTimer = 0;
+                                    }
+
+                                    return;
+
+                                }
+                                else
+                                {
+                                    gravCounter = 0;
+                                    if (!justSpawned)//TODO: maybe make this a ruleset thing, i don't think segatet does this?
+                                        activeTet.groundTimer--;
+                                }
+                            }
+                        }
 
                         //handle ghost piece logic
                         if (activeTet.id != 0)
@@ -2004,10 +1971,37 @@ namespace TGMsim
                 g -= 1;
             }
             if (g != 0 && ghost == false && activeTet.kicked == 0 && ruleset.lockType == 0)
-                activeTet.groundTimer = MOD.baseLock;
+                activeTet.groundTimer = MOD.baseLock - 1;
 
             if (i == 19 && MOD.g20 == false && g > activeTet.sonic && sonic)
                 activeTet.sonic = g;
+        }
+
+        void checkGrounded()
+        {
+            bool f = false;
+            int big = 0;
+            if (MOD.bigmode)
+                big = 1;
+            for (int i = 0; i < activeTet.bits.Count; i++)
+            {
+                if (activeTet.bits[i].y < 0)
+                    continue;
+                if (activeTet.bits[i].y - big - 1 <= -1)
+                {
+                    f = true;
+                    break;
+                }
+                else if (gameField[activeTet.bits[i].x][activeTet.bits[i].y - big - 1] != 0)
+                {
+                    f = true;
+                    break;
+                }
+            }
+
+            if (!activeTet.floored && f)
+                Audio.playSound(Audio.s_Contact);
+            activeTet.floored = f;
         }
 
         private string convertTime(long numtime)

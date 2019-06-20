@@ -13,7 +13,7 @@ namespace TGMsim.Modes
 
         public Master2Plus() : base()
         {
-            delayTable[1] = new List<int> { 27, 27, 18, 14, 8, 8 };//line ARE
+            delayTable[1] = new List<int> { 25, 25, 16, 12, 6, 6 };//line ARE
             ModeName = "MASTER 2+";
         }
 

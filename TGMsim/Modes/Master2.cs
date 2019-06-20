@@ -42,8 +42,8 @@ namespace TGMsim.Modes
             sections.Add(800);
             sections.Add(900);
             sections.Add(999);
-            delayTable.Add(new List<int> { 27, 27, 27, 18, 14, 14, 14 });//ARE
-            delayTable.Add(new List<int> { 27, 27, 27, 27, 27, 27, 27 });//line ARE
+            delayTable.Add(new List<int> { 25, 25, 25, 16, 12, 12, 12 });//ARE
+            delayTable.Add(new List<int> { 25, 25, 25, 25, 25, 25, 25 });//line ARE
             delayTable.Add(new List<int> { 14, 8, 8, 8, 8, 6, 6 });//DAS
             delayTable.Add(new List<int> { 30, 30, 30, 30, 30, 17, 17 });//LOCK
             delayTable.Add(new List<int> { 40, 25, 16, 12, 6, 6, 6 });//LINE CLEAR

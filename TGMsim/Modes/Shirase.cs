@@ -86,11 +86,11 @@ namespace TGMsim.Modes
             border = Color.DarkRed;
             g20 = true;
             initialGrade = 0;
-            delayTable.Add(new List<int> { 12, 12, 12, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6 });
+            delayTable.Add(new List<int> { 11, 11, 11, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5 });
             delayTable.Add(new List<int> { 8, 7, 6, 6, 5, 5, 5, 5, 5, 5, 5, 5, 5, 6 });
             delayTable.Add(new List<int> { 8, 6, 6, 6, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4 });
-            delayTable.Add(new List<int> { 18, 18, 17, 15, 13, 12, 12, 12, 12, 12, 12, 10, 8, 15 });
-            delayTable.Add(new List<int> { 6, 5, 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 6 });
+            delayTable.Add(new List<int> { 19, 19, 18, 16, 14, 13, 13, 13, 13, 13, 13, 11, 9, 16 });
+            delayTable.Add(new List<int> { 5, 4, 3, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 5 });
             secTet.Add(0);
         }
 

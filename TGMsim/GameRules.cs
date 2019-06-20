@@ -26,6 +26,7 @@ namespace TGMsim
         public int baseGrav = 4;
 
         public int lockType = 0; //step-reset, move-reset
+        public int flashLength = 3;
 
         public int creditsLength = 3238;
 
@@ -131,6 +132,7 @@ namespace TGMsim
                     generator = (int)Gens.TGM2;
                     lag = 0;
                     lockType = 0;
+                    flashLength = 2;
                     bigMove = 2;
                     gravType = 0;
                     baseGrav = 4;
@@ -149,6 +151,7 @@ namespace TGMsim
                     generator = (int)Gens.TGM2;
                     lag = 0;
                     lockType = 0;
+                    flashLength = 3; //one black, two white
                     bigMove = 1;
                     gravType = 0;
                     baseGrav = 4;
@@ -167,6 +170,7 @@ namespace TGMsim
                     generator = (int)Gens.TGM3;
                     lag = 3;
                     lockType = 0;
+                    flashLength = 1;
                     bigMove = 2;
                     gravType = 1;
                     baseGrav = 1024;

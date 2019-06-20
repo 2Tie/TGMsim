@@ -27,11 +27,11 @@ namespace TGMsim.Modes
             sections.Add(800);
             sections.Add(900);
             sections.Add(999);
-            delayTable.Add(new List<int> { 30 });
-            delayTable.Add(new List<int> { 30 });
-            delayTable.Add(new List<int> { 16 });
-            delayTable.Add(new List<int> { 30 });
-            delayTable.Add(new List<int> { 41 });
+            delayTable.Add(new List<int> { 30 });//ARE
+            delayTable.Add(new List<int> { 27 });//line ARE
+            delayTable.Add(new List<int> { 16 });//DAS
+            delayTable.Add(new List<int> { 30 });//lock
+            delayTable.Add(new List<int> { 44 });//line clear
             secTet.Add(0);
             hasCreditsPause = false;
             speedUpCredits = true;

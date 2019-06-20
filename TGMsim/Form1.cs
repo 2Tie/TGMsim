@@ -51,6 +51,8 @@ namespace TGMsim
         bool saved;
         string repNam;
         bool tasAdvance = true;
+        bool tasEnabled = true;
+        bool tasToggleEnabled = true;
         
         NAudio.Wave.WaveOutEvent songPlayer = new NAudio.Wave.WaveOutEvent();
         
@@ -267,15 +269,22 @@ namespace TGMsim
                     }
                     if (pad1.inputRot2 == 1)
                         changeMenu(2); //go back
-                    //if (pad1.inputHold == 1)
-                        //changeMenu(6);//hiscores for mode, TODO: make this part of mode select
                     break;
                 case 4: //ingame
                     if (player.name == "TAS")//if this is a TAS, perform frameadvance
                     {
-                        if (!field1.isPlayback)//if not playback, record
+                        if (Keyboard.IsKeyDown(Key.G) && Focused) //only toggle when focused
                         {
-                            if (Keyboard.IsKeyDown(Key.F))
+                            if (tasToggleEnabled)
+                            {
+                                tasEnabled = !tasEnabled;
+                                tasToggleEnabled = false;
+                            }
+                        }
+                        else tasToggleEnabled = true;
+                        if (!field1.isPlayback && tasEnabled)//if not playback, record
+                        {
+                            if (Keyboard.IsKeyDown(Key.F) && Focused) //only frameadvanvce while focused
                             {
                                 if (tasAdvance)
                                 {

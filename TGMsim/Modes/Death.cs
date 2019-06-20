@@ -35,8 +35,8 @@ namespace TGMsim.Modes
             g20 = true;
             showGrade = true;
             showGhost = false;
-            delayTable.Add(new List<int> { 18, 14, 14, 8, 7, 6 });
-            delayTable.Add(new List<int> { 14, 8, 8, 8, 7, 6 });
+            delayTable.Add(new List<int> { 16, 12, 12, 6, 5, 4 });
+            delayTable.Add(new List<int> { 12, 6, 6, 6, 5, 4 });
             delayTable.Add(new List<int> { 10, 10, 9, 8, 6, 6 });
             delayTable.Add(new List<int> { 30, 26, 22, 18, 15, 15 });
             delayTable.Add(new List<int> { 12, 6, 6, 6, 5, 4 });
