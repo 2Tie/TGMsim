@@ -512,7 +512,7 @@ namespace TGMsim
                         drawBuffer.DrawImage(tetImgs[10], x + 25 * activeTet.bits[i].x, y + height - (25 * activeTet.bits[i].y), 25 * big, 25 * big);
                     else
                     {
-                        if (activeTet.groundTimer > 0)
+                        if (activeTet.groundTimer >= 0)
                         {
                             drawBuffer.DrawImage(tetImgs[(int)activeTet.id], x + 25 * activeTet.bits[i].x, y + height - (25 * activeTet.bits[i].y), 25 * big, 25 * big);
                             drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb((MOD.baseLock - activeTet.groundTimer) * 127 / MOD.baseLock, Color.Black)), x + 25 * activeTet.bits[i].x, y + height - (25 * activeTet.bits[i].y), 25 * big, 25 * big);
@@ -1250,10 +1250,10 @@ namespace TGMsim
                             if (currentTimer == timerType.LockDelay)
                             {
                                 //if lock delay up, place piece.
-                                if (activeTet.groundTimer == 0 || pad.inputV == -1)
+                                if (activeTet.groundTimer == 0 || (pad.inputV == -1 && safelock == false))
                                 {
-
-                                    safelock = true;
+                                    if ((int)ruleset.gameRules > 3 || MOD.modeID == Mode.ModeType.DEATH || ((int)ruleset.gameRules == 2 && MOD.level > 899) || ((int)ruleset.gameRules == 3 && MOD.level > 899))
+                                        safelock = true;
 
                                     Audio.playSound(Audio.s_Lock);
                                     //GIMMICKS

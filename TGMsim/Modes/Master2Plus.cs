@@ -118,7 +118,9 @@ namespace TGMsim.Modes
                     curSection++;
                     showGhost = false;
                     secTet.Add(0);
-                    
+                    if (curSection >= 9)
+                        lockSafety = true;
+
                     //MUSIC
                     updateMusic();
                     //DELAYS

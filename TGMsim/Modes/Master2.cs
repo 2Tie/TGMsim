@@ -205,6 +205,8 @@ namespace TGMsim.Modes
                 curSection++;
                 showGhost = false;
                 secTet.Add(0);
+                if (curSection >= 9)
+                    lockSafety = true;
                 //GM FLAGS
                 if (GMflags.Count == 0 && level >= 100)
                 {

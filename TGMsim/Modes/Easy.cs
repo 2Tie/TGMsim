@@ -37,6 +37,7 @@ namespace TGMsim.Modes
             delayTable.Add(new List<int> { 30 });
             delayTable.Add(new List<int> { 40 });
             endLevel = 200;
+            lockSafety = true;
         }
 
         public override void onSpawn()

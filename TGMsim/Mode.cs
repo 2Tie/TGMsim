@@ -48,6 +48,7 @@ namespace TGMsim
         public bool showGrade = true;
         public int initialGrade = 0;
         public int variant = 0;
+        public bool lockSafety = false;
 
         public bool comboing = false;
         public bool inCredits = false;
