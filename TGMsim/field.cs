@@ -168,7 +168,7 @@ namespace TGMsim
             medalImg = Image.FromFile("Res/GFX/medals.png");
             gradeImg = Image.FromFile("Res/GFX/grades.png");
 
-            fonts.AddFontFile(@"Res\Maestro.ttf");
+            fonts.AddFontFile(@"Res\Maestro2.ttf");
             FontFamily fontFam = fonts.Families[0];
             f_Maestro = new System.Drawing.Font(fontFam, 16, GraphicsUnit.Pixel);
 
@@ -416,7 +416,7 @@ namespace TGMsim
             //TODO: credits text?
 
             //draw the info bg
-            drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(bgAlpha, Color.Black)), x + 275, y + 20, 100, height + 10);
+            drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(bgAlpha, Color.Black)), x + 275, y + 20, 160, height + 10);
 
             //draw field targets
             for (int i = 0; i < MOD.targets.Count; i++)
@@ -2150,7 +2150,7 @@ namespace TGMsim
             for (int i = 0; i < gd.Length; i++)
             {
                 int dex = "0123456789SmMVOKTG".IndexOf(gd.Substring(i, 1));
-                drawBuffer.DrawImage(gradeImg, new Rectangle(x + 280 + i * 26, 70, 25, 25), new Rectangle(1 + (dex % 6) * 26, 1 + (int)Math.Floor((double)dex / 6) * 26 + gold, 25, 25), GraphicsUnit.Pixel);
+                drawBuffer.DrawImage(gradeImg, new Rectangle(x + 280 + i * 26, 76, 25, 25), new Rectangle(1 + (dex % 6) * 26, 1 + (int)Math.Floor((double)dex / 6) * 26 + gold, 25, 25), GraphicsUnit.Pixel);
             }
         }
     }

@@ -17,6 +17,20 @@ namespace TGMsim
         int vInput = 0;
         Rectangle curBox, destBox;
 
+        SolidBrush tb;
+
+        List<string> desc = new List<string> {
+            "WHERE IT ALL BEGAN", //SEGA
+            "SLOW AND STEADY", //TGM1
+            "PICKING UP THE PACE", //TGM2
+            "ROUNDING OUT THE MODES", //TAP
+            "MORE CONTROL, MORE SPEED", //TGM3
+            "HOW GOOD IS YOUR STACKING AND ADAPTABILITY?", //ACE
+            "PUSH YOURSELF TO THE MAX!", //GMX
+            "FUN EXTRAS", //BONUS
+            "CHANGE YOUR SETTINGS" //PREFERENCES
+        };
+
         float tempX = 0;
         float tempY = 150;
         float tempW = 200;
@@ -29,6 +43,7 @@ namespace TGMsim
         {
             destBox = new Rectangle(0, 150, 200, 299);
             curBox = destBox;
+            tb = new SolidBrush(Color.White);
 
             Audio.addSound(s_Select, "/Res/Audio/SE/SEI_roll.wav");
         }
@@ -194,34 +209,37 @@ namespace TGMsim
 
 
         }
-        public void render(Graphics drawBuffer)
+        public void render(Graphics drawBuffer, Font f)
         {
             drawBuffer.DrawImageUnscaled(Image.FromFile("Res/GFX/menus/bg0.png"), 0, 0);
             //placeholder until i get arts or something
-            drawBuffer.DrawString("SEGA", SystemFonts.DefaultFont, new SolidBrush(Color.White), 100, 100);
-            drawBuffer.DrawString("TGM", SystemFonts.DefaultFont, new SolidBrush(Color.White), 100, 200);
-            drawBuffer.DrawString("GM2", SystemFonts.DefaultFont, new SolidBrush(Color.White), 300, 100);
-            drawBuffer.DrawString("TAP", SystemFonts.DefaultFont, new SolidBrush(Color.White), 300, 200);
-            drawBuffer.DrawString("GM3", SystemFonts.DefaultFont, new SolidBrush(Color.White), 500, 200);
-            drawBuffer.DrawString("ACE", SystemFonts.DefaultFont, new SolidBrush(Color.White), 500, 300);
-            drawBuffer.DrawString("GMX", SystemFonts.DefaultFont, new SolidBrush(Color.White), 700, 200);
-            drawBuffer.DrawString("Bonus", SystemFonts.DefaultFont, new SolidBrush(Color.White), 200, 500);
-            drawBuffer.DrawString("Preferences", SystemFonts.DefaultFont, new SolidBrush(Color.White), 600, 500);
-            drawBuffer.DrawString("Press Hold to load a replay!", SystemFonts.DefaultFont, new SolidBrush(Color.White), 330, 580);
+            drawBuffer.DrawString("SEGA", f, tb, 80, 100);
+            drawBuffer.DrawString("TGM", f, tb, 80, 200);
+            drawBuffer.DrawString("GM2", f, tb, 290, 100);
+            drawBuffer.DrawString("TAP", f, tb, 290, 200);
+            drawBuffer.DrawString("GM3", f, tb, 480, 200);
+            drawBuffer.DrawString("ACE", f, tb, 480, 300);
+            drawBuffer.DrawString("GMX", f, tb, 680, 200);
+            drawBuffer.DrawString("BONUS", f, tb, 180, 500);
+            drawBuffer.DrawString("PREFERENCES", f, tb, 560, 500);
+            //replay message
+            drawBuffer.DrawString("PRESS HOLD TO LOAD A REPLAY!", f, tb, 280, 2);
+            //game description bar
+            drawBuffer.DrawString(desc[menuSelection], f, tb, 400 - (9 * desc[menuSelection].Length / 2), 580);
 
 
             //selection box
-            drawBuffer.DrawRectangle(new Pen(new SolidBrush(Color.White)), curBox);
+            drawBuffer.DrawRectangle(new Pen(tb), curBox);
 
 
             if (prompt)
             {
                 drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(160, Color.Black)), 0, 0, 800, 600); //dim the BG
-                drawBuffer.DrawString("Are you sure you want to log out?", SystemFonts.DefaultFont, new SolidBrush(Color.White), 320, 200);
-                drawBuffer.DrawString("No...", SystemFonts.DefaultFont, new SolidBrush(Color.White), 300, 220);
-                drawBuffer.DrawString("Yes!", SystemFonts.DefaultFont, new SolidBrush(Color.White), 500, 220);
+                drawBuffer.DrawString("Are you sure you want to log out?", SystemFonts.DefaultFont, tb, 320, 200);
+                drawBuffer.DrawString("No...", SystemFonts.DefaultFont, tb, 300, 220);
+                drawBuffer.DrawString("Yes!", SystemFonts.DefaultFont, tb, 500, 220);
 
-                drawBuffer.DrawString(">", SystemFonts.DefaultFont, new SolidBrush(Color.White), 290 + (200 * pSel), 220);
+                drawBuffer.DrawString(">", SystemFonts.DefaultFont, tb, 290 + (200 * pSel), 220);
             }
         }
     }

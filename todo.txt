@@ -1,9 +1,9 @@
 Bugs to fix:
+confirm segatet frame timings
 
 Additions for release:
 finish Dynamo
 backgrounds for game select and mode select
-
 
 Additions in the future:
 GM medals

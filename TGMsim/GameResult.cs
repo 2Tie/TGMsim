@@ -60,7 +60,7 @@ namespace TGMsim
             codeData.Add((byte)((level >> 1) & 0xF));
             codeData.Add((byte)((level & 0x1) << 3));
             //encode line
-            codeData[4] += (byte)(lineC << 1); //todo: simplify
+            codeData[4] += (byte)(lineC << 1);
 
             long ltemp = 0;
             //encode score or line, depending on mode

@@ -73,7 +73,7 @@ namespace TGMsim
             this.Icon = new Icon(@"Res/GFX/fundoshi.ico");
 
             //interval = (long)TimeSpan.FromSeconds(1.0 / FPS).TotalMilliseconds;
-            fonts.AddFontFile(@"Res\Maestro.ttf");
+            fonts.AddFontFile(@"Res\Maestro2.ttf");
             FontFamily fontFam = fonts.Families[0];
             f_Maestro = new Font(fontFam, 16, GraphicsUnit.Pixel);
             medalImg = Image.FromFile("Res/GFX/medals.png");
@@ -453,11 +453,11 @@ namespace TGMsim
                     break;
                 case 1:
                     drawBuffer.DrawString("login", DefaultFont, new SolidBrush(Color.White), 5, 5);
-                    login.render(drawBuffer);
+                    login.render(drawBuffer, f_Maestro);
                     break;
                 case 2:
                     //drawBuffer.DrawString("game select", DefaultFont, new SolidBrush(Color.White), 5, 5);
-                    gSel.render(drawBuffer);
+                    gSel.render(drawBuffer, f_Maestro);
                     break;
                 case 3:
                     drawBuffer.DrawString("mode select", DefaultFont, new SolidBrush(Color.White), 5, 5);

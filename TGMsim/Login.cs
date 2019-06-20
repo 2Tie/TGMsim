@@ -27,7 +27,8 @@ namespace TGMsim
 
         Point linePos = new Point(400, 215);
         Point lineDes = new Point(400, 215);
-        Point lineEnd = new Point(411, 215);
+        Point lineEnd = new Point(410, 215);
+        float tempX = 399;
 
         public Login()
         {
@@ -58,7 +59,8 @@ namespace TGMsim
                         pad1.inputPressedRot3 = false;
                     }
 
-                    if (File.Exists("Sav/" + temp.name + ".usr"))
+                    string filename = temp.name.Replace("?", "§");
+                    if (File.Exists("Sav/" + filename + ".usr"))
                     {
                         if (temp.readUserData())
                             menuSelection = 3;
@@ -112,39 +114,41 @@ namespace TGMsim
             //line logic
             if (menuSelection < 3)
             {
-                lineDes.X = 400 + menuSelection * 9;
+                lineDes.X = 400 + menuSelection * 10;
                 lineDes.Y = 215;
             }
 
-            linePos.X += (lineDes.X - linePos.X) / 2;
+            //tempX = linePos.X;
+            tempX += (lineDes.X - tempX) / 2;
+            linePos.X = (int)tempX;
             linePos.Y += (lineDes.Y - linePos.Y) / 2;
 
-            lineEnd.X = linePos.X + 11;
+            lineEnd.X = linePos.X + 10;
             lineEnd.Y = linePos.Y;
         }
 
-        public void render(Graphics drawBuffer)
+        public void render(Graphics drawBuffer, Font f)
         {
             if (menuSelection < 3)
                 drawBuffer.DrawLine(new Pen(new SolidBrush(Color.Blue)), linePos, lineEnd);
             else
-                drawBuffer.DrawString("Press Start!", SystemFonts.DefaultFont, new SolidBrush(Color.White), 300, 260);
+                drawBuffer.DrawString("PRESS START TO CONFIRM", f, new SolidBrush(Color.White), 300, 260);
 
             if (loginErr == 1)
                 drawBuffer.DrawString("There was an error reading the profile specified. Try again or delete the file.", SystemFonts.DefaultFont, new SolidBrush(Color.White), 150, 100);
             if (loginErr == 2)
                 drawBuffer.DrawString("The password doesn't match. Please try again.", SystemFonts.DefaultFont, new SolidBrush(Color.White), 150, 100);
             drawBuffer.DrawString("Profile name: ", SystemFonts.DefaultFont, new SolidBrush(Color.White), 300, 200);
-            drawBuffer.DrawString(getLetter(username[0]), SystemFonts.DefaultFont, new SolidBrush(Color.White), 400, 200);
+            drawBuffer.DrawString(getLetter(username[0]), f, new SolidBrush(Color.White), 399, 200);
             if (menuSelection > 0)
-            drawBuffer.DrawString(getLetter(username[1]), SystemFonts.DefaultFont, new SolidBrush(Color.White), 409, 200);
+            drawBuffer.DrawString(getLetter(username[1]), f, new SolidBrush(Color.White), 409, 200);
             if (menuSelection > 1)
-            drawBuffer.DrawString(getLetter(username[2]), SystemFonts.DefaultFont, new SolidBrush(Color.White), 418, 200);
+            drawBuffer.DrawString(getLetter(username[2]), f, new SolidBrush(Color.White), 419, 200);
         }
 
         string getLetter(int i)
         {
-            return "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!.[& ".Substring(i, 1);
+            return "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!?.& ".Substring(i, 1);
         }
 
         private void addSound(System.Windows.Media.MediaPlayer plr, string uri)

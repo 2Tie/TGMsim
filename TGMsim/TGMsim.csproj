@@ -202,7 +202,7 @@
     <None Include="Res\Boards\hell.brd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Res\Maestro.ttf">
+    <None Include="Res\Maestro2.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
