@@ -42,6 +42,7 @@ namespace TGMsim.Modes
             delayTable.Add(new List<int> { 12, 6, 6, 6, 5, 4 });
             secTet.Add(0);
             hasCreditsPause = false;
+            lockSafety = true;
         }
 
         public override void onTick(long time)

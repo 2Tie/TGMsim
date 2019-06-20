@@ -92,6 +92,7 @@ namespace TGMsim.Modes
             delayTable.Add(new List<int> { 19, 19, 18, 16, 14, 13, 13, 13, 13, 13, 13, 11, 9, 16 });
             delayTable.Add(new List<int> { 5, 4, 3, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 5 });
             secTet.Add(0);
+            lockSafety = true;
         }
 
         public override void onSpawn()

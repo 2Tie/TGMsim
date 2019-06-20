@@ -1252,7 +1252,7 @@ namespace TGMsim
                                 //if lock delay up, place piece.
                                 if (activeTet.groundTimer == 0 || (pad.inputV == -1 && safelock == false))
                                 {
-                                    if ((int)ruleset.gameRules > 3 || MOD.modeID == Mode.ModeType.DEATH || ((int)ruleset.gameRules == 2 && MOD.level > 899) || ((int)ruleset.gameRules == 3 && MOD.level > 899))
+                                    if (MOD.lockSafety)
                                         safelock = true;
 
                                     Audio.playSound(Audio.s_Lock);
