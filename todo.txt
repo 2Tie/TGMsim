@@ -1,5 +1,6 @@
 Bugs to fix:
-confirm segatet frame timings
+add v-das to flashpoint
+delay segatet locking by a frame when down is held
 
 Additions for release:
 finish Dynamo

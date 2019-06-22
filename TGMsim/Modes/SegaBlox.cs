@@ -98,7 +98,7 @@ namespace TGMsim.Modes
             garbTemplate.Add(new List<int> { 7, 0, 0, 0, 7, 7, 7, 7, 7, 7 });
             garbTemplate.Add(new List<int> { 7, 7, 0, 7, 7, 7, 7, 7, 7, 7 });
             delayTable[2][0] = 12;
-            delayTable[4][0] = 40;
+            delayTable[4][0] = 39;
             ModeName = "BLOXEED";
             showGhost = false;
         }

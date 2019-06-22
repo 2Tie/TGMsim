@@ -937,7 +937,7 @@ namespace TGMsim
                             inputDelayH--;
                         }
                         if (inputDelayH == -1 || inputDelayDir != pad.inputH)
-                            inputDelayH = MOD.baseDAS;
+                            inputDelayH = MOD.baseDAS - 1;
                     }
                     else
                         inputDelayH = -1;

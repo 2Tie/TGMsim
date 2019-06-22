@@ -93,6 +93,7 @@ namespace TGMsim
                     rotation = (int)Rots.SEGA;
                     generator = (int)Gens.SEGA;
                     lockType = 0;
+                    flashLength = 22;
                     bigMove = 1;
                     gravType = 2;
                     baseGrav = 256;

@@ -25,7 +25,7 @@ namespace TGMsim
             "PICKING UP THE PACE", //TGM2
             "ROUNDING OUT THE MODES", //TAP
             "MORE CONTROL, MORE SPEED", //TGM3
-            "HOW GOOD IS YOUR STACKING AND ADAPTABILITY?", //ACE
+            "TEST A VARIETY OF SKILLS", //ACE
             "PUSH YOURSELF TO THE MAX!", //GMX
             "FUN EXTRAS", //BONUS
             "CHANGE YOUR SETTINGS" //PREFERENCES

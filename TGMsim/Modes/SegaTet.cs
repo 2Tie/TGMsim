@@ -33,10 +33,10 @@ namespace TGMsim.Modes
             sections.Add(13);
             sections.Add(15);
             endLevel = 0;
-            delayTable.Add(new List<int> { 30 });
-            delayTable.Add(new List<int> { 30 });
+            delayTable.Add(new List<int> { 29 });
+            delayTable.Add(new List<int> { 29 });
             delayTable.Add(new List<int> { 20 });
-            delayTable.Add(new List<int> { 30 });
+            delayTable.Add(new List<int> { 31 });
             delayTable.Add(new List<int> { 42 });
         }
 
