@@ -49,6 +49,7 @@ namespace TGMsim
         public int initialGrade = 0;
         public int variant = 0;
         public bool lockSafety = false;
+        public bool hasDAD = false; //Delayed Auto Drop; i'm putting it here instead of in GameRules because i'm handling Flash Point as a mode
 
         public bool comboing = false;
         public bool inCredits = false;

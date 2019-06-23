@@ -27,6 +27,7 @@ namespace TGMsim
 
         public int lockType = 0; //step-reset, move-reset
         public int flashLength = 3;
+        public bool instaLock = true;
 
         public int creditsLength = 3238;
 
@@ -94,6 +95,7 @@ namespace TGMsim
                     generator = (int)Gens.SEGA;
                     lockType = 0;
                     flashLength = 22;
+                    instaLock = false;
                     bigMove = 1;
                     gravType = 2;
                     baseGrav = 256;

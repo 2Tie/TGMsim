@@ -118,7 +118,8 @@ namespace TGMsim
         Pen gridPen = new Pen(new SolidBrush(Color.White));
 
         Controller pad;
-        int inputDelayH = 0, inputDelayDir = 0;
+        int inputDelayH = 0, inputDelayDirH = 0;
+        int inputDelayV = 0, inputDelayDirV = 0;
 
         public Field(Controller ctlr, GameRules rules, int startSeed)
         {
@@ -349,10 +350,11 @@ namespace TGMsim
                 br.BaseStream.Position += MOD.boardsProgress * 100;
                 byte temp;
                 int p;
+                int garb = MOD.garbLine;
 
                 if (MOD.garbLine > 0) //if garbLine is nonzero on start, then populate the garbTemplate with everything hidden
                 {
-                    for (int i = 0; i < 20-MOD.garbLine; i++)
+                    for (int i = 0; i < 20 - garb; i++)
                     {
                         List<int> tar = new List<int>();
                         for (int j = 0; j < 5; j++)
@@ -377,8 +379,10 @@ namespace TGMsim
                     }
                     MOD.garbTemplate.Reverse(); // since they were added bottom up but need to be read top down
                 }
+                else
+                    garb = 20;
 
-                for (int i = 0; i < MOD.garbLine*5; i++)
+                for (int i = 0; i < garb*5; i++)//add the rest of the rows
                 {
                     temp = br.ReadByte();
                     p = (temp >> 4) & 0xF;
@@ -936,13 +940,30 @@ namespace TGMsim
                         {
                             inputDelayH--;
                         }
-                        if (inputDelayH == -1 || inputDelayDir != pad.inputH)
+                        if (inputDelayH == -1 || inputDelayDirH != pad.inputH)
                             inputDelayH = MOD.baseDAS - 1;
                     }
                     else
                         inputDelayH = -1;
 
-                    inputDelayDir = pad.inputH;
+                    inputDelayDirH = pad.inputH;
+
+                    if (MOD.hasDAD)
+                    {
+                        if (pad.inputV == 1 || pad.inputV == -1)
+                        {
+                            if (inputDelayV > 0)
+                            {
+                                inputDelayV--;
+                            }
+                            if (inputDelayV == -1 || inputDelayDirV != pad.inputV)
+                                inputDelayV = MOD.baseDAS - 1;
+                        }
+                        else
+                            inputDelayV = -1;
+
+                        inputDelayDirV = pad.inputV;
+                    }
 
                     //if (inCredits && (((int)ruleset.gameRules > 1) == (creditsPause.count >= 3000) || MOD.modeID == Mode.ModeType.DEATH || creditsProgress != 0))
                     if (inCredits && creditsProgress != 0)
@@ -1101,36 +1122,13 @@ namespace TGMsim
 
                         //check saved inputs and act on them accordingly
 
-                        bool son = false;
-
                         if (pad.inputStart == 1 && MOD.startEnd)
                             endGame(true);
 
                         if (isPlayback == true && pad.superStart)
                             endGame(false);
-
-                        if (pad.inputV == 1 && ruleset.hardDrop == 1)
-                        {
-                            blockDrop = 19;
-                            gravCounter = 0;
-                            son = true;
-                        }
-                        else if (pad.inputV == -1)
-                        {
-                            if (!activeTet.floored)
-                            {
-                                //blockDrop++;
-                                activeTet.soft++;
-                                MOD.onSoft();
-                            }
-                            /*else if (!safelock || !((int)ruleset.gameRules > 3 || MOD.modeID == Mode.ModeType.DEATH || ((int)ruleset.gameRules == 2 && MOD.level > 899) || ((int)ruleset.gameRules == 3 && MOD.level > 899)))
-                            {
-                                if(activeTet.floored)
-                                    gravCounter = 0;
-                                activeTet.groundTimer = 0;
-                            }*/
-                        }
-                        else
+                        
+                        if(pad.inputV == 0)
                         {
                             safelock = false;
                         }
@@ -1153,7 +1151,7 @@ namespace TGMsim
                             int big = 0;
                             if (activeTet.big)
                                 big = 1;
-                            if (pad.inputH != 0 && (inputDelayH < 1 || inputDelayH == MOD.baseDAS))
+                            if (pad.inputH != 0 && (inputDelayH < 1 || inputDelayH == MOD.baseDAS - 1))
                             {
                                 bool safe = true;
 
@@ -1198,13 +1196,19 @@ namespace TGMsim
                                 blockDrop++;
                             }
 
+                        bool firstContact = false;
+                        bool son = false;
+
                         if (!activeTet.floored)
                         {
+                            firstContact = true;
                             if (ruleset.gravType < 2)
                             {
-                                if (pad.inputV == -1 && (gravTable[gravLevel] <= Math.Pow(256, ruleset.gravType + 1)))
+                                if (pad.inputV == -1 && (gravTable[gravLevel] <= Math.Pow(256, ruleset.gravType + 1)) && (MOD.hasDAD ? inputDelayV < 1 || inputDelayV == MOD.baseDAS - 1 : true))
                                 {
                                     blockDrop += 1;
+                                    activeTet.soft++;
+                                    MOD.onSoft();
                                 }
                                 else
                                     gravCounter += gravTable[gravLevel]; //add our current gravity strength
@@ -1216,10 +1220,12 @@ namespace TGMsim
                             }
                             else
                             {
-                                if (pad.inputV == -1 && gravTable[gravLevel] > 1)
+                                if (pad.inputV == -1 && gravTable[gravLevel] > 1 && (MOD.hasDAD ? inputDelayV < 1 || inputDelayV == MOD.baseDAS - 1 : true))
                                 {
                                     blockDrop = 1;
                                     gravCounter = 0;
+                                    activeTet.soft++;
+                                    MOD.onSoft();
                                 }
                                 else
                                     gravCounter++;
@@ -1229,6 +1235,13 @@ namespace TGMsim
                                     gravCounter = 0;
                                 }
                             }
+                            
+                            if (pad.inputV == 1 && ruleset.hardDrop == 1)
+                            {
+                                blockDrop = 19;
+                                gravCounter = 0;
+                                son = true;
+                            }
                         }
 
                         if (MOD.g20 || (gravTable[gravLevel] == Math.Pow(256, ruleset.gravType + 1) * 20))
@@ -1237,7 +1250,7 @@ namespace TGMsim
                         }
                         
 
-                        if (blockDrop > 0)// && currentTimer != (int)Field.timerType.LockDelay)
+                        if (blockDrop > 0)
                         {
                             tetGrav(activeTet, blockDrop, false, son);
                         }
@@ -1250,7 +1263,7 @@ namespace TGMsim
                             if (currentTimer == timerType.LockDelay)
                             {
                                 //if lock delay up, place piece.
-                                if (activeTet.groundTimer == 0 || (pad.inputV == -1 && safelock == false))
+                                if (activeTet.groundTimer == 0 || (pad.inputV == -1 && safelock == false && (ruleset.instaLock || !firstContact) && (MOD.hasDAD?inputDelayV < 1 || inputDelayV == MOD.baseDAS - 1:true)))
                                 {
                                     if (MOD.lockSafety)
                                         safelock = true;

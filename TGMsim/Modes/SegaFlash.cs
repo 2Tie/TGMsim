@@ -25,6 +25,7 @@ namespace TGMsim.Modes
             shadeStack = false;
             outlineStack = false;
             showGhost = false;
+            hasDAD = true;
             boardsFile = "flash";
             boardsProgress = 0;
             sections.Add(2);
