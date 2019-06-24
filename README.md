@@ -2,37 +2,42 @@
 
 Open-source TGM Series clone, aiming for accuracy, and extensibility down the line.
 
-## Currently supported game modes:
+## Supported game modes:
 
-TGM1 Master (has visual errors - lock flash is mistimed)
+TGM1 Master  
 
-TGM2 Master
-
-TAP Normal (missing powerups)  
+TGM2 Master  
+ 
 TAP Master  
 TAP TGM+  
-TAP Death
+TAP Death  
 
-TGM3 Easy (missing hanabi)  
+TGM3 Easy  
 TGM3 Master  
-TGM3 Sakura  
-TGM3 Shirase
+TGM3 Shirase  
 
 SEGA Tetris  
 SEGA Bloxeed (missing powerups)  
-SEGA Flash Point (missing vertical DAS)  
+SEGA Flash Point  
 
-New Dynamo Mode (heavily WIP)
+New Dynamo Mode (heavily WIP)  
+New Hell March Mode  
+
+## Future game modes:
+
+TAP Normal  
+Tetris + Cardcaptor Sakura, Easy & Normal  
+TGM3 Sakura  
+ACE modes  
+Custom Mode  
 
 ## Controls
 
-By default, WASD is for joystick input, I O and P are the rotation buttons, Space is the hold button (for TGM3), and Enter is the Start button. I is also the Accept button in menus, and O is the button to back out. **If you want to change this before making a profile, enter a username of three spaces at the login screen (space character is back one) and change the bindings in the Preferences menu, and then back out to the Login screen.**
+On first run, the game will prompt for inputs. If you wish to rebind them, you can do that in the Preferences menu or by deleting 'SAV/prefs.dat' and relaunching the game.
 
 Starting up the game, after the Title Screen is the Login Menu. Left and right will change the current letter and Rotate 1 will advance a letter, while Rotate 2 will go back a letter. Once a three-letter profile name is selected, you will be moved to the main menu.
 
 Games and modes are selected with the Rotate 1 button and backed out of with the Rotate 2 button. You can back out of the Game Select screen to the Login menu as well.
-
-In the Mode Select screen, pressing the Hold button will show the Hiscores for the selected game's Master mode. 
 
 ## Credits
 

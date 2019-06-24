@@ -19,6 +19,9 @@ namespace TGMsim.Modes
         public int gradeTime = 0;
         public int intGrade = 0;
 
+        int bonusGradeProgress = 0;
+        int bonusGrades = 0;
+
         public FrameTimer secTimer = new FrameTimer();
         public List<long> secTimes = new List<long>();
         public FrameTimer coolTime = new FrameTimer();
@@ -31,6 +34,12 @@ namespace TGMsim.Modes
         {
             ModeName = "DYNAMO";
             border = Color.MediumPurple;
+            List<string> grades = new List<string> {
+                "9", "8", "7", "6", "5", "4", "3", "2", "1",
+                "S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "S9", //the TAP grades
+                "M1", "M2", "M3", "M4", "M5", "M6", "M7", "M8", "M9", //the COOL grades
+                "V1", "V2", "V3", "V4", "V5", "V6", "V7", "V8", "V9", //the variant grades
+                "M", "MK", "MV", "MO", "MM", "GM" }; //credit grades?
             sections.Add(100);
             sections.Add(200);
             sections.Add(300);
@@ -49,7 +58,10 @@ namespace TGMsim.Modes
             if (v == 0)
                 creditsSong = "crdtcas";
             else if (v == 4)
+            {
                 creditsSong = "crdtinvis";
+                g20 = true;
+            }
             else
                 creditsSong = "crdtvanish";
 
@@ -125,7 +137,12 @@ namespace TGMsim.Modes
             {
                 //TODO: super curve, cools don't affect it
                 //update delays
-
+                int num = 999 / (delayTable[0].Count + 1);
+                baseARE = delayTable[0][level/num];
+                baseARELine = delayTable[1][level/num];
+                baseDAS = delayTable[2][level/num];
+                baseLock = delayTable[3][level/num];
+                baseLineClear = delayTable[4][level/num];
             }
 
             //COOLS
@@ -146,6 +163,17 @@ namespace TGMsim.Modes
                     }
                     else
                         coolCounter.Add(0);
+                }
+            }
+
+            //bonus grades
+            if(variant > 0)
+            {
+                int l = 999 / (variant * 2 + 1); //each variant has two more potential bonus grades, i.e. variant 4 has 8 extra grades
+                if(level > l*bonusGradeProgress)
+                {
+                    bonusGradeProgress++;
+                    bonusGrades++;
                 }
             }
         }
@@ -215,6 +243,16 @@ namespace TGMsim.Modes
             }
         }
 
+        public override void onGameOver()
+        {
+            if (creditsClear)
+                bonusGrades++; //bonus grade for clearing the credits
+
+            grade += bonusGrades;
+
+            showGrade = true;
+        }
+
         public override void draw(Graphics drawBuffer, Font f, SolidBrush b, bool replay)
         {
             Brush tb = new SolidBrush(Color.White);
@@ -226,6 +264,8 @@ namespace TGMsim.Modes
             {
                 drawBuffer.DrawString("-", f, tb, 20 + 10 * i, 348);
             }
+            if (variant == 4)
+                drawBuffer.DrawString((level/(999 / (delayTable[0].Count + 1))).ToString(), f, b, 20, 324);
         }
 
         public override void updateMusic()

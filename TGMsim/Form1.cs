@@ -733,14 +733,14 @@ namespace TGMsim
                                 saveHiscore(gameResult, m, i);
                                 return true;
                             }
-                            //compare time
-                            if (hiscoreTable[i].time > gameResult.time)
+                            //compare level
+                            if (hiscoreTable[i].level < gameResult.level)
                             {
                                 saveHiscore(gameResult, m, i);
                                 return true;
                             }
-                            //compare level
-                            if (hiscoreTable[i].level < gameResult.level)
+                            //compare time
+                            if (hiscoreTable[i].time > gameResult.time)
                             {
                                 saveHiscore(gameResult, m, i);
                                 return true;
