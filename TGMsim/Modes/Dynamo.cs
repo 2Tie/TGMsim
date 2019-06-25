@@ -18,6 +18,7 @@ namespace TGMsim.Modes
         public int gradeCombo = 0;
         public int gradeTime = 0;
         public int intGrade = 0;
+        public int teteri = 0;
 
         int bonusGradeProgress = 0;
         int bonusGrades = 0;
@@ -183,7 +184,11 @@ namespace TGMsim.Modes
             level += lines;
 
             if (lines == 4)
+            {
                 Audio.playSound(Audio.s_Tetris);
+                if (inCredits)
+                    teteri++;
+            }
 
             int newPts = (int)(Math.Ceiling(baseGradePts[lines - 1][grade] * comboTable[lines - 1][gradeCombo]) * Math.Ceiling((double)level / 250));
 
@@ -246,7 +251,19 @@ namespace TGMsim.Modes
         public override void onGameOver()
         {
             if (creditsClear)
-                bonusGrades++; //bonus grade for clearing the credits
+            {
+                bonusGrades++; //one (1) bonus grade for clearing the credits
+                orangeLine = true;
+            }
+
+            if (teteri > 6)
+                teteri = 6;
+
+            if (creditsType == 1)
+                teteri /= 2;
+
+            if (creditsType != 0)
+                bonusGrades += teteri;
 
             grade += bonusGrades;
 

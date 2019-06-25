@@ -5,8 +5,9 @@ finish Dynamo
 backgrounds for game select and mode select
 
 Additions in the future:
-GM medals
+GM/Full Clear medals in game select
 item blocks
 normal mode
 CCS modes
 ACE modes
+Custom Mode
