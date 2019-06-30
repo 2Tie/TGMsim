@@ -1,10 +1,11 @@
 Bugs to fix:
 
 Additions for release:
-finish Dynamo
+polish up GUI some more
 backgrounds for game select and mode select
 
 Additions in the future:
+refine Dynamo based on feedback
 GM/Full Clear medals in game select
 item blocks
 normal mode

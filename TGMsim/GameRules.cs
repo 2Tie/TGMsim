@@ -30,6 +30,9 @@ namespace TGMsim
         public bool instaLock = true;
 
         public int creditsLength = 3238;
+        public bool hasKillSpeed = false;
+        public int killSpeedTime = 0;
+        public List<int> killSpeedDelays;
 
         public int fieldW = 10;
         public int fieldH = 22;
@@ -162,8 +165,11 @@ namespace TGMsim
                     fieldW = 10;
                     fieldH = 22;
                     gravTable = new List<int> { 4, 6, 8, 10, 12, 16, 32, 48, 64, 80, 96, 112, 128, 144, 4, 32, 64, 96, 128, 160, 192, 224, 256, 512, 768, 1024, 1280, 1024, 768, 5120 };
+                    hasKillSpeed = true;
+                    killSpeedTime = 15 * 60 * 1000; //15 minutes
+                    killSpeedDelays = new List<int> { 7, 7, 16, 7 }; //no DAS
                     break;
-                case Games.TGM3: //TI and ACE
+                case Games.TGM3: //TI
                     GameName = "TGM3";
                     FPS = 60.00;
                     nextNum = 3;
@@ -181,6 +187,9 @@ namespace TGMsim
                     fieldW = 10;
                     fieldH = 22;
                     gravTable = new List<int> { 1024, 1536, 2048, 2560, 3072, 4096, 8192, 12288, 16384, 20480, 24576, 28672, 32768, 36864, 1024, 8192, 16348, 24576, 32768, 40960, 49152, 57344, 65536, 131072, 196608, 262144, 327680, 262144, 196608, 1310720 };
+                    hasKillSpeed = true;
+                    killSpeedTime = 15 * 60 * 1000; //15 minutes
+                    killSpeedDelays = new List<int> { 5, 6, 13, 2 }; //no DAS
                     break;
                 case Games.ACE:
                 case Games.EXTRA:

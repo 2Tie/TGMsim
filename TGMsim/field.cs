@@ -989,6 +989,13 @@ namespace TGMsim
                     MOD.onTick(timer.count, currentTimer);
 
                     //GAME LOGIC
+                    //check for killspeeds
+                    if(ruleset.hasKillSpeed)
+                    {
+                        if (timer.count > ruleset.killSpeedTime)
+                            MOD.g20 = true;
+                    }
+
 
                     //check ID of current tetromino.
                     if (activeTet.id == 0)
@@ -1270,6 +1277,20 @@ namespace TGMsim
 
                                     Audio.playSound(Audio.s_Lock);
                                     //GIMMICKS
+
+                                    //killspeed check
+                                    if(ruleset.hasKillSpeed)
+                                    {
+                                        if(ruleset.killSpeedTime < timer.count)
+                                        {
+                                            //apply delays
+                                            MOD.baseARE = ruleset.killSpeedDelays[0];
+                                            MOD.baseARELine = ruleset.killSpeedDelays[1];
+                                            MOD.baseLock = ruleset.killSpeedDelays[2];
+                                            MOD.baseLineClear = ruleset.killSpeedDelays[3];
+                                        }
+                                    }
+
 
                                     //garbage is handled in mode
 
