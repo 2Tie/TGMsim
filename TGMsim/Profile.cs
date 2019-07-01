@@ -24,7 +24,16 @@ namespace TGMsim
         public bool createUser()
         {
             string filename = name.Replace("?", "§");
-            using (FileStream fsStream = new FileStream("Sav/" + filename + ".usr", FileMode.Create))
+            FileStream fsStream;
+            try
+            {
+                fsStream = new FileStream("Sav/Users/" + filename + ".usr", FileMode.Create);
+            }
+            catch (DirectoryNotFoundException e)
+            {
+                Directory.CreateDirectory("Sav/Users/");
+                fsStream = new FileStream("Sav/Users/" + filename + ".usr", FileMode.Create);
+            }
             using (BinaryWriter sw = new BinaryWriter(fsStream, Encoding.UTF8))
             {
                 sw.Write(name);
@@ -63,7 +72,7 @@ namespace TGMsim
         {
             //read the pass and put it into verifyPass
             string filename = name.Replace("?", "§");
-            BinaryReader file = new BinaryReader(File.OpenRead("Sav/" + filename + ".usr"));
+            BinaryReader file = new BinaryReader(File.OpenRead("Sav/Users/" + filename + ".usr"));
             if (file.ReadString() != name)//read name
                 return 1; //bad name
             if (file.ReadByte() != 0x03)//read save version, compare to current
@@ -97,10 +106,15 @@ namespace TGMsim
             string filename = name.Replace("?", "§");
             try
             {
-                 file = new BinaryReader(File.OpenRead("Sav/" + filename + ".usr"));
+                 file = new BinaryReader(File.OpenRead("Sav/Users/" + filename + ".usr"));
             }
             catch (FileNotFoundException e)
             {
+                return false;
+            }
+            catch (DirectoryNotFoundException e)
+            {
+                Directory.CreateDirectory("Sav/Users/");
                 return false;
             }
             if (file.ReadString() != name)//read name
@@ -149,7 +163,7 @@ namespace TGMsim
         public bool updateUser()
         {
             string filename = name.Replace("?", "§");
-            using (FileStream fsStream = new FileStream("Sav/" + filename + ".usr", FileMode.Truncate))
+            using (FileStream fsStream = new FileStream("Sav/Users/" + filename + ".usr", FileMode.Truncate))
             using (BinaryWriter sw = new BinaryWriter(fsStream, Encoding.UTF8))
             {
                 //sw.Seek(21, SeekOrigin.Begin);

@@ -756,8 +756,17 @@ namespace TGMsim
         {
             var tim = System.DateTime.Now.ToString("G", new CultureInfo("ja-JP"));
             tim = tim.Replace("/", "_").Replace(":", "_");
-            string repFile = "Sav/"+tim+" "+rules.GameName+" "+rules.mod.ModeName+".rep";
-            using (FileStream fsStream = new FileStream(repFile, FileMode.OpenOrCreate))
+            string repFile = "Sav/Replays/"+tim+" "+rules.GameName+" "+rules.mod.ModeName+".rep";
+            FileStream fsStream;
+            try
+            {
+                fsStream = new FileStream(repFile, FileMode.Create);
+            }
+            catch (DirectoryNotFoundException e)
+            {
+                Directory.CreateDirectory("Sav/Replays/");
+                fsStream = new FileStream(repFile, FileMode.Create);
+            }
             using (BinaryWriter sw = new BinaryWriter(fsStream, Encoding.UTF8))
             {
                 sw.Write(player.name);
@@ -824,7 +833,7 @@ namespace TGMsim
             hiscoreTable.Insert(place, gameResult);
             hiscoreTable.RemoveAt(hiscoreTable.Count - 1);
 
-            string hiFile = "Sav/gm" + gameResult.game + m + ".hst";
+            string hiFile = "Sav/Hiscores/gm" + gameResult.game + m + ".hst";
             File.Delete(hiFile);
             using (FileStream fsStream = new FileStream(hiFile, FileMode.Create))
             using (BinaryWriter sw = new BinaryWriter(fsStream, Encoding.UTF8))
@@ -847,7 +856,7 @@ namespace TGMsim
         
         private void loadHiscores(int game, int mode)
         {
-            string filename = "Sav/gm" + game.ToString() + mode.ToString() + ".hst";
+            string filename = "Sav/Hiscores/gm" + game.ToString() + mode.ToString() + ".hst";
             if (!File.Exists(filename))
             {
                 if (game == 1 && mode == 1)
@@ -892,7 +901,16 @@ namespace TGMsim
 
         public bool defaultTGMScores()
         {
-            using (FileStream fsStream = new FileStream("Sav/gm11.hst", FileMode.OpenOrCreate))
+            FileStream fsStream;
+            try
+            {
+                fsStream = new FileStream("Sav/Hiscores/gm11.hst", FileMode.Create);
+            }
+            catch (DirectoryNotFoundException e)
+            {
+                Directory.CreateDirectory("Sav/Hiscores/");
+                fsStream = new FileStream("Sav/Hiscores/gm11.hst", FileMode.Create);
+            }
             using (BinaryWriter sw = new BinaryWriter(fsStream, Encoding.UTF8))
             {
                 long temptime;
@@ -937,7 +955,16 @@ namespace TGMsim
         }
         public bool defaultTGM2Scores()
         {
-            using (FileStream fsStream = new FileStream("Sav/gm21.hst", FileMode.Create))
+            FileStream fsStream;
+            try
+            {
+                fsStream = new FileStream("Sav/Hiscores/gm21.hst", FileMode.Create);
+            }
+            catch (DirectoryNotFoundException e)
+            {
+                Directory.CreateDirectory("Sav/Hiscores/");
+                fsStream = new FileStream("Sav/Hiscores/gm21.hst", FileMode.Create);
+            }
             using (BinaryWriter sw = new BinaryWriter(fsStream, Encoding.UTF8))
             {
                 long temptime;
@@ -983,7 +1010,16 @@ namespace TGMsim
 
         public bool defaultTAPScores()
         {
-            using (FileStream fsStream = new FileStream("Sav/gm32.hst", FileMode.Create))
+            FileStream fsStream;
+            try
+            {
+                fsStream = new FileStream("Sav/Hiscores/gm32.hst", FileMode.Create);
+            }
+            catch (DirectoryNotFoundException e)
+            {
+                Directory.CreateDirectory("Sav/Hiscores/");
+                fsStream = new FileStream("Sav/Hiscores/gm32.hst", FileMode.Create);
+            }
             using (BinaryWriter sw = new BinaryWriter(fsStream, Encoding.UTF8))
             {
                 long temptime;
@@ -1028,7 +1064,16 @@ namespace TGMsim
         }
         public bool defaultTGM3Scores()
         {
-            using (FileStream fsStream = new FileStream("Sav/gm42.hst", FileMode.Create))
+            FileStream fsStream;
+            try
+            {
+                fsStream = new FileStream("Sav/Hiscores/gm42.hst", FileMode.Create);
+            }
+            catch (DirectoryNotFoundException e)
+            {
+                Directory.CreateDirectory("Sav/Hiscores/");
+                fsStream = new FileStream("Sav/Hiscores/gm42.hst", FileMode.Create);
+            }
             using (BinaryWriter sw = new BinaryWriter(fsStream, Encoding.UTF8))
             {
                 long temptime;
@@ -1074,7 +1119,16 @@ namespace TGMsim
 
         public bool defaultGenericScores(int game, int mode)
         {
-            using (FileStream fsStream = new FileStream("Sav/gm" + game.ToString() + mode.ToString() + ".hst", FileMode.Create))
+            FileStream fsStream;
+            try
+            {
+                fsStream = new FileStream("Sav/Hiscores/gm" + game.ToString() + mode.ToString() + ".hst", FileMode.Create);
+            }
+            catch (DirectoryNotFoundException e)
+            {
+                Directory.CreateDirectory("Sav/Hiscores/");
+                fsStream = new FileStream("Sav/Hiscores/gm" + game.ToString() + mode.ToString() + ".hst", FileMode.Create);
+            }
             using (BinaryWriter sw = new BinaryWriter(fsStream, Encoding.UTF8))
             {
                 for (int i = 0; i < 6; i++)
@@ -1137,7 +1191,7 @@ namespace TGMsim
             }
             catch (DirectoryNotFoundException e)
             {
-                createSavFolder();
+                createFolder("Sav/");
             }
             catch (FileNotFoundException e)
             {
@@ -1145,9 +1199,9 @@ namespace TGMsim
             }
         }
 
-        private void createSavFolder()
+        private void createFolder(string nom)
         {
-            Directory.CreateDirectory("Sav/");
+            Directory.CreateDirectory(nom);
         }
     }
 }
