@@ -15,6 +15,7 @@ namespace TGMsim
         public long time;
         public long rawTime;
         public int grade;
+        public int secretGrade;
         public int level;
         public string username;
         public List<int> medals;

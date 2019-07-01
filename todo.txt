@@ -8,7 +8,7 @@ Additions in the future:
 refine Dynamo based on feedback
 GM/Full Clear medals in game select
 item blocks
-normal mode
+normal mode (has secret grade)
 CCS modes
 ACE modes
 Custom Mode

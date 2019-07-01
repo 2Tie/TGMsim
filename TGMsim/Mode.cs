@@ -83,6 +83,10 @@ namespace TGMsim
         public List<int> targets = new List<int>();
         public bool showGhost = true;
         public bool orangeLine = false;
+        public bool hasSecretGrade = false;
+        public bool secretOnlyOnTopOut = false; //for TGM1. no reason new modes should ever make this true
+        public int minSecret = 2;
+        public List<string> secretGrades = new List<string> { "L1", "L2", "L3", "L4", "L5", "L6", "L7", "L8", "L9", "L10", "L11", "L12", "L13", "L14", "L15", "L16", "L17", "L18", "MAX", };
 
         public FrameTimer masteringTime = new FrameTimer();
 

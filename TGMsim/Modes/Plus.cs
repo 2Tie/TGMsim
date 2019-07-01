@@ -116,6 +116,9 @@ namespace TGMsim.Modes
                 new List<int> { 9, 9, 9, 9, 0, 9, 9, 9, 9, 9 },
                 new List<int> { 9, 9, 9, 0, 0, 0, 9, 9, 9, 9 }
             };
+            hasSecretGrade = true; //yes i confirmed this
+            minSecret = 5;
+            secretGrades = new List<string> { "9", "8", "7", "6", "5", "4", "3", "2", "1", "S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "S9", "GM" };
         }
 
         public override void onSpawn()

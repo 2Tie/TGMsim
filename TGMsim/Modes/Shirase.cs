@@ -93,6 +93,9 @@ namespace TGMsim.Modes
             delayTable.Add(new List<int> { 5, 4, 3, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 5 });
             secTet.Add(0);
             lockSafety = true;
+            hasSecretGrade = true;
+            minSecret = 5;
+            secretGrades = new List<string> { "S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "S9", "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9", "GM" };
         }
 
         public override void onSpawn()

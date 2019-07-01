@@ -778,6 +778,9 @@ namespace TGMsim
                 if (newHiscore)
                     drawBuffer.DrawString("New Hiscore registered!", SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 440);
 
+                if(MOD.hasSecretGrade && results.secretGrade > MOD.minSecret)
+                    drawBuffer.DrawString("Secret Grade: " + MOD.secretGrades[results.secretGrade-1], SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 450);
+
                 if (!isPlayback)
                 {
                     if (!recorded)
@@ -1733,9 +1736,13 @@ namespace TGMsim
                 }
                 activeTet.id = 0;
 
-                MOD.onGameOver();
-
                 results = new GameResult();
+
+                //check for secret grade here, just because
+                if (!MOD.secretOnlyOnTopOut || !cleared) //does tgm1 still check if topped out in credits?
+                    results.secretGrade = checkSecretGrade();
+
+                MOD.onGameOver();
 
                 if (inCredits)
                 {
@@ -2172,6 +2179,44 @@ namespace TGMsim
                 newField.Add(tempList);
             }
             gameField = newField;
+        }
+
+        int checkSecretGrade()
+        {
+            int s = 0;
+
+            for(int i = 0; i < 10; i++)
+            {
+                int bits = 0;
+                for(int x = 0; x < 10; x++)
+                {
+                    if (gameField[x][i] != 0 ^ x == i)
+                        bits++;
+                }
+                if (bits == 10)
+                    s++;
+                else
+                    break;
+            }
+            if(s == 10)
+                for (int i = 0; i < 9; i++)
+                {
+                    int bits = 0;
+                    for (int x = 0; x < 10; x++)
+                    {
+                        if (gameField[x][10+i] != 0 ^ x == 9-i)
+                            bits++;
+                    }
+                    if (bits == 10)
+                        s++;
+                    else
+                        break;
+                }
+            if (s == 19)
+                if (gameField[0][20] == 0 || gameField[1][20] == 0) //check the cap
+                    s = 18;
+
+            return s;
         }
 
         private void drawGrade(Graphics drawBuffer, string gd)
