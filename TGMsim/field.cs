@@ -1006,7 +1006,7 @@ namespace TGMsim
                         if(currentTimer == timerType.GarbageRaise)
                         {
                             --timerCount;
-                            if (timerCount == -1) //garbagedelay of zero means the delay is nonexistant
+                            if (timerCount < 0) //garbagedelay of zero means the delay is nonexistant
                             {
                                 switch (MOD.garbType)
                                 {

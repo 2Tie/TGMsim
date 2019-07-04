@@ -1,6 +1,12 @@
 Bugs to fix:
+CCS Gravity speeds are incorrect
+use grades to store highest level reached in hiscores
+implement Mirror, HideNext, Shade, XRay
+implement CCS Easy gem recycling
+implement CCS time limits
 
 Additions for release:
+Sakura mode?
 polish up GUI some more
 backgrounds for game select and mode select
 
@@ -9,6 +15,5 @@ refine Dynamo based on feedback
 GM/Full Clear medals in game select
 item blocks
 normal mode (has secret grade)
-CCS modes
 ACE modes
 Custom Mode

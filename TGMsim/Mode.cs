@@ -15,10 +15,10 @@ namespace TGMsim
             public int startLvl;
             public int endLvl;
             public int parameter;
-            public enum Type { FADING, INVIS, GARBAGE, BONES, ICE, BIG };
+            public enum Type { FADING, INVIS, GARBAGE, BONES, ICE, BIG, HIDENEXT, XRAY, REMOVEGEMS, MIRROR, SHADE };
         }
 
-        public enum ModeType { MASTER, DEATH, SHIRASE, SPRINT, GARBAGE, ROUNDS,  KONOHA, TRAINING, SEGA, MINER, DYNAMO, ENDURA, BLOX, PLUS, FLASH, MARCH, EASY }; //for the ID stuff
+        public enum ModeType { MASTER, DEATH, SHIRASE, SPRINT, GARBAGE, ROUNDS,  KONOHA, TRAINING, SEGA, MINER, DYNAMO, ENDURA, BLOX, PLUS, FLASH, MARCH, EASY, CCS }; //for the ID stuff
 
         public enum GarbType { FIXED, COPY, RANDOM, HIDDEN } ;
 

@@ -317,6 +317,9 @@ namespace TGMsim
                 case Mode.ModeType.EASY: //easy
                     mod = new Modes.Easy(); //uuuhhhhhhh?????
                     break;
+                case Mode.ModeType.CCS:
+                    mod = new Modes.CCS(vari);
+                    break;
                 default:
                     throw new Exception("unknown mode");
                     break;
