@@ -1,9 +1,8 @@
 Bugs to fix:
+Draw coloured gems
 CCS Gravity speeds are incorrect
-use grades to store highest level reached in hiscores
 implement Mirror, HideNext, Shade, XRay
 implement CCS Easy gem recycling
-implement CCS time limits
 
 Additions for release:
 Sakura mode?

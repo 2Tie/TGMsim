@@ -476,11 +476,14 @@ namespace TGMsim
                                 drawBuffer.DrawLine(new Pen(Color.Orange), hX - 10, hY + 11 + 30 * i, hX + 300, hY + 11 + 30 * i);
                             }
                             drawBuffer.DrawString(hiscoreTable[i].username, DefaultFont, new SolidBrush(Color.White), hX, hY + 30 * i);
-                            drawBuffer.DrawString(hiscoreTable[i].level.ToString(), DefaultFont, new SolidBrush(Color.White), hX + 40, hY + 30 * i);
+                            if(mSel.modes[mSel.game][mSel.selection].id != Mode.ModeType.CCS)
+                                drawBuffer.DrawString(hiscoreTable[i].level.ToString(), DefaultFont, new SolidBrush(Color.White), hX + 40, hY + 30 * i);
                             if (mSel.modes[mSel.game][mSel.selection].id == Mode.ModeType.EASY)
                                 drawBuffer.DrawString(hiscoreTable[i].score.ToString(), DefaultFont, new SolidBrush(Color.White), hX + 80, hY + 30 * i);
-                            else
+                            else if(mSel.modes[mSel.game][mSel.selection].id != Mode.ModeType.CCS)
                                 drawBuffer.DrawString(rules.mod.grades[hiscoreTable[i].grade], DefaultFont, new SolidBrush(Color.White), hX + 80, hY + 30 * i);
+                            else
+                                drawBuffer.DrawString(rules.mod.grades[hiscoreTable[i].grade], DefaultFont, new SolidBrush(Color.White), hX + 40, hY + 30 * i);
                             var temptimeVAR = hiscoreTable[i].time;
                             var min = (int)Math.Floor((double)temptimeVAR / 60000);
                             temptimeVAR -= min * 60000;

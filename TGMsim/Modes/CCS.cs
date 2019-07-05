@@ -22,16 +22,25 @@ namespace TGMsim.Modes
             delayTable.Add(new List<int> { 30 });//line clear
             endLevel = 0;
             drawSec = false;
-            boardsProgress = 16;
+            showGrade = false;
+            boardsProgress = 0;
             presetBoards = true;
             shadeStack = false;
             boardsFile = var==0?"ccseasy":"ccsnorm";
             hasCredits = false;
+            limitType = 3; //time
+            limit = variant==0?180000:1000*60*20;//three minutes or twenty minutes
+            grades = new List<string> { "E1", "N1", "E2", "N2", "E3", "N3", "E4", "N4", "E5", "N5", "E6", "N6", "E7", "N7", "E8", "N8", "E9", "N9", "E10", "N10", "E11", "N11", "E12", "N12", "E13", "N13", "E14", "N14", "E15", "N15", "E16", "N16", "E17", "N17", "E18", "N18", "E CLEAR", "N CLEAR" };
         }
 
         public override void onPut(Tetromino tet, bool clear)
         {
             garbTimer++;
+        }
+
+        public override void onGameOver()
+        {
+            grade = boardsProgress * 2 + variant;
         }
 
         public override void onClear(int lines, Tetromino tet, long time, bool bravo)
@@ -42,6 +51,7 @@ namespace TGMsim.Modes
                 garbTimer = 0;
                 garbLine = 0;
                 level = 0;
+                if (variant == 0) limit = (int)(time + 1000 * 60 * 3);//reset easy time limit
                 gimList = new List<Gimmick>(); //reset it for each level
                 boardsProgress++;
                 modeClear = true;
