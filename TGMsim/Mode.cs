@@ -15,7 +15,13 @@ namespace TGMsim
             public int startLvl;
             public int endLvl;
             public int parameter;
-            public enum Type { FADING, INVIS, GARBAGE, BONES, ICE, BIG, HIDENEXT, XRAY, REMOVEGEMS, MIRROR, SHADE };
+            public enum Type { FADING, INVIS, GARBAGE, BONES, ICE, BIG, HIDENEXT, XRAY, MIRROR, SHADE, SHIMMER };
+        }
+
+        public struct recycleTiming
+        {
+            public int delay;
+            public byte colours;
         }
 
         public enum ModeType { MASTER, DEATH, SHIRASE, SPRINT, GARBAGE, ROUNDS,  KONOHA, TRAINING, SEGA, MINER, DYNAMO, ENDURA, BLOX, PLUS, FLASH, MARCH, EASY, CCS }; //for the ID stuff
@@ -80,6 +86,9 @@ namespace TGMsim
         public string boardsFile = "";
         public int boardsProgress = 0;
         public int boardGems = 0;
+        public bool recycleGems = false;
+        public int recycleProgress = 0;
+        public List<recycleTiming> recycleTimings = new List<recycleTiming>();
         public List<int> targets = new List<int>();
         public bool showGhost = true;
         public bool orangeLine = false;

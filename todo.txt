@@ -1,11 +1,11 @@
 Bugs to fix:
 Draw coloured gems
+Draw gems in active piece
 CCS Gravity speeds are incorrect
-implement Mirror, HideNext, Shade, XRay
-implement CCS Easy gem recycling
+implement Mirror, HideNext, Shade, Shimmer
 
 Additions for release:
-Sakura mode?
+Sakura mode? needs XRAY
 polish up GUI some more
 backgrounds for game select and mode select
 

@@ -29,6 +29,7 @@ namespace TGMsim.Modes
             boardsFile = var==0?"ccseasy":"ccsnorm";
             hasCredits = false;
             limitType = 3; //time
+            if (variant == 0) recycleGems = true;
             limit = variant==0?180000:1000*60*20;//three minutes or twenty minutes
             grades = new List<string> { "E1", "N1", "E2", "N2", "E3", "N3", "E4", "N4", "E5", "N5", "E6", "N6", "E7", "N7", "E8", "N8", "E9", "N9", "E10", "N10", "E11", "N11", "E12", "N12", "E13", "N13", "E14", "N14", "E15", "N15", "E16", "N16", "E17", "N17", "E18", "N18", "E CLEAR", "N CLEAR" };
         }

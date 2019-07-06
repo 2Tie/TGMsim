@@ -44,6 +44,8 @@ namespace TGMsim
         public List<vanPip> vanList = new List<vanPip>();
         public List<flashPip> flashList = new List<flashPip>();
         int fadeout = 0;
+
+        public List<byte> gemQueue = new List<byte>();
         
 
         public Tetromino heldPiece;
@@ -999,6 +1001,23 @@ namespace TGMsim
                             MOD.g20 = true;
                     }
 
+                    //check for gem recycling
+                    if(MOD.recycleGems)
+                        if(MOD.recycleProgress < MOD.recycleTimings.Count())
+                            if(MOD.recycleTimings[MOD.recycleProgress].delay < timer.count)
+                                for (byte i = 0; i < 8; i++)//for each colour
+                                    if((MOD.recycleTimings[MOD.recycleProgress].colours & (byte)(1<<(7-i))) != 0)//if colour marked
+                                        for(x = 0; x < 10; x++)
+                                            for(y = 0; y < 20; y++)
+                                                if(gameField[x][y] == 11 + i)//11 - 19 are the gems
+                                                {
+                                                    if (i == 0)
+                                                        gameField[x][y] = 9;
+                                                    else
+                                                        gameField[x][y] = i;
+                                                    gemQueue.Add(i);
+                                                }
+
 
                     //check ID of current tetromino.
                     if (activeTet.id == 0)
@@ -1808,7 +1827,15 @@ namespace TGMsim
             Tetromino tempTet = new Tetromino((Tetromino.Piece)tempID, false);//force non-big here so they're not stretched out in the queue
             if (checkGimmick(Mode.Gimmick.Type.BONES))
                 tempTet.bone = true;
-            
+
+            //check whether we should add a gem to this block
+            if (gemQueue.Contains((byte)tempTet.id))
+                if (GEN.read() % 2 == 0)//i don't actually know the probability here
+                {
+                    tempTet.gemmed = true;
+                    gemQueue.Remove((byte)tempTet.id);
+                }
+
             return tempTet;
         }
 
