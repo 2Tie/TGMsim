@@ -1,6 +1,6 @@
 Bugs to fix:
 Draw coloured gems
-Draw gems in active piece
+add rotations for gem & doublecheck rotations & kicks
 CCS Gravity speeds are incorrect
 implement Mirror, HideNext, Shade, Shimmer
 

@@ -9,7 +9,14 @@ namespace TGMsim.Modes
 {
     class CCS : Mode
     {
-        
+        const byte RED = 0b01000000;
+        const byte ORANGE = 0b00000100;
+        const byte YELLOW = 0b0000010;
+        const byte GREEN = 0b00100000;
+        const byte CYAN = 0b00000001;
+        const byte BLUE = 0b0001000;
+        const byte PURPLE = 0b00010000;
+
         public CCS( int var)
         {
             variant = var;
@@ -29,7 +36,18 @@ namespace TGMsim.Modes
             boardsFile = var==0?"ccseasy":"ccsnorm";
             hasCredits = false;
             limitType = 3; //time
-            if (variant == 0) recycleGems = true;
+            if (variant == 0)
+            {
+                recycleGems = true;
+                recycleTiming rt = new recycleTiming();
+                rt.delay = 6;
+                rt.colours = YELLOW | CYAN | BLUE;
+                recycleTimings.Add(rt);
+                rt = new recycleTiming();
+                rt.delay = 7;
+                rt.colours = RED | ORANGE | GREEN | PURPLE;
+                recycleTimings.Add(rt);
+            }
             limit = variant==0?180000:1000*60*20;//three minutes or twenty minutes
             grades = new List<string> { "E1", "N1", "E2", "N2", "E3", "N3", "E4", "N4", "E5", "N5", "E6", "N6", "E7", "N7", "E8", "N8", "E9", "N9", "E10", "N10", "E11", "N11", "E12", "N12", "E13", "N13", "E14", "N14", "E15", "N15", "E16", "N16", "E17", "N17", "E18", "N18", "E CLEAR", "N CLEAR" };
         }
@@ -58,6 +76,8 @@ namespace TGMsim.Modes
                 modeClear = true;
                 if (boardsProgress < 18)
                     continueMode = true;
+
+                recycleTimings = new List<recycleTiming>();
 
                 if (boardsProgress == 4)
                 {

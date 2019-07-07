@@ -21,6 +21,7 @@ namespace TGMsim
         public bool floored = false;
         public bool spun = false;
         public bool gemmed = false;
+        public int gemPip = 0;
         public int groundTimer = 0;
         public int item = 0;
 
@@ -266,6 +267,7 @@ namespace TGMsim
             tet.floored = floored;
             tet.spun = spun;
             tet.gemmed = gemmed;
+            tet.gemPip = gemPip;
             return tet;
         }
     }

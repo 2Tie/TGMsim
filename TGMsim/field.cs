@@ -515,16 +515,24 @@ namespace TGMsim
                 {
 
                     if (activeTet.bone == true)
-                        drawBuffer.DrawImage(tetImgs[10], x + 25 * activeTet.bits[i].x, y + height - (25 * activeTet.bits[i].y), 25 * big, 25 * big);
+                    {
+                        if (activeTet.gemmed && i == activeTet.gemPip)
+                            drawBuffer.DrawImage(tetGem, x + 25 * activeTet.bits[i].x, y + height - (25 * activeTet.bits[i].y), 25 * big, 25 * big);
+                        else
+                            drawBuffer.DrawImage(tetImgs[10], x + 25 * activeTet.bits[i].x, y + height - (25 * activeTet.bits[i].y), 25 * big, 25 * big);
+                    }
                     else
                     {
                         if (activeTet.groundTimer >= 0)
                         {
-                            drawBuffer.DrawImage(tetImgs[(int)activeTet.id], x + 25 * activeTet.bits[i].x, y + height - (25 * activeTet.bits[i].y), 25 * big, 25 * big);
+                            if (activeTet.gemmed && i == activeTet.gemPip)
+                                drawBuffer.DrawImage(tetGem, x + 25 * activeTet.bits[i].x, y + height - (25 * activeTet.bits[i].y), 25 * big, 25 * big);
+                            else
+                                drawBuffer.DrawImage(tetImgs[(int)activeTet.id], x + 25 * activeTet.bits[i].x, y + height - (25 * activeTet.bits[i].y), 25 * big, 25 * big);
                             drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb((MOD.baseLock - activeTet.groundTimer) * 127 / MOD.baseLock, Color.Black)), x + 25 * activeTet.bits[i].x, y + height - (25 * activeTet.bits[i].y), 25 * big, 25 * big);
                         }
                         //else
-                            //drawBuffer.DrawImage(tetImgs[9], x + 25 * (activeTet.bits[i].x * (2 / big) - (4 % (6 - big))), y - 25 + 25 * (activeTet.bits[i].y * (2 / big) - (lowY * ((2 / big) - 1))), 25 * (2 / big), 25 * (2 / big));
+                        //drawBuffer.DrawImage(tetImgs[9], x + 25 * (activeTet.bits[i].x * (2 / big) - (4 % (6 - big))), y - 25 + 25 * (activeTet.bits[i].y * (2 / big) - (lowY * ((2 / big) - 1))), 25 * (2 / big), 25 * (2 / big));
                     }
                 }
 
@@ -585,11 +593,21 @@ namespace TGMsim
                         if (i == 0)//1st next drawn at full size
                         {
                             if (nextTet[i].bone == true)
-                                drawBuffer.DrawImage(tetImgs[10], x + 25 * nextTet[i].bits[j].x, y - 95 + 25 * (21- nextTet[i].bits[j].y), 25, 25);
+                            {
+                                if (nextTet[i].gemmed && j == nextTet[i].gemPip)
+                                    drawBuffer.DrawImage(tetGem, x + 25 * nextTet[i].bits[j].x, y - 95 + 25 * (21 - nextTet[i].bits[j].y), 25, 25);
+                                else
+                                    drawBuffer.DrawImage(tetImgs[10], x + 25 * nextTet[i].bits[j].x, y - 95 + 25 * (21 - nextTet[i].bits[j].y), 25, 25);
                                 //drawBuffer.DrawImageUnscaled(tetImgs[10], x + i * 70 + 16 * nextTet[i].bits[j].x + 40, y + 16 * nextTet[i].bits[j].y - 75);
+                            }
                             else
-                                drawBuffer.DrawImage(tetImgs[(int)nextTet[i].id], x + 25 * nextTet[i].bits[j].x, y - 95 + 25 * (21-nextTet[i].bits[j].y), 25, 25);
+                            {
+                                if (nextTet[i].gemmed && j == nextTet[i].gemPip)
+                                    drawBuffer.DrawImage(tetGem, x + 25 * nextTet[i].bits[j].x, y - 95 + 25 * (21 - nextTet[i].bits[j].y), 25, 25);
+                                else
+                                    drawBuffer.DrawImage(tetImgs[(int)nextTet[i].id], x + 25 * nextTet[i].bits[j].x, y - 95 + 25 * (21 - nextTet[i].bits[j].y), 25, 25);
                                 //drawBuffer.DrawImageUnscaled(tetImgs[nextTet[i].id], x + i * 70 + 16 * nextTet[i].bits[j].x + 40, y + 16 * nextTet[i].bits[j].y - 75);
+                            }
                         }
                         else
                         {
@@ -1002,21 +1020,24 @@ namespace TGMsim
                     }
 
                     //check for gem recycling
-                    if(MOD.recycleGems)
-                        if(MOD.recycleProgress < MOD.recycleTimings.Count())
-                            if(MOD.recycleTimings[MOD.recycleProgress].delay < timer.count)
+                    if (MOD.recycleGems)
+                        if (MOD.recycleProgress < MOD.recycleTimings.Count())
+                            if (MOD.recycleTimings[MOD.recycleProgress].delay * 10 * 1000 < timer.count)
+                            {
                                 for (byte i = 0; i < 8; i++)//for each colour
-                                    if((MOD.recycleTimings[MOD.recycleProgress].colours & (byte)(1<<(7-i))) != 0)//if colour marked
-                                        for(x = 0; x < 10; x++)
-                                            for(y = 0; y < 20; y++)
-                                                if(gameField[x][y] == 11 + i)//11 - 19 are the gems
+                                    if ((MOD.recycleTimings[MOD.recycleProgress].colours & (byte)(1 << (7 - i))) != 0)//if colour marked
+                                        for (int cx = 0; cx < 10; cx++)
+                                            for (int cy = 0; cy < 20; cy++)
+                                                if (gameField[cx][cy] == 11 + i)//11 - 19 are the gems
                                                 {
                                                     if (i == 0)
-                                                        gameField[x][y] = 9;
+                                                        gameField[cx][cy] = 9;
                                                     else
-                                                        gameField[x][y] = i;
+                                                        gameField[cx][cy] = i;
                                                     gemQueue.Add(i);
                                                 }
+                                MOD.recycleProgress++;
+                            }
 
 
                     //check ID of current tetromino.
@@ -1345,9 +1366,19 @@ namespace TGMsim
                                                 if (checkGimmick(Mode.Gimmick.Type.INVIS) || MOD.creditsType == 2)
                                                     gameField[activeTet.bits[i].x + j][activeTet.bits[i].y - k] = 8;
                                                 else if (activeTet.bone == true)
-                                                    gameField[activeTet.bits[i].x + j][activeTet.bits[i].y - k] = 10;
+                                                {
+                                                    if (activeTet.gemmed && activeTet.gemPip == i)
+                                                        gameField[activeTet.bits[i].x + j][activeTet.bits[i].y - k] = 11;
+                                                    else
+                                                        gameField[activeTet.bits[i].x + j][activeTet.bits[i].y - k] = 10;
+                                                }
                                                 else
-                                                    gameField[activeTet.bits[i].x + j][activeTet.bits[i].y - k] = (int)activeTet.id;
+                                                {
+                                                    if (activeTet.gemmed && activeTet.gemPip == i)
+                                                        gameField[activeTet.bits[i].x + j][activeTet.bits[i].y - k] = 11 + (int)activeTet.id;
+                                                    else
+                                                        gameField[activeTet.bits[i].x + j][activeTet.bits[i].y - k] = (int)activeTet.id;
+                                                }
 
                                                 if (MOD.creditsType == 1 && inCredits)//vanishing?
                                                 {
@@ -1832,6 +1863,7 @@ namespace TGMsim
             if (gemQueue.Contains((byte)tempTet.id))
                 if (GEN.read() % 2 == 0)//i don't actually know the probability here
                 {
+                    tempTet.gemPip = GEN.read() % 4;
                     tempTet.gemmed = true;
                     gemQueue.Remove((byte)tempTet.id);
                 }
