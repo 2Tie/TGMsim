@@ -104,7 +104,7 @@ namespace TGMsim
         List<Image> tetImgs = new List<Image>();
         List<Image> tetSImgs = new List<Image>();
         List<Image> bgs = new List<Image>();
-        Image tetGem;
+        List<Image> tetGems = new List<Image>();
         Image boneGem;
         Image medalImg;
         Image gradeImg;
@@ -165,7 +165,14 @@ namespace TGMsim
             bgs.Add(null);
             bgs.Add(null);
 
-            tetGem = Image.FromFile("Res/GFX/o8.png");
+            tetGems.Add(Image.FromFile("Res/GFX/o1.png"));
+            tetGems.Add(Image.FromFile("Res/GFX/o6.png"));
+            tetGems.Add(Image.FromFile("Res/GFX/o5.png"));
+            tetGems.Add(Image.FromFile("Res/GFX/o4.png"));
+            tetGems.Add(Image.FromFile("Res/GFX/o3.png"));
+            tetGems.Add(Image.FromFile("Res/GFX/o7.png"));
+            tetGems.Add(Image.FromFile("Res/GFX/o2.png"));
+            tetGems.Add(Image.FromFile("Res/GFX/o8.png"));
             boneGem = Image.FromFile("Res/GFX/o9.png");
 
             medalImg = Image.FromFile("Res/GFX/medals.png");
@@ -454,11 +461,11 @@ namespace TGMsim
                         else if (block < 11)//garbage or bone
                             drawBuffer.DrawImageUnscaled(tetImgs[block], x + 25 * i, y + height - (j * 25), 25, 25);
                         else if (block == 11)//colourless gem
-                            drawBuffer.DrawImageUnscaled(tetGem, x + 25 * i, y + height - (j * 25), 25, 25);
+                            drawBuffer.DrawImageUnscaled(tetGems[7], x + 25 * i, y + height - (j * 25), 25, 25);
                         else if (block < 19) //gem block
                         {
                             //drawBuffer.FillEllipse(new SolidBrush(Color.FromArgb(130, Color.White)), x + 25 * i, y + height - (j * 25), 25, 25);
-                            drawBuffer.DrawImageUnscaled(tetGem, x + 25 * i, y + height - (j * 25), 25, 25);
+                            drawBuffer.DrawImageUnscaled(tetGems[block - 12], x + 25 * i, y + height - (j * 25), 25, 25);
                         }
                         if (MOD.shadeStack && block != 8 && block != 0)
                             drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(130, Color.Black)), x + 25 * i, y + height - (j * 25), 25, 25);
@@ -517,7 +524,7 @@ namespace TGMsim
                     if (activeTet.bone == true)
                     {
                         if (activeTet.gemmed && i == activeTet.gemPip)
-                            drawBuffer.DrawImage(tetGem, x + 25 * activeTet.bits[i].x, y + height - (25 * activeTet.bits[i].y), 25 * big, 25 * big);
+                            drawBuffer.DrawImage(boneGem, x + 25 * activeTet.bits[i].x, y + height - (25 * activeTet.bits[i].y), 25 * big, 25 * big);
                         else
                             drawBuffer.DrawImage(tetImgs[10], x + 25 * activeTet.bits[i].x, y + height - (25 * activeTet.bits[i].y), 25 * big, 25 * big);
                     }
@@ -526,7 +533,7 @@ namespace TGMsim
                         if (activeTet.groundTimer >= 0)
                         {
                             if (activeTet.gemmed && i == activeTet.gemPip)
-                                drawBuffer.DrawImage(tetGem, x + 25 * activeTet.bits[i].x, y + height - (25 * activeTet.bits[i].y), 25 * big, 25 * big);
+                                drawBuffer.DrawImage(tetGems[(int)activeTet.id - 1], x + 25 * activeTet.bits[i].x, y + height - (25 * activeTet.bits[i].y), 25 * big, 25 * big);
                             else
                                 drawBuffer.DrawImage(tetImgs[(int)activeTet.id], x + 25 * activeTet.bits[i].x, y + height - (25 * activeTet.bits[i].y), 25 * big, 25 * big);
                             drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb((MOD.baseLock - activeTet.groundTimer) * 127 / MOD.baseLock, Color.Black)), x + 25 * activeTet.bits[i].x, y + height - (25 * activeTet.bits[i].y), 25 * big, 25 * big);
@@ -595,7 +602,7 @@ namespace TGMsim
                             if (nextTet[i].bone == true)
                             {
                                 if (nextTet[i].gemmed && j == nextTet[i].gemPip)
-                                    drawBuffer.DrawImage(tetGem, x + 25 * nextTet[i].bits[j].x, y - 95 + 25 * (21 - nextTet[i].bits[j].y), 25, 25);
+                                    drawBuffer.DrawImage(boneGem, x + 25 * nextTet[i].bits[j].x, y - 95 + 25 * (21 - nextTet[i].bits[j].y), 25, 25);
                                 else
                                     drawBuffer.DrawImage(tetImgs[10], x + 25 * nextTet[i].bits[j].x, y - 95 + 25 * (21 - nextTet[i].bits[j].y), 25, 25);
                                 //drawBuffer.DrawImageUnscaled(tetImgs[10], x + i * 70 + 16 * nextTet[i].bits[j].x + 40, y + 16 * nextTet[i].bits[j].y - 75);
@@ -603,7 +610,7 @@ namespace TGMsim
                             else
                             {
                                 if (nextTet[i].gemmed && j == nextTet[i].gemPip)
-                                    drawBuffer.DrawImage(tetGem, x + 25 * nextTet[i].bits[j].x, y - 95 + 25 * (21 - nextTet[i].bits[j].y), 25, 25);
+                                    drawBuffer.DrawImage(tetGems[(int)nextTet[i].id - 1], x + 25 * nextTet[i].bits[j].x, y - 95 + 25 * (21 - nextTet[i].bits[j].y), 25, 25);
                                 else
                                     drawBuffer.DrawImage(tetImgs[(int)nextTet[i].id], x + 25 * nextTet[i].bits[j].x, y - 95 + 25 * (21 - nextTet[i].bits[j].y), 25, 25);
                                 //drawBuffer.DrawImageUnscaled(tetImgs[nextTet[i].id], x + i * 70 + 16 * nextTet[i].bits[j].x + 40, y + 16 * nextTet[i].bits[j].y - 75);

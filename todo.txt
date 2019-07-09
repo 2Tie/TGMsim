@@ -1,6 +1,6 @@
 Bugs to fix:
-Draw coloured gems
 CCS Gravity speeds are incorrect
+figure out how/when delay table is looped through??
 implement Mirror, HideNext, Shade, Shimmer
 
 Additions for release:
