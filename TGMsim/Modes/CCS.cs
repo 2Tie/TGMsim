@@ -73,6 +73,7 @@ namespace TGMsim.Modes
                 if (variant == 0) limit = (int)(time + 1000 * 60 * 3);//reset easy time limit
                 gimList = new List<Gimmick>(); //reset it for each level
                 boardsProgress++;
+                recycleProgress = 0;
                 modeClear = true;
                 if (boardsProgress < 18)
                     continueMode = true;
@@ -164,6 +165,226 @@ namespace TGMsim.Modes
                         gimList.Add(g);
                         garbLine = 7;
                         garbType = GarbType.HIDDEN;
+                    }
+                }
+
+                if(variant == 0)
+                {
+                    recycleTiming rt = new recycleTiming();
+                    switch (boardsProgress)
+                    {
+                        case 1:
+                            rt = new recycleTiming();
+                            rt.delay = 5;
+                            rt.colours = ORANGE | YELLOW;
+                            recycleTimings.Add(rt);
+                            rt = new recycleTiming();
+                            rt.delay = 6;
+                            rt.colours = CYAN | BLUE | PURPLE;
+                            recycleTimings.Add(rt);
+                            rt = new recycleTiming();
+                            rt.delay = 7;
+                            rt.colours = RED | GREEN;
+                            recycleTimings.Add(rt);
+                            break;
+                        case 2:
+                            rt = new recycleTiming();
+                            rt.delay = 5;
+                            rt.colours = YELLOW | GREEN | CYAN;
+                            recycleTimings.Add(rt);
+                            rt = new recycleTiming();
+                            rt.delay = 6;
+                            rt.colours = ORANGE | BLUE;
+                            recycleTimings.Add(rt);
+                            rt = new recycleTiming();
+                            rt.delay = 8;
+                            rt.colours = RED;
+                            recycleTimings.Add(rt);
+                            rt = new recycleTiming();
+                            rt.delay = 9;
+                            rt.colours = PURPLE;
+                            recycleTimings.Add(rt);
+                            break;
+                        case 3:
+                            rt = new recycleTiming();
+                            rt.delay = 6;
+                            rt.colours = ORANGE | BLUE;
+                            recycleTimings.Add(rt);
+                            rt = new recycleTiming();
+                            rt.delay = 7;
+                            rt.colours = YELLOW;
+                            recycleTimings.Add(rt);
+                            rt = new recycleTiming();
+                            rt.delay = 8;
+                            rt.colours = GREEN | PURPLE;
+                            recycleTimings.Add(rt);
+                            rt = new recycleTiming();
+                            rt.delay = 9;
+                            rt.colours = RED | CYAN;
+                            recycleTimings.Add(rt);
+                            break;
+                        case 4:
+                            rt = new recycleTiming();
+                            rt.delay = 6;
+                            rt.colours = ORANGE | YELLOW | GREEN | BLUE;
+                            recycleTimings.Add(rt);
+                            break;
+                        case 5:
+                            rt = new recycleTiming();
+                            rt.delay = 6;
+                            rt.colours = ORANGE | YELLOW | CYAN | BLUE;
+                            recycleTimings.Add(rt);
+                            break;
+                        case 6:
+                            rt = new recycleTiming();
+                            rt.delay = 5;
+                            rt.colours = RED | ORANGE | BLUE | PURPLE;
+                            recycleTimings.Add(rt);
+                            rt = new recycleTiming();
+                            rt.delay = 6;
+                            rt.colours = YELLOW | GREEN | CYAN;
+                            recycleTimings.Add(rt);
+                            break;
+                        case 7:
+                            rt = new recycleTiming();
+                            rt.delay = 1;
+                            rt.colours = RED | CYAN;
+                            recycleTimings.Add(rt);
+                            rt = new recycleTiming();
+                            rt.delay = 2;
+                            rt.colours = YELLOW | GREEN | BLUE;
+                            recycleTimings.Add(rt);
+                            rt = new recycleTiming();
+                            rt.delay = 3;
+                            rt.colours = ORANGE | PURPLE;
+                            recycleTimings.Add(rt);
+                            break;
+                        case 9:
+                            rt = new recycleTiming();
+                            rt.delay = 6;
+                            rt.colours = YELLOW | GREEN | CYAN | PURPLE;
+                            recycleTimings.Add(rt);
+                            rt = new recycleTiming();
+                            rt.delay = 7;
+                            rt.colours = RED;
+                            recycleTimings.Add(rt);
+                            rt = new recycleTiming();
+                            rt.delay = 9;
+                            rt.colours = ORANGE | BLUE;
+                            recycleTimings.Add(rt);
+                            break;
+                        case 10:
+                            rt = new recycleTiming();
+                            rt.delay = 5;
+                            rt.colours = RED | ORANGE | YELLOW;
+                            recycleTimings.Add(rt);
+                            rt = new recycleTiming();
+                            rt.delay = 6;
+                            rt.colours = BLUE | PURPLE;
+                            recycleTimings.Add(rt);
+                            rt = new recycleTiming();
+                            rt.delay = 7;
+                            rt.colours = CYAN;
+                            recycleTimings.Add(rt);
+                            rt = new recycleTiming();
+                            rt.delay = 8;
+                            rt.colours = GREEN;
+                            recycleTimings.Add(rt);
+                            break;
+                        case 11:
+                            rt = new recycleTiming();
+                            rt.delay = 6;
+                            rt.colours = RED | GREEN | CYAN | BLUE | PURPLE;
+                            recycleTimings.Add(rt);
+                            rt = new recycleTiming();
+                            rt.delay = 7;
+                            rt.colours = ORANGE;
+                            recycleTimings.Add(rt);
+                            rt = new recycleTiming();
+                            rt.delay = 8;
+                            rt.colours = YELLOW;
+                            recycleTimings.Add(rt);
+                            break;
+                        case 12:
+                            rt = new recycleTiming();
+                            rt.delay = 3;
+                            rt.colours = YELLOW | CYAN;
+                            recycleTimings.Add(rt);
+                            rt = new recycleTiming();
+                            rt.delay = 4;
+                            rt.colours = ORANGE | GREEN | BLUE;
+                            recycleTimings.Add(rt);
+                            rt = new recycleTiming();
+                            rt.delay = 5;
+                            rt.colours = RED | PURPLE;
+                            recycleTimings.Add(rt);
+                            break;
+                        case 13:
+                            rt = new recycleTiming();
+                            rt.delay = 6;
+                            rt.colours = YELLOW | CYAN;
+                            recycleTimings.Add(rt);
+                            rt = new recycleTiming();
+                            rt.delay = 8;
+                            rt.colours = ORANGE | BLUE | PURPLE;
+                            recycleTimings.Add(rt);
+                            rt = new recycleTiming();
+                            rt.delay = 9;
+                            rt.colours = RED | GREEN;
+                            recycleTimings.Add(rt);
+                            break;
+                        case 14:
+                            rt = new recycleTiming();
+                            rt.delay = 1;
+                            rt.colours = CYAN;
+                            recycleTimings.Add(rt);
+                            rt = new recycleTiming();
+                            rt.delay = 6;
+                            rt.colours = BLUE;
+                            recycleTimings.Add(rt);
+                            rt = new recycleTiming();
+                            rt.delay = 7;
+                            rt.colours = PURPLE | GREEN;
+                            recycleTimings.Add(rt);
+                            rt = new recycleTiming();
+                            rt.delay = 8;
+                            rt.colours = RED | ORANGE | YELLOW;
+                            recycleTimings.Add(rt);
+                            break;
+                        case 15:
+                            rt = new recycleTiming();
+                            rt.delay = 6;
+                            rt.colours = RED | ORANGE | YELLOW | GREEN | CYAN | BLUE | PURPLE;
+                            recycleTimings.Add(rt);
+                            break;
+                        case 16:
+                            rt = new recycleTiming();
+                            rt.delay = 3;
+                            rt.colours = GREEN;
+                            recycleTimings.Add(rt);
+                            rt = new recycleTiming();
+                            rt.delay = 4;
+                            rt.colours = PURPLE;
+                            recycleTimings.Add(rt);
+                            rt = new recycleTiming();
+                            rt.delay = 5;
+                            rt.colours = BLUE;
+                            recycleTimings.Add(rt);
+                            rt = new recycleTiming();
+                            rt.delay = 6;
+                            rt.colours = RED | ORANGE;
+                            recycleTimings.Add(rt);
+                            rt = new recycleTiming();
+                            rt.delay = 7;
+                            rt.colours = YELLOW;
+                            recycleTimings.Add(rt);
+                            rt = new recycleTiming();
+                            rt.delay = 8;
+                            rt.colours = CYAN;
+                            recycleTimings.Add(rt);
+                            break;
+                        default:
+                            break;
                     }
                 }
             }

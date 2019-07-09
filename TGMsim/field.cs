@@ -509,7 +509,10 @@ namespace TGMsim
                 {
                     if (ghostPiece.bits[i].y < 20)
                     {
-                        drawBuffer.DrawImage(tetImgs[(int)ghostPiece.id], x + 25 * ghostPiece.bits[i].x, y + height - (25 * (ghostPiece.bits[i].y)), 25 * big, 25 * big);
+                        if (activeTet.gemmed && i == activeTet.gemPip)
+                            drawBuffer.DrawImage(tetGems[(int)ghostPiece.id - 1], x + 25 * ghostPiece.bits[i].x, y + height - (25 * (ghostPiece.bits[i].y)), 25 * big, 25 * big);
+                        else
+                            drawBuffer.DrawImage(tetImgs[(int)ghostPiece.id], x + 25 * ghostPiece.bits[i].x, y + height - (25 * (ghostPiece.bits[i].y)), 25 * big, 25 * big);
                         drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(130, Color.Black)), x + 25 * ghostPiece.bits[i].x, y + height - (25 * (ghostPiece.bits[i].y)), 25 * big, 25 * big);
                     }
                 }
@@ -1029,7 +1032,7 @@ namespace TGMsim
                     //check for gem recycling
                     if (MOD.recycleGems)
                         if (MOD.recycleProgress < MOD.recycleTimings.Count())
-                            if (MOD.recycleTimings[MOD.recycleProgress].delay * 10 * 1000 < timer.count)
+                            if (MOD.recycleTimings[MOD.recycleProgress].delay * 10 * 1000 < timer.count - (MOD.limit - 3*60*1000))
                             {
                                 for (byte i = 0; i < 8; i++)//for each colour
                                     if ((MOD.recycleTimings[MOD.recycleProgress].colours & (byte)(1 << (7 - i))) != 0)//if colour marked
