@@ -39,5 +39,10 @@ namespace TGMsim
         {
             return 6;
         }
+
+        public virtual int firstpull()
+        {
+            return pull();
+        }
     }
 }

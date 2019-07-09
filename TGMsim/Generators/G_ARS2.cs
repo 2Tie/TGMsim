@@ -22,6 +22,7 @@ namespace TGMsim
 
         public override int pull()
         {
+            int stor = history[0];
             int temp = 0;
             for (int i = 0; i < rolls; i++)
             {
@@ -30,7 +31,7 @@ namespace TGMsim
                     break;
             }
             updateHistory(temp);
-            return history[1];
+            return stor;
         }
     }
 }

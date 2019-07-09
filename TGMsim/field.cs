@@ -232,9 +232,10 @@ namespace TGMsim
 
             if (nextTet.Count == 0 && ruleset.nextNum > 0) //generate nextTet
             {
-                for (int i = 0; i < ruleset.nextNum; i++)
+                nextTet.Add(generatePiece(true));
+                for (int i = 1; i < ruleset.nextNum; i++)
                 {
-                    nextTet.Add(generatePiece());
+                    nextTet.Add(generatePiece(false));
                 }
             }
 
@@ -1669,7 +1670,7 @@ namespace TGMsim
                 {
                     nextTet[i] = nextTet[i + 1];
                 }
-                nextTet[nextTet.Count - 1] = generatePiece();
+                nextTet[nextTet.Count - 1] = generatePiece(false);
                 if (pad.inputPressedHold && ruleset.hold == true && swappedHeld == 0)
                 {
                     hold();
@@ -1861,9 +1862,13 @@ namespace TGMsim
             return success;
         }
 
-        public Tetromino generatePiece()
+        public Tetromino generatePiece(bool first)
         {
-            int tempID = GEN.pull() + 1;
+            int tempID;
+            if (first)
+                tempID = GEN.firstpull() + 1;
+            else
+                tempID = GEN.pull() + 1;
 
             Tetromino tempTet = new Tetromino((Tetromino.Piece)tempID, false);//force non-big here so they're not stretched out in the queue
             if (checkGimmick(Mode.Gimmick.Type.BONES))
