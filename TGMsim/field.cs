@@ -63,9 +63,10 @@ namespace TGMsim
         bool safelock = false;
 
         public int x, y, width, height;
-        public enum timerType { ARE, DAS, LockDelay, LineClear, tgm1flash, GarbageRaise} ;
+        public enum timerType { ARE, DAS, LockDelay, LineClear, GarbageRaise } ;
         public timerType currentTimer = 0;
         public int timerCount = 0;
+        public int gimmickTimer = 0;
         public int gravCounter = 0;
         public int gravLevel = 0;
         List<int> gravTable;
@@ -1054,118 +1055,125 @@ namespace TGMsim
                     //check ID of current tetromino.
                     if (activeTet.id == 0)
                     {
-                        if(currentTimer == timerType.GarbageRaise)
+                        if (gimmickTimer > 0)
                         {
-                            --timerCount;
-                            if (timerCount < 0) //garbagedelay of zero means the delay is nonexistant
+                            gimmickTimer--;
+                        }
+                        else
+                        {
+                            if (currentTimer == timerType.GarbageRaise)
                             {
-                                switch (MOD.garbType)
+                                --timerCount;
+                                if (timerCount < 0) //garbagedelay of zero means the delay is nonexistant
                                 {
-                                    case Mode.GarbType.COPY:
-                                        raiseGarbage(1);
-                                        break;
-                                    case Mode.GarbType.RANDOM:
-                                        raiseGarbage(true);
-                                        break;
-                                    case Mode.GarbType.FIXED:
-                                    case Mode.GarbType.HIDDEN:
-                                        raiseGarbageSlice();
-                                        break;
+                                    switch (MOD.garbType)
+                                    {
+                                        case Mode.GarbType.COPY:
+                                            raiseGarbage(1);
+                                            break;
+                                        case Mode.GarbType.RANDOM:
+                                            raiseGarbage(true);
+                                            break;
+                                        case Mode.GarbType.FIXED:
+                                        case Mode.GarbType.HIDDEN:
+                                            raiseGarbageSlice();
+                                            break;
+                                    }
+                                    if (full.Count > 0)
+                                    {
+                                        currentTimer = timerType.LineClear;
+                                        timerCount = MOD.baseLineClear;
+                                    }
+                                    else
+                                    {
+                                        currentTimer = timerType.ARE;
+                                        timerCount = MOD.baseARE;
+                                    }
                                 }
-                                if (full.Count > 0)
+                            }
+                            if (currentTimer == timerType.LineClear)  //if timer is line clear and done, settle pieces and start ARE
+                            {
+                                if (timerCount == 0)
                                 {
-                                    currentTimer = timerType.LineClear;
-                                    timerCount = MOD.baseLineClear;
+                                    //settle pieces and start ARE
+                                    for (int i = 0; i < full.Count; i++)
+                                    {
+                                        for (int j = full[i]; j < gameField[0].Count - 1; j++)
+                                        {
+                                            for (int k = 0; k < 10; k++)
+                                            {
+                                                gameField[k][j] = gameField[k][j + 1];
+                                            }
+                                            for (int c = 0; c < vanList.Count; c++)
+                                            {
+                                                if (vanList[c].y == j)
+                                                {
+                                                    var vP = new vanPip();
+                                                    vP.time = vanList[c].time;
+                                                    vP.x = vanList[c].x;
+                                                    vP.y = vanList[c].y + 1;
+                                                    vanList[c] = vP;
+                                                }
+                                            }
+                                            for (int d = 0; d < flashList.Count; d++)//update flash list, juuust in case of an instant lineclear
+                                            {
+                                                if (flashList[d].y == j)
+                                                {
+                                                    var vP = new flashPip();
+                                                    vP.time = flashList[d].time;
+                                                    vP.x = flashList[d].x;
+                                                    vP.y = flashList[d].y + 1;
+                                                    flashList[d] = vP;
+                                                }
+                                            }
+                                        }
+                                        for (int k = 0; k < 10; k++)
+                                        {
+                                            gameField[k][gameField[0].Count - 1] = 0;
+                                        }
+                                    }
+
+                                    if (w4)
+                                        w4ify();
+
+                                    if (MOD.autoGarbage)//and if no pieces in 9
+                                    {
+                                        bool raise = true;
+                                        for (int j = 0; j < 10; j++)
+                                        {
+                                            if (gameField[j][9] != 0)
+                                            {
+                                                raise = false;
+                                            }
+                                        }
+                                        if (raise)
+                                            raiseGarbage(true);
+                                    }
+                                    checkGimmickTriggered();
+                                    currentTimer = timerType.ARE;
+                                    timerCount = MOD.baseARELine;
+                                    Audio.playSound(Audio.s_Impact);
                                 }
                                 else
                                 {
-                                    currentTimer = timerType.ARE;
-                                    timerCount = MOD.baseARE;
+                                    timerCount--;
+                                    return;
                                 }
                             }
-                        }
-                        if (currentTimer == timerType.LineClear)  //if timer is line clear and done, settle pieces and start ARE
-                        {
-                            if (timerCount == 0)
+                            //if timer is ARE and done, get next tetromino
+                            if (currentTimer == timerType.ARE)
                             {
-                                //settle pieces and start ARE
-                                for (int i = 0; i < full.Count; i++)
+                                if (timerCount <= 0 && ((inCredits == (creditsPause.count > 3000)) || ruleset.gameRules == GameRules.Games.TGM1 || MOD.modeID == Mode.ModeType.DEATH))
                                 {
-                                    for (int j = full[i]; j < gameField[0].Count-1; j++)
-                                    {
-                                        for (int k = 0; k < 10; k++)
-                                        {
-                                            gameField[k][j] = gameField[k][j + 1];
-                                        }
-                                        for (int c = 0; c < vanList.Count; c++ )
-                                        {
-                                            if (vanList[c].y == j)
-                                            {
-                                                var vP = new vanPip();
-                                                vP.time = vanList[c].time;
-                                                vP.x = vanList[c].x;
-                                                vP.y = vanList[c].y + 1;
-                                                vanList[c] = vP;
-                                            }
-                                        }
-                                        for (int d = 0; d < flashList.Count; d++)//update flash list, juuust in case of an instant lineclear
-                                        {
-                                            if (flashList[d].y == j)
-                                            {
-                                                var vP = new flashPip();
-                                                vP.time = flashList[d].time;
-                                                vP.x = flashList[d].x;
-                                                vP.y = flashList[d].y + 1;
-                                                flashList[d] = vP;
-                                            }
-                                        }
-                                    }
-                                    for (int k = 0; k < 10; k++)
-                                    {
-                                        gameField[k][gameField[0].Count-1] = 0;
-                                    }
+                                    full.Clear();
+                                    swappedHeld = 0;
+                                    spawnPiece();
                                 }
-
-                                if (w4)
-                                    w4ify();
-
-                                if (MOD.autoGarbage)//and if no pieces in 9
+                                else
                                 {
-                                    bool raise = true;
-                                    for (int j = 0; j < 10; j++)
-                                    {
-                                        if (gameField[j][9] != 0)
-                                        {
-                                            raise = false;
-                                        }
-                                    }
-                                    if (raise)
-                                        raiseGarbage(true);
+                                    timerCount--;
+                                    return;
                                 }
-
-                                currentTimer = timerType.ARE;
-                                timerCount = MOD.baseARELine;
-                                Audio.playSound(Audio.s_Impact);
-                            }
-                            else
-                            {
-                                timerCount--;
-                                return;
-                            }
-                        }
-                        //if timer is ARE and done, get next tetromino
-                        if (currentTimer == timerType.ARE)
-                        {
-                            if (timerCount <= 0 && ((inCredits == (creditsPause.count > 3000)) || ruleset.gameRules == GameRules.Games.TGM1 || MOD.modeID == Mode.ModeType.DEATH))
-                            {
-                                full.Clear();
-                                swappedHeld = 0;
-                                spawnPiece();
-                            }
-                            else
-                            {
-                                timerCount--;
-                                return;
                             }
                         }
                     }
@@ -1520,8 +1528,8 @@ namespace TGMsim
                                     {
                                         currentTimer = timerType.ARE;
                                         timerCount = MOD.baseARE;
-
                                         MOD.onPut(activeTet, false);
+                                        checkGimmickTriggered();
                                     }
 
                                     if (MOD.inCredits && !inCredits)
@@ -1906,6 +1914,16 @@ namespace TGMsim
             return -1;
         }
 
+        private int getActiveGimmickDelay(Mode.Gimmick.Type gim)
+        {
+            for (int i = 0; i < activeGim.Count; i++)
+            {
+                if (activeGim[i].type == gim)
+                    return activeGim[i].delay;
+            }
+            return -1;
+        }
+
         private void raiseGarbage(int num)
         {
             for(int i = 0; i < num; i++)//skim the top
@@ -2206,6 +2224,26 @@ namespace TGMsim
                 }
 
             }
+        }
+
+        bool checkGimmickTriggered()
+        {
+            //mirror
+            if (checkGimmick(Mode.Gimmick.Type.MIRROR))
+            {
+                if (MOD.gimCounter >= getActiveGimmickParameter(Mode.Gimmick.Type.MIRROR))
+                {
+                    //flip field
+                    List<List<int>> tempF = new List<List<int>>();
+                    for (int i = 0; i < 10; i++)
+                        tempF.Add(gameField[9 - i]);
+                    gameField = tempF;
+                    gimmickTimer = getActiveGimmickDelay(Mode.Gimmick.Type.MIRROR);
+                    MOD.gimCounter = 0;
+                    return true;
+                }
+            }
+            return false;
         }
 
         private void clearField()

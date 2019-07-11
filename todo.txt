@@ -1,7 +1,8 @@
 Bugs to fix:
 CCS Gravity speeds are incorrect
 figure out how/when delay table is looped through??
-implement Mirror, HideNext, Shade, Shimmer
+implement HideNext, Shade, Shimmer
+verify out delay for Mirror in CCS
 
 Additions for release:
 Sakura mode? needs XRAY

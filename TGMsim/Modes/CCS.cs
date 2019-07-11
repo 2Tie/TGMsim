@@ -55,6 +55,8 @@ namespace TGMsim.Modes
         public override void onPut(Tetromino tet, bool clear)
         {
             garbTimer++;
+            if (boardsProgress == 4)
+                gimCounter++;
         }
 
         public override void onGameOver()
@@ -87,6 +89,7 @@ namespace TGMsim.Modes
                     g.parameter = 3;
                     g.startLvl = 0;
                     g.endLvl = 0;
+                    g.delay = 40;
                     gimList.Add(g);
                 }
                 else if(boardsProgress == 8)

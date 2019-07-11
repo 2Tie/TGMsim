@@ -15,6 +15,7 @@ namespace TGMsim
             public int startLvl;
             public int endLvl;
             public int parameter;
+            public int delay; //number of frames to wait
             public enum Type { FADING, INVIS, GARBAGE, BONES, ICE, BIG, HIDENEXT, XRAY, MIRROR, SHADE, SHIMMER };
         }
 
@@ -105,6 +106,7 @@ namespace TGMsim
         public List<int> medals = new List<int>() { 0, 0, 0, 0, 0, 0 };
 
         public List<Gimmick> gimList = new List<Gimmick>();
+        public int gimCounter = 0; //auxiliary counter for gimmicks
         public List<List<int>> delayTable = new List<List<int>>();
 
         public int baseARE = 30;
