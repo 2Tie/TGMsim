@@ -64,9 +64,23 @@ namespace TGMsim.Modes
             grade = boardsProgress * 2 + variant;
         }
 
+        public override void onTick(long time)
+        {
+            if (boardsProgress == 8)
+            {
+                gimCounter++;
+                if (gimCounter + 4 * 60 > 20*60)
+                    gimCounter = 0;
+            }
+        }
+
         public override void onClear(int lines, Tetromino tet, long time, bool bravo)
         {
             level += lines;
+            if(boardsProgress == 9)
+            {
+                gimCounter += lines;
+            }
             if (boardGems == 0)
             {
                 garbTimer = 0;
@@ -96,7 +110,7 @@ namespace TGMsim.Modes
                 {
                     Gimmick g = new Gimmick();
                     g.type = Gimmick.Type.HIDENEXT;
-                    g.parameter = 17;
+                    g.parameter = 13*60;
                     g.startLvl = 0;
                     g.endLvl = 0;
                     gimList.Add(g);

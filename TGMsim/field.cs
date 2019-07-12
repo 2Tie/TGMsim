@@ -91,6 +91,8 @@ namespace TGMsim
         public bool g0 = false;
         public bool w4 = false;
         public bool toriless = false;
+        public bool hideNext = false;
+        public bool heavyStackShade = false;
 
         public List<Mode.Gimmick> activeGim = new List<Mode.Gimmick>();
         public int gimIndex = 0;
@@ -471,8 +473,10 @@ namespace TGMsim
                         }
                         if (MOD.shadeStack && block != 8 && block != 0)
                             drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(130, Color.Black)), x + 25 * i, y + height - (j * 25), 25, 25);
+                        if (heavyStackShade && block != 8 && block != 0)
+                            drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(180, Color.Black)), x + 25 * i, y + height - (j * 25), 25, 25);
 
-                        
+
                     }
                     //outline
                     if (MOD.outlineStack)
@@ -596,7 +600,7 @@ namespace TGMsim
             }
 
             //draw the next piece
-            if (ruleset.nextNum > 0)
+            if (ruleset.nextNum > 0 && !hideNext)
             {
                 for (int i = 0; i < ruleset.nextNum; i++)
                 {
@@ -1023,6 +1027,8 @@ namespace TGMsim
 
                     MOD.onTick(timer.count, currentTimer);
 
+                    checkGimmickTriggered();
+
                     //GAME LOGIC
                     //check for killspeeds
                     if(ruleset.hasKillSpeed)
@@ -1149,7 +1155,7 @@ namespace TGMsim
                                         if (raise)
                                             raiseGarbage(true);
                                     }
-                                    checkGimmickTriggered();
+                                    //checkGimmickTriggered();
                                     currentTimer = timerType.ARE;
                                     timerCount = MOD.baseARELine;
                                     Audio.playSound(Audio.s_Impact);
@@ -1529,7 +1535,7 @@ namespace TGMsim
                                         currentTimer = timerType.ARE;
                                         timerCount = MOD.baseARE;
                                         MOD.onPut(activeTet, false);
-                                        checkGimmickTriggered();
+                                        //checkGimmickTriggered();
                                     }
 
                                     if (MOD.inCredits && !inCredits)
@@ -2242,6 +2248,22 @@ namespace TGMsim
                     MOD.gimCounter = 0;
                     return true;
                 }
+            }
+            if (checkGimmick(Mode.Gimmick.Type.SHADE))
+            {
+                if (MOD.gimCounter % getActiveGimmickParameter(Mode.Gimmick.Type.SHADE) == 1)
+                    heavyStackShade = true;
+                else
+                    heavyStackShade = false;
+                return heavyStackShade;
+            }
+            if (checkGimmick(Mode.Gimmick.Type.HIDENEXT))
+            {
+                if (MOD.gimCounter >= getActiveGimmickParameter(Mode.Gimmick.Type.HIDENEXT))
+                    hideNext = true;
+                else
+                    hideNext = false;
+                return hideNext;
             }
             return false;
         }
