@@ -187,6 +187,8 @@ namespace TGMsim.Modes
                     {
                         creditsType = 2;
                         creditsSong = "crdtinvis";
+                        outlineFlashing = true;
+                        outlineFlashDelay = 2;
                     }
                     else
                         creditsType = 1;

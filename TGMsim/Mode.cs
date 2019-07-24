@@ -118,6 +118,8 @@ namespace TGMsim
         public Color border = Color.LightGray;
         public bool shadeStack = true;
         public bool outlineStack = true;
+        public bool outlineFlashing = false;
+        public int outlineFlashDelay = 0; //use this for outline to show after a piece goes invisible
 
         public bool firstPiece = true;
 

@@ -447,14 +447,14 @@ namespace TGMsim
             {
                 for (int j = 0; j < 20; j++)
                 {
-                    bool flashing = false;
+                    int flashing = -1;
                     int block = gameField[i][j];
                     for (int k = 0; k < flashList.Count; k++)
                     {
                         if (i == flashList[k].x && j == flashList[k].y)
-                            flashing = true;
+                            flashing = flashList[k].time;
                     }
-                    if (flashing)
+                    if (flashing > -1 + MOD.outlineFlashDelay) //raise the cieling on raw flash
                     {
                         drawBuffer.DrawImageUnscaled(tetImgs[9], x + 25 * i, y + height - (j * 25), 25, 25);
                     }
@@ -480,7 +480,7 @@ namespace TGMsim
                     }
                     //outline
                     if (MOD.outlineStack)
-                        if (block != 0 && block != 8 && block != 10)//don't outline invis or bones
+                        if (block != 0 && (block != 8 || (flashing>-1 && MOD.outlineFlashing && (checkGimmick(Mode.Gimmick.Type.INVIS) || (inCredits && MOD.creditsType == 2)))) && block != 10)//don't outline invis or bones
                         {
                             if (i > 0)
                                 if (gameField[i - 1][j] == 0)//left
@@ -1418,7 +1418,7 @@ namespace TGMsim
                                                 if (!activeTet.bone && ruleset.flashLength != 0)
                                                 {
                                                     flashPip fP = new flashPip();
-                                                    fP.time = ruleset.flashLength - 1;
+                                                    fP.time = ruleset.flashLength - 1 + MOD.outlineFlashDelay;
                                                     fP.x = activeTet.bits[i].x + j;
                                                     fP.y = activeTet.bits[i].y - k;
                                                     flashList.Add(fP);

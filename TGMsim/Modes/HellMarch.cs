@@ -76,6 +76,8 @@ namespace TGMsim.Modes
                 curSection = 2;
                 continueMode = true;
                 roadProgress = 2;
+                outlineFlashing = true;
+                outlineFlashDelay = 2;
                 updateMusic();
             }
             else if (roadProgress == 0 && targets.Count == 0)
