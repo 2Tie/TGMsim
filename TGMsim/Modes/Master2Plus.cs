@@ -46,6 +46,7 @@ namespace TGMsim.Modes
                         creditsType = 2;
                 }
                 inCredits = true;
+                outlineStack = false;
             }
 
             //check for tetris

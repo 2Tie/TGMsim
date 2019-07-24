@@ -1,8 +1,9 @@
 Bugs to fix:
-CCS Gravity speeds are incorrect
+CCS Gravity speeds are incorrect - maybe seperate out into a new game category?
 figure out how/when delay table is looped through??
 implement Shimmer
 verify out delay for Mirror in CCS
+SEGA-based modes have a turnaround das bug, need to implement
 
 Additions for release:
 Sakura mode? needs XRAY
