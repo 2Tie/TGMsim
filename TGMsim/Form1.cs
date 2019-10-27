@@ -765,7 +765,7 @@ namespace TGMsim
             {
                 fsStream = new FileStream(repFile, FileMode.Create);
             }
-            catch (DirectoryNotFoundException e)
+            catch (DirectoryNotFoundException)
             {
                 Directory.CreateDirectory("Sav/Replays/");
                 fsStream = new FileStream(repFile, FileMode.Create);
@@ -909,7 +909,7 @@ namespace TGMsim
             {
                 fsStream = new FileStream("Sav/Hiscores/gm11.hst", FileMode.Create);
             }
-            catch (DirectoryNotFoundException e)
+            catch (DirectoryNotFoundException)
             {
                 Directory.CreateDirectory("Sav/Hiscores/");
                 fsStream = new FileStream("Sav/Hiscores/gm11.hst", FileMode.Create);
@@ -963,7 +963,7 @@ namespace TGMsim
             {
                 fsStream = new FileStream("Sav/Hiscores/gm21.hst", FileMode.Create);
             }
-            catch (DirectoryNotFoundException e)
+            catch (DirectoryNotFoundException)
             {
                 Directory.CreateDirectory("Sav/Hiscores/");
                 fsStream = new FileStream("Sav/Hiscores/gm21.hst", FileMode.Create);
@@ -1018,7 +1018,7 @@ namespace TGMsim
             {
                 fsStream = new FileStream("Sav/Hiscores/gm32.hst", FileMode.Create);
             }
-            catch (DirectoryNotFoundException e)
+            catch (DirectoryNotFoundException)
             {
                 Directory.CreateDirectory("Sav/Hiscores/");
                 fsStream = new FileStream("Sav/Hiscores/gm32.hst", FileMode.Create);
@@ -1072,7 +1072,7 @@ namespace TGMsim
             {
                 fsStream = new FileStream("Sav/Hiscores/gm42.hst", FileMode.Create);
             }
-            catch (DirectoryNotFoundException e)
+            catch (DirectoryNotFoundException)
             {
                 Directory.CreateDirectory("Sav/Hiscores/");
                 fsStream = new FileStream("Sav/Hiscores/gm42.hst", FileMode.Create);
@@ -1127,7 +1127,7 @@ namespace TGMsim
             {
                 fsStream = new FileStream("Sav/Hiscores/gm" + game.ToString() + mode.ToString() + ".hst", FileMode.Create);
             }
-            catch (DirectoryNotFoundException e)
+            catch (DirectoryNotFoundException)
             {
                 Directory.CreateDirectory("Sav/Hiscores/");
                 fsStream = new FileStream("Sav/Hiscores/gm" + game.ToString() + mode.ToString() + ".hst", FileMode.Create);
@@ -1192,11 +1192,12 @@ namespace TGMsim
                 prefs.flashing = (temp & 0x02) == 2 ? true : false;
                 prf.Close();
             }
-            catch (DirectoryNotFoundException e)
+            catch (DirectoryNotFoundException)
             {
                 createFolder("Sav/");
+                changeMenu(10);
             }
-            catch (FileNotFoundException e)
+            catch (FileNotFoundException)
             {
                 changeMenu(10);
             }

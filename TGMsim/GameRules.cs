@@ -320,6 +320,10 @@ namespace TGMsim
                 case Mode.ModeType.CCS:
                     mod = new Modes.CCS(vari);
                     break;
+                case Mode.ModeType.PRACTICE:
+                    setup(Games.TGM1, Mode.ModeType.MASTER, 0);
+                    mod = new Modes.Master1Practice(vari);
+                    break;
                 default:
                     throw new Exception("unknown mode");
                     break;

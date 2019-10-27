@@ -108,6 +108,7 @@
     <Compile Include="Modes\Garbo.cs" />
     <Compile Include="Modes\HellMarch.cs" />
     <Compile Include="Modes\IcyShirase.cs" />
+    <Compile Include="Modes\Master1Practice.cs" />
     <Compile Include="Modes\Master2.cs" />
     <Compile Include="Modes\Master1.cs" />
     <Compile Include="Modes\Master2Plus.cs" />

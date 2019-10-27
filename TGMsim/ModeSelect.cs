@@ -98,6 +98,7 @@ namespace TGMsim
             tmp.Add(new ModeSelObj(new List<string> { "20G Practice" }, Mode.ModeType.TRAINING, new List<bool> { true }));
             tmp.Add(new ModeSelObj(new List<string> { "Icy Shirase" }, Mode.ModeType.ROUNDS, new List<bool> { true }));
             tmp.Add(new ModeSelObj(new List<string> { "Big Bravo Mania" }, Mode.ModeType.KONOHA, new List<bool> { true }));
+            tmp.Add(new ModeSelObj(new List<string> { "TGM Practice 0", "TGM Practice 100", "TGM Practice 200", "TGM Practice 1G", "TGM Practice 2G", "TGM Practice 5G", "TGM 20G" }, Mode.ModeType.PRACTICE, new List<bool> { true, true, true, true, true, true, true, }));
             modes.Add(tmp);
 
             for (int i = 0; i < modes[g].Count; i++)
