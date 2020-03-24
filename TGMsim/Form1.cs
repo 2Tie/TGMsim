@@ -1,17 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Input;
 using System.IO;
 using System.Drawing.Text;
-using System.Diagnostics;
-using System.Runtime.InteropServices;
 using System.Globalization;
 
 namespace TGMsim
@@ -23,12 +17,14 @@ namespace TGMsim
         double FPS = 60.00; //59.84 for TGM1, 61.68 for TGM2, 60.00 for TGM3
         long startTime;
         long interval;
+        long freetime = 0;
+        bool drawdebug = false;
 
         Controller pad1 = new Controller();
         GameRules rules = new GameRules();
 
         Image imgBuffer;
-        Graphics graphics, drawBuffer;
+        Graphics drawBuffer;
 
         Profile player;
         Preferences prefs;
@@ -46,6 +42,7 @@ namespace TGMsim
         GameSelect gSel;
         ModeSelect mSel;
         CheatMenu cMen;
+        CustomMenu customMenu;
 
         List<GameResult> hiscoreTable = new List<GameResult>();
         bool saved;
@@ -88,7 +85,6 @@ namespace TGMsim
 
             readPrefs();
 
-            graphics = this.CreateGraphics();
             drawBuffer = Graphics.FromImage(imgBuffer);
 
 
@@ -119,6 +115,7 @@ namespace TGMsim
                 if (cycle == 4) cycle = 1;
 
                 Application.DoEvents();
+                freetime = timer.elapsedTime - startTime;
                 while (timer.elapsedTime - startTime < interval);
             }
         }
@@ -173,6 +170,11 @@ namespace TGMsim
                     //Audio.playMusic("Hiscores");
                     break;
 
+                case 7: //custom
+                    menuState = 7;
+                    customMenu = new CustomMenu();
+                    break;
+
                 case 8:
                     menuState = 8;
                     readPrefs();
@@ -192,6 +194,10 @@ namespace TGMsim
         {
             if (player.name != "TAS" || menuState != 4)//limit this so it only logs relevant inputs while TASing
                 pad1.poll(Focused);
+
+            //check for debug toggle
+            if (pad1.debug)
+                drawdebug = true;
 
             //deal with game logic
             switch (menuState)
@@ -230,8 +236,7 @@ namespace TGMsim
                             }
                         }
                     }
-                    else
-                        if (pad1.inputRot2 == 1)
+                    else if (pad1.inputRot2 == 1)
                     {
                         if (gSel.prompt)
                             gSel.prompt = false;
@@ -306,7 +311,7 @@ namespace TGMsim
                     if (field1.gameRunning == false)
                     {
                         //test and save a hiscore ONCE
-                        if (saved == false && field1.isPlayback == false)
+                        if (saved == false && field1.isPlayback == false && field1.custom == false)
                         {
                             field1.results.username = player.name;
                             if (field1.ruleset.gameRules == GameRules.Games.TAP)
@@ -356,7 +361,12 @@ namespace TGMsim
                         if (field1.isPlayback)
                             loadReplay();
                         else
-                            setupGame();
+                        {
+                            if (field1.custom)
+                                setupCustomGame();
+                            else
+                                setupGame();
+                        }
                     }
                     if (field1.exit == true)
                         changeMenu(2);
@@ -371,8 +381,12 @@ namespace TGMsim
                         changeMenu(3);
                     break;*/
                 case 7://custom game
-                    if (pad1.inputPressedRot2)
+                    //custom menu logic here
+                    customMenu.logic(pad1);
+                    if (pad1.inputRot2 == 1)
                         changeMenu(2);
+                    else if (pad1.inputStart == 1)
+                        setupCustomGame();
                     break;
                 case 8://settings
                     if (pad1.inputRot2 == 1 && prefs.menuState == 0)
@@ -513,6 +527,10 @@ namespace TGMsim
                 case 4:
                     field1.draw(drawBuffer);
                     break;
+                case 7:
+                    customMenu.render(drawBuffer);
+                    drawBuffer.DrawString("custom game", DefaultFont, new SolidBrush(Color.White), 5, 5);
+                    break;
                 case 8:
                     drawBuffer.DrawString("preferences", DefaultFont, new SolidBrush(Color.White), 5, 5);
                     prefs.render(drawBuffer);
@@ -559,6 +577,8 @@ namespace TGMsim
             if (menuState > 1)
                 drawBuffer.DrawString(player.name, f_Maestro, new SolidBrush(Color.White), 765, 5);
 
+            if (drawdebug)
+                drawBuffer.DrawString(freetime.ToString(), f_Maestro, new SolidBrush(Color.White), 765, 20);
 #if DEBUG
             SolidBrush debugBrush = new SolidBrush(Color.White);
             //denote debug
@@ -596,6 +616,18 @@ namespace TGMsim
                 return avg;
             return -1;
             
+        }
+
+        private void setupCustomGame()
+        {
+            Audio.stopMusic();
+            rules = new GameRules();
+            rules.setup((GameRules.Games)0, 0, 0);
+            pad1.southpaw = prefs.southpaw;
+            FPS = rules.FPS;
+            field1 = new Field(pad1, rules, -1);
+            field1.disableGoldFlash = !prefs.flashing;
+            field1.custom = true;
         }
 
         private void setupGame()

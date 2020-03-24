@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TGMsim.Modes
 {
@@ -88,8 +85,8 @@ namespace TGMsim.Modes
 
         public override void draw(Graphics drawBuffer, Font f, SolidBrush b, bool replay)
         {
-            drawBuffer.DrawString(timeCounter.ToString(), f, b, 20, 300);
-            drawBuffer.DrawString(levelUpTimes[level > 15 ? 15 : level].ToString(), f, b, 20, 312);
+            //drawBuffer.DrawString(timeCounter.ToString(), f, b, 20, 300);
+            //drawBuffer.DrawString(levelUpTimes[level > 15 ? 15 : level].ToString(), f, b, 20, 312);
         }
     }
 }

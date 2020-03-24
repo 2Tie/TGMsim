@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace TGMsim
 {
@@ -24,18 +20,18 @@ namespace TGMsim
             history.Insert(0, id);
         }
 
-        public int read()
+        public int read() //calls the rand and saves seed
         {
             seed = rand(seed);
             return (seed >> 10) & 0x7FFF;
         }
 
-        public virtual int rand(int s)
+        public virtual int rand(int s) //takes a number and returns a new one
         {
             return (int)(((s * 0x41C64E6D) + 12345) & 0xFFFFFFFF);
         }
 
-        public virtual int pull()
+        public virtual int pull() //grabs next tetromino ID
         {
             return 6;
         }

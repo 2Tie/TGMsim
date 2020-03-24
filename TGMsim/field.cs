@@ -3,12 +3,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Media;
-using System.Text;
-using System.Threading.Tasks;
-using NAudio;
-using System.Windows.Forms;
 using System.Drawing.Text;
+using TGMsim.Rotations;
 
 namespace TGMsim
 {
@@ -93,6 +89,7 @@ namespace TGMsim
         public bool toriless = false;
         public bool hideNext = false;
         public bool heavyStackShade = false;
+        public bool custom = false;
 
         public List<Mode.Gimmick> activeGim = new List<Mode.Gimmick>();
         public int gimIndex = 0;
@@ -192,6 +189,7 @@ namespace TGMsim
             if (ruleset.rotation == 0) RSYS = new R_ARS1();
             if (ruleset.rotation == 1) RSYS = new R_ARS3();
             if (ruleset.rotation == 2) RSYS = new R_SEGA();
+            else if (ruleset.rotation == 3) RSYS = new R_SEMIPRO();
 
 
             if (startSeed != -1)
@@ -817,7 +815,7 @@ namespace TGMsim
                 if(MOD.hasSecretGrade && results.secretGrade > MOD.minSecret)
                     drawBuffer.DrawString("Secret Grade: " + MOD.secretGrades[results.secretGrade-1], SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 450);
 
-                if (!isPlayback)
+                if (!isPlayback && !custom)
                 {
                     if (!recorded)
                     {
@@ -1214,12 +1212,10 @@ namespace TGMsim
                         }
                         
                         int rot = (pad.inputRot1 | pad.inputRot3) - pad.inputRot2;
-                        if (rot != 0)
-                        {
-                            //if (activeTet.kicked != 0)
-                                //activeTet.groundTimer = 1;
-                            rotatePiece(activeTet, rot, false);
-                        }
+
+                        if (MOD.modeID != Mode.ModeType.SHIMIZU)
+                            if (rot != 0)
+                                rotatePiece(activeTet, rot, false);
 
                         if (!justSpawned)
                         {
@@ -1261,6 +1257,10 @@ namespace TGMsim
                                 }
                             }
                         }
+
+                        if (MOD.modeID == Mode.ModeType.SHIMIZU) //this goes here. sorry, synchros
+                            if (rot != 0)
+                                rotatePiece(activeTet, rot, false);
 
                         //calc gravity LAST so I-jumps are doable?
 

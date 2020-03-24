@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TGMsim
 {
@@ -48,6 +44,7 @@ namespace TGMsim
             tmp.Add(new ModeSelObj(new List<string> { "Tetris" }, Mode.ModeType.SEGA, new List<bool> { true }));
             tmp.Add(new ModeSelObj(new List<string> { "Bloxeed" }, Mode.ModeType.BLOX, new List<bool> { true }));
             tmp.Add(new ModeSelObj(new List<string> { "Flash Point" }, Mode.ModeType.FLASH, new List<bool> { true }));
+            tmp.Add(new ModeSelObj(new List<string> { "SEMIPRO 20G" }, Mode.ModeType.SHIMIZU, new List<bool> { true }));
             modes.Add(tmp);
             tmp = new List<ModeSelObj>();//tgm1
             tmp.Add(new ModeSelObj(new List<string> { "Master" }, Mode.ModeType.MASTER, new List<bool> { true }));
@@ -92,7 +89,7 @@ namespace TGMsim
             tmp.Add(new ModeSelObj(new List<string> { "Hell March" }, Mode.ModeType.MARCH, new List<bool> { true }));
             modes.Add(tmp);
             tmp = new List<ModeSelObj>(); //bonus
-            tmp.Add(new ModeSelObj(new List<string> { "Custom" }, Mode.ModeType.SEGA, new List<bool> { false }));
+            tmp.Add(new ModeSelObj(new List<string> { "Custom" }, Mode.ModeType.SEGA, new List<bool> { true }));
             tmp.Add(new ModeSelObj(new List<string> { "Miner", "Zen" }, Mode.ModeType.MINER, new List<bool> { true, true }));
             tmp.Add(new ModeSelObj(new List<string> { "Garbage Clear" }, Mode.ModeType.GARBAGE, new List<bool> { true }));
             tmp.Add(new ModeSelObj(new List<string> { "20G Practice" }, Mode.ModeType.TRAINING, new List<bool> { true }));

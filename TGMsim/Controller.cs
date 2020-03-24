@@ -1,20 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.Windows.Input;
 
 namespace TGMsim
 {
     class Controller //4-way stick, horizontal input overrides vertical input. Three upper buttons, a lower button, and a start button.
     {
-        public Key keyRot1, keyRot2, keyRot3, keyHold, keyUp, keyDown, keyLeft, keyRight, keyStart;
+        public Key keyRot1, keyRot2, keyRot3, keyHold, keyUp, keyDown, keyLeft, keyRight, keyStart, keyDebug;
 
         public int inputH, inputV, inputStart, inputRot1, inputRot2, inputRot3, inputHold;
-        public bool inputPressedRot1 = false, inputPressedRot2 = false, inputPressedRot3 = false, inputPressedHold = false, superStart = false;
+        public bool inputPressedRot1 = false, inputPressedRot2 = false, inputPressedRot3 = false, inputPressedHold = false, superStart = false, debug = false;
         List<short> inputHistory = new List<short> {0,0,0,0,0,0}; //up, down, left, right, rot1, rot2, rot3, hold, start, 7 bits for frame length (unused for lag, used for replays).
         public int lag = 0;
         public bool southpaw = false;
@@ -34,6 +28,7 @@ namespace TGMsim
             keyLeft = Key.A;
             keyRight = Key.D;
             keyStart = Key.Enter;
+            keyDebug = Key.F9;
         }
 
         public void poll(bool focused) 
@@ -48,6 +43,9 @@ namespace TGMsim
                 inputHistory[i] = inputHistory[i + 1];
             }
             inputHistory[5] = 0;
+
+            if (Keyboard.IsKeyDown(keyDebug))
+                debug = true;
 
             if (focused)
             {

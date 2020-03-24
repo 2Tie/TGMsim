@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TGMsim
 {
@@ -18,7 +14,7 @@ namespace TGMsim
 
         public int rotation = 0; //TGM, TGM3, SEGA, SRS
         public int generator = 0; //dummy, TGM1, TGM2, TGM3, ACE, 
-        public enum Rots { ARS1 = 0, ARS3, SEGA};
+        public enum Rots { ARS1 = 0, ARS3, SEGA, SEMIPRO};
         public enum Gens { dummy = 0, TGM1, TGM2, TGM3, ACE, SEGA, EZ, CCSEZ, CCS};
         public enum Games { SEGA = 0, TGM1, TGM2, TAP, TGM3, ACE, GMX, EXTRA, GUIDELINE}
         
@@ -323,6 +319,14 @@ namespace TGMsim
                 case Mode.ModeType.PRACTICE:
                     setup(Games.TGM1, Mode.ModeType.MASTER, 0);
                     mod = new Modes.Master1Practice(vari);
+                    break;
+                case Mode.ModeType.CUSTOM:
+                    throw new Exception("don't call this, nerd");
+                    break;
+                case Mode.ModeType.SHIMIZU:
+                    setup(Games.SEGA, Mode.ModeType.SEGA, 0);
+                    mod.g20 = true;
+                    rotation = (int)Rots.SEMIPRO;
                     break;
                 default:
                     throw new Exception("unknown mode");

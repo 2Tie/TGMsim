@@ -76,6 +76,7 @@
     <Compile Include="BlockBit.cs" />
     <Compile Include="CheatMenu.cs" />
     <Compile Include="Controller.cs" />
+    <Compile Include="CustomMenu.cs" />
     <Compile Include="Field.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
@@ -128,6 +129,7 @@
     <Compile Include="Rotations\R_ARS3.cs" />
     <Compile Include="Rotations\R_ARS1.cs" />
     <Compile Include="Rotations\R_SEGA.cs" />
+    <Compile Include="Rotations\R_SEMIPRO.cs" />
     <Compile Include="Tetromino.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>

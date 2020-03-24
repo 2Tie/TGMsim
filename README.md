@@ -20,8 +20,11 @@ SEGA Tetris
 SEGA Bloxeed (missing powerups)  
 SEGA Flash Point  
 
+SEMIPRO-68k 20 Cell  
+
 New Dynamo Mode (heavily WIP)  
 New Hell March Mode  
+Custom Mode (heavily WIP)
 
 ## Future game modes:
 
@@ -29,7 +32,6 @@ TAP Normal
 Tetris + Cardcaptor Sakura, Easy & Normal  
 TGM3 Sakura  
 ACE modes  
-Custom Mode  
 
 ## Controls
 
