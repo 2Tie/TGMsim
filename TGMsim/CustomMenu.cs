@@ -115,21 +115,21 @@ namespace TGMsim
             }
         }
 
-        public void render(Graphics drawBuffer)
+        public void render()
         {
-            drawBuffer.DrawString("invisible active piece: " + (invPiece?"true":"false"), SystemFonts.DefaultFont, new SolidBrush(Color.White), 150, 250);
-            drawBuffer.DrawString("invisible preview/hold: " + (invPreview?"true":"false"), SystemFonts.DefaultFont, new SolidBrush(Color.White), 150, 262);
-            drawBuffer.DrawString("invisible stack: " + (invStack?"true":"false"), SystemFonts.DefaultFont, new SolidBrush(Color.White), 150, 274);
-            drawBuffer.DrawString("big: " + (big ? "true" : "false"), SystemFonts.DefaultFont, new SolidBrush(Color.White), 150, 286);
-            drawBuffer.DrawString("grav: " + gravnames[grav], SystemFonts.DefaultFont, new SolidBrush(Color.White), 150, 298);
-            drawBuffer.DrawString("garbage: " + garbnames[garbage], SystemFonts.DefaultFont, new SolidBrush(Color.White), 150, 310);
-            drawBuffer.DrawString("game base: " + gamenames[game], SystemFonts.DefaultFont, new SolidBrush(Color.White), 150, 322);
-            drawBuffer.DrawString("rotation system: " + rotnames[rotation], SystemFonts.DefaultFont, new SolidBrush(Color.White), 150, 334);
-            drawBuffer.DrawString("generator: " + gennames[generator], SystemFonts.DefaultFont, new SolidBrush(Color.White), 150, 346);
+            Draw.buffer.DrawString("invisible active piece: " + (invPiece?"true":"false"), SystemFonts.DefaultFont, Draw.wb, 150, 250);
+            Draw.buffer.DrawString("invisible preview/hold: " + (invPreview?"true":"false"), SystemFonts.DefaultFont, Draw.wb, 150, 262);
+            Draw.buffer.DrawString("invisible stack: " + (invStack?"true":"false"), SystemFonts.DefaultFont, Draw.wb, 150, 274);
+            Draw.buffer.DrawString("big: " + (big ? "true" : "false"), SystemFonts.DefaultFont, Draw.wb, 150, 286);
+            Draw.buffer.DrawString("grav: " + gravnames[grav], SystemFonts.DefaultFont, Draw.wb, 150, 298);
+            Draw.buffer.DrawString("garbage: " + garbnames[garbage], SystemFonts.DefaultFont, Draw.wb, 150, 310);
+            Draw.buffer.DrawString("game base: " + gamenames[game], SystemFonts.DefaultFont, Draw.wb, 150, 322);
+            Draw.buffer.DrawString("rotation system: " + rotnames[rotation], SystemFonts.DefaultFont, Draw.wb, 150, 334);
+            Draw.buffer.DrawString("generator: " + gennames[generator], SystemFonts.DefaultFont, Draw.wb, 150, 346);
 
-            drawBuffer.DrawString("→", SystemFonts.DefaultFont, new SolidBrush(Color.White), 135, 250 + 12 * pos);
+            Draw.buffer.DrawString("→", SystemFonts.DefaultFont, Draw.wb, 135, 250 + 12 * pos);
 
-            drawBuffer.DrawString("press start to play", SystemFonts.DefaultFont, new SolidBrush(Color.White), 150, 400);
+            Draw.buffer.DrawString("press start to play", SystemFonts.DefaultFont, Draw.wb, 150, 400);
         }
     }
 }

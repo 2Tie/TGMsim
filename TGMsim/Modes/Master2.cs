@@ -461,16 +461,16 @@ namespace TGMsim.Modes
             if (curSection == 8 && level % 100 > 84) Audio.stopMusic();
         }
 
-        public override void draw(Graphics drawBuffer, Font f, SolidBrush b, bool replay)
+        public override void draw(bool replay)
         {
             if (replay)
             {
-                drawBuffer.DrawString(grade.ToString(), f, b, 20, 300);
-                drawBuffer.DrawString(intGrade.ToString(), f, b, 20, 312);
-                drawBuffer.DrawString(gradePoints.ToString(), f, b, 20, 324);
+                Draw.buffer.DrawString(grade.ToString(), Draw.f_Maestro, Draw.tb, 20, 300);
+                Draw.buffer.DrawString(intGrade.ToString(), Draw.f_Maestro, Draw.tb, 20, 312);
+                Draw.buffer.DrawString(gradePoints.ToString(), Draw.f_Maestro, Draw.tb, 20, 324);
 
                 for (int i = 0; i < GMflags.Count; i++)
-                    drawBuffer.DrawString(GMflags[i] ? "+" : "-", f, b, 20 + 10 * i, 336);
+                    Draw.buffer.DrawString(GMflags[i] ? "+" : "-", Draw.f_Maestro, Draw.tb, 20 + 10 * i, 336);
             }
         }
     }

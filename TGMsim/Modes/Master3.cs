@@ -474,17 +474,16 @@ namespace TGMsim.Modes
             if (curSection + cools > 6 && level % 100 > 84 && Audio.song == "Level 2") Audio.stopMusic();
         }
 
-        public override void draw(Graphics drawBuffer, Font f, SolidBrush b, bool replay)
+        public override void draw(bool replay)
         {
-
-            Brush tb = new SolidBrush(Color.White);
             if (replay)
             {
-                drawBuffer.DrawString(grade.ToString(), f, tb, 20, 300);
-                drawBuffer.DrawString(intGrade.ToString(), f, tb, 20, 312);
-                drawBuffer.DrawString(gradePoints.ToString(), f, tb, 20, 324);
+                Draw.buffer.DrawString(grade.ToString(), Draw.f_Maestro, Draw.tb, 20, 300);
+                Draw.buffer.DrawString(intGrade.ToString(), Draw.f_Maestro, Draw.tb, 20, 312);
+                Draw.buffer.DrawString(gradePoints.ToString(), Draw.f_Maestro, Draw.tb, 20, 324);
                 for (int i = 0; i < coolCounter.Count; i++)
-                    drawBuffer.DrawString(coolCounter[i].ToString(), f, tb, 20 + 10 * i, 336);
+                    Draw.buffer.DrawString(coolCounter[i].ToString(), Draw.f_Maestro, Draw.tb, 20 + 10 * i, 336);
+                Draw.buffer.DrawString(secTimer.count.ToString(), Draw.f_Maestro, Draw.tb, 20, 400);
             }
 
             string cTex = "REGRET!";
@@ -494,9 +493,8 @@ namespace TGMsim.Modes
                 {
                     cTex = "COOL!";
                 }
-                drawBuffer.DrawString(cTex, SystemFonts.DefaultFont, tb, 200 + 300, 350);
+                Draw.buffer.DrawString(cTex, SystemFonts.DefaultFont, Draw.tb, 200 + 300, 350);
             }
-            drawBuffer.DrawString(secTimer.count.ToString(), f, tb, 20, 400);
         }
     }
 }

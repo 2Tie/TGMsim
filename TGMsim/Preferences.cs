@@ -118,35 +118,35 @@ namespace TGMsim
             }
         }
 
-        public void render(Graphics drawBuffer)
+        public void render()
         {
             SolidBrush tb = new SolidBrush(Color.White);
             if (menuState == 0)
             {
-                drawBuffer.DrawString("Music Volume: " + Audio.musVol*10 + "%", SystemFonts.DefaultFont, tb, 100, 100);
-                drawBuffer.DrawString("SFX Volume: " + Audio.sfxVol*10 + "%", SystemFonts.DefaultFont, tb, 100, 120);
-                drawBuffer.DrawString("Replicate Emulation Input Lag: " + delay, SystemFonts.DefaultFont, tb, 100, 140);
-                drawBuffer.DrawString("20G Gold Flashing: " + flashing, SystemFonts.DefaultFont, tb, 100, 160);
-                drawBuffer.DrawString("Rebind keys", SystemFonts.DefaultFont, tb, 100, 180);
+                Draw.buffer.DrawString("Music Volume: " + Audio.musVol*10 + "%", SystemFonts.DefaultFont, tb, 100, 100);
+                Draw.buffer.DrawString("SFX Volume: " + Audio.sfxVol*10 + "%", SystemFonts.DefaultFont, tb, 100, 120);
+                Draw.buffer.DrawString("Replicate Emulation Input Lag: " + delay, SystemFonts.DefaultFont, tb, 100, 140);
+                Draw.buffer.DrawString("20G Gold Flashing: " + flashing, SystemFonts.DefaultFont, tb, 100, 160);
+                Draw.buffer.DrawString("Rebind keys", SystemFonts.DefaultFont, tb, 100, 180);
             }
             if (menuState == 1)
             {
-                drawBuffer.DrawString("UP: " + nPad.keyUp.ToString(), SystemFonts.DefaultFont, tb, 100, 100);
-                drawBuffer.DrawString("DOWN: " + nPad.keyDown.ToString(), SystemFonts.DefaultFont, tb, 100, 120);
-                drawBuffer.DrawString("LEFT: " + nPad.keyLeft.ToString(), SystemFonts.DefaultFont, tb, 100, 140);
-                drawBuffer.DrawString("RIGHT: " + nPad.keyRight.ToString(), SystemFonts.DefaultFont, tb, 100, 160);
-                drawBuffer.DrawString("ROTATE CCW: " + nPad.keyRot1.ToString(), SystemFonts.DefaultFont, tb, 100, 180);
-                drawBuffer.DrawString("ROTATE CW: " + nPad.keyRot2.ToString(), SystemFonts.DefaultFont, tb, 100, 200);
-                drawBuffer.DrawString("ROTATE CCW 2/SPEED: " + nPad.keyRot3.ToString(), SystemFonts.DefaultFont, tb, 100, 220);
-                drawBuffer.DrawString("HOLD: " + nPad.keyHold.ToString(), SystemFonts.DefaultFont, tb, 100, 240);
-                drawBuffer.DrawString("START: " + nPad.keyStart.ToString(), SystemFonts.DefaultFont, tb, 100, 260);
-                drawBuffer.DrawString("Back", SystemFonts.DefaultFont, tb, 100, 280);
+                Draw.buffer.DrawString("UP: " + nPad.keyUp.ToString(), SystemFonts.DefaultFont, tb, 100, 100);
+                Draw.buffer.DrawString("DOWN: " + nPad.keyDown.ToString(), SystemFonts.DefaultFont, tb, 100, 120);
+                Draw.buffer.DrawString("LEFT: " + nPad.keyLeft.ToString(), SystemFonts.DefaultFont, tb, 100, 140);
+                Draw.buffer.DrawString("RIGHT: " + nPad.keyRight.ToString(), SystemFonts.DefaultFont, tb, 100, 160);
+                Draw.buffer.DrawString("ROTATE CCW: " + nPad.keyRot1.ToString(), SystemFonts.DefaultFont, tb, 100, 180);
+                Draw.buffer.DrawString("ROTATE CW: " + nPad.keyRot2.ToString(), SystemFonts.DefaultFont, tb, 100, 200);
+                Draw.buffer.DrawString("ROTATE CCW 2/SPEED: " + nPad.keyRot3.ToString(), SystemFonts.DefaultFont, tb, 100, 220);
+                Draw.buffer.DrawString("HOLD: " + nPad.keyHold.ToString(), SystemFonts.DefaultFont, tb, 100, 240);
+                Draw.buffer.DrawString("START: " + nPad.keyStart.ToString(), SystemFonts.DefaultFont, tb, 100, 260);
+                Draw.buffer.DrawString("Back", SystemFonts.DefaultFont, tb, 100, 280);
             }
 
-            drawBuffer.DrawString(">", SystemFonts.DefaultFont, tb, 92, 100 + (20*selection));
+            Draw.buffer.DrawString(">", SystemFonts.DefaultFont, tb, 92, 100 + (20*selection));
             
             if (inputting)
-                drawBuffer.DrawString("INPUT YOUR NEW KEY", SystemFonts.DefaultFont, tb, 200, 300);
+                Draw.buffer.DrawString("INPUT YOUR NEW KEY", SystemFonts.DefaultFont, tb, 200, 300);
                 
         }
 

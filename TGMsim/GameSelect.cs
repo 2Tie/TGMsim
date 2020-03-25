@@ -205,37 +205,37 @@ namespace TGMsim
 
 
         }
-        public void render(Graphics drawBuffer, Font f)
+        public void render()
         {
-            drawBuffer.DrawImageUnscaled(Image.FromFile("Res/GFX/menus/bg0.png"), 0, 0);
+            Draw.buffer.DrawImageUnscaled(Image.FromFile("Res/GFX/menus/bg0.png"), 0, 0);
             //placeholder until i get arts or something
-            drawBuffer.DrawString("SEGA", f, tb, 80, 100);
-            drawBuffer.DrawString("TGM", f, tb, 80, 200);
-            drawBuffer.DrawString("GM2", f, tb, 290, 100);
-            drawBuffer.DrawString("TAP", f, tb, 290, 200);
-            drawBuffer.DrawString("GM3", f, tb, 480, 200);
-            drawBuffer.DrawString("ACE", f, tb, 480, 300);
-            drawBuffer.DrawString("GMX", f, tb, 680, 200);
-            drawBuffer.DrawString("BONUS", f, tb, 180, 500);
-            drawBuffer.DrawString("PREFERENCES", f, tb, 560, 500);
+            Draw.buffer.DrawString("SEGA", Draw.f_Maestro, tb, 80, 100);
+            Draw.buffer.DrawString("TGM", Draw.f_Maestro, tb, 80, 200);
+            Draw.buffer.DrawString("GM2", Draw.f_Maestro, tb, 290, 100);
+            Draw.buffer.DrawString("TAP", Draw.f_Maestro, tb, 290, 200);
+            Draw.buffer.DrawString("GM3", Draw.f_Maestro, tb, 480, 200);
+            Draw.buffer.DrawString("ACE", Draw.f_Maestro, tb, 480, 300);
+            Draw.buffer.DrawString("GMX", Draw.f_Maestro, tb, 680, 200);
+            Draw.buffer.DrawString("BONUS", Draw.f_Maestro, tb, 180, 500);
+            Draw.buffer.DrawString("PREFERENCES", Draw.f_Maestro, tb, 560, 500);
             //replay message
-            drawBuffer.DrawString("PRESS HOLD TO LOAD A REPLAY!", f, tb, 280, 2);
+            Draw.buffer.DrawString("PRESS HOLD TO LOAD A REPLAY!", Draw.f_Maestro, tb, 280, 2);
             //game description bar
-            drawBuffer.DrawString(desc[menuSelection], f, tb, 400 - (9 * desc[menuSelection].Length / 2), 580);
+            Draw.buffer.DrawString(desc[menuSelection], Draw.f_Maestro, tb, 400 - (9 * desc[menuSelection].Length / 2), 580);
 
 
             //selection box
-            drawBuffer.DrawRectangle(new Pen(tb), curBox);
+            Draw.buffer.DrawRectangle(new Pen(tb), curBox);
 
 
             if (prompt)
             {
-                drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(160, Color.Black)), 0, 0, 800, 600); //dim the BG
-                drawBuffer.DrawString("Are you sure you want to log out?", SystemFonts.DefaultFont, tb, 320, 200);
-                drawBuffer.DrawString("No...", SystemFonts.DefaultFont, tb, 300, 220);
-                drawBuffer.DrawString("Yes!", SystemFonts.DefaultFont, tb, 500, 220);
+                Draw.buffer.FillRectangle(new SolidBrush(Color.FromArgb(160, Color.Black)), 0, 0, 800, 600); //dim the BG
+                Draw.buffer.DrawString("Are you sure you want to log out?", SystemFonts.DefaultFont, tb, 320, 200);
+                Draw.buffer.DrawString("No...", SystemFonts.DefaultFont, tb, 300, 220);
+                Draw.buffer.DrawString("Yes!", SystemFonts.DefaultFont, tb, 500, 220);
 
-                drawBuffer.DrawString(">", SystemFonts.DefaultFont, tb, 290 + (200 * pSel), 220);
+                Draw.buffer.DrawString(">", SystemFonts.DefaultFont, tb, 290 + (200 * pSel), 220);
             }
         }
     }

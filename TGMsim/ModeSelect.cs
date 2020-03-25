@@ -132,14 +132,14 @@ namespace TGMsim
                 prevSel = selection;
             }
         }
-        public void render(Graphics drawBuffer)
+        public void render()
         {
             for(int i = 0; i < modes[game].Count; i++)
             {
                 ModeSelObj m = modes[game][i];
-                drawBuffer.DrawString(m.names[variant[i]], SystemFonts.DefaultFont, m.enabled[variant[i]] ? active : locked, 150, 250 + 12*i);
+                Draw.buffer.DrawString(m.names[variant[i]], SystemFonts.DefaultFont, m.enabled[variant[i]] ? active : locked, 150, 250 + 12*i);
             }
-            drawBuffer.DrawString("→", SystemFonts.DefaultFont, new SolidBrush(Color.White), 135, 250 + 12 * selection);
+            Draw.buffer.DrawString("→", SystemFonts.DefaultFont, Draw.wb, 135, 250 + 12 * selection);
         }
     }
 }

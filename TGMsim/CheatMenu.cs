@@ -35,20 +35,20 @@ namespace TGMsim
                 dInput = 0;
         }
 
-        public void render(Graphics drawBuffer)
+        public void render()
         {
             for (int i = 0; i < cheats.Count; i++)
             {
-                drawBuffer.DrawString(cheats[i].ToString(), SystemFonts.DefaultFont, new SolidBrush(Color.White), 300, 200 + (15 * i));
+                Draw.buffer.DrawString(cheats[i].ToString(), SystemFonts.DefaultFont, Draw.wb, 300, 200 + (15 * i));
             }
-            drawBuffer.DrawString("GOD MODE", SystemFonts.DefaultFont, new SolidBrush(Color.White), 220, 200);
-            drawBuffer.DrawString("20G", SystemFonts.DefaultFont, new SolidBrush(Color.White), 220, 215);
-            drawBuffer.DrawString("0G", SystemFonts.DefaultFont, new SolidBrush(Color.White), 220, 230);
-            drawBuffer.DrawString("BIG MODE", SystemFonts.DefaultFont, new SolidBrush(Color.White), 220, 245);
-            drawBuffer.DrawString("MUTE MUSIC", SystemFonts.DefaultFont, new SolidBrush(Color.White), 220, 260);
-            drawBuffer.DrawString("4W", SystemFonts.DefaultFont, new SolidBrush(Color.White), 220, 275);
-            drawBuffer.DrawString("NO TORIKAN", SystemFonts.DefaultFont, new SolidBrush(Color.White), 220, 290);
-            drawBuffer.DrawString("►", SystemFonts.DefaultFont, new SolidBrush(Color.White), 294, 200 + (15 * selection));
+            Draw.buffer.DrawString("GOD MODE", SystemFonts.DefaultFont, Draw.wb, 220, 200);
+            Draw.buffer.DrawString("20G", SystemFonts.DefaultFont, Draw.wb, 220, 215);
+            Draw.buffer.DrawString("0G", SystemFonts.DefaultFont, Draw.wb, 220, 230);
+            Draw.buffer.DrawString("BIG MODE", SystemFonts.DefaultFont, Draw.wb, 220, 245);
+            Draw.buffer.DrawString("MUTE MUSIC", SystemFonts.DefaultFont, Draw.wb, 220, 260);
+            Draw.buffer.DrawString("4W", SystemFonts.DefaultFont, Draw.wb, 220, 275);
+            Draw.buffer.DrawString("NO TORIKAN", SystemFonts.DefaultFont, Draw.wb, 220, 290);
+            Draw.buffer.DrawString("►", SystemFonts.DefaultFont, Draw.wb, 294, 200 + (15 * selection));
         }
     }
 }

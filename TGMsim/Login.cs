@@ -124,23 +124,23 @@ namespace TGMsim
             lineEnd.Y = linePos.Y;
         }
 
-        public void render(Graphics drawBuffer, Font f)
+        public void render()
         {
             if (menuSelection < 3)
-                drawBuffer.DrawLine(new Pen(new SolidBrush(Color.Blue)), linePos, lineEnd);
+                Draw.buffer.DrawLine(new Pen(new SolidBrush(Color.Blue)), linePos, lineEnd);
             else
-                drawBuffer.DrawString("PRESS START TO CONFIRM", f, new SolidBrush(Color.White), 300, 260);
+                Draw.buffer.DrawString("PRESS START TO CONFIRM", Draw.f_Maestro, Draw.wb, 300, 260);
 
             if (loginErr == 1)
-                drawBuffer.DrawString("There was an error reading the profile specified. Try again or delete the file.", SystemFonts.DefaultFont, new SolidBrush(Color.White), 150, 100);
+                Draw.buffer.DrawString("There was an error reading the profile specified. Try again or delete the file.", SystemFonts.DefaultFont, Draw.wb, 150, 100);
             if (loginErr == 2)
-                drawBuffer.DrawString("The password doesn't match. Please try again.", SystemFonts.DefaultFont, new SolidBrush(Color.White), 150, 100);
-            drawBuffer.DrawString("Profile name: ", SystemFonts.DefaultFont, new SolidBrush(Color.White), 300, 200);
-            drawBuffer.DrawString(getLetter(username[0]), f, new SolidBrush(Color.White), 399, 200);
+                Draw.buffer.DrawString("The password doesn't match. Please try again.", SystemFonts.DefaultFont, Draw.wb, 150, 100);
+            Draw.buffer.DrawString("Profile name: ", SystemFonts.DefaultFont, Draw.wb, 300, 200);
+            Draw.buffer.DrawString(getLetter(username[0]), Draw.f_Maestro, Draw.wb, 399, 200);
             if (menuSelection > 0)
-            drawBuffer.DrawString(getLetter(username[1]), f, new SolidBrush(Color.White), 409, 200);
+            Draw.buffer.DrawString(getLetter(username[1]), Draw.f_Maestro, Draw.wb, 409, 200);
             if (menuSelection > 1)
-            drawBuffer.DrawString(getLetter(username[2]), f, new SolidBrush(Color.White), 419, 200);
+            Draw.buffer.DrawString(getLetter(username[2]), Draw.f_Maestro, Draw.wb, 419, 200);
         }
 
         string getLetter(int i)

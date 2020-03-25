@@ -104,11 +104,11 @@ namespace TGMsim.Modes
             }
         }
 
-        public override void draw(Graphics drawBuffer, Font f, SolidBrush b, bool replay)
+        public override void draw(bool replay)
         {
-            drawBuffer.DrawString(boardGems.ToString(), f, b, 20, 300);
-            drawBuffer.DrawString(bonusP.ToString(), f, b, 20, 324);
-            drawBuffer.DrawString(levelUpTimes[level > 15 ? 15 : level].ToString(), f, b, 20, 312);
+            Draw.buffer.DrawString(boardGems.ToString(), Draw.f_Maestro, Draw.tb, 20, 300);
+            Draw.buffer.DrawString(bonusP.ToString(), Draw.f_Maestro, Draw.tb, 20, 324);
+            Draw.buffer.DrawString(levelUpTimes[level > 15 ? 15 : level].ToString(), Draw.f_Maestro, Draw.tb, 20, 312);
         }
     }
 }

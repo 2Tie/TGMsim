@@ -54,10 +54,10 @@ namespace TGMsim.Modes
             }
         }
 
-        public override void draw(Graphics drawBuffer, Font f_Maestro, SolidBrush b, bool replay)
+        public override void draw(bool replay)
         {
-            drawBuffer.DrawString("CLEARED LINES:", f_Maestro, b, 480, 140);
-                drawBuffer.DrawString(clearedLines.ToString(), f_Maestro, b, 480, 160);
+            Draw.buffer.DrawString("CLEARED LINES:", Draw.f_Maestro, Draw.tb, 480, 140);
+            Draw.buffer.DrawString(clearedLines.ToString(), Draw.f_Maestro, Draw.tb, 480, 160);
         }
     }
 }

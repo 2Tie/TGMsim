@@ -271,19 +271,18 @@ namespace TGMsim.Modes
             showGrade = true;
         }
 
-        public override void draw(Graphics drawBuffer, Font f, SolidBrush b, bool replay)
+        public override void draw(bool replay)
         {
-            Brush tb = new SolidBrush(Color.White);
             for (int i = 0; i < variant; i++)
             {
-                drawBuffer.DrawString("+", f, tb, 20 + 10 * i, 336);
+                Draw.buffer.DrawString("+", Draw.f_Maestro, Draw.tb, 20 + 10 * i, 336);
             }
             for (int i = 0; i < cools; i++)
             {
-                drawBuffer.DrawString("-", f, tb, 20 + 10 * i, 348);
+                Draw.buffer.DrawString("-", Draw.f_Maestro, Draw.tb, 20 + 10 * i, 348);
             }
             if (variant == 4)
-                drawBuffer.DrawString((level/(999 / (delayTable[0].Count + 1))).ToString(), f, b, 20, 324);
+                Draw.buffer.DrawString((level/(999 / (delayTable[0].Count + 1))).ToString(), Draw.f_Maestro, Draw.tb, 20, 324);
         }
 
         public override void updateMusic()

@@ -353,13 +353,11 @@ namespace TGMsim.Modes
             }
         }
 
-        public override void draw(Graphics drawBuffer, Font f, SolidBrush b, bool replay)
+        public override void draw(bool replay)
         {
-            SolidBrush tb = new SolidBrush(Color.White);
-            
             if (coolTime.count > 0)
             {
-                drawBuffer.DrawString("REGRET!", SystemFonts.DefaultFont, tb, 200 + 300, 350);
+                Draw.buffer.DrawString("REGRET!", SystemFonts.DefaultFont, Draw.tb, 200 + 300, 350);
             }
         }
 

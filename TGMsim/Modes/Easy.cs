@@ -182,10 +182,13 @@ namespace TGMsim.Modes
             graceF = 100;
         }
 
-        public override void draw(Graphics drawBuffer, Font f, SolidBrush textBrush, bool replay)
+        public override void draw(bool replay)
         {
-            drawBuffer.DrawString(combo.ToString(), f, textBrush, 10, 60);
-            drawBuffer.DrawString(hanabi.ToString(), f, textBrush, 10, 68);
+            if (replay)
+            {
+                Draw.buffer.DrawString(combo.ToString(), Draw.f_Maestro, Draw.tb, 10, 60);
+                Draw.buffer.DrawString(hanabi.ToString(), Draw.f_Maestro, Draw.tb, 10, 68);
+            }
         }
     }
 }

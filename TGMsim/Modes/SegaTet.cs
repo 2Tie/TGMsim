@@ -83,10 +83,13 @@ namespace TGMsim.Modes
             }
         }
 
-        public override void draw(Graphics drawBuffer, Font f, SolidBrush b, bool replay)
+        public override void draw(bool replay)
         {
-            //drawBuffer.DrawString(timeCounter.ToString(), f, b, 20, 300);
-            //drawBuffer.DrawString(levelUpTimes[level > 15 ? 15 : level].ToString(), f, b, 20, 312);
+            if (replay)
+            {
+                Draw.buffer.DrawString(timeCounter.ToString(), Draw.f_Maestro, Draw.wb, 20, 300);
+                Draw.buffer.DrawString(levelUpTimes[level > 15 ? 15 : level].ToString(), Draw.f_Maestro, Draw.wb, 20, 312);
+            }
         }
     }
 }

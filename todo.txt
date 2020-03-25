@@ -4,6 +4,7 @@ figure out how/when delay table is looped through??
 implement Shimmer
 verify out delay for Mirror in CCS
 SEGA-based modes have a turnaround das bug, need to implement
+check the JL kick exception exception in CCS
 
 Additions for release:
 Sakura mode? needs XRAY

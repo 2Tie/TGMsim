@@ -97,6 +97,7 @@
     <Compile Include="Generators\G_ARSSEasy.cs" />
     <Compile Include="Generators\G_ARSSNormal.cs" />
     <Compile Include="Generators\G_SEGA.cs" />
+    <Compile Include="Draw.cs" />
     <Compile Include="Login.cs" />
     <Compile Include="LoopStream.cs" />
     <Compile Include="Mode.cs" />

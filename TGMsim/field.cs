@@ -109,15 +109,15 @@ namespace TGMsim
         Image medalImg;
         Image gradeImg;
         Color frameColour;
-        SolidBrush textBrush = new SolidBrush(Color.White);
+        //SolidBrush textBrush = new SolidBrush(Color.White);
         bool goldFlash = false;
         public bool disableGoldFlash = false;
         int bgAlpha = 180;//120
 
-        PrivateFontCollection fonts = new PrivateFontCollection();
-        Font f_Maestro;
+        //PrivateFontCollection fonts = new PrivateFontCollection();
+        //Font f_Maestro;
 
-        Pen gridPen = new Pen(new SolidBrush(Color.White));
+        //Pen gridPen = new Pen(new SolidBrush(Color.White));
 
         Controller pad;
         int inputDelayH = 0, inputDelayDirH = 0;
@@ -178,9 +178,9 @@ namespace TGMsim
             medalImg = Image.FromFile("Res/GFX/medals.png");
             gradeImg = Image.FromFile("Res/GFX/grades.png");
 
-            fonts.AddFontFile(@"Res\Maestro2.ttf");
-            FontFamily fontFam = fonts.Families[0];
-            f_Maestro = new System.Drawing.Font(fontFam, 16, GraphicsUnit.Pixel);
+            //fonts.AddFontFile(@"Res\Maestro2.ttf");
+            //FontFamily fontFam = fonts.Families[0];
+            //f_Maestro = new System.Drawing.Font(fontFam, 16, GraphicsUnit.Pixel);
 
             pad = ctlr;
             ruleset = rules;
@@ -416,28 +416,28 @@ namespace TGMsim
             }
         }
 
-        public void draw(Graphics drawBuffer)
+        public void draw()
         {
             //draw the background
             int bg = 9;
             if (curSection < 9) bg = curSection;
             if (bgtimer > 0 && bgtimer < 10) bg -= 1;
-            if (bgs[bg] != null) drawBuffer.DrawImage(bgs[bg], 0, 0, 800, 600);
-            if (bgtimer > 0) drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(255 - (25*Math.Abs(bgtimer-10)), Color.Black)), 0, 0, 800, 600);
+            if (bgs[bg] != null) Draw.buffer.DrawImage(bgs[bg], 0, 0, 800, 600);
+            if (bgtimer > 0) Draw.buffer.FillRectangle(new SolidBrush(Color.FromArgb(255 - (25*Math.Abs(bgtimer-10)), Color.Black)), 0, 0, 800, 600);
 
             //draw the field bg
-            drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(bgAlpha, Color.Black)), x, y + 25, width, height);
+            Draw.buffer.FillRectangle(new SolidBrush(Color.FromArgb(bgAlpha, Color.Black)), x, y + 25, width, height);
 
             //TODO: credits text?
 
             //draw the info bg
-            drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(bgAlpha, Color.Black)), x + 275, y + 20, 160, height + 10);
+            Draw.buffer.FillRectangle(new SolidBrush(Color.FromArgb(bgAlpha, Color.Black)), x + 275, y + 20, 160, height + 10);
 
             //draw field targets
             for (int i = 0; i < MOD.targets.Count; i++)
             {
-                drawBuffer.FillRectangle(new SolidBrush(Color.Red), x, y + height + 4 - (MOD.targets[i] * 25), 250, 17);
-                drawBuffer.FillRectangle(new SolidBrush(Color.DarkRed), x, y + height + 5 - (MOD.targets[i] * 25), 250, 15);
+                Draw.buffer.FillRectangle(new SolidBrush(Color.Red), x, y + height + 4 - (MOD.targets[i] * 25), 250, 17);
+                Draw.buffer.FillRectangle(new SolidBrush(Color.DarkRed), x, y + height + 5 - (MOD.targets[i] * 25), 250, 15);
             }
 
             //draw the pieces
@@ -455,25 +455,25 @@ namespace TGMsim
                         }
                         if (flashing > -1 + MOD.outlineFlashDelay) //raise the cieling on raw flash
                         {
-                            drawBuffer.DrawImageUnscaled(tetImgs[9], x + 25 * i, y + height - (j * 25), 25, 25);
+                            Draw.buffer.DrawImageUnscaled(tetImgs[9], x + 25 * i, y + height - (j * 25), 25, 25);
                         }
                         else
                         {
                             if (block == 8 || block == 0) //empty or invis, don't draw
                                 ;
                             else if (block < 11)//garbage or bone
-                                drawBuffer.DrawImageUnscaled(tetImgs[block], x + 25 * i, y + height - (j * 25), 25, 25);
+                                Draw.buffer.DrawImageUnscaled(tetImgs[block], x + 25 * i, y + height - (j * 25), 25, 25);
                             else if (block == 11)//colourless gem
-                                drawBuffer.DrawImageUnscaled(tetGems[7], x + 25 * i, y + height - (j * 25), 25, 25);
+                                Draw.buffer.DrawImageUnscaled(tetGems[7], x + 25 * i, y + height - (j * 25), 25, 25);
                             else if (block < 19) //gem block
                             {
                                 //drawBuffer.FillEllipse(new SolidBrush(Color.FromArgb(130, Color.White)), x + 25 * i, y + height - (j * 25), 25, 25);
-                                drawBuffer.DrawImageUnscaled(tetGems[block - 12], x + 25 * i, y + height - (j * 25), 25, 25);
+                                Draw.buffer.DrawImageUnscaled(tetGems[block - 12], x + 25 * i, y + height - (j * 25), 25, 25);
                             }
                             if (MOD.shadeStack && block != 8 && block != 0)
-                                drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(130, Color.Black)), x + 25 * i, y + height - (j * 25), 25, 25);
+                                Draw.buffer.FillRectangle(new SolidBrush(Color.FromArgb(130, Color.Black)), x + 25 * i, y + height - (j * 25), 25, 25);
                             if (heavyStackShade && block != 8 && block != 0)
-                                drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(180, Color.Black)), x + 25 * i, y + height - (j * 25), 25, 25);
+                                Draw.buffer.FillRectangle(new SolidBrush(Color.FromArgb(180, Color.Black)), x + 25 * i, y + height - (j * 25), 25, 25);
 
 
                         }
@@ -483,25 +483,25 @@ namespace TGMsim
                             {
                                 if (i > 0)
                                     if (gameField[i - 1][j] == 0)//left
-                                        drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.White)), x + 25 * i, y + height - (j * 25), 3, 25);
+                                        Draw.buffer.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.White)), x + 25 * i, y + height - (j * 25), 3, 25);
                                 if (i < 9)
                                     if (gameField[i + 1][j] == 0)//right
-                                        drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.White)), x + 25 * i + 22, y + height - (j * 25), 3, 25);
+                                        Draw.buffer.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.White)), x + 25 * i + 22, y + height - (j * 25), 3, 25);
                                 if (j > 0)
                                     if (gameField[i][j - 1] == 0)//down
-                                        drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.White)), x + 25 * i, y + height + 22 - (j * 25), 25, 3);
+                                        Draw.buffer.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.White)), x + 25 * i, y + height + 22 - (j * 25), 25, 3);
                                 if (j < gameField[0].Count - 1)
                                     if (gameField[i][j + 1] == 0)//up
-                                        drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.White)), x + 25 * i, y + height - (j * 25), 25, 3);
+                                        Draw.buffer.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.White)), x + 25 * i, y + height - (j * 25), 25, 3);
                             }
                     }
                 }
 
             //draw the frame
-            drawBuffer.FillRectangle(new SolidBrush(frameColour), x - 5, y - 5 + 25, width + 10, 5);
-            drawBuffer.FillRectangle(new SolidBrush(frameColour), x - 5, y + height + 25, width + 10, 5);
-            drawBuffer.FillRectangle(new SolidBrush(frameColour), x - 5, y - 5 + 25, 5, height + 10);
-            drawBuffer.FillRectangle(new SolidBrush(frameColour), x + width, y - 5 + 25, 5, height + 10);
+            Draw.buffer.FillRectangle(new SolidBrush(frameColour), x - 5, y - 5 + 25, width + 10, 5);
+            Draw.buffer.FillRectangle(new SolidBrush(frameColour), x - 5, y + height + 25, width + 10, 5);
+            Draw.buffer.FillRectangle(new SolidBrush(frameColour), x - 5, y - 5 + 25, 5, height + 10);
+            Draw.buffer.FillRectangle(new SolidBrush(frameColour), x + width, y - 5 + 25, 5, height + 10);
 
             int big = 1;
             if (activeTet.big)
@@ -515,10 +515,10 @@ namespace TGMsim
                     if (ghostPiece.bits[i].y < 20)
                     {
                         if (activeTet.gemmed && i == activeTet.gemPip)
-                            drawBuffer.DrawImage(tetGems[(int)ghostPiece.id - 1], x + 25 * ghostPiece.bits[i].x, y + height - (25 * (ghostPiece.bits[i].y)), 25 * big, 25 * big);
+                            Draw.buffer.DrawImage(tetGems[(int)ghostPiece.id - 1], x + 25 * ghostPiece.bits[i].x, y + height - (25 * (ghostPiece.bits[i].y)), 25 * big, 25 * big);
                         else
-                            drawBuffer.DrawImage(tetImgs[(int)ghostPiece.id], x + 25 * ghostPiece.bits[i].x, y + height - (25 * (ghostPiece.bits[i].y)), 25 * big, 25 * big);
-                        drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(130, Color.Black)), x + 25 * ghostPiece.bits[i].x, y + height - (25 * (ghostPiece.bits[i].y)), 25 * big, 25 * big);
+                            Draw.buffer.DrawImage(tetImgs[(int)ghostPiece.id], x + 25 * ghostPiece.bits[i].x, y + height - (25 * (ghostPiece.bits[i].y)), 25 * big, 25 * big);
+                        Draw.buffer.FillRectangle(new SolidBrush(Color.FromArgb(130, Color.Black)), x + 25 * ghostPiece.bits[i].x, y + height - (25 * (ghostPiece.bits[i].y)), 25 * big, 25 * big);
                     }
                 }
             }
@@ -532,19 +532,19 @@ namespace TGMsim
                     if (activeTet.bone == true)
                     {
                         if (activeTet.gemmed && i == activeTet.gemPip)
-                            drawBuffer.DrawImage(boneGem, x + 25 * activeTet.bits[i].x, y + height - (25 * activeTet.bits[i].y), 25 * big, 25 * big);
+                            Draw.buffer.DrawImage(boneGem, x + 25 * activeTet.bits[i].x, y + height - (25 * activeTet.bits[i].y), 25 * big, 25 * big);
                         else
-                            drawBuffer.DrawImage(tetImgs[10], x + 25 * activeTet.bits[i].x, y + height - (25 * activeTet.bits[i].y), 25 * big, 25 * big);
+                            Draw.buffer.DrawImage(tetImgs[10], x + 25 * activeTet.bits[i].x, y + height - (25 * activeTet.bits[i].y), 25 * big, 25 * big);
                     }
                     else
                     {
                         if (activeTet.groundTimer >= 0)
                         {
                             if (activeTet.gemmed && i == activeTet.gemPip)
-                                drawBuffer.DrawImage(tetGems[(int)activeTet.id - 1], x + 25 * activeTet.bits[i].x, y + height - (25 * activeTet.bits[i].y), 25 * big, 25 * big);
+                                Draw.buffer.DrawImage(tetGems[(int)activeTet.id - 1], x + 25 * activeTet.bits[i].x, y + height - (25 * activeTet.bits[i].y), 25 * big, 25 * big);
                             else
-                                drawBuffer.DrawImage(tetImgs[(int)activeTet.id], x + 25 * activeTet.bits[i].x, y + height - (25 * activeTet.bits[i].y), 25 * big, 25 * big);
-                            drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb((MOD.baseLock - activeTet.groundTimer) * 127 / MOD.baseLock, Color.Black)), x + 25 * activeTet.bits[i].x, y + height - (25 * activeTet.bits[i].y), 25 * big, 25 * big);
+                                Draw.buffer.DrawImage(tetImgs[(int)activeTet.id], x + 25 * activeTet.bits[i].x, y + height - (25 * activeTet.bits[i].y), 25 * big, 25 * big);
+                            Draw.buffer.FillRectangle(new SolidBrush(Color.FromArgb((MOD.baseLock - activeTet.groundTimer) * 127 / MOD.baseLock, Color.Black)), x + 25 * activeTet.bits[i].x, y + height - (25 * activeTet.bits[i].y), 25 * big, 25 * big);
                         }
                         //else
                         //drawBuffer.DrawImage(tetImgs[9], x + 25 * (activeTet.bits[i].x * (2 / big) - (4 % (6 - big))), y - 25 + 25 * (activeTet.bits[i].y * (2 / big) - (lowY * ((2 / big) - 1))), 25 * (2 / big), 25 * (2 / big));
@@ -563,7 +563,7 @@ namespace TGMsim
 
                         }
                         if (line)
-                            drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(200, Color.Yellow)), x + 25 * activeTet.bits[i].x, y + height - (25 * activeTet.bits[i].y), 3, 25 * big);
+                            Draw.buffer.FillRectangle(new SolidBrush(Color.FromArgb(200, Color.Yellow)), x + 25 * activeTet.bits[i].x, y + height - (25 * activeTet.bits[i].y), 3, 25 * big);
 
                         line = true;
                         for (int j = 1; j < 4; j++)//for each other piece, up
@@ -573,7 +573,7 @@ namespace TGMsim
 
                         }
                         if (line)
-                            drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(200, Color.Yellow)), x + 25 * activeTet.bits[i].x, y + height + 22 - (25 * (activeTet.bits[i].y - (big - 1))), 25 * big, 3);
+                            Draw.buffer.FillRectangle(new SolidBrush(Color.FromArgb(200, Color.Yellow)), x + 25 * activeTet.bits[i].x, y + height + 22 - (25 * (activeTet.bits[i].y - (big - 1))), 25 * big, 3);
 
                         line = true;
                         for (int j = 1; j < 4; j++)//for each other piece, right
@@ -583,7 +583,7 @@ namespace TGMsim
 
                         }
                         if (line)
-                            drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(200, Color.Yellow)), x + 25 * activeTet.bits[i].x + 22 + 25 * (big-1), y + height - (25 * activeTet.bits[i].y), 3, 25 * big);
+                            Draw.buffer.FillRectangle(new SolidBrush(Color.FromArgb(200, Color.Yellow)), x + 25 * activeTet.bits[i].x + 22 + 25 * (big-1), y + height - (25 * activeTet.bits[i].y), 3, 25 * big);
 
                         line = true;
                         for (int j = 1; j < 4; j++)//for each other piece, down
@@ -593,7 +593,7 @@ namespace TGMsim
 
                         }
                         if (line)
-                            drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(200, Color.Yellow)), x + 25 * activeTet.bits[i].x, y + height - (25 * activeTet.bits[i].y), 25 * big, 3);
+                            Draw.buffer.FillRectangle(new SolidBrush(Color.FromArgb(200, Color.Yellow)), x + 25 * activeTet.bits[i].x, y + height - (25 * activeTet.bits[i].y), 25 * big, 3);
                     }
                 }
             }
@@ -610,26 +610,26 @@ namespace TGMsim
                             if (nextTet[i].bone == true)
                             {
                                 if (nextTet[i].gemmed && j == nextTet[i].gemPip)
-                                    drawBuffer.DrawImage(boneGem, x + 25 * nextTet[i].bits[j].x, y - 95 + 25 * (21 - nextTet[i].bits[j].y), 25, 25);
+                                    Draw.buffer.DrawImage(boneGem, x + 25 * nextTet[i].bits[j].x, y - 95 + 25 * (21 - nextTet[i].bits[j].y), 25, 25);
                                 else
-                                    drawBuffer.DrawImage(tetImgs[10], x + 25 * nextTet[i].bits[j].x, y - 95 + 25 * (21 - nextTet[i].bits[j].y), 25, 25);
+                                    Draw.buffer.DrawImage(tetImgs[10], x + 25 * nextTet[i].bits[j].x, y - 95 + 25 * (21 - nextTet[i].bits[j].y), 25, 25);
                                 //drawBuffer.DrawImageUnscaled(tetImgs[10], x + i * 70 + 16 * nextTet[i].bits[j].x + 40, y + 16 * nextTet[i].bits[j].y - 75);
                             }
                             else
                             {
                                 if (nextTet[i].gemmed && j == nextTet[i].gemPip)
-                                    drawBuffer.DrawImage(tetGems[(int)nextTet[i].id - 1], x + 25 * nextTet[i].bits[j].x, y - 95 + 25 * (21 - nextTet[i].bits[j].y), 25, 25);
+                                    Draw.buffer.DrawImage(tetGems[(int)nextTet[i].id - 1], x + 25 * nextTet[i].bits[j].x, y - 95 + 25 * (21 - nextTet[i].bits[j].y), 25, 25);
                                 else
-                                    drawBuffer.DrawImage(tetImgs[(int)nextTet[i].id], x + 25 * nextTet[i].bits[j].x, y - 95 + 25 * (21 - nextTet[i].bits[j].y), 25, 25);
+                                    Draw.buffer.DrawImage(tetImgs[(int)nextTet[i].id], x + 25 * nextTet[i].bits[j].x, y - 95 + 25 * (21 - nextTet[i].bits[j].y), 25, 25);
                                 //drawBuffer.DrawImageUnscaled(tetImgs[nextTet[i].id], x + i * 70 + 16 * nextTet[i].bits[j].x + 40, y + 16 * nextTet[i].bits[j].y - 75);
                             }
                         }
                         else
                         {
                             if (nextTet[i].bone == true)
-                                drawBuffer.DrawImageUnscaled(tetSImgs[10], x + i * 80 + 16 * nextTet[i].bits[j].x + 65, y + 16 * (21-nextTet[i].bits[j].y) - 75);
+                                Draw.buffer.DrawImageUnscaled(tetSImgs[10], x + i * 80 + 16 * nextTet[i].bits[j].x + 65, y + 16 * (21-nextTet[i].bits[j].y) - 75);
                             else
-                                drawBuffer.DrawImageUnscaled(tetSImgs[(int)nextTet[i].id], x + i * 80 + 16 * nextTet[i].bits[j].x + 65, y + 16 * (21-nextTet[i].bits[j].y) - 75);
+                                Draw.buffer.DrawImageUnscaled(tetSImgs[(int)nextTet[i].id], x + i * 80 + 16 * nextTet[i].bits[j].x + 65, y + 16 * (21-nextTet[i].bits[j].y) - 75);
                         }
                     }
                 }
@@ -641,18 +641,18 @@ namespace TGMsim
                 for (int i = 0; i < 4; i++)
                 {
                     if (heldPiece.bone == true)
-                        drawBuffer.DrawImageUnscaled(tetSImgs[10], x - 75 + 16 * heldPiece.bits[i].x, y - 50 + 16 * (21-heldPiece.bits[i].y));
+                        Draw.buffer.DrawImageUnscaled(tetSImgs[10], x - 75 + 16 * heldPiece.bits[i].x, y - 50 + 16 * (21-heldPiece.bits[i].y));
                     else
                         if (swappedHeld != 0)
-                            drawBuffer.DrawImageUnscaled(tetSImgs[9], x - 75 + 16 * heldPiece.bits[i].x, y - 50 + 16 * (21-heldPiece.bits[i].y));
+                            Draw.buffer.DrawImageUnscaled(tetSImgs[9], x - 75 + 16 * heldPiece.bits[i].x, y - 50 + 16 * (21-heldPiece.bits[i].y));
                         else
-                            drawBuffer.DrawImageUnscaled(tetSImgs[(int)heldPiece.id], x - 75 + 16 * heldPiece.bits[i].x, y - 50 + 16 * (21-heldPiece.bits[i].y));
+                            Draw.buffer.DrawImageUnscaled(tetSImgs[(int)heldPiece.id], x - 75 + 16 * heldPiece.bits[i].x, y - 50 + 16 * (21-heldPiece.bits[i].y));
                 }
             }
 
             //draw ice
             if (checkGimmick(Mode.Gimmick.Type.ICE))
-                drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(100, Color.Blue)), x, y + 275, width, 250);
+                Draw.buffer.FillRectangle(new SolidBrush(Color.FromArgb(100, Color.Blue)), x, y + 275, width, 250);
 
 
             //GUI
@@ -682,45 +682,45 @@ namespace TGMsim
 
             if (ruleset.gameRules != GameRules.Games.SEGA) //grav meter
             {
-                drawBuffer.FillRectangle(new SolidBrush(gravColor), x + 280, 505, 60, 8);
-                drawBuffer.FillRectangle(new SolidBrush(gravMeter), x + 280, 505, (int)Math.Round(((double)gravTable[gravLevel] * 60) / ((Math.Pow(256, ruleset.gravType + 1) * 20))), 8);
+                Draw.buffer.FillRectangle(new SolidBrush(gravColor), x + 280, 505, 60, 8);
+                Draw.buffer.FillRectangle(new SolidBrush(gravMeter), x + 280, 505, (int)Math.Round(((double)gravTable[gravLevel] * 60) / ((Math.Pow(256, ruleset.gravType + 1) * 20))), 8);
                 if (MOD.g20 == true || gravTable[gravLevel] == Math.Pow(256, ruleset.gravType + 1) * 20)
-                    drawBuffer.FillRectangle(new SolidBrush(gravMeter), x + 280, 505, 60, 8);
+                    Draw.buffer.FillRectangle(new SolidBrush(gravMeter), x + 280, 505, 60, 8);
             }
 
             //SMALL TEXT
             //levels
-            drawBuffer.DrawString(MOD.level.ToString(), f_Maestro, textBrush, x + 290, 485);
+            Draw.buffer.DrawString(MOD.level.ToString(), Draw.f_Maestro, Draw.tb, x + 290, 485);
             if (MOD.drawSec)
             {
                 if (MOD.sections.Count == curSection)
-                    drawBuffer.DrawString(MOD.sections[curSection - 1].ToString(), f_Maestro, textBrush, x + 290, 525);
+                    Draw.buffer.DrawString(MOD.sections[curSection - 1].ToString(), Draw.f_Maestro, Draw.tb, x + 290, 525);
                 else
-                    drawBuffer.DrawString(MOD.sections[curSection].ToString(), f_Maestro, textBrush, x + 290, 525);
+                    Draw.buffer.DrawString(MOD.sections[curSection].ToString(), Draw.f_Maestro, Draw.tb, x + 290, 525);
             }
             //score
-            drawBuffer.DrawString(MOD.score.ToString(), f_Maestro, textBrush, x + 280, 280);
+            Draw.buffer.DrawString(MOD.score.ToString(), Draw.f_Maestro, Draw.tb, x + 280, 280);
 
             if (godmode)
-                drawBuffer.DrawString("GODMODE", f_Maestro, new SolidBrush(Color.Orange), 10, 530);
+                Draw.buffer.DrawString("GODMODE", Draw.f_Maestro, new SolidBrush(Color.Orange), 10, 530);
             if (g0)
-                drawBuffer.DrawString("0G MODE", f_Maestro, new SolidBrush(Color.Orange), 10, 550);
+                Draw.buffer.DrawString("0G MODE", Draw.f_Maestro, new SolidBrush(Color.Orange), 10, 550);
             if (toriless)
-                drawBuffer.DrawString("TORILESS MODE", f_Maestro, new SolidBrush(Color.Orange), 10, 570);
+                Draw.buffer.DrawString("TORILESS MODE", Draw.f_Maestro, new SolidBrush(Color.Orange), 10, 570);
             //if (mode.bigmode)
             //drawBuffer.DrawString("BIG MODE", f_Maestro, new SolidBrush(Color.Orange), 20, 720);
 
             //BIGGER TEXT
             //if (ruleset.gameRules == 1 && mode.id == 0 )
-            drawBuffer.DrawString("POINTS:", f_Maestro, textBrush, x + 280, 260);
+            Draw.buffer.DrawString("POINTS:", Draw.f_Maestro, Draw.tb, x + 280, 260);
 
 
-            drawBuffer.DrawString(ruleset.GameName, f_Maestro, textBrush, 20, 20);
-            drawBuffer.DrawString(MOD.ModeName, f_Maestro, textBrush, 20, 40);
+            Draw.buffer.DrawString(ruleset.GameName, Draw.f_Maestro, Draw.tb, 20, 20);
+            Draw.buffer.DrawString(MOD.ModeName, Draw.f_Maestro, Draw.tb, 20, 40);
 
 
             if (creditsProgress >= ruleset.creditsLength + 180)
-                drawBuffer.DrawString("PUT THE BLOCK !!", f_Maestro, textBrush, 260, 585);
+                Draw.buffer.DrawString("PUT THE BLOCK !!", Draw.f_Maestro, Draw.tb, 260, 585);
 
             //debug stuff
             //drawBuffer.DrawString(creditsProgress.ToString(), SystemFonts.DefaultFont, textBrush, 20, 280);
@@ -730,19 +730,19 @@ namespace TGMsim
                 //drawBuffer.DrawString("BRAVO! X" + bravoCounter, SystemFonts.DefaultFont, textBrush, x + 280, 400);
 
             if (ruleset.gameRules == GameRules.Games.GMX || ruleset.gameRules == GameRules.Games.SEGA)
-                drawBuffer.DrawString("LEVEL:", f_Maestro, textBrush, x + 280, 465);
+                Draw.buffer.DrawString("LEVEL:", Draw.f_Maestro, Draw.tb, x + 280, 465);
             
             if (MOD.limitType == 3)//time limit?
-                drawBuffer.DrawString(convertTime((long)((MOD.limit - timer.count) * ruleset.FPS / 60)), SystemFonts.DefaultFont, textBrush, x + 290, 550);
+                Draw.buffer.DrawString(convertTime((long)((MOD.limit - timer.count) * ruleset.FPS / 60)), SystemFonts.DefaultFont, Draw.tb, x + 290, 550);
             else
-                drawBuffer.DrawString(convertTime((long)(timer.count * ruleset.FPS / 60)), SystemFonts.DefaultFont, textBrush, x + 290, 550);
+                Draw.buffer.DrawString(convertTime((long)(timer.count * ruleset.FPS / 60)), SystemFonts.DefaultFont, Draw.tb, x + 290, 550);
 
             //GRADE TEXT
             if (MOD.showGrade && MOD.grade != -1)
-                drawGrade(drawBuffer, MOD.grades[MOD.grade]);
+                drawGrade(MOD.grades[MOD.grade]);
 
             if (ruleset.exam != -1)
-                drawBuffer.DrawString("EXAM: " + MOD.grades[ruleset.exam].ToString(), f_Maestro, textBrush, x + 280, 100);
+                Draw.buffer.DrawString("EXAM: " + MOD.grades[ruleset.exam].ToString(), Draw.f_Maestro, Draw.tb, x + 280, 100);
 
 
             //DRAW MEDALS
@@ -750,7 +750,7 @@ namespace TGMsim
                 for (int i = 0; i < 6; i++)
                 {
                     if (MOD.medals[i] != 0)
-                        drawBuffer.DrawImage(medalImg, new Rectangle(x + 280 + (i % 3) * 30, 190 + (20 * (int)(Math.Floor((double)i / 3))), 25, 15), i * 26, (MOD.medals[i] - 1) * 16, 25, 16, GraphicsUnit.Pixel);
+                        Draw.buffer.DrawImage(medalImg, new Rectangle(x + 280 + (i % 3) * 30, 190 + (20 * (int)(Math.Floor((double)i / 3))), 25, 15), i * 26, (MOD.medals[i] - 1) * 16, 25, 16, GraphicsUnit.Pixel);
                 }
 
             //garbage meter
@@ -758,26 +758,26 @@ namespace TGMsim
             {
                 int segment = getActiveGimmickParameter(Mode.Gimmick.Type.GARBAGE) / 6;
                 int n = (MOD.garbTimer / segment) - 1;
-                drawBuffer.DrawString(n.ToString(), f_Maestro, textBrush, 20, 400);
+                Draw.buffer.DrawString(n.ToString(), Draw.f_Maestro, Draw.tb, 20, 400);
                 if (n > 6)
                     n = 6;
                 if (n > 0)
-                    drawBuffer.FillRectangle(new SolidBrush(Color.Red), x + width + 5, y + 20 + (height + 10) / 6 * (6 - n), 10, (height + 10) / 6 * n);
+                    Draw.buffer.FillRectangle(new SolidBrush(Color.Red), x + width + 5, y + 20 + (height + 10) / 6 * (6 - n), 10, (height + 10) / 6 * n);
             }
 
             //fadeout
             if (fadeout > 22)
             {
-                drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb((fadeout - 22) * 3, Color.Black)), x, y + 25, width, height);
+                Draw.buffer.FillRectangle(new SolidBrush(Color.FromArgb((fadeout - 22) * 3, Color.Black)), x, y + 25, width, height);
             }
 
 
 
             //Starting things
             if (starting == 2)
-                drawBuffer.DrawString("Ready", SystemFonts.DefaultFont, new SolidBrush(Color.White), 200, 200);
+                Draw.buffer.DrawString("Ready", SystemFonts.DefaultFont, Draw.wb, 200, 200);
             if (starting == 3)
-                drawBuffer.DrawString("Go", SystemFonts.DefaultFont, new SolidBrush(Color.White), 200, 200);
+                Draw.buffer.DrawString("Go", SystemFonts.DefaultFont, Draw.wb, 200, 200);
 
 
             //endgame stats
@@ -785,11 +785,11 @@ namespace TGMsim
             {
                 if (MOD.modeID == Mode.ModeType.MASTER || MOD.showGrade && results.grade > -1)
                 {
-                    drawBuffer.DrawString("Grade: " + MOD.grades[results.grade], SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 200);
+                    Draw.buffer.DrawString("Grade: " + MOD.grades[results.grade], SystemFonts.DefaultFont, Draw.wb, x + 80, 200);
                 }
-                drawBuffer.DrawString("Score: " + results.score, SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 210);
-                drawBuffer.DrawString("Time: " + convertTime(results.time), SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 220);
-                drawBuffer.DrawString("Name: " + results.username, SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 230);
+                Draw.buffer.DrawString("Score: " + results.score, SystemFonts.DefaultFont, Draw.wb, x + 80, 210);
+                Draw.buffer.DrawString("Time: " + convertTime(results.time), SystemFonts.DefaultFont, Draw.wb, x + 80, 220);
+                Draw.buffer.DrawString("Name: " + results.username, SystemFonts.DefaultFont, Draw.wb, x + 80, 230);
                 if (results.username == "CHEATER")
                 {
                     throw new DivideByZeroException();
@@ -797,39 +797,39 @@ namespace TGMsim
 
                 if (MOD.torikan)
                 {
-                    drawBuffer.DrawString("Torikan hit!", SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 250);
-                    drawBuffer.DrawString(convertTime((long)(MOD.torDef * ruleset.FPS / 60)) + " over!", SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 260);
+                    Draw.buffer.DrawString("Torikan hit!", SystemFonts.DefaultFont, Draw.wb, x + 80, 250);
+                    Draw.buffer.DrawString(convertTime((long)(MOD.torDef * ruleset.FPS / 60)) + " over!", SystemFonts.DefaultFont, Draw.wb, x + 80, 260);
                 }
 
-                drawBuffer.DrawString("Press Start to", SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 280);
+                Draw.buffer.DrawString("Press Start to", SystemFonts.DefaultFont, Draw.wb, x + 80, 280);
                 if (isPlayback)
-                    drawBuffer.DrawString("restart the replay!", SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 290);
+                    Draw.buffer.DrawString("restart the replay!", SystemFonts.DefaultFont, Draw.wb, x + 80, 290);
                 else
-                    drawBuffer.DrawString("reset the field!", SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 290);
+                    Draw.buffer.DrawString("reset the field!", SystemFonts.DefaultFont, Draw.wb, x + 80, 290);
 
-                drawBuffer.DrawString("Press B to", SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 310);
-                drawBuffer.DrawString("return to menu!", SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 320);
+                Draw.buffer.DrawString("Press B to", SystemFonts.DefaultFont, Draw.wb, x + 80, 310);
+                Draw.buffer.DrawString("return to menu!", SystemFonts.DefaultFont, Draw.wb, x + 80, 320);
 
                 if (newHiscore)
-                    drawBuffer.DrawString("New Hiscore registered!", SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 440);
+                    Draw.buffer.DrawString("New Hiscore registered!", SystemFonts.DefaultFont, Draw.wb, x + 80, 440);
 
                 if(MOD.hasSecretGrade && results.secretGrade > MOD.minSecret)
-                    drawBuffer.DrawString("Secret Grade: " + MOD.secretGrades[results.secretGrade-1], SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 450);
+                    Draw.buffer.DrawString("Secret Grade: " + MOD.secretGrades[results.secretGrade-1], SystemFonts.DefaultFont, Draw.wb, x + 80, 450);
 
                 if (!isPlayback && !custom)
                 {
                     if (!recorded)
                     {
-                        drawBuffer.DrawString("Press Hold to", SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 340);
-                        drawBuffer.DrawString("record the replay!", SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 350);
+                        Draw.buffer.DrawString("Press Hold to", SystemFonts.DefaultFont, Draw.wb, x + 80, 340);
+                        Draw.buffer.DrawString("record the replay!", SystemFonts.DefaultFont, Draw.wb, x + 80, 350);
                     }
                     else
-                        drawBuffer.DrawString("Replay recorded!", SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 340);
+                        Draw.buffer.DrawString("Replay recorded!", SystemFonts.DefaultFont, Draw.wb, x + 80, 340);
 
                     if (ruleset.gameRules == GameRules.Games.TAP && results.username != "TAS" && results.username != "   ")//don't draw a code for TAS or cheats, since one wasn't generated
                     {
-                        drawBuffer.DrawString(results.code.Substring(0, 8), SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 460);
-                        drawBuffer.DrawString(results.code.Substring(8, 8), SystemFonts.DefaultFont, new SolidBrush(Color.White), x + 80, 470);
+                        Draw.buffer.DrawString(results.code.Substring(0, 8), SystemFonts.DefaultFont, Draw.wb, x + 80, 460);
+                        Draw.buffer.DrawString(results.code.Substring(8, 8), SystemFonts.DefaultFont, Draw.wb, x + 80, 470);
                     }
                 }
             }
@@ -838,31 +838,31 @@ namespace TGMsim
             if(isPlayback)
             {
                 //BG
-                drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(bgAlpha, Color.Black)), 10, 80, 180, 500);
+                Draw.buffer.FillRectangle(new SolidBrush(Color.FromArgb(bgAlpha, Color.Black)), 10, 80, 180, 500);
 
                 //DATA
-                drawBuffer.DrawString("REPLAY", f_Maestro, textBrush, 20, 60);
-                drawBuffer.DrawString("length: " + pad.replay.Count, SystemFonts.DefaultFont, textBrush, 20, 80);
-                drawBuffer.DrawString("progress: " + pad.progress, SystemFonts.DefaultFont, textBrush, 20, 100);
+                Draw.buffer.DrawString("REPLAY", Draw.f_Maestro, Draw.tb, 20, 60);
+                Draw.buffer.DrawString("length: " + pad.replay.Count, SystemFonts.DefaultFont, Draw.tb, 20, 80);
+                Draw.buffer.DrawString("progress: " + pad.progress, SystemFonts.DefaultFont, Draw.tb, 20, 100);
 
                 //CONTROLS
-                drawBuffer.FillEllipse(new SolidBrush(Color.Gray), 35, 180, 20, 20);
-                drawBuffer.FillEllipse(new SolidBrush(Color.Red), 25 + (pad.inputH*20), 170 - (pad.inputV*20), 40, 40);
+                Draw.buffer.FillEllipse(new SolidBrush(Color.Gray), 35, 180, 20, 20);
+                Draw.buffer.FillEllipse(new SolidBrush(Color.Red), 25 + (pad.inputH*20), 170 - (pad.inputV*20), 40, 40);
 
                 Color unpressed = Color.Gray;
                 Color pressed = Color.GreenYellow;
 
-                drawBuffer.FillEllipse(new SolidBrush(pad.inputPressedRot1 ? pressed : unpressed), 90, 170, 20, 20);
-                drawBuffer.FillEllipse(new SolidBrush(pad.inputPressedRot2 ? pressed : unpressed), 120, 165, 20, 20);
-                drawBuffer.FillEllipse(new SolidBrush(pad.inputPressedRot3 ? pressed : unpressed), 150, 170, 20, 20);
-                drawBuffer.FillEllipse(new SolidBrush(pad.inputPressedHold ? pressed : unpressed), 105, 200, 20, 20);
+                Draw.buffer.FillEllipse(new SolidBrush(pad.inputPressedRot1 ? pressed : unpressed), 90, 170, 20, 20);
+                Draw.buffer.FillEllipse(new SolidBrush(pad.inputPressedRot2 ? pressed : unpressed), 120, 165, 20, 20);
+                Draw.buffer.FillEllipse(new SolidBrush(pad.inputPressedRot3 ? pressed : unpressed), 150, 170, 20, 20);
+                Draw.buffer.FillEllipse(new SolidBrush(pad.inputPressedHold ? pressed : unpressed), 105, 200, 20, 20);
 
                 //INTERNALS
                 //drawBuffer.DrawString("gradepoints: " + MOD.gradePoints, SystemFonts.DefaultFont, textBrush, 20, 240);
                 //drawBuffer.DrawString("combo: " + MOD.gradeCombo, SystemFonts.DefaultFont, textBrush, 20, 260);
                 //drawBuffer.DrawString("internal grade: " + MOD.gm2grade, SystemFonts.DefaultFont, textBrush, 20, 280);
             }
-            MOD.draw(drawBuffer, f_Maestro, textBrush, isPlayback);
+            MOD.draw(isPlayback);
             
         }
 
@@ -901,9 +901,9 @@ namespace TGMsim
                     goldFlash = !goldFlash;
 
             if (goldFlash)
-                textBrush.Color = Color.Gold;
+                Draw.tb.Color = Color.Gold;
             else
-                textBrush.Color = Color.White;
+                Draw.tb.Color = Color.White;
 
             if (starting == 0)
             {
@@ -2356,17 +2356,17 @@ namespace TGMsim
             return s;
         }
 
-        private void drawGrade(Graphics drawBuffer, string gd)
+        private void drawGrade(string gd)
         {
             //string gd;
             int gold = 0;
-            if (textBrush.Color == Color.Gold)
+            if (Draw.tb.Color == Color.Gold)
                 gold = 78;
 
             for (int i = 0; i < gd.Length; i++)
             {
                 int dex = "0123456789SmMVOKTG".IndexOf(gd.Substring(i, 1));
-                drawBuffer.DrawImage(gradeImg, new Rectangle(x + 280 + i * 26, 76, 25, 25), new Rectangle(1 + (dex % 6) * 26, 1 + (int)Math.Floor((double)dex / 6) * 26 + gold, 25, 25), GraphicsUnit.Pixel);
+                Draw.buffer.DrawImage(gradeImg, new Rectangle(x + 280 + i * 26, 76, 25, 25), new Rectangle(1 + (dex % 6) * 26, 1 + (int)Math.Floor((double)dex / 6) * 26 + gold, 25, 25), GraphicsUnit.Pixel);
             }
         }
     }

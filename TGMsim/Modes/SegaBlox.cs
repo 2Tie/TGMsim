@@ -105,13 +105,13 @@ namespace TGMsim.Modes
             garbTimer++;
         }
 
-        public override void draw(Graphics drawBuffer, Font f, SolidBrush b, bool replay)
+        public override void draw(bool replay)
         {
             if (replay)
             {
-                drawBuffer.DrawString(timeCounter.ToString(), f, b, 20, 300);
-                drawBuffer.DrawString(levelUpTimes[level > 15 ? 15 : level].ToString(), f, b, 20, 312);
-                drawBuffer.DrawString(garbTimer.ToString(), f, b, 20, 324);
+                Draw.buffer.DrawString(timeCounter.ToString(), Draw.f_Maestro, Draw.tb, 20, 300);
+                Draw.buffer.DrawString(levelUpTimes[level > 15 ? 15 : level].ToString(), Draw.f_Maestro, Draw.tb, 20, 312);
+                Draw.buffer.DrawString(garbTimer.ToString(), Draw.f_Maestro, Draw.tb, 20, 324);
             }
         }
     }

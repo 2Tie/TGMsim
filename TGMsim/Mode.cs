@@ -179,7 +179,7 @@ namespace TGMsim
 
         }
 
-        public virtual void draw(Graphics drawBuffer, Font f, SolidBrush textBrush, bool replay)
+        public virtual void draw(bool replay)
         {
             
         }
