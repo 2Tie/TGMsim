@@ -386,7 +386,10 @@ namespace TGMsim
                     if (pad1.inputRot2 == 1)
                         changeMenu(2);
                     else if (pad1.inputStart == 1)
+                    {
                         setupCustomGame();
+                        menuState = 4;
+                    }
                     break;
                 case 8://settings
                     if (pad1.inputRot2 == 1 && prefs.menuState == 0)
@@ -622,12 +625,23 @@ namespace TGMsim
         {
             Audio.stopMusic();
             rules = new GameRules();
-            rules.setup((GameRules.Games)0, 0, 0);
+            rules.setup((GameRules.Games)new int[] { 0, 1, 3, 4, 6 }[customMenu.game], Mode.ModeType.CUSTOM, 0);
+            rules.mod.ModeName = "CUSTOM";
+            rules.mod.border = Color.DarkGreen;
+            rules.generator = new int[] { 5, 1, 2, 3, 6 }[customMenu.generator];
+            rules.rotation = (customMenu.rotation + 2) % 4;
+            rules.mod.g20 = customMenu.grav == 1;
+            rules.mod.bigmode = customMenu.big;
+            rules.mod.invpiece = customMenu.invPiece;
+            rules.mod.invpreview = customMenu.invPreview;
+            rules.mod.invstack = customMenu.invStack;
+
             pad1.southpaw = prefs.southpaw;
             FPS = rules.FPS;
             field1 = new Field(pad1, rules, -1);
             field1.disableGoldFlash = !prefs.flashing;
             field1.custom = true;
+            field1.g0 = customMenu.grav == 2;
         }
 
         private void setupGame()

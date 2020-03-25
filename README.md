@@ -1,12 +1,13 @@
 # TGMsim
 
-Open-source TGM Series clone, aiming for accuracy, and extensibility down the line.
+Open-source TGM Series clone, aiming for accuracy and extensibility.
 
 ## Supported game modes:
 
 TGM1 Master  
 
-TGM2 Master  
+TGM2 Master 
+Sakura Eternal Heart Easy and Normal (WIP)  
  
 TAP Master  
 TAP TGM+  
@@ -24,7 +25,7 @@ SEMIPRO-68k 20 Cell
 
 New Dynamo Mode (heavily WIP)  
 New Hell March Mode  
-Custom Mode (heavily WIP)
+Custom Mode (WIP)
 
 ## Future game modes:
 

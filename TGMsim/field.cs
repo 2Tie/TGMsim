@@ -441,60 +441,61 @@ namespace TGMsim
             }
 
             //draw the pieces
-            for (int i = 0; i < 10; i++)
-            {
-                for (int j = 0; j < 20; j++)
+            if (!MOD.invstack)
+                for (int i = 0; i < 10; i++)
                 {
-                    int flashing = -1;
-                    int block = gameField[i][j];
-                    for (int k = 0; k < flashList.Count; k++)
+                    for (int j = 0; j < 20; j++)
                     {
-                        if (i == flashList[k].x && j == flashList[k].y)
-                            flashing = flashList[k].time;
-                    }
-                    if (flashing > -1 + MOD.outlineFlashDelay) //raise the cieling on raw flash
-                    {
-                        drawBuffer.DrawImageUnscaled(tetImgs[9], x + 25 * i, y + height - (j * 25), 25, 25);
-                    }
-                    else
-                    {
-                        if (block == 8 || block == 0) //empty or invis, don't draw
-                            ;
-                        else if (block < 11)//garbage or bone
-                            drawBuffer.DrawImageUnscaled(tetImgs[block], x + 25 * i, y + height - (j * 25), 25, 25);
-                        else if (block == 11)//colourless gem
-                            drawBuffer.DrawImageUnscaled(tetGems[7], x + 25 * i, y + height - (j * 25), 25, 25);
-                        else if (block < 19) //gem block
+                        int flashing = -1;
+                        int block = gameField[i][j];
+                        for (int k = 0; k < flashList.Count; k++)
                         {
-                            //drawBuffer.FillEllipse(new SolidBrush(Color.FromArgb(130, Color.White)), x + 25 * i, y + height - (j * 25), 25, 25);
-                            drawBuffer.DrawImageUnscaled(tetGems[block - 12], x + 25 * i, y + height - (j * 25), 25, 25);
+                            if (i == flashList[k].x && j == flashList[k].y)
+                                flashing = flashList[k].time;
                         }
-                        if (MOD.shadeStack && block != 8 && block != 0)
-                            drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(130, Color.Black)), x + 25 * i, y + height - (j * 25), 25, 25);
-                        if (heavyStackShade && block != 8 && block != 0)
-                            drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(180, Color.Black)), x + 25 * i, y + height - (j * 25), 25, 25);
+                        if (flashing > -1 + MOD.outlineFlashDelay) //raise the cieling on raw flash
+                        {
+                            drawBuffer.DrawImageUnscaled(tetImgs[9], x + 25 * i, y + height - (j * 25), 25, 25);
+                        }
+                        else
+                        {
+                            if (block == 8 || block == 0) //empty or invis, don't draw
+                                ;
+                            else if (block < 11)//garbage or bone
+                                drawBuffer.DrawImageUnscaled(tetImgs[block], x + 25 * i, y + height - (j * 25), 25, 25);
+                            else if (block == 11)//colourless gem
+                                drawBuffer.DrawImageUnscaled(tetGems[7], x + 25 * i, y + height - (j * 25), 25, 25);
+                            else if (block < 19) //gem block
+                            {
+                                //drawBuffer.FillEllipse(new SolidBrush(Color.FromArgb(130, Color.White)), x + 25 * i, y + height - (j * 25), 25, 25);
+                                drawBuffer.DrawImageUnscaled(tetGems[block - 12], x + 25 * i, y + height - (j * 25), 25, 25);
+                            }
+                            if (MOD.shadeStack && block != 8 && block != 0)
+                                drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(130, Color.Black)), x + 25 * i, y + height - (j * 25), 25, 25);
+                            if (heavyStackShade && block != 8 && block != 0)
+                                drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(180, Color.Black)), x + 25 * i, y + height - (j * 25), 25, 25);
 
 
-                    }
-                    //outline
-                    if (MOD.outlineStack)
-                        if (block != 0 && (block != 8 || (flashing>-1 && MOD.outlineFlashing && (checkGimmick(Mode.Gimmick.Type.INVIS) || (inCredits && MOD.creditsType == 2)))) && block != 10)//don't outline invis or bones
-                        {
-                            if (i > 0)
-                                if (gameField[i - 1][j] == 0)//left
-                                    drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.White)), x + 25 * i, y + height - (j * 25), 3, 25);
-                            if (i < 9)
-                                if (gameField[i + 1][j] == 0)//right
-                                    drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.White)), x + 25 * i + 22, y + height - (j * 25), 3, 25);
-                            if (j > 0)
-                                if (gameField[i][j - 1] == 0)//down
-                                    drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.White)), x + 25 * i, y + height + 22 - (j * 25), 25, 3);
-                            if (j < gameField[0].Count - 1)
-                                if (gameField[i][j + 1] == 0)//up
-                                    drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.White)), x + 25 * i, y + height - (j * 25), 25, 3);
                         }
+                        //outline
+                        if (MOD.outlineStack)
+                            if (block != 0 && (block != 8 || (flashing > -1 && MOD.outlineFlashing && (checkGimmick(Mode.Gimmick.Type.INVIS) || (inCredits && MOD.creditsType == 2)))) && block != 10)//don't outline invis or bones
+                            {
+                                if (i > 0)
+                                    if (gameField[i - 1][j] == 0)//left
+                                        drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.White)), x + 25 * i, y + height - (j * 25), 3, 25);
+                                if (i < 9)
+                                    if (gameField[i + 1][j] == 0)//right
+                                        drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.White)), x + 25 * i + 22, y + height - (j * 25), 3, 25);
+                                if (j > 0)
+                                    if (gameField[i][j - 1] == 0)//down
+                                        drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.White)), x + 25 * i, y + height + 22 - (j * 25), 25, 3);
+                                if (j < gameField[0].Count - 1)
+                                    if (gameField[i][j + 1] == 0)//up
+                                        drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.White)), x + 25 * i, y + height - (j * 25), 25, 3);
+                            }
+                    }
                 }
-            }
 
             //draw the frame
             drawBuffer.FillRectangle(new SolidBrush(frameColour), x - 5, y - 5 + 25, width + 10, 5);
@@ -507,7 +508,7 @@ namespace TGMsim
                 big = 2;
 
             //draw the ghost piece
-            if (ghostPiece != null && activeTet.id == ghostPiece.id && MOD.showGhost)
+            if (ghostPiece != null && activeTet.id == ghostPiece.id && MOD.showGhost && !MOD.invpiece)
             {
                 for (int i = 0; i < activeTet.bits.Count; i++)
                 {
@@ -523,7 +524,7 @@ namespace TGMsim
             }
 
             //draw the current piece
-            if (activeTet.id != 0)
+            if (activeTet.id != 0 && !MOD.invpiece)
             {
                 for (int i = 0; i < activeTet.bits.Count; i++)
                 {
@@ -598,7 +599,7 @@ namespace TGMsim
             }
 
             //draw the next piece
-            if (ruleset.nextNum > 0 && !hideNext)
+            if (ruleset.nextNum > 0 && !hideNext && !MOD.invpreview)
             {
                 for (int i = 0; i < ruleset.nextNum; i++)
                 {
@@ -635,7 +636,7 @@ namespace TGMsim
             }
 
             //draw the hold piece
-            if(ruleset.hold == true && heldPiece != null)
+            if(ruleset.hold == true && heldPiece != null && !MOD.invpreview)
             {
                 for (int i = 0; i < 4; i++)
                 {
@@ -1287,7 +1288,7 @@ namespace TGMsim
                                 }
                                 else
                                     gravCounter += gravTable[gravLevel]; //add our current gravity strength
-                                if (gravCounter >= Math.Pow(256, ruleset.gravType + 1))
+                                if (gravCounter >= Math.Pow(256, ruleset.gravType + 1) && !g0)
                                 {
                                     blockDrop += 1;
                                     gravCounter = 0;
@@ -1840,6 +1841,8 @@ namespace TGMsim
                 }
                 else
                 {
+                    if (MOD.modeID == Mode.ModeType.CUSTOM)
+                        results.username = "CUSTOM";
                     results.time = timer.count;
                     results.rawTime = timer.rawCount;
                 }

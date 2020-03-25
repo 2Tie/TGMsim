@@ -117,11 +117,21 @@ namespace TGMsim
         public bool outlineFlashing = false;
         public int outlineFlashDelay = 0; //use this for outline to show after a piece goes invisible
 
+        public bool invpiece = false;
+        public bool invpreview = false;
+        public bool invstack = false;
+
         public bool firstPiece = true;
 
         public Mode()
         {
 
+            delayTable.Add(new List<int> { 27 });
+            delayTable.Add(new List<int> { 27 });
+            delayTable.Add(new List<int> { 14 });
+            delayTable.Add(new List<int> { 30 });
+            delayTable.Add(new List<int> { 40 });
+            sections.Add(999);
         }
 
         public virtual void onSpawn()
@@ -156,7 +166,7 @@ namespace TGMsim
 
         public virtual void onClear(int lines, Tetromino tet, long time, bool bravo)
         {
-
+            level += lines;
         }
 
         public virtual void onGameOver()

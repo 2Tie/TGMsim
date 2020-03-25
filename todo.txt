@@ -8,6 +8,7 @@ SEGA-based modes have a turnaround das bug, need to implement
 Additions for release:
 Sakura mode? needs XRAY
 polish up GUI some more
+flesh out Custom Mode
 backgrounds for game select and mode select
 
 Additions in the future:
@@ -16,4 +17,3 @@ GM/Full Clear medals in game select
 item blocks
 normal mode (has secret grade)
 ACE modes
-Custom Mode

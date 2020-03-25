@@ -268,10 +268,8 @@ namespace TGMsim
                 case Mode.ModeType.SHIRASE://shirase
                     mod = new Modes.Shirase();
                     break;
-                case Mode.ModeType.SPRINT://sprint
-                    /*gradedBy = 4;
-                    limitType = 1;
-                    border = Color.DarkGreen;*/
+                case Mode.ModeType.CUSTOM://sprint
+                    mod = new Mode();
                     break;
                 case Mode.ModeType.GARBAGE://garbage clear
                     mod = new Modes.Garbo();
@@ -319,9 +317,6 @@ namespace TGMsim
                 case Mode.ModeType.PRACTICE:
                     setup(Games.TGM1, Mode.ModeType.MASTER, 0);
                     mod = new Modes.Master1Practice(vari);
-                    break;
-                case Mode.ModeType.CUSTOM:
-                    throw new Exception("don't call this, nerd");
                     break;
                 case Mode.ModeType.SHIMIZU:
                     setup(Games.SEGA, Mode.ModeType.SEGA, 0);
