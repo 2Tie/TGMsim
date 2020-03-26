@@ -1503,6 +1503,7 @@ namespace TGMsim
                                                 if (gameField[j][full[i]] > 8)
                                                     --MOD.boardGems;
                                                 gameField[j][full[i]] = 0;
+
                                             }
                                             //remove from target list
                                             if (MOD.targets.Contains(full[i]))
@@ -1629,7 +1630,6 @@ namespace TGMsim
                         if (activeTet.id != 0)
                         {
                             ghostPiece = activeTet.clone();
-
                             tetGrav(ghostPiece, 22, true, false);
                         }
 
@@ -1929,6 +1929,18 @@ namespace TGMsim
             {
                 if (activeGim[i].type == gim)
                     return activeGim[i].delay;
+            }
+            return -1;
+        }
+
+        private int getActiveGimmickParameter(int gim)
+        {
+            for(int i = 0; i < activeGim.Count; i++)
+            {
+                if (activeGim[i].type == gim)
+                {
+                    return activeGim[i].parameter;
+                }
             }
             return -1;
         }
