@@ -1933,18 +1933,6 @@ namespace TGMsim
             return -1;
         }
 
-        private int getActiveGimmickParameter(int gim)
-        {
-            for(int i = 0; i < activeGim.Count; i++)
-            {
-                if (activeGim[i].type == gim)
-                {
-                    return activeGim[i].parameter;
-                }
-            }
-            return -1;
-        }
-
         private void raiseGarbage(int num)
         {
             for(int i = 0; i < num; i++)//skim the top
