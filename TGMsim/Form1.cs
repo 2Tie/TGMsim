@@ -578,7 +578,7 @@ namespace TGMsim
             if (drawdebug)
                 Draw.buffer.DrawString(freetime.ToString(), Draw.f_Maestro, Draw.wb, 765, 20);
 #if DEBUG
-            SolidBrush debugBrush = new SolidBrush(Color.White);
+            /*SolidBrush debugBrush = new SolidBrush(Color.White);
             //denote debug
             drawBuffer.DrawString("DEBUG", DefaultFont, debugBrush, 20, 710);
             //draw the current inputs
@@ -590,7 +590,7 @@ namespace TGMsim
             drawBuffer.DrawString(Keyboard.IsKeyDown(pad1.keyRot2) ? "1" : "0", DefaultFont, debugBrush, 58, 720);
             drawBuffer.DrawString(Keyboard.IsKeyDown(pad1.keyRot3) ? "1" : "0", DefaultFont, debugBrush, 66, 720);
             drawBuffer.DrawString(Keyboard.IsKeyDown(pad1.keyHold) ? "1" : "0", DefaultFont, debugBrush, 50, 730);
-            drawBuffer.DrawString(Keyboard.IsKeyDown(pad1.keyStart) ? "1" : "0", DefaultFont, debugBrush, 74, 730);
+            drawBuffer.DrawString(Keyboard.IsKeyDown(pad1.keyStart) ? "1" : "0", DefaultFont, debugBrush, 74, 730);*/
 
 #endif
 

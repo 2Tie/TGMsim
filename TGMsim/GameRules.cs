@@ -269,7 +269,7 @@ namespace TGMsim
                     mod = new Modes.Shirase();
                     break;
                 case Mode.ModeType.CUSTOM://sprint
-                    mod = new Mode();
+                    mod = new Modes.Custom();
                     break;
                 case Mode.ModeType.GARBAGE://garbage clear
                     mod = new Modes.Garbo();

@@ -44,6 +44,7 @@ namespace TGMsim.Modes
             hasSecretGrade = true;
             minSecret = 5;
             secretGrades = new List<string> { "9", "8", "7", "6", "5", "4", "3", "2", "1", "S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "S9", "GM" };
+            grades = new List<string> { "", "m", "GM" };
         }
 
         public override void onTick(long time)
@@ -143,7 +144,7 @@ namespace TGMsim.Modes
                     secTet.Add(0);
                     //GM FLAGS
                     if (level >= 999)
-                        grade = 19;
+                        grade = 2;
                     //TORIKAN
                     if (curSection == 5)
                     {
@@ -155,7 +156,7 @@ namespace TGMsim.Modes
                             //triggerCredits();
                         }
                         else
-                            grade = 18;
+                            grade = 1;
                     }
                     //MUSIC
                     updateMusic();

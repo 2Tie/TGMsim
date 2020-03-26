@@ -104,6 +104,7 @@
     <Compile Include="ModeSelect.cs" />
     <Compile Include="Modes\BigBravoMania.cs" />
     <Compile Include="Modes\CCS.cs" />
+    <Compile Include="Modes\Custom.cs" />
     <Compile Include="Modes\Death.cs" />
     <Compile Include="Modes\Dynamo.cs" />
     <Compile Include="Modes\Easy.cs" />

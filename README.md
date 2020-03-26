@@ -6,7 +6,7 @@ Open-source TGM Series clone, aiming for accuracy and extensibility.
 
 TGM1 Master  
 
-TGM2 Master 
+TGM2 Master  
 Sakura Eternal Heart Easy and Normal (WIP)  
  
 TAP Master  
@@ -30,7 +30,6 @@ Custom Mode (WIP)
 ## Future game modes:
 
 TAP Normal  
-Tetris + Cardcaptor Sakura, Easy & Normal  
 TGM3 Sakura  
 ACE modes  
 

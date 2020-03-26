@@ -126,12 +126,6 @@ namespace TGMsim
         public Mode()
         {
 
-            delayTable.Add(new List<int> { 27 });
-            delayTable.Add(new List<int> { 27 });
-            delayTable.Add(new List<int> { 14 });
-            delayTable.Add(new List<int> { 30 });
-            delayTable.Add(new List<int> { 40 });
-            sections.Add(999);
         }
 
         public virtual void onSpawn()
@@ -166,7 +160,7 @@ namespace TGMsim
 
         public virtual void onClear(int lines, Tetromino tet, long time, bool bravo)
         {
-            level += lines;
+            
         }
 
         public virtual void onGameOver()

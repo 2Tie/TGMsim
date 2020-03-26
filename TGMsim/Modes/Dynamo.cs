@@ -33,7 +33,7 @@ namespace TGMsim.Modes
         {
             ModeName = "DYNAMO";
             border = Color.MediumPurple;
-            List<string> grades = new List<string> {
+            grades = new List<string> {
                 "9", "8", "7", "6", "5", "4", "3", "2", "1",
                 "S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "S9", //the TAP grades
                 "M1", "M2", "M3", "M4", "M5", "M6", "M7", "M8", "M9", //the COOL grades
