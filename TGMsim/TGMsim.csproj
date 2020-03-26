@@ -11,6 +11,7 @@
     <AssemblyName>TGMsim</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -23,7 +24,6 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -45,6 +45,9 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>fundoshi.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="NAudio, Version=1.7.3.0, Culture=neutral, processorArchitecture=MSIL">
@@ -73,6 +76,7 @@
     <Compile Include="BlockBit.cs" />
     <Compile Include="CheatMenu.cs" />
     <Compile Include="Controller.cs" />
+    <Compile Include="CustomMenu.cs" />
     <Compile Include="Field.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
@@ -80,20 +84,54 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="FrameTimer.cs" />
     <Compile Include="GameResult.cs" />
+    <Compile Include="GameRules.cs" />
     <Compile Include="GameSelect.cs" />
     <Compile Include="GameTimer.cs" />
+    <Compile Include="Generator.cs" />
+    <Compile Include="Generators\G_ARS1.cs" />
+    <Compile Include="Generators\G_ARS2.cs" />
+    <Compile Include="Generators\G_ARS3Easy.cs" />
+    <Compile Include="Generators\G_ARS3.cs" />
+    <Compile Include="Generators\G_ARSSEasy.cs" />
+    <Compile Include="Generators\G_ARSSNormal.cs" />
+    <Compile Include="Generators\G_SEGA.cs" />
+    <Compile Include="Draw.cs" />
     <Compile Include="Login.cs" />
     <Compile Include="LoopStream.cs" />
     <Compile Include="Mode.cs" />
     <Compile Include="ModeSelect.cs" />
+    <Compile Include="Modes\BigBravoMania.cs" />
+    <Compile Include="Modes\CCS.cs" />
+    <Compile Include="Modes\Custom.cs" />
+    <Compile Include="Modes\Death.cs" />
+    <Compile Include="Modes\Dynamo.cs" />
+    <Compile Include="Modes\Easy.cs" />
+    <Compile Include="Modes\Garbo.cs" />
+    <Compile Include="Modes\HellMarch.cs" />
+    <Compile Include="Modes\IcyShirase.cs" />
+    <Compile Include="Modes\Master1Practice.cs" />
+    <Compile Include="Modes\Master2.cs" />
+    <Compile Include="Modes\Master1.cs" />
+    <Compile Include="Modes\Master2Plus.cs" />
+    <Compile Include="Modes\Master3.cs" />
+    <Compile Include="Modes\Miner.cs" />
+    <Compile Include="Modes\Plus.cs" />
+    <Compile Include="Modes\SegaBlox.cs" />
+    <Compile Include="Modes\SegaFlash.cs" />
+    <Compile Include="Modes\SegaTet.cs" />
+    <Compile Include="Modes\Shirase.cs" />
+    <Compile Include="Modes\Training.cs" />
     <Compile Include="Preferences.cs" />
     <Compile Include="Profile.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rotation.cs" />
-    <Compile Include="Rules.cs" />
-    <Compile Include="R_ARIKA.cs" />
+    <Compile Include="Rotations\R_ARS3.cs" />
+    <Compile Include="Rotations\R_ARS1.cs" />
+    <Compile Include="Rotations\R_SEGA.cs" />
+    <Compile Include="Rotations\R_SEMIPRO.cs" />
     <Compile Include="Tetromino.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
@@ -116,6 +154,15 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="Res\Audio\crdtcas.ogg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Res\Audio\Casual 1.ogg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Res\Audio\Casual 2.ogg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Res\Audio\crdtinvis.ogg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -146,22 +193,22 @@
     <None Include="Res\Audio\results.ogg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Res\Maestro.ttf">
+    <None Include="Res\Boards\ccseasy.brd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Sav\gm1.dat">
+    <None Include="Res\Boards\ccsnorm.brd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Sav\gm2.dat">
+    <None Include="Res\Boards\flash.brd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Sav\gm3.dat">
+    <None Include="Res\Boards\gm3sak.brd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Sav\gm4.dat">
+    <None Include="Res\Boards\hell.brd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Sav\prefs.dat">
+    <None Include="Res\Maestro2.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
@@ -172,6 +219,10 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="fundoshi.ico" />
+    <Content Include="Res\Audio\SE\bell.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Res\Audio\SE\SEB_disappear.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -264,16 +315,55 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Res\GFX\bgs\1.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Res\GFX\bgs\2.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Res\GFX\bgs\3.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Res\GFX\bgs\4.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Res\GFX\fundoshi.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Res\GFX\grades.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Res\GFX\medals.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Res\GFX\menus\bg0.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Res\GFX\o1.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Res\GFX\o2.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Res\GFX\o3.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Res\GFX\o4.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Res\GFX\o5.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Res\GFX\o6.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Res\GFX\o7.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Res\GFX\o8.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Res\GFX\o9.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Res\GFX\s1.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -347,6 +437,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

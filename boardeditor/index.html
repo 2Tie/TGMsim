@@ -1,0 +1,146 @@
+<html>
+<head><title>boardmaker</title><meta charset="UTF-8"></head>
+<body onload="init()">
+<canvas id="board" width="200" height="400" style="border:1px solid #000000;"></canvas></br>
+<canvas id="palette" width="160" height="40" style="border:1px solid #000000;"></canvas></br>
+<button type="button" onclick="generate()">Generate hex</button>
+<div id="hex"></div>
+</body>
+<script>
+var p = document.getElementById("palette");	
+var pctx = p.getContext("2d");
+var b = document.getElementById("board");
+var bctx = b.getContext("2d");
+var field = [];
+var selPal = 1;
+var mouseDown = false;
+function init()
+{
+	for(i = 0; i < 200; i++)
+		field[i] = 0;
+	document.addEventListener("mouseup", function(event)
+	{
+		mouseDown = false;
+	}
+	, false)
+	b.addEventListener("mousedown", function(event)
+	{
+		mouseDown = true;
+		var x = Math.floor((event.pageX - b.offsetLeft)/20);
+		var y = Math.floor((event.pageY - b.offsetTop)/20);
+		field[x + ((19-y)*10)] = selPal;
+	}
+	, false)
+	b.addEventListener("mousemove", function(event)
+	{
+		if(mouseDown)
+		{
+			var x = Math.floor((event.pageX - b.offsetLeft)/20);
+			var y = Math.floor((event.pageY - b.offsetTop)/20);
+			field[x + ((19-y)*10)] = selPal;
+		}
+	}, false);
+	p.addEventListener("mousedown", function(event)
+	{
+		mouseDown = true;
+		var x = Math.floor((event.pageX - p.offsetLeft)/20);
+		var y = Math.floor((event.pageY - p.offsetTop)/20);
+		selPal = x + y*8;
+	}
+	, false)
+	p.addEventListener("mousemove", function(event)
+	{
+		if(mouseDown)
+		{
+			var x = Math.floor((event.pageX - p.offsetLeft)/20);
+			var y = Math.floor((event.pageY - p.offsetTop)/20);
+			selPal = x + y*8;
+		}
+	}, false);
+	requestAnimationFrame(mainLoop);
+}
+
+function mainLoop()
+{
+	for(i = 0; i < 16; i++)//draw pallette
+		drawBlock(i%8, Math.floor(i/8), i, pctx);
+		
+	pctx.strokeStyle = "#FFFFFF";
+	pctx.strokeRect((selPal%8)*20, Math.floor(selPal/8)*20, 20, 20)//draw selected bucket
+	
+	for(i = 0; i < 200; i++)//draw blocks
+		drawBlock(i%10, 19 - Math.floor(i/10), field[i], bctx);
+		
+	bctx.strokeStyle = "#888888"
+	for(i = 0; i < 9; i++)
+	{
+		bctx.beginPath();
+		bctx.moveTo((i+1)*20, 0);
+		bctx.lineTo((i+1)*20, 400);
+		bctx.stroke();//draw bg outlines
+	}
+	for(i = 0; i < 19; i++)
+	{
+		bctx.beginPath();
+		bctx.moveTo(0, (i+1)*20);
+		bctx.lineTo(200, (i+1)*20);
+		bctx.stroke();//draw bg outlines
+	}
+		
+	requestAnimationFrame(mainLoop);
+}
+
+function drawBlock(x, y, id, context)
+{
+	var col = "#FFFFFF";
+	switch(id%8)
+	{
+		case 0:
+			if (id == 8) col = "#7c7c7c";
+			break;
+		case 1: //red
+			col = "#FF0000";
+			break;
+		case 2: //green
+			col = "#51d60e";
+			break;
+		case 3: //violet
+			col = "#c40ece";
+			break;
+		case 4: //blue
+			col = "#0e33c9";
+			break;
+		case 5: //orange
+			col = "#db7d0a";
+			break;
+		case 6: //yellow
+			col = "#ecef26";
+			break;
+		case 7: //cyan
+			col = "#23eae7";
+			break;
+	}
+	context.fillStyle = col;
+	context.fillRect(20*x, 20*y, 20, 20);
+	if(id > 7)
+	{
+		context.strokeStyle = "#000000";
+		context.beginPath();
+		context.arc(20*x + 10, 20*y + 10, 9, 0, 2 * Math.PI);
+		context.stroke();
+	}
+	
+}
+
+function generate()
+{
+	var hex = "";
+	
+	for(i = 0; i < 200; i++)
+	{
+		hex = hex.concat("0123456789ABCDEF".substring(field[i], field[i]+1));
+	}
+	document.getElementById("hex").innerHTML = hex;
+}
+</script>
+</html>

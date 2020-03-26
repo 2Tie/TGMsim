@@ -1,29 +1,45 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TGMsim
 {
     class GameSelect
     {
-        public int menuSelection = 0;
-        private int prevSel = 0;
+        public int menuSelection = 1;
+        private int prevSel = 1;
         public int pSel = 0;
         public bool prompt = false;
         int hInput = 0;
         int vInput = 0;
         Rectangle curBox, destBox;
 
+        SolidBrush tb;
+
+        List<string> desc = new List<string> {
+            "WHERE IT ALL BEGAN", //SEGA
+            "SLOW AND STEADY", //TGM1
+            "PICKING UP THE PACE", //TGM2
+            "ROUNDING OUT THE MODES", //TAP
+            "MORE CONTROL, MORE SPEED", //TGM3
+            "TEST A VARIETY OF SKILLS", //ACE
+            "PUSH YOURSELF TO THE MAX!", //GMX
+            "FUN EXTRAS", //BONUS
+            "CHANGE YOUR SETTINGS" //PREFERENCES
+        };
+
+        float tempX = 0;
+        float tempY = 150;
+        float tempW = 200;
+        float tempH = 299;
+
         System.Windows.Media.MediaPlayer s_Select = new System.Windows.Media.MediaPlayer();
 
 
         public GameSelect()
         {
-            destBox = new Rectangle(0, 0, 200, 400);
+            destBox = new Rectangle(0, 150, 200, 299);
             curBox = destBox;
+            tb = new SolidBrush(Color.White);
 
             Audio.addSound(s_Select, "/Res/Audio/SE/SEI_roll.wav");
         }
@@ -37,35 +53,46 @@ namespace TGMsim
                     {
                         case 0:
                             if (pad.inputH == -1)
-                                menuSelection = 5;
+                                menuSelection = 6;
                             if (pad.inputH == 1)
                                 menuSelection = 2;
                             break;
                         case 1:
+                            if (pad.inputH == -1)
+                                menuSelection = 6;
+                            if (pad.inputH == 1)
+                                menuSelection = 3;
+                            break;
                         case 2:
                             if (pad.inputH == -1)
                                 menuSelection = 0;
                             if (pad.inputH == 1)
-                                menuSelection = 3;
+                                menuSelection = 4;
                             break;
                         case 3:
-                        case 4:
                             if (pad.inputH == -1)
-                                menuSelection = 2;
+                                menuSelection = 1;
                             if (pad.inputH == 1)
-                                menuSelection = 5;
+                                menuSelection = 4;
                             break;
+                        case 4:
                         case 5:
                             if (pad.inputH == -1)
                                 menuSelection = 3;
                             if (pad.inputH == 1)
-                                menuSelection = 0;
+                                menuSelection = 6;
                             break;
                         case 6:
-                            menuSelection = 7;
+                            if (pad.inputH == -1)
+                                menuSelection = 4;
+                            if (pad.inputH == 1)
+                                menuSelection = 1;
                             break;
                         case 7:
-                            menuSelection = 6;
+                            menuSelection = 8;
+                            break;
+                        case 8:
+                            menuSelection = 7;
                             break;
                     }
                 }
@@ -84,40 +111,49 @@ namespace TGMsim
                     switch (menuSelection)
                     {
                         case 0:
-                            menuSelection = 6;
-                            break;
-                        case 1:
                             if (pad.inputV == 1)
-                                menuSelection = 6;
-                            else
-                                menuSelection = 2;
-                            break;
-                        case 2:
-                            if (pad.inputV == -1)
-                                menuSelection = 6;
+                                menuSelection = 7;
                             else
                                 menuSelection = 1;
                             break;
-                        case 3:
+                        case 1:
+                            if (pad.inputV == 1)
+                                menuSelection = 0;
+                            else
+                                menuSelection = 7;
+                            break;
+                        case 2:
                             if (pad.inputV == 1)
                                 menuSelection = 7;
                             else
-                                menuSelection = 4;
+                                menuSelection = 3;
+                            break;
+                        case 3:
+                            if (pad.inputV == -1)
+                                menuSelection = 7;
+                            else
+                                menuSelection = 2;
                             break;
                         case 4:
                             if (pad.inputV == 1)
-                                menuSelection = 3;
+                                menuSelection = 8;
                             else
-                                menuSelection = 7;
+                                menuSelection = 5;
                             break;
                         case 5:
-                            menuSelection = 7;
+                            if (pad.inputV == 1)
+                                menuSelection = 4;
+                            else
+                                menuSelection = 8;
                             break;
                         case 6:
-                            menuSelection = 0;
+                            menuSelection = 8;
                             break;
                         case 7:
-                            menuSelection = 5;
+                            menuSelection = 1;
+                            break;
+                        case 8:
+                            menuSelection = 6;
                             break;
                     }
                 }
@@ -133,77 +169,73 @@ namespace TGMsim
             }
 
             //box logic
-            int bhite = 450;
-            if (menuSelection == 1 || menuSelection == 4)
-                bhite = 150;
-            if (menuSelection == 2 || menuSelection == 3)
-                bhite = 300;
-            if (menuSelection > 5)
+            int bhite = 449;
+            if (menuSelection == 0 || menuSelection == 2 || menuSelection == 5)
                 bhite = 149;
-            int bwith = 200;
-            if (menuSelection > 5)
-                bwith = 400;
-            int bX = 200 * menuSelection;
-            if (menuSelection > 1)
+            if (menuSelection == 1 || menuSelection == 3 || menuSelection == 4)
+                bhite = 299;
+            if (menuSelection > 6)
+                bhite = 119;
+            int bwith = 199;
+            if (menuSelection > 6)
+                bwith = 399;
+            int bX = 200 * (menuSelection-1);
+            if (menuSelection == 0)
+                bX += 200;
+            if (menuSelection > 2)
                 bX -= 200;
-            if (menuSelection > 3)
+            if (menuSelection > 4)
                 bX -= 200;
-            if (menuSelection > 5)
-                bX = (menuSelection - 6) * 400;
+            if (menuSelection > 6)
+                bX = (menuSelection - 7) * 400;
             int bY = 0;
-            if (menuSelection == 2)
+            if (menuSelection == 1 || menuSelection == 3)
                 bY = 150;
-            if (menuSelection == 4)
+            if (menuSelection == 5)
                 bY = 300;
-            if (menuSelection > 5)
+            if (menuSelection > 6)
                 bY = 450;
             destBox = new Rectangle(bX, bY, bwith, bhite);
-            curBox.X += (destBox.X - curBox.X) / 2;
-            curBox.Y += (destBox.Y - curBox.Y) / 2;
-            curBox.Width += (destBox.Width - curBox.Width) / 2;
-            curBox.Height += (destBox.Height - curBox.Height) / 2;
+            tempX += (float)(destBox.X - curBox.X) / 2;
+            tempY += (float)(destBox.Y - curBox.Y) / 2;
+            tempW += (float)(destBox.Width - curBox.Width) / 2;
+            tempH += (float)(destBox.Height - curBox.Height) / 2;
+
+            curBox = new Rectangle((int)tempX, (int)tempY, (int)tempW, (int)tempH);
 
 
         }
-        public void render(Graphics drawBuffer)
+        public void render()
         {
-            
+            Draw.buffer.DrawImageUnscaled(Image.FromFile("Res/GFX/menus/bg0.png"), 0, 0);
             //placeholder until i get arts or something
-            drawBuffer.DrawString("TGM", SystemFonts.DefaultFont, new SolidBrush(Color.White), 100, 200);
-            drawBuffer.DrawString("TGM2", SystemFonts.DefaultFont, new SolidBrush(Color.White), 300, 100);
-            drawBuffer.DrawString("TAP", SystemFonts.DefaultFont, new SolidBrush(Color.White), 300, 200);
-            drawBuffer.DrawString("TGM3", SystemFonts.DefaultFont, new SolidBrush(Color.White), 500, 200);
-            drawBuffer.DrawString("ACE", SystemFonts.DefaultFont, new SolidBrush(Color.White), 500, 300);
-            drawBuffer.DrawString("TGM4", SystemFonts.DefaultFont, new SolidBrush(Color.White), 700, 200);
-            drawBuffer.DrawString("Bonus", SystemFonts.DefaultFont, new SolidBrush(Color.White), 200, 500);
-            drawBuffer.DrawString("Preferences", SystemFonts.DefaultFont, new SolidBrush(Color.White), 600, 500);
+            Draw.buffer.DrawString("SEGA", Draw.f_Maestro, tb, 80, 100);
+            Draw.buffer.DrawString("TGM", Draw.f_Maestro, tb, 80, 200);
+            Draw.buffer.DrawString("GM2", Draw.f_Maestro, tb, 290, 100);
+            Draw.buffer.DrawString("TAP", Draw.f_Maestro, tb, 290, 200);
+            Draw.buffer.DrawString("GM3", Draw.f_Maestro, tb, 480, 200);
+            Draw.buffer.DrawString("ACE", Draw.f_Maestro, tb, 480, 300);
+            Draw.buffer.DrawString("GMX", Draw.f_Maestro, tb, 680, 200);
+            Draw.buffer.DrawString("BONUS", Draw.f_Maestro, tb, 180, 500);
+            Draw.buffer.DrawString("PREFERENCES", Draw.f_Maestro, tb, 560, 500);
+            //replay message
+            Draw.buffer.DrawString("PRESS HOLD TO LOAD A REPLAY!", Draw.f_Maestro, tb, 280, 2);
+            //game description bar
+            Draw.buffer.DrawString(desc[menuSelection], Draw.f_Maestro, tb, 400 - (9 * desc[menuSelection].Length / 2), 580);
 
 
             //selection box
-            drawBuffer.DrawRectangle(new Pen(new SolidBrush(Color.White)), curBox);
+            Draw.buffer.DrawRectangle(new Pen(tb), curBox);
 
 
-            if (!prompt)
+            if (prompt)
             {
-                int vhelper = 0;
-                if (menuSelection == 1)
-                    vhelper = -100;
-                if (menuSelection == 4)
-                    vhelper = 100;
+                Draw.buffer.FillRectangle(new SolidBrush(Color.FromArgb(160, Color.Black)), 0, 0, 800, 600); //dim the BG
+                Draw.buffer.DrawString("Are you sure you want to log out?", SystemFonts.DefaultFont, tb, 320, 200);
+                Draw.buffer.DrawString("No...", SystemFonts.DefaultFont, tb, 300, 220);
+                Draw.buffer.DrawString("Yes!", SystemFonts.DefaultFont, tb, 500, 220);
 
-                if (menuSelection < 6)
-                    drawBuffer.DrawString("↑", SystemFonts.DefaultFont, new SolidBrush(Color.White), 108 + ((int)Math.Ceiling((double)menuSelection / 2) * 200), 215 + vhelper);
-                else
-                    drawBuffer.DrawString("↑", SystemFonts.DefaultFont, new SolidBrush(Color.White), 208 + ((menuSelection - 6) * 400), 515);
-            }
-            else
-            {
-                drawBuffer.FillRectangle(new SolidBrush(Color.FromArgb(140, Color.Black)), 0, 0, 800, 600); //dim the BG
-                drawBuffer.DrawString("Are you sure you want to log out?", SystemFonts.DefaultFont, new SolidBrush(Color.White), 320, 200);
-                drawBuffer.DrawString("No...", SystemFonts.DefaultFont, new SolidBrush(Color.White), 300, 220);
-                drawBuffer.DrawString("Yes!", SystemFonts.DefaultFont, new SolidBrush(Color.White), 500, 220);
-
-                drawBuffer.DrawString(">", SystemFonts.DefaultFont, new SolidBrush(Color.White), 290 + (200 * pSel), 220);
+                Draw.buffer.DrawString(">", SystemFonts.DefaultFont, tb, 290 + (200 * pSel), 220);
             }
         }
     }

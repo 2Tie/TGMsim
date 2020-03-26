@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TGMsim
 {
@@ -12,45 +8,123 @@ namespace TGMsim
         public int game;
         public int selection;
         private int prevSel;
-        int dInput;
+        int dInputV;
+        int dInputH;
+
+        public List<int> variant = new List<int>();
+
+        public struct ModeSelObj
+        {
+            public List<string> names;
+            public Mode.ModeType id;
+            public List<bool> enabled;
+
+            public ModeSelObj(List<string> n, Mode.ModeType t, List<bool> e)
+            {
+                names = n;
+                id = t;
+                enabled = e;
+            }
+        }
+
+        public List<List<ModeSelObj>> modes = new List<List<ModeSelObj>>();
+
+
+        SolidBrush active = new SolidBrush(Color.White);
+        SolidBrush locked = new SolidBrush(Color.Gray);
 
         System.Windows.Media.MediaPlayer s_Roll = new System.Windows.Media.MediaPlayer();
 
-        public ModeSelect(int g)
+        public ModeSelect(int g, Profile p)
         {
             game = g;
             Audio.addSound(s_Roll, "/Res/Audio/SE/SEI_name_select.wav");
+
+            List<ModeSelObj> tmp = new List<ModeSelObj>();//sega
+            tmp.Add(new ModeSelObj(new List<string> { "Tetris" }, Mode.ModeType.SEGA, new List<bool> { true }));
+            tmp.Add(new ModeSelObj(new List<string> { "Bloxeed" }, Mode.ModeType.BLOX, new List<bool> { true }));
+            tmp.Add(new ModeSelObj(new List<string> { "Flash Point" }, Mode.ModeType.FLASH, new List<bool> { true }));
+            tmp.Add(new ModeSelObj(new List<string> { "SEMIPRO 20G" }, Mode.ModeType.SHIMIZU, new List<bool> { true }));
+            modes.Add(tmp);
+            tmp = new List<ModeSelObj>();//tgm1
+            tmp.Add(new ModeSelObj(new List<string> { "Master" }, Mode.ModeType.MASTER, new List<bool> { true }));
+            modes.Add(tmp);
+            tmp = new List<ModeSelObj>();//tgm2
+            tmp.Add(new ModeSelObj(new List<string> { "Master" }, Mode.ModeType.MASTER, new List<bool> { true }));
+            tmp.Add(new ModeSelObj(new List<string> { "Cardcaptor Sakura Easy", "Cardcaptor Sakura Normal" }, Mode.ModeType.CCS, new List<bool> { true, true })); //TODO
+            modes.Add(tmp);
+            tmp = new List<ModeSelObj>();//tap
+            tmp.Add(new ModeSelObj(new List<string> { "Normal" }, Mode.ModeType.SEGA, new List<bool> { false })); //TODO
+            tmp.Add(new ModeSelObj(new List<string> { "Master" }, Mode.ModeType.MASTER, new List<bool> { true }));
+            tmp.Add(new ModeSelObj(new List<string> { "TGM+" }, Mode.ModeType.PLUS, new List<bool> { true }));
+            tmp.Add(new ModeSelObj(new List<string> { "Death" }, Mode.ModeType.DEATH, new List<bool> { true }));
+            modes.Add(tmp);
+            tmp = new List<ModeSelObj>();//tgm3
+            tmp.Add(new ModeSelObj(new List<string> { "Easy" }, Mode.ModeType.EASY, new List<bool> { true }));
+            tmp.Add(new ModeSelObj(new List<string> { "Master" }, Mode.ModeType.MASTER, new List<bool> { true }));
+            tmp.Add(new ModeSelObj(new List<string> { "Sakura" }, Mode.ModeType.SEGA, new List<bool> { false })); //TODO
+            tmp.Add(new ModeSelObj(new List<string> { "Shirase" }, Mode.ModeType.SHIRASE, new List<bool> { true }));
+            modes.Add(tmp);
+            tmp = new List<ModeSelObj>();//ACE
+            //Normal
+            //Hi-Speed 1
+            //Hi-Speed 2
+            //Big
+            //UNLOCKED BELOW HERE
+            //Another
+            //Another 2
+
+            //Match
+            //UNLOCKED BELOW HERE
+            //Eraser
+            //Level Star
+            //Target
+
+            tmp.Add(new ModeSelObj(new List<string> { "Roads" }, Mode.ModeType.SEGA, new List<bool> { false }));
+            tmp.Add(new ModeSelObj(new List<string> { "Exam" }, Mode.ModeType.SEGA, new List<bool> { false }));
+            modes.Add(tmp);
+            tmp = new List<ModeSelObj>(); //GMX
+            tmp.Add(new ModeSelObj(new List<string> { "Dynamo", "Dynamo+", "Dynamo++", "Dynamo+++", "Dynamo*" }, Mode.ModeType.DYNAMO, new List<bool> { true, p.dynamoProgress > 0, p.dynamoProgress > 1, p.dynamoProgress > 2, p.dynamoProgress > 3 }));
+            tmp.Add(new ModeSelObj(new List<string> { "Endura" }, Mode.ModeType.ENDURA, new List<bool> { false }));
+            tmp.Add(new ModeSelObj(new List<string> { "Hell March" }, Mode.ModeType.MARCH, new List<bool> { true }));
+            modes.Add(tmp);
+            tmp = new List<ModeSelObj>(); //bonus
+            tmp.Add(new ModeSelObj(new List<string> { "Custom" }, Mode.ModeType.SEGA, new List<bool> { true }));
+            tmp.Add(new ModeSelObj(new List<string> { "Miner", "Zen" }, Mode.ModeType.MINER, new List<bool> { true, true }));
+            tmp.Add(new ModeSelObj(new List<string> { "Garbage Clear" }, Mode.ModeType.GARBAGE, new List<bool> { true }));
+            tmp.Add(new ModeSelObj(new List<string> { "20G Practice" }, Mode.ModeType.TRAINING, new List<bool> { true }));
+            tmp.Add(new ModeSelObj(new List<string> { "Icy Shirase" }, Mode.ModeType.ROUNDS, new List<bool> { true }));
+            tmp.Add(new ModeSelObj(new List<string> { "Big Bravo Mania" }, Mode.ModeType.KONOHA, new List<bool> { true }));
+            tmp.Add(new ModeSelObj(new List<string> { "TGM Practice 0", "TGM Practice 100", "TGM Practice 200", "TGM Practice 1G", "TGM Practice 2G", "TGM Practice 5G", "TGM 20G" }, Mode.ModeType.PRACTICE, new List<bool> { true, true, true, true, true, true, true, }));
+            modes.Add(tmp);
+
+            for (int i = 0; i < modes[g].Count; i++)
+                variant.Add(0);
         }
         public void logic(Controller pad)
         {
-            if (pad.inputV != dInput)
+            if (pad.inputV != dInputV)
             {
                 selection = (selection - pad.inputV);
-                dInput = pad.inputV;
+                dInputV = pad.inputV;
             }
 
-            switch(game)
+            if(pad.inputH != dInputH)
             {
-                case 2:
-                case 3:
-                case 4:
-                    if (selection == 2)
-                        selection = 0;
-                    if (selection == -1)
-                        selection = 1;
-                    break;
-                case 5:
-                case 6:
-                    if (selection == 4)
-                        selection = 0;
-                    if (selection == -1)
-                        selection = 3;
-                    break;
-                default:
-                    if (selection == 1)
-                        selection = 0;
-                    break;
+                dInputH = pad.inputH;
+                if (modes[game][selection].names.Count > 1)
+                {
+                    variant[selection] += pad.inputH;
+                    if (variant[selection] < 0)
+                        variant[selection] = modes[game][selection].names.Count - 1;
+                    if (variant[selection] >= modes[game][selection].names.Count)
+                        variant[selection] = 0;
+                }
             }
+            if (selection < 0)
+                selection = modes[game].Count - 1;
+            if (selection >= modes[game].Count)
+                selection = 0;
 
             if (prevSel != selection)
             {
@@ -58,38 +132,14 @@ namespace TGMsim
                 prevSel = selection;
             }
         }
-        public void render(Graphics drawBuffer)
+        public void render()
         {
-            if (game < 4)
-                drawBuffer.DrawString("Master", SystemFonts.DefaultFont, new SolidBrush(Color.White), 300, 300);
-            if (game == 4)
-                drawBuffer.DrawString("Roads", SystemFonts.DefaultFont, new SolidBrush(Color.White), 300, 300);
-            if (game == 5)
-                drawBuffer.DrawString("World", SystemFonts.DefaultFont, new SolidBrush(Color.White), 300, 300);
-            if (game == 6)
-                drawBuffer.DrawString("Custom", SystemFonts.DefaultFont, new SolidBrush(Color.White), 300, 300);
-            drawBuffer.DrawString("→", SystemFonts.DefaultFont, new SolidBrush(Color.White), 285, 300 + 12*selection);
-            switch(game)
+            for(int i = 0; i < modes[game].Count; i++)
             {
-                case 2://tap
-                    drawBuffer.DrawString("Death", SystemFonts.DefaultFont, new SolidBrush(Color.White), 300, 312);
-                    break;
-                case 3://tgm3
-                    drawBuffer.DrawString("Shirase", SystemFonts.DefaultFont, new SolidBrush(Color.White), 300, 312);
-                    break;
-                case 4://ACE
-                    drawBuffer.DrawString("Promotion Exam", SystemFonts.DefaultFont, new SolidBrush(Color.White), 300, 312);
-                    break;
-                case 5://TGM4
-                    drawBuffer.DrawString("Rounds", SystemFonts.DefaultFont, new SolidBrush(Color.White), 300, 312);
-                    drawBuffer.DrawString("Konoha", SystemFonts.DefaultFont, new SolidBrush(Color.White), 300, 324);
-                    break;
-                case 6://bonus
-                    drawBuffer.DrawString("~Eternal Shirase~", SystemFonts.DefaultFont, new SolidBrush(Color.White), 300, 312);
-                    drawBuffer.DrawString("Garbage Clearer", SystemFonts.DefaultFont, new SolidBrush(Color.White), 300, 324);
-                    drawBuffer.DrawString("20G Practice", SystemFonts.DefaultFont, new SolidBrush(Color.White), 300, 336);
-                    break;
+                ModeSelObj m = modes[game][i];
+                Draw.buffer.DrawString(m.names[variant[i]], SystemFonts.DefaultFont, m.enabled[variant[i]] ? active : locked, 150, 250 + 12*i);
             }
+            Draw.buffer.DrawString("→", SystemFonts.DefaultFont, Draw.wb, 135, 250 + 12 * selection);
         }
     }
 }

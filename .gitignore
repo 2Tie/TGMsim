@@ -1,3 +1,6 @@
 TGMsim/bin/
 TGMsim/obj/
 SimExtras/
+.vs/
+*.suo
+*.user

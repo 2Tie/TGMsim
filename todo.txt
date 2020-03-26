@@ -1,0 +1,20 @@
+Bugs to fix:
+CCS Gravity speeds are incorrect - maybe seperate out into a new game category?
+figure out how/when delay table is looped through??
+implement Shimmer
+verify out delay for Mirror in CCS
+SEGA-based modes have a turnaround das bug, need to implement
+CCS kicks are hella wack
+
+Additions for release:
+Sakura mode? needs XRAY
+polish up GUI some more
+flesh out Custom Mode
+backgrounds for game select and mode select
+
+Additions in the future:
+refine Dynamo based on feedback
+GM/Full Clear medals in game select
+item blocks
+normal mode (has secret grade)
+ACE modes

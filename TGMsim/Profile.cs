@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace TGMsim
 {
     class Profile
     {
-        public String name;
+        public string name = "   ";
         public int decoration = 0;
         public int globalDecoration = 0;
         public bool displayGlobal = false;
@@ -17,11 +15,23 @@ namespace TGMsim
         public bool passProtected = false;
         public int TIGrade = 0;
         public List<int> TIHistory = new List<int>{0,0,0,0,0,0,0};
-        public List<bool> certs = new List<bool>{false, false, false, false, false, false, false, false, false, false}; //Official GM certifications (1, 2, tap, tap death, 3, 3 shirase, ACE TM, 4 world, 4 rounds, 4 konoha)
+        public List<bool> certs = new List<bool> { false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false };
+        public int dynamoProgress = 0;
+        public List<bool> aceUnlocks = new List<bool> { false, false, false, false, false };
 
         public bool createUser()
         {
-            using (FileStream fsStream = new FileStream("Sav/" + name + ".usr", FileMode.Create))
+            string filename = name.Replace("?", "§");
+            FileStream fsStream;
+            try
+            {
+                fsStream = new FileStream("Sav/Users/" + filename + ".usr", FileMode.Create);
+            }
+            catch (DirectoryNotFoundException e)
+            {
+                Directory.CreateDirectory("Sav/Users/");
+                fsStream = new FileStream("Sav/Users/" + filename + ".usr", FileMode.Create);
+            }
             using (BinaryWriter sw = new BinaryWriter(fsStream, Encoding.UTF8))
             {
                 sw.Write(name);
@@ -45,11 +55,13 @@ namespace TGMsim
                 }*/
                 sw.Write(new byte[4]);//global points
                 sw.Write(new byte[4]);//TGM3 points
-                sw.Write(new byte[2]);//Official GM certifications (1, 2, tap, tap death, 3, 3 shirase, ACE TM, 4 world, 4 rounds, 4 konoha)
-                sw.Write(new byte[2]);//endless shirase hiscore?
+                sw.Write(new byte[4]);//GMs and mode clears
                 sw.Write(new byte[6]);//current TI grade + previous seven rankings
                 sw.Write(new byte[1]);//ACE grade
-                sw.Write(new byte[1]);//unused
+                if (name == "TAS" || name == "   ")
+                    sw.Write(new byte[1] { 0xFF });//dynamo progress and ACE unlocks; tas and cheater have all unlocked by default
+                else
+                    sw.Write(new byte[1]);
             }
             return false;
         }
@@ -57,7 +69,8 @@ namespace TGMsim
         public int readPass()
         {
             //read the pass and put it into verifyPass
-            BinaryReader file = new BinaryReader(File.OpenRead("Sav/" + name + ".usr"));
+            string filename = name.Replace("?", "§");
+            BinaryReader file = new BinaryReader(File.OpenRead("Sav/Users/" + filename + ".usr"));
             if (file.ReadString() != name)//read name
                 return 1; //bad name
             if (file.ReadByte() != 0x03)//read save version, compare to current
@@ -87,7 +100,21 @@ namespace TGMsim
         public bool readUserData()
         {
             //read the user data and pass it to the game
-            BinaryReader file = new BinaryReader(File.OpenRead("Sav/" + name + ".usr"));
+            BinaryReader file;
+            string filename = name.Replace("?", "§");
+            try
+            {
+                 file = new BinaryReader(File.OpenRead("Sav/Users/" + filename + ".usr"));
+            }
+            catch (FileNotFoundException e)
+            {
+                return false;
+            }
+            catch (DirectoryNotFoundException e)
+            {
+                Directory.CreateDirectory("Sav/Users/");
+                return false;
+            }
             if (file.ReadString() != name)//read name
                 return false;
             if (file.ReadByte() != 0x03)//read save version, compare to current
@@ -98,14 +125,12 @@ namespace TGMsim
             globalDecoration = file.ReadInt32();
             //tgm3 points
             decoration = file.ReadInt32();
-            //GM certs
-            ushort certB = file.ReadUInt16();
-            for (int i = 0; i < 10; i++ )
+            //clear certs
+            int certB = file.ReadInt32();
+            for (int i = 0; i < 27; i++ )
             {
-                certs.Add(((certB >> (10 - i)) & 0x1) == 1);
+                certs.Add(((certB >> (26 - i)) & 0x1) == 1);
             }
-            //shirase
-            file.ReadBytes(2);
             //TI grade data
             byte[] tempbyte = new byte[6];
             tempbyte = file.ReadBytes(6);
@@ -123,14 +148,20 @@ namespace TGMsim
 
             //ACE grade data
             file.ReadByte();
-            //future use
-            file.ReadByte();
+            //three bits used by dynamo, five bits used by ACE modes
+            byte t = file.ReadByte();
+            dynamoProgress = (int)(t & 0x7);
+            for(int i = 0; i < 5; i++)
+            {
+                aceUnlocks[i] = ((t >> (7 - i)) & 0x1) == 1;
+            }
             return true;
         }
 
         public bool updateUser()
         {
-            using (FileStream fsStream = new FileStream("Sav/" + name + ".usr", FileMode.Truncate))
+            string filename = name.Replace("?", "§");
+            using (FileStream fsStream = new FileStream("Sav/Users/" + filename + ".usr", FileMode.Truncate))
             using (BinaryWriter sw = new BinaryWriter(fsStream, Encoding.UTF8))
             {
                 //sw.Seek(21, SeekOrigin.Begin);
@@ -155,14 +186,13 @@ namespace TGMsim
                 sw.Write(globalDecoration);//global points
                 sw.Write(decoration);//TGM3 points
 
-                UInt16 certB = new ushort();
-                for (int i = 0; i < 10; i++ )
+                int certB = new ushort();
+                for (int i = 0; i < 27; i++ )
                 {
                     if (certs[i])
-                        certB += (ushort)(0x1 << (10 - i));
+                        certB += (ushort)(0x1 << (26 - i));
                 }
-                sw.Write(certB);//Official GM certifications (1, 2, tap, tap death, 3, 3 shirase, ACE TM, 4 world, 4 rounds, 4 konoha)
-                sw.Write(new byte[2]);//endless shirase hiscore?
+                sw.Write(certB);//Official GM/mode clear certifications (FP, 1, 2, CCS EZ, CCS N, normal, tap, TGM+, death, easy, 3, sakura, shirase, 10 ACE modes, ACE TM, Dynamo, Endura, Hell March)
 
                 byte[] tempbyte = new byte[6];
                 tempbyte[0] = (byte)((TIGrade << 2) + ((TIHistory[0] & 0x30) >> 4));
@@ -174,7 +204,12 @@ namespace TGMsim
 
                 sw.Write(tempbyte);//current TI grade + previous seven rankings
                 sw.Write(new byte[1]);//ACE grade
-                sw.Write(new byte[1]);//unused
+                byte temp = (byte)dynamoProgress;
+                for (int i = 0; i < 5; i++)
+                {
+                    temp += (byte)(((aceUnlocks[i]?1:0) << (7 - i)) & 0x1);
+                }
+                sw.Write(temp);//dynamo progress and ACE mode unlocks
             }
             return true;
         }
