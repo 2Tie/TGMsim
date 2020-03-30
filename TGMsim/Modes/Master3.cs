@@ -100,11 +100,11 @@ namespace TGMsim.Modes
             }
         }
 
-        public override void onTick(long time)
+        public override void onTick(long time, Field.timerType timer)
         {
             t = time;
             secTimer.tick();
-            if (!comboing && !inCredits)
+            if (gradeCombo == 0 && !inCredits && timer == Field.timerType.LockDelay)
                 gradeTime++;
             if (gradeTime > decayRate[grade])
             {

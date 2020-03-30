@@ -661,7 +661,7 @@ namespace TGMsim
             pad1.southpaw = prefs.southpaw;
             FPS = rules.FPS;
 
-            field1 = new Field(pad1, rules, 6044, false);
+            field1 = new Field(pad1, rules, -1, false);
             if (player.name == "   ")
             {
                 field1.godmode = cMen.cheats[0];
