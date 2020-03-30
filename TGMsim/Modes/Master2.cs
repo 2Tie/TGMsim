@@ -85,7 +85,7 @@ namespace TGMsim.Modes
         {
             t = time;
             secTimer.tick();
-            if(!comboing && !inCredits)
+            if(gradeCombo == 0 && !inCredits)
                 gradeTime++;
             if (gradeTime > decayRate[grade])
             {
@@ -463,7 +463,7 @@ namespace TGMsim.Modes
 
         public override void draw(bool replay)
         {
-            if (replay)
+            //if (replay)
             {
                 Draw.buffer.DrawString(grade.ToString(), Draw.f_Maestro, Draw.tb, 20, 300);
                 Draw.buffer.DrawString(intGrade.ToString(), Draw.f_Maestro, Draw.tb, 20, 312);

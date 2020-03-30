@@ -49,13 +49,13 @@ namespace TGMsim
         {
             addSound(s_Ready, @"\Res\Audio\SE\SEP_ready.wav");
             addSound(s_Go, @"/Res/Audio/SE/SEP_go.wav");
-            addSound(s_Tet1, @"/Res/Audio/SE/SEB_mino1.wav");
-            addSound(s_Tet2, @"/Res/Audio/SE/SEB_mino2.wav");
-            addSound(s_Tet3, @"/Res/Audio/SE/SEB_mino3.wav");
-            addSound(s_Tet4, @"/Res/Audio/SE/SEB_mino4.wav");
-            addSound(s_Tet5, @"/Res/Audio/SE/SEB_mino5.wav");
-            addSound(s_Tet6, @"/Res/Audio/SE/SEB_mino6.wav");
-            addSound(s_Tet7, @"/Res/Audio/SE/SEB_mino7.wav");
+            addSound(s_Tet1, @"/Res/Audio/SE/SEB_mino7.wav");
+            addSound(s_Tet2, @"/Res/Audio/SE/SEB_mino4.wav");
+            addSound(s_Tet3, @"/Res/Audio/SE/SEB_mino5.wav");
+            addSound(s_Tet4, @"/Res/Audio/SE/SEB_mino2.wav");
+            addSound(s_Tet5, @"/Res/Audio/SE/SEB_mino3.wav");
+            addSound(s_Tet6, @"/Res/Audio/SE/SEB_mino1.wav");
+            addSound(s_Tet7, @"/Res/Audio/SE/SEB_mino6.wav");
             addSound(s_PreRot, @"/Res/Audio/SE/SEB_prerotate.wav");
             addSound(s_Contact, @"/Res/Audio/SE/SEB_instal.wav");
             addSound(s_Lock, @"/Res/Audio/SE/SEB_fixa.wav");

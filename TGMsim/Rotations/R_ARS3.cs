@@ -14,54 +14,57 @@ namespace TGMsim
 
             Tetromino testTet = tet.clone((tet.rotation + p + 4)%4);
 
-            int bigOffset = 1;
-            if (large)
-                bigOffset = 2;
-
-            if (tet.id == Tetromino.Piece.I)//test I floorkicks
+            if (!spawn)//IRS doesn't kick
             {
-                if (tet.rotation % 2 == 0 && tet.floored && !checkUnder(testTet, gameField, large, spawn))
+                int bigOffset = 1;
+                if (large)
+                    bigOffset = 2;
+
+                if (tet.id == Tetromino.Piece.I)//test I floorkicks
                 {
-                    testTet.move(0, bigOffset);
-                    testTet.kicked++;
-                    if (!checkUnder(testTet, gameField, large, spawn))
+                    if (tet.rotation % 2 == 0 && tet.floored && !checkUnder(testTet, gameField, large))
                     {
                         testTet.move(0, bigOffset);
-                        if (!checkUnder(testTet, gameField, large, spawn))
+                        testTet.kicked++;
+                        if (!checkUnder(testTet, gameField, large))
                         {
-                            testTet.move(0, -2 * bigOffset);
-                            testTet.kicked = 0;
+                            testTet.move(0, bigOffset);
+                            if (!checkUnder(testTet, gameField, large))
+                            {
+                                testTet.move(0, -2 * bigOffset);
+                                testTet.kicked = 0;
+                            }
                         }
                     }
+                    if (tet.rotation % 2 == 1 && tet.kicked > 0)
+                        testTet.groundTimer = 1;
                 }
-                if (tet.rotation % 2 == 1 && tet.kicked > 0)
-                    testTet.groundTimer = 1;
-            }
 
-            if (testRestrict(tet, p, gameField, large))//test kick restrictions
-            {
-                for (int i = 1; i < 3; i++)//test wallkicks in order, stop at first rotation that works
+                if (testRestrict(tet, p, gameField, large))//test kick restrictions
                 {
-                    if (!checkUnder(testTet, gameField, large, spawn))
+                    for (int i = 1; i < 3; i++)//test wallkicks in order, stop at first rotation that works
                     {
-                        if (i != 2)
-                            testTet.move(1*bigOffset, 0);
-                        else
-                            testTet.move(-2*bigOffset, 0);
+                        if (!checkUnder(testTet, gameField, large))
+                        {
+                            if (i != 2)
+                                testTet.move(1 * bigOffset, 0);
+                            else
+                                testTet.move(-2 * bigOffset, 0);
+                        }
                     }
+                    if (tet.id == Tetromino.Piece.I && tet.rotation % 2 == 1 && !checkUnder(testTet, gameField, large))//final I wallkick
+                        testTet.move(3 * bigOffset, 0);
                 }
-                if (tet.id == Tetromino.Piece.I && tet.rotation%2 == 1 && !checkUnder(testTet, gameField, large, spawn))//final I wallkick
-                    testTet.move(3 * bigOffset, 0);
+
+
+
+                if (tet.id == Tetromino.Piece.T && tet.floored && !checkUnder(testTet, gameField, large) && (tet.rotation + p + 4) % 4 == 2)//test T floorkicks
+                {
+                    testTet.move(bigOffset, bigOffset);
+                }
             }
 
-            
-
-            if (tet.id == Tetromino.Piece.T && tet.floored && !checkUnder(testTet, gameField, large, spawn) && (tet.rotation + p + 4) % 4 == 2)//test T floorkicks
-            {
-                testTet.move(bigOffset, bigOffset);
-            }
-
-            if (!checkUnder(testTet, gameField, large, spawn)) //did any kick of the rotation work?
+            if (!checkUnder(testTet, gameField, large)) //did any kick of the rotation work?
                 return tet;
 
             return testTet;
@@ -69,7 +72,7 @@ namespace TGMsim
 
         private bool testRestrict(Tetromino tet, int p, List<List<int>> gameField, bool large)
         {
-            int lowY = 22;
+            int lowY = 23;
             int big = 2;
             if (large)
                 big = 1;

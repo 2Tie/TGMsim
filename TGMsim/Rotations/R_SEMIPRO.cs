@@ -15,14 +15,9 @@ namespace TGMsim.Rotations
 
         public override Tetromino rotate(Tetromino tet, int p, List<List<int>> gameField, int rule, bool large, bool spawn)
         {
-            p = (tet.rotation + p);
-            if (p < 0)
-                p += 4;
-            else if (p > 3)
-                p -= 4;
-            Tetromino testTet = tet.clone(p);
+            Tetromino testTet = tet.clone((tet.rotation + p + 4) % 4);
 
-            if (!checkUnder(testTet, gameField, large, false)) //did the rotation work?
+            if (!checkUnder(testTet, gameField, large)) //did the rotation work?
                 return tet;
 
             return testTet;

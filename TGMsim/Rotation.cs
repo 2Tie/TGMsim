@@ -16,10 +16,8 @@ namespace TGMsim
             return new Tetromino(0, large);
         }
 
-        public bool checkUnder(Tetromino tet, List<List<int>> gameField, bool large, bool spawn)
+        public bool checkUnder(Tetromino tet, List<List<int>> gameField, bool large)
         {
-            if (spawn)
-                return true;
 
             int lowY = 22;
             int big = 2;

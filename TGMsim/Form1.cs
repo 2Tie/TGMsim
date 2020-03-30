@@ -620,11 +620,11 @@ namespace TGMsim
         {
             Audio.stopMusic();
             rules = new GameRules();
-            rules.setup((GameRules.Games)new int[] { 0, 1, 3, 4, 6 }[customMenu.game], Mode.ModeType.CUSTOM, 0);
+            rules.setup((GameRules.Games)customMenu.game, Mode.ModeType.CUSTOM, 0);
             rules.mod.ModeName = "CUSTOM";
             rules.mod.border = Color.DarkGreen;
-            rules.generator = new int[] { 5, 1, 2, 3, 6 }[customMenu.generator];
-            rules.rotation = (customMenu.rotation + 2) % 4;
+            rules.generator = (GameRules.Gens)customMenu.generator;
+            rules.rotation = (GameRules.Rots)customMenu.rotation;
             rules.mod.g20 = customMenu.grav == 1;
             rules.mod.bigmode = customMenu.big;
             rules.mod.invpiece = customMenu.invPiece;
@@ -633,7 +633,7 @@ namespace TGMsim
 
             pad1.southpaw = prefs.southpaw;
             FPS = rules.FPS;
-            field1 = new Field(pad1, rules, -1);
+            field1 = new Field(pad1, rules, -1, false);
             field1.disableGoldFlash = !prefs.flashing;
             field1.custom = true;
             field1.g0 = customMenu.grav == 2;
@@ -661,7 +661,7 @@ namespace TGMsim
             pad1.southpaw = prefs.southpaw;
             FPS = rules.FPS;
 
-            field1 = new Field(pad1, rules, -1);
+            field1 = new Field(pad1, rules, 6044, false);
             if (player.name == "   ")
             {
                 field1.godmode = cMen.cheats[0];
@@ -867,7 +867,7 @@ namespace TGMsim
                 throw new Exception();
             rules = new GameRules();
             rules.setup((GameRules.Games)gam, (Mode.ModeType)mod, v);
-            field1 = new Field(pad1, rules, s);
+            field1 = new Field(pad1, rules, s, true);
             Audio.stopMusic();
         }
 

@@ -24,6 +24,7 @@ namespace TGMsim
                 temp = read() % 7;
                 if (!history.Contains(temp))
                     break;
+                temp = read() % 7; //not verified this is needed, but i'm assuming so since TAP and TGM3 need it.
             }
             updateHistory(temp);
             return history[1];

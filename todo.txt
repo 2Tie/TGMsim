@@ -4,12 +4,14 @@ figure out how/when delay table is looped through??
 implement Shimmer
 verify out delay for Mirror in CCS
 SEGA-based modes have a turnaround das bug, need to implement
-CCS kicks are hella wack
+CCS kicks are hella wack  
+implement the top of the field cutting off pips while not breaking big mode  
 
 Additions for release:
 Sakura mode? needs XRAY
 polish up GUI some more
 flesh out Custom Mode
+add seed select to Custom Mode
 backgrounds for game select and mode select
 
 Additions in the future:

@@ -18,11 +18,11 @@ namespace TGMsim
             if (large)
                 bigOffset = 2;
 
-            if (testRestrict(tet, p, gameField, large))//test kick restrictions
+            if (!spawn && testRestrict(tet, p, gameField, large))//test kick restrictions
             {
                 for (int i = 1; i < 3; i++)//test wallkicks in order, stop at first rotation that works
                 {
-                    if (!checkUnder(testTet, gameField, large, spawn))
+                    if (!checkUnder(testTet, gameField, large))
                     {
                         if (i != 2)
                             testTet.move(1*bigOffset, 0);
@@ -31,13 +31,13 @@ namespace TGMsim
                     }
                 }
             }
-            if (!checkUnder(testTet, gameField, large, spawn)) //did any kick of the rotation work?
+            if (!checkUnder(testTet, gameField, large)) //did any kick of the rotation work?
                 return tet;
 
             return testTet;
         }
 
-        private bool testRestrict(Tetromino tet, int p, List<List<int>> gameField, bool large)
+        protected bool testRestrict(Tetromino tet, int p, List<List<int>> gameField, bool large)
         {
             int lowY = 22;
             int big = 2;

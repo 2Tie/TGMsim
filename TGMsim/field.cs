@@ -123,7 +123,7 @@ namespace TGMsim
         int inputDelayH = 0, inputDelayDirH = 0;
         int inputDelayV = 0, inputDelayDirV = 0;
 
-        public Field(Controller ctlr, GameRules rules, int startSeed)
+        public Field(Controller ctlr, GameRules rules, int startSeed, bool isReplay)
         {
             x = 200;
             y = 50;
@@ -186,46 +186,52 @@ namespace TGMsim
             ruleset = rules;
             MOD = rules.mod;
 
-            if (ruleset.rotation == 0) RSYS = new R_ARS1();
-            if (ruleset.rotation == 1) RSYS = new R_ARS3();
-            if (ruleset.rotation == 2) RSYS = new R_SEGA();
-            else if (ruleset.rotation == 3) RSYS = new R_SEMIPRO();
+            if (ruleset.rotation == GameRules.Rots.ARS1) RSYS = new R_ARS1();
+            else if (ruleset.rotation == GameRules.Rots.ARS3) RSYS = new R_ARS3();
+            else if (ruleset.rotation == GameRules.Rots.SEGA) RSYS = new R_SEGA();
+            else if (ruleset.rotation == GameRules.Rots.SEMIPRO) RSYS = new R_SEMIPRO();
+            else if (ruleset.rotation == GameRules.Rots.CCS) RSYS = new R_CCS();
 
 
             if (startSeed != -1)
-            {
                 seed = startSeed;
-                isPlayback = true;
-                pad.enablePlayback();
-            }
             else
             {
                 Random r = new Random();
-                seed = r.Next(Int32.MaxValue);
-                isPlayback = false;
-                pad.enableRecording();
+                seed = r.Next(int.MaxValue);
             }
+
+            isPlayback = isReplay;
+            if (isPlayback)
+                pad.enablePlayback();
+            else
+                pad.enableRecording();
 
             switch (ruleset.generator)
             {
-                case 0:
+                case GameRules.Gens.dummy:
                     GEN = new Generator(seed);
                     break;
-                case 1:
+                case GameRules.Gens.TGM1:
                     GEN = new G_ARS1(seed);
                     break;
-                case 2:
+                case GameRules.Gens.TGM2:
                     GEN = new G_ARS2(seed);
                     break;
-                case 3:
-                case 4:
+                case GameRules.Gens.TGM3:
                     GEN = new G_ARS3(seed);
                     break;
-                case 5:
+                case GameRules.Gens.SEGA:
                     GEN = new G_SEGA(seed);
                     break;
-                case 6:
+                case GameRules.Gens.TGM3_EZ:
                     GEN = new G_ARS3Easy(seed);
+                    break;
+                case GameRules.Gens.CCS:
+                    GEN = new G_ARSSNormal(seed);
+                    break;
+                case GameRules.Gens.CCS_EZ:
+                    GEN = new G_ARSSEasy(seed);
                     break;
             }
 
@@ -1735,7 +1741,7 @@ namespace TGMsim
             
             MOD.onSpawn();
 
-            bool blocked = false;
+            bool blocked;
 
             blocked = !emptyUnderTet(activeTet);
 

@@ -130,6 +130,7 @@
     <Compile Include="Rotation.cs" />
     <Compile Include="Rotations\R_ARS3.cs" />
     <Compile Include="Rotations\R_ARS1.cs" />
+    <Compile Include="Rotations\R_CCS.cs" />
     <Compile Include="Rotations\R_SEGA.cs" />
     <Compile Include="Rotations\R_SEMIPRO.cs" />
     <Compile Include="Tetromino.cs" />

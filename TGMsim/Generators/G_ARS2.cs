@@ -25,6 +25,7 @@ namespace TGMsim
                 temp = read() % 7;
                 if (!history.Contains(temp))
                     break;
+                temp = read() % 7;//duplicate, needed
             }
             updateHistory(temp);
             return stor;

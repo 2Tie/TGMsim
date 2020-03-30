@@ -12,11 +12,11 @@ namespace TGMsim
 
         public int genAttps = 4;
 
-        public int rotation = 0; //TGM, TGM3, SEGA, SRS
-        public int generator = 0; //dummy, TGM1, TGM2, TGM3, ACE, 
-        public enum Rots { ARS1 = 0, ARS3, SEGA, SEMIPRO};
-        public enum Gens { dummy = 0, TGM1, TGM2, TGM3, ACE, SEGA, EZ, CCSEZ, CCS};
-        public enum Games { SEGA = 0, TGM1, TGM2, TAP, TGM3, ACE, GMX, EXTRA, GUIDELINE}
+        public Rots rotation = 0; //TGM, TGM3, SEGA, SRS
+        public Gens generator = 0; //dummy, TGM1, TGM2, TGM3, ACE, 
+        public enum Rots { SEGA = 0, SEMIPRO, ARS1, CCS, ARS3}
+        public enum Gens { dummy = 0, SEGA, TGM1, TGM2, CCS, CCS_EZ, TGM3, TGM3_EZ}
+        public enum Games { SEGA = 0, TGM1, TGM2, TAP, CCS, TGM3, ACE, GMX, EXTRA, GUIDELINE}
         
         public int gravType = 0; //b256, b65536, frames
         public int baseGrav = 4;
@@ -90,8 +90,8 @@ namespace TGMsim
                     nextNum = 1;
                     hold = false;
                     hardDrop = 0;
-                    rotation = (int)Rots.SEGA;
-                    generator = (int)Gens.SEGA;
+                    rotation = Rots.SEGA;
+                    generator = Gens.SEGA;
                     lockType = 0;
                     flashLength = 22;
                     instaLock = false;
@@ -111,8 +111,8 @@ namespace TGMsim
                     nextNum = 1;
                     hold = false;
                     hardDrop = 0;
-                    rotation = (int)Rots.ARS1;
-                    generator = (int)Gens.TGM1;
+                    rotation = Rots.ARS1;
+                    generator = Gens.TGM1;
                     lag = 2;
                     lockType = 0;
                     bigMove = 1;
@@ -120,7 +120,7 @@ namespace TGMsim
                     baseGrav = 4;
                     genAttps = 4;
                     fieldW = 10;
-                    fieldH = 22;
+                    fieldH = 23;
                     creditsLength = 2968; //taken from nullpomino, though estimates place it around 2961. still need to verify. this also cuts off credits song!
                     gravTable = new List<int> { 4, 6, 8, 10, 12, 16, 32, 48, 64, 80, 96, 112, 128, 144, 4, 32, 64, 96, 128, 160, 192, 224, 256, 512, 768, 1024, 1280, 1024, 768, 5120 };
                     break;
@@ -130,8 +130,8 @@ namespace TGMsim
                     nextNum = 1;
                     hold = false;
                     hardDrop = 1;
-                    rotation = (int)Rots.ARS1;
-                    generator = (int)Gens.TGM2;
+                    rotation = Rots.ARS1;
+                    generator = Gens.TGM2;
                     lag = 0;
                     lockType = 0;
                     flashLength = 2;
@@ -140,7 +140,7 @@ namespace TGMsim
                     baseGrav = 4;
                     genAttps = 6;
                     fieldW = 10;
-                    fieldH = 22;
+                    fieldH = 23;
                     gravTable = new List<int> { 4, 6, 8, 10, 12, 16, 32, 48, 64, 80, 96, 112, 128, 144, 4, 32, 64, 96, 128, 160, 192, 224, 256, 512, 768, 1024, 1280, 1024, 768, 5120 };
                     break;
                 case Games.TAP: //TAP
@@ -149,8 +149,8 @@ namespace TGMsim
                     nextNum = 1;
                     hold = false;
                     hardDrop = 1;
-                    rotation = (int)Rots.ARS1;
-                    generator = (int)Gens.TGM2;
+                    rotation = Rots.ARS1;
+                    generator = Gens.TGM2;
                     lag = 0;
                     lockType = 0;
                     flashLength = 3; //one black, two white
@@ -159,7 +159,7 @@ namespace TGMsim
                     baseGrav = 4;
                     genAttps = 6;
                     fieldW = 10;
-                    fieldH = 22;
+                    fieldH = 23;
                     gravTable = new List<int> { 4, 6, 8, 10, 12, 16, 32, 48, 64, 80, 96, 112, 128, 144, 4, 32, 64, 96, 128, 160, 192, 224, 256, 512, 768, 1024, 1280, 1024, 768, 5120 };
                     hasKillSpeed = true;
                     killSpeedTime = 15 * 60 * 1000; //15 minutes
@@ -171,8 +171,8 @@ namespace TGMsim
                     nextNum = 3;
                     hold = true;
                     hardDrop = 1;
-                    rotation = (int)Rots.ARS3;
-                    generator = (int)Gens.TGM3;
+                    rotation = Rots.ARS3;
+                    generator = Gens.TGM3;
                     lag = 3;
                     lockType = 0;
                     flashLength = 1;
@@ -181,7 +181,7 @@ namespace TGMsim
                     baseGrav = 1024;
                     genAttps = 6;
                     fieldW = 10;
-                    fieldH = 22;
+                    fieldH = 23;
                     gravTable = new List<int> { 1024, 1536, 2048, 2560, 3072, 4096, 8192, 12288, 16384, 20480, 24576, 28672, 32768, 36864, 1024, 8192, 16348, 24576, 32768, 40960, 49152, 57344, 65536, 131072, 196608, 262144, 327680, 262144, 196608, 1310720 };
                     hasKillSpeed = true;
                     killSpeedTime = 15 * 60 * 1000; //15 minutes
@@ -194,8 +194,8 @@ namespace TGMsim
                     nextNum = 3;
                     hold = true;
                     hardDrop = 1;
-                    rotation = (int)Rots.ARS3;
-                    generator = (int)Gens.TGM3;
+                    rotation = Rots.ARS3;
+                    generator = Gens.TGM3;
                     lag = 3;
                     lockType = 0;
                     bigMove = 2;
@@ -203,7 +203,7 @@ namespace TGMsim
                     baseGrav = 1024;
                     genAttps = 6;
                     fieldW = 10;
-                    fieldH = 22;
+                    fieldH = 23;
                     gravTable = new List<int> { 1024, 1536, 2048, 2560, 3072, 4096, 8192, 12288, 16384, 20480, 24576, 28672, 32768, 36864, 1024, 8192, 16348, 24576, 32768, 40960, 49152, 57344, 65536, 131072, 196608, 262144, 327680, 262144, 196608, 1310720 };
                     break;
                 case Games.GMX: //GMX?
@@ -212,15 +212,15 @@ namespace TGMsim
                     nextNum = 3;
                     hold = true;
                     hardDrop = 1;
-                    rotation = (int)Rots.ARS3;
-                    generator = (int)Gens.TGM3;
+                    rotation = Rots.ARS3;
+                    generator = Gens.TGM3;
                     lockType = 0;
                     bigMove = 2;
                     gravType = 0;
                     baseGrav = 256;
                     genAttps = 6;
                     fieldW = 10;
-                    fieldH = 22;
+                    fieldH = 23;
                     gravLevels = new List<int>() { 0, 25, 50, 75, 100, 125, 150, 175, 200, 225, 250, 275, 300, 325, 350, 375, 400, 425, 450, 475, 500, 600, 700,  800,  900, 1000};
                     gravTable = new List<int>    { 4, 11, 19, 26,  34,  41,  49,  56,  64,  72,  80,  88,  96, 104, 112, 120, 128, 160, 192, 224, 256, 512, 768, 1024, 1280, 5120};
                     break;
@@ -278,7 +278,7 @@ namespace TGMsim
                     mod = new Modes.IcyShirase();
                     break;
                 case Mode.ModeType.KONOHA://konoha
-                    generator = (int)Gens.EZ;
+                    generator = Gens.TGM3_EZ;
                     mod = new Modes.BigBravoMania();
                     break;
                 case Mode.ModeType.TRAINING://20g training
@@ -313,6 +313,11 @@ namespace TGMsim
                     break;
                 case Mode.ModeType.CCS:
                     mod = new Modes.CCS(vari);
+                    rotation = Rots.CCS;
+                    if (vari == 1)
+                        generator = Gens.CCS_EZ;
+                    else
+                        generator = Gens.CCS;
                     break;
                 case Mode.ModeType.PRACTICE:
                     setup(Games.TGM1, Mode.ModeType.MASTER, 0);
@@ -321,7 +326,7 @@ namespace TGMsim
                 case Mode.ModeType.SHIMIZU:
                     setup(Games.SEGA, Mode.ModeType.SEGA, 0);
                     mod.g20 = true;
-                    rotation = (int)Rots.SEMIPRO;
+                    rotation = Rots.SEMIPRO;
                     break;
                 default:
                     throw new Exception("unknown mode");

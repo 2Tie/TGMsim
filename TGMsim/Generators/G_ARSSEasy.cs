@@ -24,6 +24,7 @@ namespace TGMsim
                 temp = read() % 7;
                 if (!history.Contains(temp))
                     break;
+                temp = read() % 7;//not 100% sure but this seems to be on purpose in other arika randos so i'm putting it here too...
             }
             updateHistory(temp);
             return history[1];

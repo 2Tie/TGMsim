@@ -13,12 +13,10 @@ namespace TGMsim
         string[] gravnames = new string[] { "normal", "20G", "0G" };
         public int garbage = 0; //none, random, copy
         string[] garbnames = new string[] { "none", "random", "copy" };
-        public int game = 0; //sega, tgm1, tap, tgm3, gmx
-        string[] gamenames = new string[] { "SEGA", "TGM", "TAP", "TGM3", "GMX" };
-        public int rotation = 0; //sega, shimizu, tgm, tgm3
-        string[] rotnames = new string[] { "SEGA", "SEMIPRO", "TGM", "TGM3" };
-        public int generator = 0; //sega, tgm1, tap, tgm3, tgm3ez
-        string[] gennames = new string[] { "SEGA", "TGM", "TAP", "TGM3", "EZPZ" };
+        public int garbdelay = 1;
+        public int game = 0;
+        public int rotation = 0;
+        public int generator = 0;
 
         int deltaH = 0, deltaV = 0;
 
@@ -71,44 +69,49 @@ namespace TGMsim
                             break;
                         case 6:
                             game += pad.inputH;
-                            if (game > 4)
-                                game = 0;
-                            else if (game < 0)
-                                game = 4;
-                            if (game == 0)
+                            if (game > (int)GameRules.Games.GMX)
+                                game = (int)GameRules.Games.SEGA;
+                            else if (game < (int)GameRules.Games.SEGA)
+                                game = (int)GameRules.Games.GMX;
+                            if (game == (int)GameRules.Games.SEGA)
                             {
-                                generator = 0;
-                                rotation = 0;
+                                generator = (int)GameRules.Gens.SEGA;
+                                rotation = (int)GameRules.Rots.SEGA;
                             }
-                            else if (game == 1)
+                            else if (game == (int)GameRules.Games.TGM1)
                             {
-                                generator = 1;
-                                rotation = 2;
+                                generator = (int)GameRules.Gens.TGM1;
+                                rotation = (int)GameRules.Rots.ARS1;
                             }
-                            else if (game == 2)
+                            else if (game == (int)GameRules.Games.TGM2 || game == (int)GameRules.Games.TAP)
                             {
-                                generator = 2;
-                                rotation = 2;
+                                generator = (int)GameRules.Gens.TGM2;
+                                rotation = (int)GameRules.Rots.ARS1;
                             }
-                            else if (game == 3 || game == 4)
+                            else if (game == (int)GameRules.Games.CCS)
                             {
-                                generator = 3;
-                                rotation = 3;
+                                generator = (int)GameRules.Gens.CCS;
+                                rotation = (int)GameRules.Rots.CCS;
+                            }
+                            else if (game == (int)GameRules.Games.TGM3 || game == (int)GameRules.Games.ACE || game == (int)GameRules.Games.GMX)
+                            {
+                                generator = (int)GameRules.Gens.TGM3;
+                                rotation = (int)GameRules.Rots.ARS3;
                             }
                             break;
                         case 7:
                             rotation += pad.inputH;
-                            if (rotation > 3)
+                            if (rotation > 4)
                                 rotation = 0;
                             else if (rotation < 0)
-                                rotation = 3;
+                                rotation = 4;
                             break;
                         case 8:
                             generator += pad.inputH;
-                            if (generator > 4)
+                            if (generator > 7)
                                 generator = 0;
                             else if (generator < 0)
-                                generator = 4;
+                                generator = 7;
                             break;
                     }
                 }
@@ -123,9 +126,9 @@ namespace TGMsim
             Draw.buffer.DrawString("big: " + (big ? "true" : "false"), SystemFonts.DefaultFont, Draw.wb, 150, 286);
             Draw.buffer.DrawString("grav: " + gravnames[grav], SystemFonts.DefaultFont, Draw.wb, 150, 298);
             Draw.buffer.DrawString("garbage: " + garbnames[garbage], SystemFonts.DefaultFont, Draw.wb, 150, 310);
-            Draw.buffer.DrawString("game base: " + gamenames[game], SystemFonts.DefaultFont, Draw.wb, 150, 322);
-            Draw.buffer.DrawString("rotation system: " + rotnames[rotation], SystemFonts.DefaultFont, Draw.wb, 150, 334);
-            Draw.buffer.DrawString("generator: " + gennames[generator], SystemFonts.DefaultFont, Draw.wb, 150, 346);
+            Draw.buffer.DrawString("game base: " + (GameRules.Games)game, SystemFonts.DefaultFont, Draw.wb, 150, 322);
+            Draw.buffer.DrawString("rotation system: " + (GameRules.Rots)rotation, SystemFonts.DefaultFont, Draw.wb, 150, 334);
+            Draw.buffer.DrawString("generator: " + (GameRules.Gens)generator, SystemFonts.DefaultFont, Draw.wb, 150, 346);
 
             Draw.buffer.DrawString("→", SystemFonts.DefaultFont, Draw.wb, 135, 250 + 12 * pos);
 
