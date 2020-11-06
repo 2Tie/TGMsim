@@ -16,7 +16,7 @@ namespace TGMsim
         public Gens generator = 0; //dummy, TGM1, TGM2, TGM3, ACE, 
         public enum Rots { SEGA = 0, SEMIPRO, ARS1, CCS, ARS3}
         public enum Gens { dummy = 0, SEGA, TGM1, TGM2, CCS, CCS_EZ, TGM3, TGM3_EZ}
-        public enum Games { SEGA = 0, TGM1, TGM2, TAP, CCS, TGM3, ACE, GMX, EXTRA, GUIDELINE}
+        public enum Games { SEGA = 0, TGM1, TGM2, TAP, CCS, TGM3, ACE, GMX, EXTRA, M0R}
         
         public int gravType = 0; //b256, b65536, frames
         public int baseGrav = 4;
@@ -224,14 +224,14 @@ namespace TGMsim
                     gravLevels = new List<int>() { 0, 25, 50, 75, 100, 125, 150, 175, 200, 225, 250, 275, 300, 325, 350, 375, 400, 425, 450, 475, 500, 600, 700,  800,  900, 1000};
                     gravTable = new List<int>    { 4, 11, 19, 26,  34,  41,  49,  56,  64,  72,  80,  88,  96, 104, 112, 120, 128, 160, 192, 224, 256, 512, 768, 1024, 1280, 5120};
                     break;
-                case Games.GUIDELINE: //henk plz
-                    GameName = "GUIDELINE";
+                case Games.M0R: //shhh
+                    GameName = "SECRET";
                     FPS = 60.0;
                     nextNum = 4;
                     hold = true;
                     hardDrop = 1;
-                    /*rotation = (int)Rots.Guideline;
-                    generator = (int)Gens.Guideline;*/ //these aren't in scope, but others are free to contribute ;)
+                    rotation = Rots.ARS3;
+                    generator = Gens.TGM3;
                     lockType = 1;
                     bigMove = 2;
                     gravType = 1;
@@ -275,11 +275,14 @@ namespace TGMsim
                     mod = new Modes.Garbo();
                     break;
                 case Mode.ModeType.ROUNDS://rounds
+                    setup(Games.M0R, Mode.ModeType.DUMMY, 0);
                     mod = new Modes.IcyShirase();
                     break;
                 case Mode.ModeType.KONOHA://konoha
+                    setup(Games.M0R, Mode.ModeType.DUMMY, 0);
                     generator = Gens.TGM3_EZ;
                     mod = new Modes.BigBravoMania();
+                    //gravTable = new List<int> { } //todo: 20G
                     break;
                 case Mode.ModeType.TRAINING://20g training
                     mod = new Modes.Training();
@@ -327,6 +330,9 @@ namespace TGMsim
                     setup(Games.SEGA, Mode.ModeType.SEGA, 0);
                     mod.g20 = true;
                     rotation = Rots.SEMIPRO;
+                    break;
+                case Mode.ModeType.DUMMY:
+                    mod = new Mode();
                     break;
                 default:
                     throw new Exception("unknown mode");

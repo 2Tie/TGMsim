@@ -6,6 +6,7 @@ namespace TGMsim.Modes
 {
     class BigBravoMania : Mode
     {
+        int bravos = 0;
         public BigBravoMania()
         {
             ModeName = "BIG BRAVO MANIA";
@@ -27,11 +28,11 @@ namespace TGMsim.Modes
             sections.Add(1100);
             sections.Add(1200);
             border = Color.PaleVioletRed;
-            delayTable.Add(new List<int> { 27, 27, 27, 18, 14, 14, 8, 7, 6 });
-            delayTable.Add(new List<int> { 27, 27, 18, 14, 8, 8, 8, 7, 6 });
-            delayTable.Add(new List<int> { 14, 8, 8, 8, 8, 6, 6, 6, 6 });
-            delayTable.Add(new List<int> { 30, 30, 30, 30, 30, 17, 17, 15, 15 });
-            delayTable.Add(new List<int> { 40, 25, 16, 12, 6, 6, 6, 6, 6 });
+            delayTable.Add(new List<int> { 26 });
+            delayTable.Add(new List<int> { 26 });
+            delayTable.Add(new List<int> { 14, 8, 8, 8, 8, 6, 6, 6, 6 }); //das, dunno
+            delayTable.Add(new List<int> { 30, 30, 30, 30, 30, 17, 17, 15, 15 }); //lock, dunno
+            delayTable.Add(new List<int> { 21 });
         }
 
         public override void onSpawn()
@@ -55,6 +56,7 @@ namespace TGMsim.Modes
             }
             if (bravo)
             {
+                bravos++;
                 if (level < 1000)
                 {
                     if (lines == 1)
@@ -68,14 +70,19 @@ namespace TGMsim.Modes
                 }
                 else
                 {
-                    if (lines == 1)
-                        limit += 1000 * 1;
                     if (lines == 2)
-                        limit += 1000 * 2;
+                        limit += 1000 * 1;
                     if (lines == 3)
+                        limit += 1000 * 2;
+                    if (lines == 4)
                         limit += 1000 * 3;
                 }
             }
+            //time is added before level is increased
+            level += lines*2;
+            if (lines == 4)
+                level += 4;
+
             if (level >= sections[curSection])
             {
                 curSection++;
@@ -87,6 +94,25 @@ namespace TGMsim.Modes
                 //BACKGROUND
                 if (level > endLevel && endLevel != 0)
                     level = endLevel;
+                if (curSection == 2)
+                    g20 = true;
+            }
+            if(bravos == 11)
+            {
+                //disable generator duplicate prevention?
+                generatorFlag = true;
+            }
+            if(bravos == 38) //13*3 - 1
+            {
+                inCredits = true;
+            }
+        }
+
+        public override void draw(bool replay)
+        {
+            //if (replay)
+            {
+                Draw.buffer.DrawString("BRAVOS: " + bravos, Draw.f_Maestro, Draw.tb, 480, 340);
             }
         }
     }

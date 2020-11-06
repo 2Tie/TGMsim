@@ -40,5 +40,10 @@ namespace TGMsim
         {
             return pull();
         }
+
+        public virtual void handleFlag()
+        {
+
+        }
     }
 }

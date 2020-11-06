@@ -21,7 +21,7 @@ namespace TGMsim
             public byte colours;
         }
 
-        public enum ModeType { MASTER, DEATH, SHIRASE, SPRINT, GARBAGE, ROUNDS,  KONOHA, TRAINING, SEGA, MINER, DYNAMO, ENDURA, BLOX, PLUS, FLASH, MARCH, EASY, CCS, PRACTICE, CUSTOM, SHIMIZU }; //for the ID stuff
+        public enum ModeType { DUMMY, MASTER, DEATH, SHIRASE, SPRINT, GARBAGE, ROUNDS,  KONOHA, TRAINING, SEGA, MINER, DYNAMO, ENDURA, BLOX, PLUS, FLASH, MARCH, EASY, CCS, PRACTICE, CUSTOM, SHIMIZU }; //for the ID stuff
 
         public enum GarbType { FIXED, COPY, RANDOM, HIDDEN } ;
 
@@ -122,6 +122,8 @@ namespace TGMsim
         public bool invstack = false;
 
         public bool firstPiece = true;
+
+        public bool generatorFlag = false; //hacky, oof
 
         public Mode()
         {

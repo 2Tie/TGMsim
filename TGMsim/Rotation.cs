@@ -53,9 +53,9 @@ namespace TGMsim
                 {
                     if (gameField[tetX + 1][tetY] != 0)
                         return false;
-                    if (gameField[tetX][tetY + 1] != 0)
+                    if (gameField[tetX][tetY - 1] != 0)
                         return false;
-                    if (gameField[tetX + 1][tetY + 1] != 0)
+                    if (gameField[tetX + 1][tetY - 1] != 0)
                         return false;
                 }
             }

@@ -4,41 +4,36 @@ namespace TGMsim
 {
     class G_ARS3Easy : Generator
     {
-        List<int> drought_order = new List<int> { 3, 0, 4, 5, 6 };
-        List<int> bag = new List<int> { 0, 0, 0, 0, 0, 0, 3, 4, 5, 6, 0, 3, 4, 5, 6, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 6, 6, 6, 6, 6 };
+        List<int> bag = new List<int> { 0, 3, 4, 5, 6 };
+        bool norepeat = true;
 
         public G_ARS3Easy(int nuseed) : base(nuseed)
         {
-            rolls = 6;
-            history = new List<int> { 1, 1, 2, 2 };
-            int temp = 1;
-            while (temp == 1 || temp == 2 || temp == 5)
-            {
-                temp = read() % 5;
-                if (temp > 0)
-                    temp += 2;
-            }
-            history[0] = temp;
+            history = new List<int> { 0, 0 };
+            int temp = read() % 5;
+            history[0] = bag[temp]; //save rolled piece
+            bag.RemoveAt(temp); //swipe from bag
         }
 
         public override int pull()
         {
-            int temp = 0;
-            for (int i = 0; i < rolls; i++)
+            int temp = read() % bag.Count;
+            while(norepeat && history[0] == bag[temp])
             {
-                temp = read() % 35;
-                if (!history.Contains(bag[temp]))
-                    break;
+                temp = read() % bag.Count;
             }
             int piece = bag[temp];
-            bag[temp] = drought_order[0];
-
-            drought_order.RemoveAt(0);
-            drought_order.Add(piece);
-
+            bag.RemoveAt(temp);
+            if (bag.Count == 0)
+                bag = new List<int> { 0, 3, 4, 5, 6 };
             updateHistory(piece);
             
             return history[1];
+        }
+
+        public override void handleFlag()
+        {
+            norepeat = false;
         }
     }
 }

@@ -1586,6 +1586,11 @@ namespace TGMsim
 
                                     //update gimmicks
                                     updateGimmicks();
+                                    if(MOD.generatorFlag)
+                                    {
+                                        MOD.generatorFlag = false;
+                                        GEN.handleFlag();
+                                    }
 
 
                                     while (gravLevel < gravTable.Count - 1)
