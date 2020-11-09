@@ -28,11 +28,11 @@ namespace TGMsim.Modes
             sections.Add(1100);
             sections.Add(1200);
             border = Color.PaleVioletRed;
-            delayTable.Add(new List<int> { 26 });
-            delayTable.Add(new List<int> { 26 });
+            delayTable.Add(new List<int> { 25 });
+            delayTable.Add(new List<int> { 25 });
             delayTable.Add(new List<int> { 14, 8, 8, 8, 8, 6, 6, 6, 6 }); //das, dunno
             delayTable.Add(new List<int> { 30, 30, 30, 30, 30, 17, 17, 15, 15 }); //lock, dunno
-            delayTable.Add(new List<int> { 21 });
+            delayTable.Add(new List<int> { 20 });
         }
 
         public override void onSpawn()
@@ -94,8 +94,6 @@ namespace TGMsim.Modes
                 //BACKGROUND
                 if (level > endLevel && endLevel != 0)
                     level = endLevel;
-                if (curSection == 2)
-                    g20 = true;
             }
             if(bravos == 11)
             {

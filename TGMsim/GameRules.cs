@@ -15,8 +15,8 @@ namespace TGMsim
         public Rots rotation = 0; //TGM, TGM3, SEGA, SRS
         public Gens generator = 0; //dummy, TGM1, TGM2, TGM3, ACE, 
         public enum Rots { SEGA = 0, SEMIPRO, ARS1, CCS, ARS3}
-        public enum Gens { dummy = 0, SEGA, TGM1, TGM2, CCS, CCS_EZ, TGM3, TGM3_EZ}
-        public enum Games { SEGA = 0, TGM1, TGM2, TAP, CCS, TGM3, ACE, GMX, EXTRA, M0R}
+        public enum Gens { dummy = 0, SEGA, TGM1, TGM2, CCS, CCS_EZ, TGM3, TGM3_EZ }
+        public enum Games { SEGA = 0, TGM1, CCS, TGM2, TAP, TGM3, ACE, GMX, EXTRA, M0R }
         
         public int gravType = 0; //b256, b65536, frames
         public int baseGrav = 4;
@@ -43,11 +43,11 @@ namespace TGMsim
 
         public List<List<double>> comboTable = new List<List<double>>();
 
-        public List<int> decayRate = new List<int>() { 125, 80, 80, 50, 45, 45, 45, 40, 40, 40, 40, 40, 30, 30, 30, 20, 20, 20, 20, 20, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 10 };
+        public List<int> decayRate = new List<int> { 125, 80, 80, 50, 45, 45, 45, 40, 40, 40, 40, 40, 30, 30, 30, 20, 20, 20, 20, 20, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 10 };
         public List<List<int>> baseGradePts = new List<List<int>>();
 
-        public List<int> gravTable = new List<int>();
-        public List<int> gravLevels = new List<int>() { 0, 30, 35, 40, 50, 60, 70, 80, 90, 100, 120, 140, 160, 170, 200, 220, 230, 233, 236, 239, 243, 247, 251, 300, 330, 360, 400, 420, 450, 500 };
+        public List<int> gravTable = new List<int>  { 4,  6,  8, 10, 12, 16, 32, 48, 64,  80,  96, 112, 128, 144,   4,  32,  64,  96, 128, 160, 192, 224, 256, 512, 768, 1024, 1280, 1024, 768, 5120 };
+        public List<int> gravLevels = new List<int> { 0, 30, 35, 40, 50, 60, 70, 80, 90, 100, 120, 140, 160, 170, 200, 220, 230, 233, 236, 239, 243, 247, 251, 300, 330,  360,  400,  420, 450,  500 };
         public List<List<int>> delayTable = new List<List<int>>();
         
 
@@ -122,7 +122,6 @@ namespace TGMsim
                     fieldW = 10;
                     fieldH = 23;
                     creditsLength = 2968; //taken from nullpomino, though estimates place it around 2961. still need to verify. this also cuts off credits song!
-                    gravTable = new List<int> { 4, 6, 8, 10, 12, 16, 32, 48, 64, 80, 96, 112, 128, 144, 4, 32, 64, 96, 128, 160, 192, 224, 256, 512, 768, 1024, 1280, 1024, 768, 5120 };
                     break;
                 case Games.TGM2: //TGM2
                     GameName = "TGM2";
@@ -141,7 +140,6 @@ namespace TGMsim
                     genAttps = 6;
                     fieldW = 10;
                     fieldH = 23;
-                    gravTable = new List<int> { 4, 6, 8, 10, 12, 16, 32, 48, 64, 80, 96, 112, 128, 144, 4, 32, 64, 96, 128, 160, 192, 224, 256, 512, 768, 1024, 1280, 1024, 768, 5120 };
                     break;
                 case Games.TAP: //TAP
                     GameName = "TAP";
@@ -160,7 +158,6 @@ namespace TGMsim
                     genAttps = 6;
                     fieldW = 10;
                     fieldH = 23;
-                    gravTable = new List<int> { 4, 6, 8, 10, 12, 16, 32, 48, 64, 80, 96, 112, 128, 144, 4, 32, 64, 96, 128, 160, 192, 224, 256, 512, 768, 1024, 1280, 1024, 768, 5120 };
                     hasKillSpeed = true;
                     killSpeedTime = 15 * 60 * 1000; //15 minutes
                     killSpeedDelays = new List<int> { 7, 7, 16, 7 }; //no DAS
@@ -177,12 +174,11 @@ namespace TGMsim
                     lockType = 0;
                     flashLength = 1;
                     bigMove = 2;
-                    gravType = 1;
-                    baseGrav = 1024;
+                    //gravType = 1;
+                    baseGrav = 4;
                     genAttps = 6;
                     fieldW = 10;
                     fieldH = 23;
-                    gravTable = new List<int> { 1024, 1536, 2048, 2560, 3072, 4096, 8192, 12288, 16384, 20480, 24576, 28672, 32768, 36864, 1024, 8192, 16348, 24576, 32768, 40960, 49152, 57344, 65536, 131072, 196608, 262144, 327680, 262144, 196608, 1310720 };
                     hasKillSpeed = true;
                     killSpeedTime = 15 * 60 * 1000; //15 minutes
                     killSpeedDelays = new List<int> { 5, 6, 13, 2 }; //no DAS
@@ -199,12 +195,11 @@ namespace TGMsim
                     lag = 3;
                     lockType = 0;
                     bigMove = 2;
-                    gravType = 1;
-                    baseGrav = 1024;
+                    //gravType = 1;
+                    baseGrav = 4;
                     genAttps = 6;
                     fieldW = 10;
                     fieldH = 23;
-                    gravTable = new List<int> { 1024, 1536, 2048, 2560, 3072, 4096, 8192, 12288, 16384, 20480, 24576, 28672, 32768, 36864, 1024, 8192, 16348, 24576, 32768, 40960, 49152, 57344, 65536, 131072, 196608, 262144, 327680, 262144, 196608, 1310720 };
                     break;
                 case Games.GMX: //GMX?
                     GameName = "XTREME";
@@ -217,7 +212,7 @@ namespace TGMsim
                     lockType = 0;
                     bigMove = 2;
                     gravType = 0;
-                    baseGrav = 256;
+                    baseGrav = 4;
                     genAttps = 6;
                     fieldW = 10;
                     fieldH = 23;
@@ -234,12 +229,11 @@ namespace TGMsim
                     generator = Gens.TGM3;
                     lockType = 1;
                     bigMove = 2;
-                    gravType = 1;
-                    baseGrav = 1024;
+                    //gravType = 1;
+                    baseGrav = 4;
                     genAttps = 6;
                     fieldW = 10;
                     fieldH = 24;
-                    gravTable = new List<int> { 1024, 1536, 2048, 2560, 3072, 4096, 8192, 12288, 16384, 20480, 24576, 28672, 32768, 36864, 1024, 8192, 16348, 24576, 32768, 40960, 49152, 57344, 65536, 131072, 196608, 262144, 327680, 262144, 196608, 1310720 };
                     break;
             }
             
@@ -282,7 +276,8 @@ namespace TGMsim
                     setup(Games.M0R, Mode.ModeType.DUMMY, 0);
                     generator = Gens.TGM3_EZ;
                     mod = new Modes.BigBravoMania();
-                    //gravTable = new List<int> { } //todo: 20G
+                    gravTable = new List<int> {  4,  6,  8, 10, 12, 16, 32, 48,  64, 128, 256, 384, 5120 };
+                    gravLevels = new List<int> { 0, 30, 35, 40, 50, 60, 70, 80, 120, 140, 160, 170,  200 };
                     break;
                 case Mode.ModeType.TRAINING://20g training
                     mod = new Modes.Training();

@@ -40,6 +40,7 @@ namespace TGMsim.Modes
             delayTable.Add(new List<int> { 12 });
             delayTable.Add(new List<int> { 31 });
             delayTable.Add(new List<int> { 39 });
+            grades = new List<string> { "" };
         }
 
         public override void onPut(Tetromino tet, bool clear)

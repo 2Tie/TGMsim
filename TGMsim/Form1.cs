@@ -146,9 +146,10 @@ namespace TGMsim
                     //if (gSel.menuSelection != 5 && gSel.menuSelection != 0 && gSel.menuSelection != 7)
                         //loadHiscores(gSel.menuSelection);
                     mSel = new ModeSelect(gSel.menuSelection, player);
-                    if (mSel.modes[mSel.game][mSel.selection].enabled[mSel.variant[mSel.selection]])
+                    ModeSelect.ModeSelObj mode = mSel.modes[mSel.game][mSel.selection];
+                    if (mode.enabled[mSel.variant[mSel.selection]])
                     {
-                        rules.setup((GameRules.Games)mSel.game, mSel.modes[mSel.game][mSel.selection].id, mSel.variant[mSel.selection]);
+                        rules.setup(mode.game, mode.id, mSel.variant[mSel.selection]);
                         loadHiscores(gSel.menuSelection, 1);
                     }
                     break;
@@ -253,16 +254,18 @@ namespace TGMsim
                     break;
                 case 3: //mode select
                     mSel.logic(pad1);
-                    if (pad1.inputV != 0 && mSel.modes[mSel.game][mSel.selection].enabled[mSel.variant[mSel.selection]])
+                    ModeSelect.ModeSelObj mode = mSel.modes[mSel.game][mSel.selection];
+                    if (pad1.inputV != 0 && mode.enabled[mSel.variant[mSel.selection]])
                     {
-                        rules.setup((GameRules.Games)mSel.game, mSel.modes[mSel.game][mSel.selection].id, mSel.variant[mSel.selection]);
-                        loadHiscores(gSel.menuSelection, mSel.selection + 1);
+                        rules.setup(mode.game, mode.id, mSel.variant[mSel.selection]);
+                        if(mode.id != Mode.ModeType.CUSTOM)
+                        loadHiscores((int)mode.game, mSel.selection + 1);
                     }
                     if ((pad1.inputRot1 | pad1.inputRot3) == 1)
                     {
-                        if (!mSel.modes[mSel.game][mSel.selection].enabled[mSel.variant[mSel.selection]])
+                        if (!mode.enabled[mSel.variant[mSel.selection]])
                             return;
-                        else if (mSel.game == 7 && mSel.selection == 0) //custom
+                        else if (mode.id == Mode.ModeType.CUSTOM) //custom
                             changeMenu(7);
                         else
                             changeMenu(4); //load mode
@@ -474,7 +477,8 @@ namespace TGMsim
                 case 3:
                     Draw.buffer.DrawString("mode select", DefaultFont, Draw.wb, 5, 5);
                     mSel.render();
-                    if (mSel.modes[mSel.game][mSel.selection].enabled[0]) //draw hiscores //TODO: this check should be obsolete after all are playable
+                    ModeSelect.ModeSelObj mode = mSel.modes[mSel.game][mSel.selection];
+                    if (mode.enabled[0]) //draw hiscores //TODO: this check should be obsolete after all are playable
                         for (int i = 0; i < 6; i++)
                         {
                             int hX = 300;
@@ -488,11 +492,11 @@ namespace TGMsim
                                 Draw.buffer.DrawLine(new Pen(Color.Orange), hX - 10, hY + 11 + 30 * i, hX + 300, hY + 11 + 30 * i);
                             }
                             Draw.buffer.DrawString(hiscoreTable[i].username, DefaultFont, Draw.wb, hX, hY + 30 * i);
-                            if(mSel.modes[mSel.game][mSel.selection].id != Mode.ModeType.CCS)
+                            if(mode.id != Mode.ModeType.CCS)
                                 Draw.buffer.DrawString(hiscoreTable[i].level.ToString(), DefaultFont, Draw.wb, hX + 40, hY + 30 * i);
-                            if (mSel.modes[mSel.game][mSel.selection].id == Mode.ModeType.EASY)
+                            if (mode.id == Mode.ModeType.EASY)
                                 Draw.buffer.DrawString(hiscoreTable[i].score.ToString(), DefaultFont, Draw.wb, hX + 80, hY + 30 * i);
-                            else if(mSel.modes[mSel.game][mSel.selection].id != Mode.ModeType.CCS)
+                            else if(mode.id != Mode.ModeType.CCS)
                                 Draw.buffer.DrawString(rules.mod.grades[hiscoreTable[i].grade], DefaultFont, Draw.wb, hX + 80, hY + 30 * i);
                             else
                                 Draw.buffer.DrawString(rules.mod.grades[hiscoreTable[i].grade], DefaultFont, Draw.wb, hX + 40, hY + 30 * i);
@@ -514,7 +518,7 @@ namespace TGMsim
                                 }
                             }
                         }
-                    if(mSel.game == (int)GameRules.Games.TGM3)
+                    if(mode.game == GameRules.Games.TGM3)
                     {
                         List<string> gm3grades = new List<string> { "9", "8", "7", "6", "5", "4", "3", "2", "1", "S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "S9", "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9", "M", "MK", "MV", "MO", "MM", "GM" };
                         Draw.buffer.DrawString("Qualified Grade: " + gm3grades[player.TIGrade], DefaultFont, Draw.wb, 200, 5);
@@ -643,7 +647,8 @@ namespace TGMsim
         {
             Audio.stopMusic();
             rules = new GameRules();
-            rules.setup((GameRules.Games)mSel.game, mSel.modes[mSel.game][mSel.selection].id, mSel.variant[mSel.selection]);
+            ModeSelect.ModeSelObj mode = mSel.modes[mSel.game][mSel.selection];
+            rules.setup(mode.game, mode.id, mSel.variant[mSel.selection]);
 
             //m.mute = prefs.muted;
 
@@ -653,7 +658,7 @@ namespace TGMsim
                     rules.mod.bigmode = cMen.cheats[3];
                 Audio.muted = cMen.cheats[4];
             }
-            else if (mSel.game == 4 && mSel.selection == 1)
+            else if (mode.game == GameRules.Games.TGM3 && mode.id == Mode.ModeType.MASTER)
                 rules.exam = checkExam();
 
             if (prefs.delay)
