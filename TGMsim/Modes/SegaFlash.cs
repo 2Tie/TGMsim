@@ -9,6 +9,7 @@ namespace TGMsim.Modes
         public List<int> levelUpTimes = new List<int> { 3480, 2320, 2320, 2320, 2320, 2320, 2320, 2320, 2320, 3480, 3480, 1740, 1740, 1740, 1740, 3480 };
         public int timeCounter = 0;
         public int lineCounter = 0;
+        public int totalLines = 0;
         List<int> linePoints = new List<int> { 100, 400, 900, 2000 };
         int bonusP = 1000;
         byte bonusF = 0;
@@ -25,6 +26,7 @@ namespace TGMsim.Modes
             hasDAD = true;
             boardsFile = "flash";
             boardsProgress = 0;
+            boardsResetSeed = true;
             sections.Add(2);
             sections.Add(4);
             sections.Add(6);
@@ -80,6 +82,7 @@ namespace TGMsim.Modes
 
             timeCounter = 0;
             lineCounter += lines;
+            totalLines += lines;
             if (lineCounter >= 4)
             {
                 level++;
@@ -94,13 +97,16 @@ namespace TGMsim.Modes
                 {
                     continueMode = true;
                     bonusP = ((boardsProgress / 4) + 1) * 1000;
-                    if (lineCounter == 0)
+                    if (totalLines < 100) //not sure if less than or equal to is better here
                     {
-                        lineCounter = 3;
-                        level -= (level > 0) ? 1 : 0;
+                        if (lineCounter == 0)
+                        {
+                            lineCounter = 3;
+                            level -= (level > 0) ? 1 : 0;
+                        }
+                        else
+                            --lineCounter;
                     }
-                    else
-                        --lineCounter;
                 }
             }
         }

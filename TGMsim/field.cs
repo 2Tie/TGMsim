@@ -465,15 +465,15 @@ namespace TGMsim
                         }
                         else
                         {
-                            if (block == 8 || block == 0) //empty or invis, don't draw
-                                ;
+                            if(block == 0) { } //empty, do nothing
+                            else if (block == 8 && isPlayback) //invis
+                                Draw.buffer.DrawImageUnscaled(tetImgs[9], x + 25*i, y + height - (j * 25), 25, 25);
                             else if (block < 11)//garbage or bone
                                 Draw.buffer.DrawImageUnscaled(tetImgs[block], x + 25 * i, y + height - (j * 25), 25, 25);
                             else if (block == 11)//colourless gem
                                 Draw.buffer.DrawImageUnscaled(tetGems[7], x + 25 * i, y + height - (j * 25), 25, 25);
                             else if (block < 19) //gem block
                             {
-                                //drawBuffer.FillEllipse(new SolidBrush(Color.FromArgb(130, Color.White)), x + 25 * i, y + height - (j * 25), 25, 25);
                                 Draw.buffer.DrawImageUnscaled(tetGems[block - 12], x + 25 * i, y + height - (j * 25), 25, 25);
                             }
                             if (MOD.shadeStack && block != 8 && block != 0)
@@ -1555,6 +1555,13 @@ namespace TGMsim
                                             resetField();
                                             MOD.modeClear = false;
                                             MOD.continueMode = false;
+                                            if (MOD.boardsResetSeed)
+                                            {
+                                                GEN.reset();
+                                                for(int i = 0; i < ruleset.nextNum; i++)
+
+                                                nextTet[i] = generatePiece(false);
+                                            }
                                         }
                                         else
                                         {

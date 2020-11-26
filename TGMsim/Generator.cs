@@ -5,6 +5,7 @@ namespace TGMsim
     class Generator
     {
         public string type = "BASE";
+        public int startingseed;
         public int seed;
         public int rolls;
         public List<int> history = new List<int>(4);
@@ -12,6 +13,8 @@ namespace TGMsim
         public Generator(int nuseed)
         {
             seed = nuseed;
+            startingseed = seed;
+
         }
 
         public void updateHistory(int id)
@@ -44,6 +47,11 @@ namespace TGMsim
         public virtual void handleFlag()
         {
 
+        }
+
+        public virtual void reset()
+        {
+            seed = startingseed;
         }
     }
 }

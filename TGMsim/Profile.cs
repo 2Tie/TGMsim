@@ -27,7 +27,7 @@ namespace TGMsim
             {
                 fsStream = new FileStream("Sav/Users/" + filename + ".usr", FileMode.Create);
             }
-            catch (DirectoryNotFoundException e)
+            catch (DirectoryNotFoundException)
             {
                 Directory.CreateDirectory("Sav/Users/");
                 fsStream = new FileStream("Sav/Users/" + filename + ".usr", FileMode.Create);
@@ -106,11 +106,11 @@ namespace TGMsim
             {
                  file = new BinaryReader(File.OpenRead("Sav/Users/" + filename + ".usr"));
             }
-            catch (FileNotFoundException e)
+            catch (FileNotFoundException)
             {
                 return false;
             }
-            catch (DirectoryNotFoundException e)
+            catch (DirectoryNotFoundException)
             {
                 Directory.CreateDirectory("Sav/Users/");
                 return false;

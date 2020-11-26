@@ -83,6 +83,7 @@ namespace TGMsim
         public string boardsFile = "";
         public int boardsProgress = 0;
         public int boardGems = 0;
+        public bool boardsResetSeed = false;
         public bool recycleGems = false;
         public int recycleProgress = 0;
         public List<recycleTiming> recycleTimings = new List<recycleTiming>();

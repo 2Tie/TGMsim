@@ -4,6 +4,7 @@ namespace TGMsim
 {
     class G_ARS3Easy : Generator
     {
+        //TODO: this is incorrect. need further info.
         List<int> bag = new List<int> { 0, 3, 4, 5, 6 };
         bool norepeat = true;
 

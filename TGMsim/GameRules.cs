@@ -235,6 +235,18 @@ namespace TGMsim
                     fieldW = 10;
                     fieldH = 24;
                     break;
+                case Games.CCS:
+                    GameName = "TWCCS";
+                    FPS = 60.0;
+                    nextNum = 1;
+                    rotation = Rots.CCS;
+                    generator = Gens.CCS;
+                    lockType = 1;
+                    bigMove = 1;
+                    baseGrav = 4;
+                    fieldW = 10;
+                    fieldH = 22;
+                    break;
             }
             
             switch (mode)
@@ -307,7 +319,7 @@ namespace TGMsim
                     mod = new Modes.HellMarch();
                     break;
                 case Mode.ModeType.EASY: //easy
-                    mod = new Modes.Easy(); //uuuhhhhhhh?????
+                    mod = new Modes.Easy();
                     break;
                 case Mode.ModeType.CCS:
                     mod = new Modes.CCS(vari);

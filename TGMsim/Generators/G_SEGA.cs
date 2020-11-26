@@ -22,7 +22,7 @@
 
         private new int read()
         {
-            return (rand(seed) & 0x3F);
+            return rand(seed) & 0x3F;
         }
 
         public override int pull()
@@ -38,13 +38,18 @@
         public override int firstpull()
         {
             //generate the sequence
-            //seed = 0x2A6D365A;//the power-on-pattern, for testing
+            //seed = 0x2A6D365A;//the power-on-pattern, for testing//this is 0x2A6D365B for bloxeed
             for (int i = 0; i < 1000; i++)
             {
                 seq[i] = (byte)(read() % 7);
             }
             //pull a piece
             return pull();
+        }
+
+        public override void reset()
+        {
+            pos = 0;
         }
     }
 }
