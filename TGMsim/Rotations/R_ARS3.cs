@@ -14,97 +14,49 @@ namespace TGMsim
 
             Tetromino testTet = tet.clone((tet.rotation + p + 4)%4);
 
-            if (!spawn)//IRS doesn't kick
-            {
-                int bigOffset = 1;
-                if (large)
-                    bigOffset = 2;
-
-                if (tet.id == Tetromino.Piece.I)//test I floorkicks
-                {
-                    if (tet.rotation % 2 == 0 && tet.floored && !checkUnder(testTet, gameField, large))
-                    {
-                        testTet.move(0, bigOffset);
-                        testTet.kicked++;
-                        if (!checkUnder(testTet, gameField, large))
-                        {
-                            testTet.move(0, bigOffset);
-                            if (!checkUnder(testTet, gameField, large))
-                            {
-                                testTet.move(0, -2 * bigOffset);
-                                testTet.kicked = 0;
-                            }
-                        }
-                    }
-                    if (tet.rotation % 2 == 1 && tet.kicked > 0)
-                        testTet.groundTimer = 1;
-                }
-
-                if (testRestrict(tet, p, gameField, large))//test kick restrictions
-                {
-                    for (int i = 1; i < 3; i++)//test wallkicks in order, stop at first rotation that works
-                    {
-                        if (!checkUnder(testTet, gameField, large))
-                        {
-                            if (i != 2)
-                                testTet.move(1 * bigOffset, 0);
-                            else
-                                testTet.move(-2 * bigOffset, 0);
-                        }
-                    }
-                    if (tet.id == Tetromino.Piece.I && tet.rotation % 2 == 1 && !checkUnder(testTet, gameField, large))//final I wallkick
-                        testTet.move(3 * bigOffset, 0);
-                }
-
-
-
-                if (tet.id == Tetromino.Piece.T && tet.floored && !checkUnder(testTet, gameField, large) && (tet.rotation + p + 4) % 4 == 2)//test T floorkicks
-                {
-                    testTet.move(bigOffset, bigOffset);
-                }
-            }
-
-            if (!checkUnder(testTet, gameField, large)) //did any kick of the rotation work?
-                return tet;
-
-            return testTet;
-        }
-
-        private bool testRestrict(Tetromino tet, int p, List<List<int>> gameField, bool large)
-        {
-            int lowY = 23;
-            int big = 2;
+            int bigOffset = 1;
             if (large)
-                big = 1;
-            for (int q = 0; q < tet.bits.Count; q++)
+                bigOffset = 2;
+
+            int c = checkUnder(testTet, gameField, large);
+            if (c == 0)
+                return testTet;
+            if(!spawn)
             {
-                if (tet.bits[q].y < lowY)
-                    lowY = tet.bits[q].y;
-            }
-
-            if ((int)tet.id < 4 || tet.id == Tetromino.Piece.O)//I, S, Z, and O have no kick restrictions
-                return true;
-
-
-            //universal center-testing (two up from bottom center will never kick, even when considering the exception below)
-            if (tet.bits[1].x > -1 && tet.bits[1].y + ((1 + (tet.rotation / 2)) * (3 - big)) < 22)
-                if (gameField[tet.bits[1].x][tet.bits[1].y + ((1 + (tet.rotation / 2)) * (3 - big))] != 0)
-                    return false;
-
-            if (tet.id == Tetromino.Piece.J || tet.id == Tetromino.Piece.L)
-            {
-                if (tet.rotation % 2 == 0)
+                if (c % 4 == 2)
+                    return tet; //centre column rule
+                if (tet.kicked > 0)
+                    testTet.groundTimer = 1;
+                if ((tet.id == Tetromino.Piece.I || tet.id == Tetromino.Piece.T) && (c > 8))//floorkick stuff
                 {
-                    if (gameField[tet.bits[1].x][tet.bits[1].y - 1 + (tet.rotation / 2 * (3 - big)) * 2] != 0)//if hooked
+                    testTet.move(0, 1 * bigOffset);
+                    testTet.kicked = 1;
+                    c = checkUnder(testTet, gameField, large);
+                    if (c == 0)
+                        return testTet;
+                    if (c > 12)
                     {
-                        if (gameField[tet.bits[1].x + (((int)tet.id - 4) * -2) + 1][tet.bits[1].y + (tet.rotation / 2) + 1] != 0 && tet.rotation - (((((int)tet.id - 4) * 2) - 1) * p) == 1)//if exception blocked
-                            return true;
-                        return false;
+                        testTet.move(0, 1 * bigOffset);
+                        if (checkUnder(testTet, gameField, large) == 0)
+                            return testTet;
                     }
+                    return tet;
+                }
+
+                testTet.move(1 * bigOffset, 0);
+                if (checkUnder(testTet, gameField, large) == 0)
+                    return testTet;
+                testTet.move(-2 * bigOffset, 0);
+                if (checkUnder(testTet, gameField, large) == 0)
+                    return testTet;
+                if (tet.id == Tetromino.Piece.I) //final I wallkick
+                {
+                    testTet.move(3 * bigOffset, 0);
+                    if (checkUnder(testTet, gameField, large) == 0)
+                        return testTet;
                 }
             }
-            return true;
+            return tet;
         }
-        
     }
 }

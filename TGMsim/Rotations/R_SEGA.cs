@@ -13,7 +13,7 @@ namespace TGMsim
         {
             Tetromino testTet = tet.clone((tet.rotation + 1) % 4);
 
-            if (!checkUnder(testTet, gameField, large)) //did the rotation work?
+            if (checkUnder(testTet, gameField, large) != 0) //did the rotation work?
                 return tet;
 
             return testTet;

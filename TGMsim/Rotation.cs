@@ -16,51 +16,53 @@ namespace TGMsim
             return new Tetromino(0, large);
         }
 
-        public bool checkUnder(Tetromino tet, List<List<int>> gameField, bool large)
+        public int checkUnder(Tetromino tet, List<List<int>> gameField, bool large)
         {
 
-            int lowY = 22;
             int big = 2;
             if (large)
                 big = 1;
-            for (int q = 0; q < tet.bits.Count; q++)
-            {
-                if (tet.bits[q].y < lowY)
-                    lowY = tet.bits[q].y;
-            }
 
-            for (int i = 0; i < 4; i++)
+            for (int i = 1; i < 17; i++)
             {
                 int tetX, tetY;
-                tetX = tet.bits[i].x;// * (2 / big) - (4 % (6 - big));
-                tetY = tet.bits[i].y;// * (2 / big) - (lowY * ((2 / big) - 1));
+                int p = -1;
+                for (int j = 0; j < 4; j++)
+                {
+                    if ((tet.bits[j].x - tet.x + 4 * (tet.y - tet.bits[j].y)) / (3 - big) + 1 == i)
+                        p = j;
+                }
+                if (p == -1)
+                    continue; 
+                tetX = tet.bits[p].x;
+                tetY = tet.bits[p].y;
                 //check OoB
                 if (tetY + 2-big > gameField[0].Count - 1)
-                    return false;
+                    return 2;
                 if (tetY < 0)
-                    return false;
+                    return 8;
 
                 if (tetX + 2-big > 9)
-                    return false;
+                    return 3;
                 if (tetX < 0)
-                    return false;
+                    return 1;
 
 
                 //test the cells
                 if (gameField[tetX][tetY] != 0)
-                    return false;
+                    return i; //should return the overlapped cell
                 if (large)
                 {
                     if (gameField[tetX + 1][tetY] != 0)
-                        return false;
+                        return i; //yknow what big mode's just broken again for now.
                     if (gameField[tetX][tetY - 1] != 0)
-                        return false;
+                        return i;
                     if (gameField[tetX + 1][tetY - 1] != 0)
-                        return false;
+                        return i;
                 }
             }
 
-            return true;
+            return 0;
         }
     }
 }

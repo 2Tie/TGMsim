@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace TGMsim.Rotations
 {
@@ -17,54 +13,24 @@ namespace TGMsim.Rotations
         {
             Tetromino testTet = tet.clone((tet.rotation + p + 4) % 4);
 
-            if (!spawn) //kicks only work outside of IRS
+            int bigOffset = 1;
+            if (large)
+                bigOffset = 2;
+            int c = checkUnder(testTet, gameField, large);
+            if (c == 0)
+                return testTet;
+            if (!spawn)
             {
-                //TODO: a big rework of this, possibly all of the rotation systems too.
-                //check restrictions
-                if (testRestrict(tet, p, gameField, large) == false)
-                    //can't rotate here, so return this
+                if (tet.id == Tetromino.Piece.I || (c % 4) == 2) //i rule, centre collison
                     return tet;
-
-                //we're allowed to rotate here.
-                //now we check if the new place is free
-                if (!checkUnder(testTet, gameField, large))
-                {
-                    //if not, determine which way to kick. 
-                    //odd rotation kicks left for Z and right for S
-                    if (testTet.id == Tetromino.Piece.Z && (testTet.rotation % 2) == 1)
-                        testTet.move(-1, 0);
-                    else if (testTet.id == Tetromino.Piece.S && (testTet.rotation % 2 == 1))
-                        testTet.move(1, 0);
-                    //J with R0 prefers left
-                    else if (testTet.id == Tetromino.Piece.J && (testTet.rotation == 0))
-                    {
-                        testTet.move(-1, 0);
-                        if (checkUnder(testTet, gameField, large))
-                            return testTet;
-                        else
-                            testTet.move(2, 0);
-                    }
-                    //J with R2 kicks right if top pip hit, L with R2 kicks left if top pip hit
-                    else if (testTet.id == Tetromino.Piece.J && testTet.rotation == 2 && gameField[testTet.x][testTet.y + 1] != 0)
-                        testTet.move(1, 0);
-                    else if (testTet.id == Tetromino.Piece.L && testTet.rotation == 2 && gameField[testTet.x + 2][testTet.y + 1] != 0)
-                        testTet.move(-1, 0);
-                    //other J, L, S, and Z kick normally
-                    else
-                    {
-                        testTet.move(1, 0);
-                        if (checkUnder(testTet, gameField, large))
-                            return testTet;
-                        else
-                            testTet.move(-2, 0);
-                    }
-                }
+                if ((c % 4) == 1)
+                    testTet.move(1 * bigOffset, 0);
+                else
+                    testTet.move(-1 * bigOffset, 0);
+                if (checkUnder(testTet, gameField, large) == 0)
+                    return testTet;
             }
-            //if the final spot don't work, return the old tet
-            if (!checkUnder(testTet, gameField, large))
-                return tet;
-            //otherwise return our new one
-            return testTet;
+            return tet;
         }
     }
 }
