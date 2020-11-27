@@ -1,10 +1,81 @@
 ﻿using System.Collections.Generic;
+
 using System.Drawing;
 
 namespace TGMsim.Modes
 {
     class SegaBlox : SegaTet
     {
+        G_SEGA itemgen;
+        int itemtimer = 0;
+        int[] stackheighttimes = new int[4] { 1200, 900, 600, 300 };
+        Tetromino.ItemType[,] itemtable = new Tetromino.ItemType[64, 4] {
+        { Tetromino.ItemType.delfour, Tetromino.ItemType.delfour, Tetromino.ItemType.delfour, Tetromino.ItemType.delfour},
+        { Tetromino.ItemType.delfour, Tetromino.ItemType.delfour, Tetromino.ItemType.delfour, Tetromino.ItemType.delfour},
+        { Tetromino.ItemType.delfour, Tetromino.ItemType.delfour, Tetromino.ItemType.delfour, Tetromino.ItemType.delfour},
+        { Tetromino.ItemType.delfour, Tetromino.ItemType.delfour, Tetromino.ItemType.delfour, Tetromino.ItemType.delfour},
+        { Tetromino.ItemType.delfour, Tetromino.ItemType.delfour, Tetromino.ItemType.delfour, Tetromino.ItemType.delfour},
+        { Tetromino.ItemType.delfour, Tetromino.ItemType.delfour, Tetromino.ItemType.delfour, Tetromino.ItemType.delfour},
+        { Tetromino.ItemType.delfour, Tetromino.ItemType.delfour, Tetromino.ItemType.delfour, Tetromino.ItemType.delfour},
+        { Tetromino.ItemType.delfour, Tetromino.ItemType.delfour, Tetromino.ItemType.delfour, Tetromino.ItemType.delfour},
+        { Tetromino.ItemType.delfour, Tetromino.ItemType.delfour, Tetromino.ItemType.delfour, Tetromino.ItemType.delfour},
+        { Tetromino.ItemType.delfour, Tetromino.ItemType.delfour, Tetromino.ItemType.delfour, Tetromino.ItemType.delfour},
+        { Tetromino.ItemType.delfour, Tetromino.ItemType.delfour, Tetromino.ItemType.delfour, Tetromino.ItemType.delfour},
+        { Tetromino.ItemType.delfour, Tetromino.ItemType.delfour, Tetromino.ItemType.delfour, Tetromino.ItemType.delfour},
+        { Tetromino.ItemType.delfour, Tetromino.ItemType.delfour, Tetromino.ItemType.delfour, Tetromino.ItemType.delfour},
+        { Tetromino.ItemType.delfour, Tetromino.ItemType.delfour, Tetromino.ItemType.delfour, Tetromino.ItemType.delfour},
+        { Tetromino.ItemType.delfour, Tetromino.ItemType.delfour, Tetromino.ItemType.delfour, Tetromino.ItemType.delfour},
+        { Tetromino.ItemType.delfour, Tetromino.ItemType.delfour, Tetromino.ItemType.delfour, Tetromino.ItemType.delfour},
+        { Tetromino.ItemType.delfour, Tetromino.ItemType.delfour, Tetromino.ItemType.delfour, Tetromino.ItemType.delfour}, //0x10
+        { Tetromino.ItemType.delfour, Tetromino.ItemType.delfour, Tetromino.ItemType.bird, Tetromino.ItemType.delfour},
+        { Tetromino.ItemType.delfour, Tetromino.ItemType.bird, Tetromino.ItemType.bird, Tetromino.ItemType.delfour},
+        { Tetromino.ItemType.delfour, Tetromino.ItemType.bird, Tetromino.ItemType.bird, Tetromino.ItemType.delfour},
+        { Tetromino.ItemType.delfour, Tetromino.ItemType.bird, Tetromino.ItemType.bird, Tetromino.ItemType.delfour},
+        { Tetromino.ItemType.delfour, Tetromino.ItemType.bird, Tetromino.ItemType.bird, Tetromino.ItemType.delfour},
+        { Tetromino.ItemType.delfour, Tetromino.ItemType.bird, Tetromino.ItemType.bird, Tetromino.ItemType.delfour},
+        { Tetromino.ItemType.delfour, Tetromino.ItemType.bird, Tetromino.ItemType.bird, Tetromino.ItemType.delfour},
+        { Tetromino.ItemType.delfour, Tetromino.ItemType.bird, Tetromino.ItemType.bird, Tetromino.ItemType.bird},
+        { Tetromino.ItemType.bird, Tetromino.ItemType.bird, Tetromino.ItemType.bird, Tetromino.ItemType.bird},
+        { Tetromino.ItemType.bird, Tetromino.ItemType.bird, Tetromino.ItemType.shot, Tetromino.ItemType.bird},
+        { Tetromino.ItemType.bird, Tetromino.ItemType.bird, Tetromino.ItemType.shot, Tetromino.ItemType.bird},
+        { Tetromino.ItemType.bird, Tetromino.ItemType.bird, Tetromino.ItemType.shot, Tetromino.ItemType.bird},
+        { Tetromino.ItemType.bird, Tetromino.ItemType.bird, Tetromino.ItemType.shot, Tetromino.ItemType.bird},
+        { Tetromino.ItemType.bird, Tetromino.ItemType.bird, Tetromino.ItemType.shot, Tetromino.ItemType.bird},
+        { Tetromino.ItemType.bird, Tetromino.ItemType.bird, Tetromino.ItemType.shot, Tetromino.ItemType.shot},
+        { Tetromino.ItemType.bird, Tetromino.ItemType.bird, Tetromino.ItemType.shot, Tetromino.ItemType.shot},//0x20
+        { Tetromino.ItemType.bird, Tetromino.ItemType.shot, Tetromino.ItemType.shot, Tetromino.ItemType.shot},
+        { Tetromino.ItemType.bird, Tetromino.ItemType.shot, Tetromino.ItemType.shot, Tetromino.ItemType.shot},
+        { Tetromino.ItemType.bird, Tetromino.ItemType.shot, Tetromino.ItemType.shot, Tetromino.ItemType.shot},
+        { Tetromino.ItemType.shot, Tetromino.ItemType.shot, Tetromino.ItemType.weight16, Tetromino.ItemType.shot},
+        { Tetromino.ItemType.shot, Tetromino.ItemType.shot, Tetromino.ItemType.weight16, Tetromino.ItemType.shot},
+        { Tetromino.ItemType.shot, Tetromino.ItemType.shot, Tetromino.ItemType.weight16, Tetromino.ItemType.shot},
+        { Tetromino.ItemType.shot, Tetromino.ItemType.shot, Tetromino.ItemType.weight16, Tetromino.ItemType.shot},
+        { Tetromino.ItemType.shot, Tetromino.ItemType.shot, Tetromino.ItemType.weight16, Tetromino.ItemType.weight16},
+        { Tetromino.ItemType.shot, Tetromino.ItemType.shot, Tetromino.ItemType.weight16, Tetromino.ItemType.weight16},
+        { Tetromino.ItemType.shot, Tetromino.ItemType.shot, Tetromino.ItemType.weight16, Tetromino.ItemType.weight16},
+        { Tetromino.ItemType.shot, Tetromino.ItemType.shot, Tetromino.ItemType.weight16, Tetromino.ItemType.weight16},
+        { Tetromino.ItemType.shot, Tetromino.ItemType.shot, Tetromino.ItemType.weight16, Tetromino.ItemType.weight16},
+        { Tetromino.ItemType.shot, Tetromino.ItemType.shot, Tetromino.ItemType.weight16, Tetromino.ItemType.weight16},
+        { Tetromino.ItemType.weight16, Tetromino.ItemType.shot, Tetromino.ItemType.weight16, Tetromino.ItemType.weight16},
+        { Tetromino.ItemType.weight16, Tetromino.ItemType.shot, Tetromino.ItemType.weight16, Tetromino.ItemType.weight16},
+        { Tetromino.ItemType.weight16, Tetromino.ItemType.weight16, Tetromino.ItemType.weight16, Tetromino.ItemType.weight16},//0x30
+        { Tetromino.ItemType.weight16, Tetromino.ItemType.weight16, Tetromino.ItemType.weight16, Tetromino.ItemType.bomb},
+        { Tetromino.ItemType.weight16, Tetromino.ItemType.weight16, Tetromino.ItemType.weight16, Tetromino.ItemType.bomb},
+        { Tetromino.ItemType.weight16, Tetromino.ItemType.weight16, Tetromino.ItemType.weight16, Tetromino.ItemType.bomb},
+        { Tetromino.ItemType.weight16, Tetromino.ItemType.weight16, Tetromino.ItemType.weight16, Tetromino.ItemType.bomb},
+        { Tetromino.ItemType.weight16, Tetromino.ItemType.weight16, Tetromino.ItemType.weight16, Tetromino.ItemType.bomb},
+        { Tetromino.ItemType.bomb, Tetromino.ItemType.weight16, Tetromino.ItemType.bomb, Tetromino.ItemType.bomb},
+        { Tetromino.ItemType.bomb, Tetromino.ItemType.weight16, Tetromino.ItemType.bomb, Tetromino.ItemType.bomb},
+        { Tetromino.ItemType.bomb, Tetromino.ItemType.bomb, Tetromino.ItemType.bomb, Tetromino.ItemType.bomb},
+        { Tetromino.ItemType.bomb, Tetromino.ItemType.bomb, Tetromino.ItemType.bomb, Tetromino.ItemType.bomb},
+        { Tetromino.ItemType.bomb, Tetromino.ItemType.bomb, Tetromino.ItemType.bomb, Tetromino.ItemType.bomb},
+        { Tetromino.ItemType.bomb, Tetromino.ItemType.bomb, Tetromino.ItemType.bomb, Tetromino.ItemType.bomb},
+        { Tetromino.ItemType.bomb, Tetromino.ItemType.bomb, Tetromino.ItemType.bomb, Tetromino.ItemType.bomb},
+        { Tetromino.ItemType.bomb, Tetromino.ItemType.bomb, Tetromino.ItemType.bomb, Tetromino.ItemType.bomb},
+        { Tetromino.ItemType.bomb, Tetromino.ItemType.bomb, Tetromino.ItemType.bomb, Tetromino.ItemType.bomb},
+        { Tetromino.ItemType.bomb, Tetromino.ItemType.bomb, Tetromino.ItemType.bomb, Tetromino.ItemType.bomb},
+        };
+
         public SegaBlox() : base()
         {
             var gL = new Gimmick();
@@ -97,12 +168,50 @@ namespace TGMsim.Modes
             delayTable[4][0] = 39;
             ModeName = "BLOXEED";
             showGhost = false;
+
+            //the item randomizer
+            itemgen = new G_SEGA(0x2A6D365B); //POP seed for now while it's tested
+            itemgen.read();
+            itemgen.read();
+
         }
 
         public override void onTick(long time)
         {
             timeCounter++;
             garbTimer++;
+            itemtimer++;
+        }
+
+        public override void onPieceGen(Tetromino tet, List<List<int>> gameField)
+        {
+            int table = itemgen.read();
+            int stackheight;
+            for (stackheight = gameField[0].Count - 1; stackheight > -1; stackheight--)
+            {
+                if (gameField[2][stackheight] != 0)
+                    break;
+                if (gameField[3][stackheight] != 0)
+                    break;
+                if (gameField[4][stackheight] != 0)
+                    break;
+                if (gameField[5][stackheight] != 0)
+                    break;
+                if (gameField[6][stackheight] != 0)
+                    break;
+                if (gameField[7][stackheight] != 0)
+                    break;
+            }
+            int heightchunk = 0;
+            if (stackheight > 8) heightchunk++;
+            if (stackheight > 12) heightchunk++;
+            if (stackheight > 16) heightchunk++;
+            //get stack height, if timer above threshold then make the tet an item block
+            if (itemtimer > stackheighttimes[heightchunk])
+            {
+                tet.item = itemtable[table, heightchunk];
+                itemtimer = 0;
+            }
         }
 
         public override void draw(bool replay)
@@ -113,6 +222,8 @@ namespace TGMsim.Modes
                 Draw.buffer.DrawString(levelUpTimes[level > 15 ? 15 : level].ToString(), Draw.f_Maestro, Draw.tb, 20, 312);
                 Draw.buffer.DrawString(garbTimer.ToString(), Draw.f_Maestro, Draw.tb, 20, 324);
             }
+
+            Draw.buffer.DrawString(itemtimer.ToString(), Draw.f_Maestro, Draw.tb, 20, 336);
         }
     }
 }

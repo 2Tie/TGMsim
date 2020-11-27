@@ -23,7 +23,7 @@ namespace TGMsim
             history.Insert(0, id);
         }
 
-        public int read() //calls the rand and saves seed
+        public virtual int read() //calls the rand and saves seed
         {
             seed = rand(seed);
             return (seed >> 10) & 0x7FFF;

@@ -19,7 +19,7 @@ namespace TGMsim
         public bool gemmed = false;
         public int gemPip = 0;
         public int groundTimer = 0;
-        public int item = 0;
+        public ItemType item = 0;
 
         //stats
         public int soft = 0;
@@ -27,7 +27,7 @@ namespace TGMsim
         public int life = 0;
         public int rotations = 0;
 
-        public enum ItemType { none, freefall, deleven };
+        public enum ItemType { none, freefall, deleven, delfour, weight16, shot, bomb, bird };
 
         public List<BlockBit> bits = new List<BlockBit>(); //first four will always be the "small" version
 
@@ -309,6 +309,7 @@ namespace TGMsim
             tet.spun = spun;
             tet.gemmed = gemmed;
             tet.gemPip = gemPip;
+            tet.item = item;
             return tet;
         }
     }

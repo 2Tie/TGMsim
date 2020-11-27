@@ -235,6 +235,8 @@ namespace TGMsim
                     break;
             }
 
+            resetField();
+
             activeTet = new Tetromino(0, MOD.bigmode); //first piece cannot be S, Z, or O
 
             if (nextTet.Count == 0 && ruleset.nextNum > 0) //generate nextTet
@@ -249,16 +251,12 @@ namespace TGMsim
             gravTable = ruleset.gravTable;
 
             MOD.grade = MOD.initialGrade;
-
-
             
             frameColour = MOD.border;
 
             if (ruleset.exam != -1)
                 frameColour = Color.Gold;
 
-            
-            
             while (gravLevel < gravTable.Count - 1) //update gravity
             {
                 if (MOD.level + (MOD.secBonus * 100) >= ruleset.gravLevels[gravLevel + 1])
@@ -266,25 +264,6 @@ namespace TGMsim
                 else
                     break;
             }
-
-            //if ((MOD.g20 == true || gravTable[gravLevel] == Math.Pow(256, ruleset.gravType + 1) * 20) && (int)ruleset.gameRules < 4)
-                //textBrush = new SolidBrush(Color.Gold);
-            
-            
-            //secTet.Add(0);
-
-            for (int i = 0; i < ruleset.fieldW; i++)
-            {
-                List<int> tempList = new List<int>();
-                for (int j = 0; j < ruleset.fieldH; j++)
-                {
-                    tempList.Add(0); // at least nine types; seven tetrominoes, invisible, and garbage
-                }
-                gameField.Add(tempList);
-            }
-
-            resetField();
-            
         }
 
         public void resetField()
@@ -534,23 +513,30 @@ namespace TGMsim
             {
                 for (int i = 0; i < activeTet.bits.Count; i++)
                 {
-
-                    if (activeTet.bone == true)
+                    int px = x + 25 * activeTet.bits[i].x;
+                    int py = y + height - (25 * activeTet.bits[i].y);
+                    int psize = 25 * big;
+                    if (i == 1 && activeTet.item != Tetromino.ItemType.none)
+                    {
+                        Draw.buffer.DrawImage(tetGems[1], px, py, psize, psize);
+                        Draw.buffer.DrawString("I", Draw.f_Maestro, Draw.wb, px, py);
+                    }
+                    else if (activeTet.bone == true)
                     {
                         if (activeTet.gemmed && i == activeTet.gemPip)
-                            Draw.buffer.DrawImage(boneGem, x + 25 * activeTet.bits[i].x, y + height - (25 * activeTet.bits[i].y), 25 * big, 25 * big);
+                            Draw.buffer.DrawImage(boneGem, px, py, psize, psize);
                         else
-                            Draw.buffer.DrawImage(tetImgs[10], x + 25 * activeTet.bits[i].x, y + height - (25 * activeTet.bits[i].y), 25 * big, 25 * big);
+                            Draw.buffer.DrawImage(tetImgs[10], px, py, psize, psize);
                     }
                     else
                     {
                         if (activeTet.groundTimer >= 0)
                         {
                             if (activeTet.gemmed && i == activeTet.gemPip)
-                                Draw.buffer.DrawImage(tetGems[(int)activeTet.id - 1], x + 25 * activeTet.bits[i].x, y + height - (25 * activeTet.bits[i].y), 25 * big, 25 * big);
+                                Draw.buffer.DrawImage(tetGems[(int)activeTet.id - 1], px, py, psize, psize);
                             else
-                                Draw.buffer.DrawImage(tetImgs[(int)activeTet.id], x + 25 * activeTet.bits[i].x, y + height - (25 * activeTet.bits[i].y), 25 * big, 25 * big);
-                            Draw.buffer.FillRectangle(new SolidBrush(Color.FromArgb((MOD.baseLock - activeTet.groundTimer) * 127 / MOD.baseLock, Color.Black)), x + 25 * activeTet.bits[i].x, y + height - (25 * activeTet.bits[i].y), 25 * big, 25 * big);
+                                Draw.buffer.DrawImage(tetImgs[(int)activeTet.id], px, py, psize, psize);
+                            Draw.buffer.FillRectangle(new SolidBrush(Color.FromArgb((MOD.baseLock - activeTet.groundTimer) * 127 / MOD.baseLock, Color.Black)), px, py, psize, psize);
                         }
                         //else
                         //drawBuffer.DrawImage(tetImgs[9], x + 25 * (activeTet.bits[i].x * (2 / big) - (4 % (6 - big))), y - 25 + 25 * (activeTet.bits[i].y * (2 / big) - (lowY * ((2 / big) - 1))), 25 * (2 / big), 25 * (2 / big));
@@ -613,29 +599,41 @@ namespace TGMsim
                     {
                         if (i == 0)//1st next drawn at full size
                         {
-                            if (nextTet[i].bone == true)
+                            int px = x + 25 * nextTet[i].bits[j].x;
+                            int py = y - 95 + 25 * (21 - nextTet[i].bits[j].y);
+                            if (j == 1 && nextTet[i].item != Tetromino.ItemType.none)
+                            {
+                                Draw.buffer.DrawImageUnscaled(tetGems[1], px, py);
+                                Draw.buffer.DrawString("I", Draw.f_Maestro, Draw.wb, px, py);
+                            }
+                            else if (nextTet[i].bone == true)
                             {
                                 if (nextTet[i].gemmed && j == nextTet[i].gemPip)
-                                    Draw.buffer.DrawImage(boneGem, x + 25 * nextTet[i].bits[j].x, y - 95 + 25 * (21 - nextTet[i].bits[j].y), 25, 25);
+                                    Draw.buffer.DrawImageUnscaled(boneGem, px, py);
                                 else
-                                    Draw.buffer.DrawImage(tetImgs[10], x + 25 * nextTet[i].bits[j].x, y - 95 + 25 * (21 - nextTet[i].bits[j].y), 25, 25);
-                                //drawBuffer.DrawImageUnscaled(tetImgs[10], x + i * 70 + 16 * nextTet[i].bits[j].x + 40, y + 16 * nextTet[i].bits[j].y - 75);
+                                    Draw.buffer.DrawImageUnscaled(tetImgs[10], px, py);
                             }
                             else
                             {
                                 if (nextTet[i].gemmed && j == nextTet[i].gemPip)
-                                    Draw.buffer.DrawImage(tetGems[(int)nextTet[i].id - 1], x + 25 * nextTet[i].bits[j].x, y - 95 + 25 * (21 - nextTet[i].bits[j].y), 25, 25);
+                                    Draw.buffer.DrawImageUnscaled(tetGems[(int)nextTet[i].id - 1], px, py);
                                 else
-                                    Draw.buffer.DrawImage(tetImgs[(int)nextTet[i].id], x + 25 * nextTet[i].bits[j].x, y - 95 + 25 * (21 - nextTet[i].bits[j].y), 25, 25);
-                                //drawBuffer.DrawImageUnscaled(tetImgs[nextTet[i].id], x + i * 70 + 16 * nextTet[i].bits[j].x + 40, y + 16 * nextTet[i].bits[j].y - 75);
+                                    Draw.buffer.DrawImageUnscaled(tetImgs[(int)nextTet[i].id], px, py);
                             }
                         }
                         else
                         {
-                            if (nextTet[i].bone == true)
-                                Draw.buffer.DrawImageUnscaled(tetSImgs[10], x + i * 80 + 16 * nextTet[i].bits[j].x + 65, y + 16 * (21-nextTet[i].bits[j].y) - 75);
+                            int px = x + i * 80 + 16 * nextTet[i].bits[j].x + 65;
+                            int py = y + 16 * (21 - nextTet[i].bits[j].y) - 75;
+                            if (j == 1 && nextTet[i].item != Tetromino.ItemType.none)
+                            {
+                                Draw.buffer.DrawImageUnscaled(tetGems[1], px, py);
+                                Draw.buffer.DrawString("I", Draw.f_Maestro, Draw.wb, px, py);
+                            }
+                            else if (nextTet[i].bone == true)
+                                Draw.buffer.DrawImageUnscaled(tetSImgs[10], px, py);
                             else
-                                Draw.buffer.DrawImageUnscaled(tetSImgs[(int)nextTet[i].id], x + i * 80 + 16 * nextTet[i].bits[j].x + 65, y + 16 * (21-nextTet[i].bits[j].y) - 75);
+                                Draw.buffer.DrawImageUnscaled(tetSImgs[(int)nextTet[i].id], px, py);
                         }
                     }
                 }
@@ -1918,6 +1916,8 @@ namespace TGMsim
                     gemQueue.Remove((byte)tempTet.id);
                 }
 
+            MOD.onPieceGen(tempTet, gameField);
+
             return tempTet;
         }
 
@@ -1969,6 +1969,7 @@ namespace TGMsim
                 for (int j = 0; j < 10; j++)
                     if (gameField[j][num] != 0)
                         gameField[j][num - 1 - i] = 9;
+            raiseFlashForGarbage(num);
         }
 
         private void raiseGarbage(bool rand)
@@ -1989,6 +1990,7 @@ namespace TGMsim
                     else
                         gameField[j][0] = 0;
             }
+            raiseFlashForGarbage(1);
         }
 
         private void raiseGarbageSlice()
@@ -2017,9 +2019,16 @@ namespace TGMsim
                         MOD.garbDelay = 0;
                     else
                         MOD.garbLine = 0;
+                raiseFlashForGarbage(1);
             }
             else
                 throw new Exception("Tried to use empty garbage template");
+        }
+
+        private void raiseFlashForGarbage(int amt)
+        {
+            for(int i = 0; i < flashList.Count; i++)
+                flashList[i] = new flashPip { x = flashList[i].x, y = flashList[i].y+amt, time = flashList[i].time };
         }
 
         private void dropField(int num)

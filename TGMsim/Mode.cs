@@ -131,6 +131,11 @@ namespace TGMsim
 
         }
 
+        public virtual void onPieceGen(Tetromino tet, List<List<int>> gameField)
+        {
+
+        }
+
         public virtual void onSpawn()
         {
 

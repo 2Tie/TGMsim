@@ -12,11 +12,8 @@ polish up GUI some more
 flesh out Custom Mode
 add seed select to Custom Mode
 backgrounds for game select and mode select
-implement the bloxeed item system and items
-
-Additions in the future:
-refine Dynamo based on feedback
-GM/Full Clear medals in game select
 item blocks
 normal mode (has secret grade)
+refine Dynamo
+GM/Full Clear medals in game select
 ACE modes

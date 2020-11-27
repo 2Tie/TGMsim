@@ -20,7 +20,7 @@
             return ((s & 0xFFFF) + (s>>16)) | (int)(old & 0xFFFF0000);
         }
 
-        private new int read()
+        public override int read()
         {
             return rand(seed) & 0x3F;
         }

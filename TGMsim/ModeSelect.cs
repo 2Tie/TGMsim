@@ -53,7 +53,7 @@ namespace TGMsim
             modes.Add(tmp);
             tmp = new List<ModeSelObj>();//tgm2
             tmp.Add(new ModeSelObj(new List<string> { "Master" }, Mode.ModeType.MASTER, GameRules.Games.TGM2, new List<bool> { true }));
-            tmp.Add(new ModeSelObj(new List<string> { "Cardcaptor Sakura Easy", "Cardcaptor Sakura Normal" }, Mode.ModeType.CCS, GameRules.Games.CCS, new List<bool> { true, true })); //TODO
+            tmp.Add(new ModeSelObj(new List<string> { "Cardcaptor Sakura Easy", "Cardcaptor Sakura Normal" }, Mode.ModeType.CCS, GameRules.Games.CCS, new List<bool> { true, true }));
             modes.Add(tmp);
             tmp = new List<ModeSelObj>();//tap
             tmp.Add(new ModeSelObj(new List<string> { "Normal" }, Mode.ModeType.SEGA, GameRules.Games.TAP, new List<bool> { false })); //TODO

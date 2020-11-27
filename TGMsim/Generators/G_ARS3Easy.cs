@@ -4,29 +4,26 @@ namespace TGMsim
 {
     class G_ARS3Easy : Generator
     {
-        //TODO: this is incorrect. need further info.
-        List<int> bag = new List<int> { 0, 3, 4, 5, 6 };
+        //strict 3 history, possibly true random after that? a roll system possibly? hard to know for sure right now
+        List<int> pieces = new List<int> { 0, 3, 4, 5, 6 };
         bool norepeat = true;
 
         public G_ARS3Easy(int nuseed) : base(nuseed)
         {
-            history = new List<int> { 0, 0 };
+            history = new List<int> { 7, 7, 7 };
             int temp = read() % 5;
-            history[0] = bag[temp]; //save rolled piece
-            bag.RemoveAt(temp); //swipe from bag
+            history[0] = pieces[temp]; //save rolled piece
         }
 
         public override int pull()
         {
-            int temp = read() % bag.Count;
-            while(norepeat && history[0] == bag[temp])
-            {
-                temp = read() % bag.Count;
-            }
-            int piece = bag[temp];
-            bag.RemoveAt(temp);
-            if (bag.Count == 0)
-                bag = new List<int> { 0, 3, 4, 5, 6 };
+            pieces = new List<int> { 0, 3, 4, 5, 6 }; //refill options
+            if (norepeat)//remove options in history
+                for (int i = 0; i < history.Count; i++)
+                    pieces.Remove(history[i]);
+
+            int temp = read() % pieces.Count;
+            int piece = pieces[temp];
             updateHistory(piece);
             
             return history[1];
