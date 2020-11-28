@@ -7,16 +7,10 @@ namespace TGMsim.Modes
 {
     class Dynamo : Mode
     {
-
-        public List<List<double>> comboTable = new List<List<double>>();
-        public List<int> gradeIntTGM2 = new List<int> { 0, 1, 2, 3, 4, 5, 5, 6, 6, 7, 7, 7, 8, 8, 8, 9, 9, 9, 10, 11, 12, 12, 12, 13, 13, 14, 14, 15, 15, 16, 16, 17 };
-        public List<int> decayRate = new List<int>() { 125, 80, 80, 50, 45, 45, 45, 40, 40, 40, 40, 40, 30, 30, 30, 20, 20, 20, 20, 20, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 10 };
-        public List<List<int>> baseGradePts = new List<List<int>>();
+        public int[] gradeTable = new int[17] { 20, 45, 75, 110, 150, 195, 245, 300, 360, 425, 495, 570, 650, 735, 825, 920, 1020 };
         public int gradePoints = 0;
-        public int gradeCombo = 0;
-        public int gradeTime = 0;
-        public int intGrade = 0;
-        public int teteri = 0;
+        public double gradeCombo = 1;
+        public int creditPoints = 0;
 
         int bonusGradeProgress = 0;
         int bonusGrades = 0;
@@ -35,10 +29,10 @@ namespace TGMsim.Modes
             border = Color.MediumPurple;
             grades = new List<string> {
                 "9", "8", "7", "6", "5", "4", "3", "2", "1",
-                "S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "S9", //the TAP grades
-                "M1", "M2", "M3", "M4", "M5", "M6", "M7", "M8", "M9", //the COOL grades
-                "V1", "V2", "V3", "V4", "V5", "V6", "V7", "V8", "V9", //the variant grades
-                "M", "MK", "MV", "MO", "MM", "GM" }; //credit grades?
+                "S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "S9", //the point grades
+                "M1", "M2", "M3", "M4", "M5", "M6", "M7", "M8", "M9", "MM", //the COOL grades (one for each section)
+                "V1", "V2", "V3", "V4", "V5", "V6", "V7", "V8", "V9", //the variant grades + clear grade
+                "G1", "G2", "G3", "G4", "G5", "GM" }; //credit grades?
             sections.Add(100);
             sections.Add(200);
             sections.Add(300);
@@ -49,21 +43,21 @@ namespace TGMsim.Modes
             sections.Add(800);
             sections.Add(900);
             sections.Add(999);
-            showGrade = false;
+            showGrade = true;
             variant = v;
             if (v < 4)
                 secBonus = v * 10;
             //if v == 4, final mode
             if (v == 0)
-                creditsSong = "crdtcas";
-            else if (v == 4)
             {
-                creditsSong = "crdtinvis";
-                g20 = true;
+                creditsType = CreditsTypes.plain;
+                creditsSong = "crdtcas";
             }
             else
+            {
+                creditsType = CreditsTypes.vanishing;
                 creditsSong = "crdtvanish";
-
+            }
             //ADD SHIRASE
             delayTable.Add(new List<int> { 27, 27, 27, 18, 14, 14, 12, 12, 12, 8,  7,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6 });//ARE
             delayTable.Add(new List<int> { 27, 27, 18, 14, 8,  8,  8,  7,  6,  6,  6,  6,  6,  5,  5,  5,  5,  5,  5,  5,  5,  5 });//LINE ARE
@@ -71,38 +65,13 @@ namespace TGMsim.Modes
             delayTable.Add(new List<int> { 30, 30, 30, 30, 30, 17, 17, 17, 17, 17, 15, 15, 15, 13, 12, 12, 12, 12, 12, 12, 10, 8 });//LOCK
             delayTable.Add(new List<int> { 40, 25, 16, 12, 6,  6,  6,  5,  5,  5,  5,  5,  4,  3,  3,  3,  3,  3,  3,  3,  3,  3 });//LINE CLEAR
 
-            comboTable.Add(new List<double>() { 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0 });
-            comboTable.Add(new List<double>() { 1.0, 1.2, 1.2, 1.4, 1.4, 1.4, 1.4, 1.5, 1.5, 2.0 });
-            comboTable.Add(new List<double>() { 1.0, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2.5 });
-            comboTable.Add(new List<double>() { 1.0, 1.5, 1.8, 2.0, 2.2, 2.3, 2.4, 2.5, 2.6, 3.0 });
-            baseGradePts.Add(new List<int>() { 10, 10, 10, 10, 10, 5, 5, 5, 5, 5 });
-            baseGradePts.Add(new List<int>() { 20, 20, 20, 15, 15, 15, 10, 10, 10, 10 });
-            baseGradePts.Add(new List<int>() { 40, 30, 30, 30, 20, 20, 20, 15, 15, 15 });
-            baseGradePts.Add(new List<int>() { 50, 40, 40, 40, 40, 30, 30, 30, 30, 30 });
-            for (int i = 0; i < 22; i++)
-            {
-                baseGradePts[0].Add(2);
-                baseGradePts[1].Add(12);
-                baseGradePts[2].Add(13);
-                baseGradePts[3].Add(30);
-            }
-            hasSecretGrade = true;
-            minSecret = 5;
-            secretGrades = new List<string> { "9", "8", "7", "6", "5", "4", "3", "2", "1", "S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "S9", "GM" };
+            hasSecretGrade = false;
         }
 
         public override void onTick(long time)
         {
             t = time;
             secTimer.tick();
-            if (!comboing && !inCredits)
-                gradeTime++;
-            if (gradeTime > decayRate[grade])
-            {
-                gradeTime = 0;
-                if (gradePoints != 0)
-                    gradePoints--;
-            }
             if (coolTime.count > 0)
             {
                 coolTime.tick();
@@ -130,9 +99,8 @@ namespace TGMsim.Modes
         {
             if (clear == false)
             {
-                combo = 1;
-                gradeCombo = 0;
-                comboing = false;
+                if (gradeCombo > 1.0)
+                    gradeCombo -= 0.1;
             }
 
             if(variant == 4)
@@ -150,10 +118,10 @@ namespace TGMsim.Modes
             //COOLS
             if (level % 100 > 69)
             {
-                if (coolCounter.Count <= curSection && curSection != 9)
+                if (coolCounter.Count <= curSection)
                 {
                     int framebonus = 24 - curSection; //15 was base
-                    long cool = (baseARE + framebonus) * 60 + (baseLineClear) * 6;//cool time in frames
+                    long cool = (baseARE + framebonus) * 60 + (baseLineClear) * 6;//cool time in frames //TODO: this only works for the non-super variants
                     //long cool = (baseARE + 60) * 60 + (baseLineClear) * 6;//testing adjustment because i'm a scrub
                     cool = (cool / 60) * 1000;//cool time in ms
 
@@ -187,65 +155,68 @@ namespace TGMsim.Modes
             if (lines == 4)
             {
                 Audio.playSound(Audio.s_Tetris);
-                if (inCredits)
-                    teteri++;
             }
 
-            int newPts = (int)(Math.Ceiling(baseGradePts[lines - 1][grade] * comboTable[lines - 1][gradeCombo]) * Math.Ceiling((double)level / 250));
+            //int newPts = (int)(Math.Ceiling(baseGradePts[lines - 1][grade] * comboTable[lines - 1][gradeCombo]) * Math.Ceiling((double)level / 250));
 
-            gradePoints += newPts;
-            //update grade
-            if (gradePoints > 99)
+            //todo: new system. lines cleared squared. multiplier set to 1.3, with nonclearing locks dropping it to 1.2 then by 0.5 each. 1000 grade points the target for S9?
+            if (!inCredits)
             {
-                if (intGrade < gradeIntTGM2.Count - 1)
+                gradePoints += (int)(Math.Pow(lines, 2) * gradeCombo);
+                gradeCombo = 1.5;
+                //update grade
+                if (grade < gradeTable.Count() - 1 && gradePoints > gradeTable[grade])
                 {
-                    intGrade++;
-                    gradePoints = 0;
-                    gradeTime = 0; //nullpo resets the decay here
-                    if (gradeIntTGM2[intGrade] != grade)
-                    {
-                        grade++;
-                        masteringTime.count = time;
-                    }
+                    grade++;
+                    masteringTime.count = time;
                 }
-            }
 
-            if (curSection < sections.Count)
-            {
-                if (level >= sections[curSection])
+                if (curSection < sections.Count)
                 {
-                    curSection++;
-                    showGhost = false;
-                    secTet.Add(0);
-                    secTimes.Add(secTimer.count);
-                    secTimer = new FrameTimer();
-                    //GM FLAGS
-
-                    //MUSIC
-                    updateMusic();
-                    //DELAYS
-                    if (coolCounter.Count(p => p == 1) > cools)
+                    if (level >= sections[curSection])
                     {
-                        cools++;
-                        secBonus += 1;
+                        curSection++;
+                        showGhost = false;
+                        secTet.Add(0);
+                        secTimes.Add(secTimer.count);
+                        secTimer = new FrameTimer();
+                        //GM FLAGS
 
-                        int num = (curSection + secBonus) / 2 - 4;
-                        if (num > 0 && variant < 4)
+                        //MUSIC
+                        updateMusic();
+                        //DELAYS
+                        if (coolCounter.Count(p => p == 1) > cools)
                         {
-                            //update delays
-                            baseARE = delayTable[0][num];
-                            baseARELine = delayTable[1][num];
-                            baseDAS = delayTable[2][num];
-                            baseLock = delayTable[3][num];
-                            baseLineClear = delayTable[4][num];
+                            cools++;
+                            secBonus += 1;
+
+                            int num = (curSection + secBonus) / 2 - 4;
+                            if (num > 0 && variant < 4)
+                            {
+                                //update delays
+                                baseARE = delayTable[0][num];
+                                baseARELine = delayTable[1][num];
+                                baseDAS = delayTable[2][num];
+                                baseLock = delayTable[3][num];
+                                baseLineClear = delayTable[4][num];
+                            }
                         }
                     }
                 }
+            }
+            else
+            {
+                creditPoints += lines * lines; 
             }
             if (level >= endLevel && endLevel != 0)
             {
                 level = endLevel;
                 inCredits = true;
+                if(cools == 10)
+                {
+                    creditsType = CreditsTypes.invisible;
+                    creditsSong = "crdtinvis";
+                }
             }
         }
 
@@ -257,18 +228,16 @@ namespace TGMsim.Modes
                 orangeLine = true;
             }
 
-            if (teteri > 6)
-                teteri = 6;
+            if (creditPoints > 16*6)
+                creditPoints = 16*6;
 
-            if (creditsType == 1)
-                teteri /= 2;
+            if (creditsType ==  CreditsTypes.vanishing)
+                creditPoints /= 2;
 
-            if (creditsType != 0)
-                bonusGrades += teteri;
+            if (creditsType != CreditsTypes.plain)
+                bonusGrades += creditPoints/16;
 
             grade += bonusGrades;
-
-            showGrade = true;
         }
 
         public override void draw(bool replay)
@@ -283,6 +252,7 @@ namespace TGMsim.Modes
             }
             if (variant == 4)
                 Draw.buffer.DrawString((level/(999 / (delayTable[0].Count + 1))).ToString(), Draw.f_Maestro, Draw.tb, 20, 324);
+            Draw.buffer.DrawString(gradePoints.ToString(), Draw.f_Maestro, Draw.tb, 20, 312);
         }
 
         public override void updateMusic()

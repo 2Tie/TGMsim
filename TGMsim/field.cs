@@ -464,7 +464,7 @@ namespace TGMsim
                         }
                         //outline
                         if (MOD.outlineStack)
-                            if (block != 0 && (block != 8 || (flashing > -1 && MOD.outlineFlashing && (checkGimmick(Mode.Gimmick.Type.INVIS) || (inCredits && MOD.creditsType == 2)))) && block != 10)//don't outline invis or bones
+                            if (block != 0 && (block != 8 || (flashing > -1 && MOD.outlineFlashing && (checkGimmick(Mode.Gimmick.Type.INVIS) || (inCredits && MOD.creditsType == Mode.CreditsTypes.invisible)))) && block != 10)//don't outline invis or bones
                             {
                                 if (i > 0)
                                     if (gameField[i - 1][j] == 0)//left
@@ -1393,7 +1393,7 @@ namespace TGMsim
                                             {
                                                 if (activeTet.bits[i].y - k < 0)
                                                     continue;
-                                                if (checkGimmick(Mode.Gimmick.Type.INVIS) || MOD.creditsType == 2)
+                                                if (checkGimmick(Mode.Gimmick.Type.INVIS) || MOD.creditsType == Mode.CreditsTypes.invisible)
                                                     gameField[activeTet.bits[i].x + j][activeTet.bits[i].y - k] = 8;
                                                 else if (activeTet.bone == true)
                                                 {
@@ -1410,7 +1410,7 @@ namespace TGMsim
                                                         gameField[activeTet.bits[i].x + j][activeTet.bits[i].y - k] = (int)activeTet.id;
                                                 }
 
-                                                if (MOD.creditsType == 1 && inCredits)//vanishing?
+                                                if (MOD.creditsType == Mode.CreditsTypes.vanishing && inCredits)//vanishing?
                                                 {
                                                     vanPip vP = new vanPip();
                                                     vP.time = creditsProgress;
@@ -1816,7 +1816,7 @@ namespace TGMsim
                         {
                             if (activeTet.bits[i].y - k < 0)
                                 continue;
-                            if (checkGimmick(Mode.Gimmick.Type.INVIS) || MOD.creditsType == 2)
+                            if (checkGimmick(Mode.Gimmick.Type.INVIS) || MOD.creditsType == Mode.CreditsTypes.invisible)
                                 gameField[activeTet.bits[i].x + j][activeTet.bits[i].y - k] = 8;
                             else if (activeTet.bone == true)
                                 gameField[activeTet.bits[i].x + j][activeTet.bits[i].y - k] = 10;

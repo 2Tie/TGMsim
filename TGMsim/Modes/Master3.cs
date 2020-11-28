@@ -183,13 +183,13 @@ namespace TGMsim.Modes
                 {
                     if (grade > 26 && secCools.Sum() == 8)
                     {
-                        creditsType = 2;
+                        creditsType = CreditsTypes.invisible;
                         creditsSong = "crdtinvis";
                         outlineFlashing = true;
                         outlineFlashDelay = 2;
                     }
                     else
-                        creditsType = 1;
+                        creditsType = CreditsTypes.vanishing;
                 }
                 inCredits = true;
             }
@@ -237,7 +237,7 @@ namespace TGMsim.Modes
             if (!inCredits)
                 gradePoints += newPts;
             else
-                creditGrades += creditGradePoints[creditsType - 1][lines];
+                creditGrades += creditGradePoints[(int)creditsType - 1][lines];
             //update grade
             if (gradePoints > 99)
             {
@@ -420,9 +420,9 @@ namespace TGMsim.Modes
         {
             if (creditsClear)
             {
-                if (creditsType == 1)
+                if (creditsType == CreditsTypes.vanishing)
                     creditGrades += 50;
-                if (creditsType == 2)
+                if (creditsType == CreditsTypes.invisible)
                     creditGrades += 160;
                 orangeLine = true;
             }

@@ -41,7 +41,7 @@ namespace TGMsim.Modes
                 if (!inCredits) //test for invis roll
                 {
                     if (grade == 27)
-                        creditsType = 2;
+                        creditsType = CreditsTypes.invisible;
                 }
                 inCredits = true;
                 outlineStack = false;

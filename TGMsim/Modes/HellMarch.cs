@@ -50,7 +50,7 @@ namespace TGMsim.Modes
                     grade = 3;
                     modeClear = true;
                     inCredits = true;
-                    creditsType = 2;
+                    creditsType = CreditsTypes.invisible;
                     g20 = true;
                 }
             }

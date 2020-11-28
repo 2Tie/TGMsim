@@ -69,7 +69,8 @@ namespace TGMsim
         public bool toriCredits = true;
         public int toriLevel = 0;
 
-        public int creditsType = 0;//normal, vanishing, invisible
+        public CreditsTypes creditsType = CreditsTypes.plain;//normal, vanishing, invisible
+        public enum CreditsTypes { plain, vanishing, invisible };
 
         public int score = 0;
         public int combo = 1;
