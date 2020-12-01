@@ -30,7 +30,7 @@ namespace TGMsim.Modes
             grades = new List<string> {
                 "9", "8", "7", "6", "5", "4", "3", "2", "1",
                 "S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "S9", //the point grades
-                "M1", "M2", "M3", "M4", "M5", "M6", "M7", "M8", "M9", "MM", //the COOL grades (one for each section)
+                "M1", "M2", "M3", "M4", "M5", "M6", "M7", "M8", "M9", "MM", //the COOL/teteri grades (one for each section)
                 "V1", "V2", "V3", "V4", "V5", "V6", "V7", "V8", "V9", //the variant grades + clear grade
                 "G1", "G2", "G3", "G4", "G5", "GM" }; //credit grades?
             sections.Add(100);
@@ -66,6 +66,7 @@ namespace TGMsim.Modes
             delayTable.Add(new List<int> { 40, 25, 16, 12, 6,  6,  6,  5,  5,  5,  5,  5,  4,  3,  3,  3,  3,  3,  3,  3,  3,  3 });//LINE CLEAR
 
             hasSecretGrade = false;
+            secTet.Add(0);
         }
 
         public override void onTick(long time)
@@ -114,9 +115,8 @@ namespace TGMsim.Modes
                 baseLock = delayTable[3][level/num];
                 baseLineClear = delayTable[4][level/num];
             }
-
             //COOLS
-            if (level % 100 > 69)
+            else if ((level % 100) > 69)
             {
                 if (coolCounter.Count <= curSection)
                 {
@@ -154,12 +154,10 @@ namespace TGMsim.Modes
 
             if (lines == 4)
             {
+                secTet[curSection]++;
                 Audio.playSound(Audio.s_Tetris);
             }
 
-            //int newPts = (int)(Math.Ceiling(baseGradePts[lines - 1][grade] * comboTable[lines - 1][gradeCombo]) * Math.Ceiling((double)level / 250));
-
-            //todo: new system. lines cleared squared. multiplier set to 1.3, with nonclearing locks dropping it to 1.2 then by 0.5 each. 1000 grade points the target for S9?
             if (!inCredits)
             {
                 gradePoints += (int)(Math.Pow(lines, 2) * gradeCombo);
@@ -175,6 +173,8 @@ namespace TGMsim.Modes
                 {
                     if (level >= sections[curSection])
                     {
+                        if (secTet[curSection] > 2)
+                            cools++;
                         curSection++;
                         showGhost = false;
                         secTet.Add(0);
@@ -212,7 +212,7 @@ namespace TGMsim.Modes
             {
                 level = endLevel;
                 inCredits = true;
-                if(cools == 10)
+                if(cools == 10 && variant != 0)
                 {
                     creditsType = CreditsTypes.invisible;
                     creditsSong = "crdtinvis";
