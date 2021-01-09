@@ -1459,7 +1459,7 @@ namespace TGMsim
                                                 tetCount++;
                                             }
                                         }
-                                        if (columnCount == 10)
+                                        if (columnCount == 10 && (i < 19 || MOD.clear20bug == false))
                                         {
                                             if (!checkGimmick(Mode.Gimmick.Type.ICE) || i > 9)
                                             {

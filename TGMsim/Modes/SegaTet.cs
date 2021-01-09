@@ -36,6 +36,7 @@ namespace TGMsim.Modes
             delayTable.Add(new List<int> { 31 });
             delayTable.Add(new List<int> { 42 });
             grades = new List<string> { "" };
+            clear20bug = true;
         }
 
         public override void onPut(Tetromino tet, bool clear)

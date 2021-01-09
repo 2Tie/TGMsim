@@ -254,7 +254,7 @@ namespace TGMsim.Modes
                 }
             }
 
-            if (comboing)
+            if (comboing && lines > 1)
                 Audio.playSound(Audio.s_Combo);
 
             comboing = true;

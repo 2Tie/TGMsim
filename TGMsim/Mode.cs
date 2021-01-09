@@ -53,6 +53,7 @@ namespace TGMsim
         public int variant = 0;
         public bool lockSafety = false;
         public bool hasDAD = false; //Delayed Auto Drop; i'm putting it here instead of in GameRules because i'm handling Flash Point as a mode
+        public bool clear20bug = false; //for base segatet
 
         public bool comboing = false;
         public bool inCredits = false;
