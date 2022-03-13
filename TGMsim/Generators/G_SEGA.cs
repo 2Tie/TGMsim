@@ -9,7 +9,6 @@
         public G_SEGA(int nuseed) : base(nuseed)
         {
             IDs = new int[] { 0, 1, 2, 5, 6, 4, 3}; //the internal piece order
-            seq = new byte[1000];
         }
 
         public override int rand(int s)
@@ -39,7 +38,8 @@
         {
             //generate the sequence
             //seed = 0x2A6D365A; //the power-on-pattern, for testing
-            //seed = 0x2A6D365B; //pop for bloxeed
+            //seed = 0x2A6D365B; //pop for flash point
+            seq = new byte[1000]; //move this here to avoid reserving unneeded memory for bloxeed
             for (int i = 0; i < 1000; i++)
             {
                 seq[i] = (byte)(read() % 7);

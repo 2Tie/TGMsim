@@ -15,7 +15,7 @@ namespace TGMsim
         public Rots rotation = 0; //TGM, TGM3, SEGA, SRS
         public Gens generator = 0; //dummy, TGM1, TGM2, TGM3, ACE, 
         public enum Rots { SEGA = 0, SEMIPRO, ARS1, CCS, ARS3}
-        public enum Gens { dummy = 0, SEGA, TGM1, TGM2, CCS, CCS_EZ, TGM3, TGM3_EZ }
+        public enum Gens { dummy = 0, SEGA, BLOX, TGM1, TGM2, CCS, CCS_EZ, TGM3, TGM3_EZ }
         public enum Games { SEGA = 0, TGM1, CCS, TGM2, TAP, TGM3, ACE, GMX, EXTRA, M0R }
         
         public int gravType = 0; //b256, b65536, frames
@@ -308,6 +308,7 @@ namespace TGMsim
                 case Mode.ModeType.BLOX: //bloxeed
                     mod = new Modes.SegaBlox();
                     gravTable = new List<int> { 16, 14, 12, 10, 8, 6, 4, 3, 2, 1, 10, 8, 6, 4, 2, 1 };
+                    generator = Gens.BLOX;
                     break;
                 case Mode.ModeType.PLUS: //tgm+
                     mod = new Modes.Plus();

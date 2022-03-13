@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Drawing.Text;
 using TGMsim.Rotations;
+using TGMsim.Generators;
 
 namespace TGMsim
 {
@@ -223,6 +224,9 @@ namespace TGMsim
                     break;
                 case GameRules.Gens.SEGA:
                     GEN = new G_SEGA(seed);
+                    break;
+                case GameRules.Gens.BLOX:
+                    GEN = new G_SEGABlox(seed);
                     break;
                 case GameRules.Gens.TGM3_EZ:
                     GEN = new G_ARS3Easy(seed);
@@ -516,10 +520,10 @@ namespace TGMsim
                     int px = x + 25 * activeTet.bits[i].x;
                     int py = y + height - (25 * activeTet.bits[i].y);
                     int psize = 25 * big;
-                    if (i == 1 && activeTet.item != Tetromino.ItemType.none)
+                    if (activeTet.item != Tetromino.ItemType.none && i == Tetromino.ItemPositions[MOD.itemPlacements, ((int)activeTet.id) - 1])
                     {
                         Draw.buffer.DrawImage(tetGems[1], px, py, psize, psize);
-                        Draw.buffer.DrawString("I", Draw.f_Maestro, Draw.wb, px, py);
+                        Draw.buffer.DrawString("I", Draw.f_Maestro, Draw.bb, px, py);
                     }
                     else if (activeTet.bone == true)
                     {
@@ -601,10 +605,10 @@ namespace TGMsim
                         {
                             int px = x + 25 * nextTet[i].bits[j].x;
                             int py = y - 95 + 25 * (21 - nextTet[i].bits[j].y);
-                            if (j == 1 && nextTet[i].item != Tetromino.ItemType.none)
+                            if (nextTet[i].item != Tetromino.ItemType.none && j == Tetromino.ItemPositions[MOD.itemPlacements, ((int)nextTet[i].id) - 1])
                             {
                                 Draw.buffer.DrawImageUnscaled(tetGems[1], px, py);
-                                Draw.buffer.DrawString("I", Draw.f_Maestro, Draw.wb, px, py);
+                                Draw.buffer.DrawString("I", Draw.f_Maestro, Draw.bb, px, py);
                             }
                             else if (nextTet[i].bone == true)
                             {
@@ -625,10 +629,10 @@ namespace TGMsim
                         {
                             int px = x + i * 80 + 16 * nextTet[i].bits[j].x + 65;
                             int py = y + 16 * (21 - nextTet[i].bits[j].y) - 75;
-                            if (j == 1 && nextTet[i].item != Tetromino.ItemType.none)
+                            if (nextTet[i].item != Tetromino.ItemType.none && j == Tetromino.ItemPositions[MOD.itemPlacements, ((int)nextTet[i].id) - 1])
                             {
                                 Draw.buffer.DrawImageUnscaled(tetGems[1], px, py);
-                                Draw.buffer.DrawString("I", Draw.f_Maestro, Draw.wb, px, py);
+                                Draw.buffer.DrawString("I", Draw.f_Maestro, Draw.bb, px, py);
                             }
                             else if (nextTet[i].bone == true)
                                 Draw.buffer.DrawImageUnscaled(tetSImgs[10], px, py);

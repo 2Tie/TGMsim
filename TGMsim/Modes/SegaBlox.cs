@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
-
+using System.Diagnostics;
 using System.Drawing;
+using TGMsim.Generators;
 
 namespace TGMsim.Modes
 {
     class SegaBlox : SegaTet
     {
-        G_SEGA itemgen;
+        G_SEGABlox itemgen;
         int itemtimer = 0;
         int[] stackheighttimes = new int[4] { 1200, 900, 600, 300 };
         Tetromino.ItemType[,] itemtable = new Tetromino.ItemType[64, 4] {
@@ -166,11 +167,12 @@ namespace TGMsim.Modes
             garbTemplate.Add(new List<int> { 7, 7, 0, 7, 7, 7, 7, 7, 7, 7 });
             delayTable[2][0] = 12;
             delayTable[4][0] = 39;
+            itemPlacements = 1;
             ModeName = "BLOXEED";
             showGhost = false;
 
             //the item randomizer
-            itemgen = new G_SEGA(0x2A6D365B); //POP seed for now while it's tested
+            itemgen = new G_SEGABlox(0x2A6D365B); //POP seed for now while it's tested
             itemgen.read();
             itemgen.read();
 
@@ -185,7 +187,7 @@ namespace TGMsim.Modes
 
         public override void onPieceGen(Tetromino tet, List<List<int>> gameField)
         {
-            int table = itemgen.read();
+            int table = itemgen.read() & 0x3F;
             int stackheight;
             for (stackheight = gameField[0].Count - 1; stackheight > -1; stackheight--)
             {
@@ -210,6 +212,7 @@ namespace TGMsim.Modes
             if (itemtimer > stackheighttimes[heightchunk])
             {
                 tet.item = itemtable[table, heightchunk];
+                Debug.WriteLine(tet.item.ToString());
                 itemtimer = 0;
             }
         }

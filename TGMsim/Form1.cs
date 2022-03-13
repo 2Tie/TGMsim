@@ -81,6 +81,8 @@ namespace TGMsim
             readPrefs();
 
             Draw.buffer = Graphics.FromImage(imgBuffer);
+            this.BackgroundImage = imgBuffer;
+            this.Invalidate();
 
 
             Audio.addSound(s_Start, "/Res/Audio/SE/SEI_class.wav");
@@ -599,8 +601,8 @@ namespace TGMsim
 #endif
 
             //draw the buffer, then set to refresh
-            this.BackgroundImage = imgBuffer;
-            this.Invalidate();
+            //BackgroundImage = imgBuffer;
+            Invalidate();
 
         }
 

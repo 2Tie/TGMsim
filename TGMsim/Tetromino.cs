@@ -21,6 +21,11 @@ namespace TGMsim
         public int groundTimer = 0;
         public ItemType item = 0;
 
+        public static int[,] ItemPositions = new int[2, 7] { 
+            { 1, 1, 1, 1, 1, 1, 1 }, //placeholder
+            { 2, 2, 2, 1, 1, 2, 1}  //bloxeed
+        };
+
         //stats
         public int soft = 0;
         public int sonic = 0;
